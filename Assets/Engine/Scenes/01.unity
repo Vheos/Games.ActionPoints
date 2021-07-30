@@ -217,6 +217,7 @@ MonoBehaviour:
   SpriteMaterial: {fileID: 2100000, guid: 2a75e4735d79c6a46a3ffb97811c674a, type: 2}
   PixelSize: 0.1
   WhitePixel: {fileID: 21300000, guid: b472578ecc7cba54bafac9e33a9eb0d9, type: 3}
+  ActionPointMaterial: {fileID: 2100000, guid: ff133a25b9c66cd4e8b29ab39b117723, type: 2}
 --- !u!4 &93296400
 Transform:
   m_ObjectHideFlags: 0
@@ -261,11 +262,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowMonoDebug: 0
-  __Material: {fileID: 2100000, guid: ff133a25b9c66cd4e8b29ab39b117723, type: 2}
   __BackgroundTint: {r: 0, g: 0, b: 0, a: 1}
   __ProgressTint: {r: 1, g: 1, b: 1, a: 1}
   __Opacity: 1
-  __Progress: 0.5
+  __Progress: 0.441
 --- !u!4 &1814747957
 Transform:
   m_ObjectHideFlags: 0
