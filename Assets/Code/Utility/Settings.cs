@@ -7,5 +7,6 @@
         public Material SpriteMaterial;
         public float PixelSize;
         public Sprite WhitePixel;
+        public Material ActionPointMaterial;
     }
 }
