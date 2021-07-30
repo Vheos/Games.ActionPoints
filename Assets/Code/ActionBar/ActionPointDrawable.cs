@@ -1,10 +1,9 @@
 namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
-    public class ActionPoint : ADrawable<ActionPointMatProps>
+    public class ActionPointDrawable : ADrawable<ActionPointMatProps>
     {
         // Inspector
-        [SerializeField] private Material __Material;
         [SerializeField] private Color __BackgroundTint;
         [SerializeField] private Color __ProgressTint;
         [Range(0, 1)]
@@ -14,7 +13,7 @@ namespace Vheos.Games.ActionPoints
 
         // Overrides
         override protected Material Material
-        => __Material;
+        => Global.Settings.ActionPointMaterial;
         override protected void InitializeInspectorFields()
         {
             __BackgroundTint = Color.black;

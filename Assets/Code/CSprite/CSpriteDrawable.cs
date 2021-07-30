@@ -2,7 +2,7 @@
 {
     using UnityEngine;
     using Vheos.Tools.Extensions.Math;
-    public class CSprite : ADrawable<CSpriteMatProps>
+    public class CSpriteDrawable : ADrawable<CSpriteMatProps>
     {
         // Inspector
         [SerializeField] private Sprite __Sprite;
@@ -48,10 +48,6 @@
         {
             base.OnAwake();
             UpdateMeshGeometry();
-        }
-        override public void OnUpdate()
-        {
-            Draw();
         }
 
         #region EDITOR
