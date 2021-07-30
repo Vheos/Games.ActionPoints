@@ -5,12 +5,17 @@ namespace Vheos.Games.ActionPoints
     {
         // Publics
         public Vector3 LocalSize
-        => Mesh.bounds.size;
+        => Mesh != null ? Mesh.bounds.size : Vector3.zero;
 
         // Virtuals
         abstract protected void InitializeInspectorFields();
         abstract protected void InitializeMatProps();
         abstract protected void AssignInspectorMProps();
+        virtual protected void Draw()
+        {
+            Graphics.DrawMesh(Mesh, transform.localToWorldMatrix,
+                              Material, 0, null, 0, _matPropsBase.MPBlock);
+        }
         virtual protected Material Material
         => Global.Settings.SpriteMaterial;
         virtual protected Mesh Mesh
@@ -18,11 +23,6 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         protected AMatProps _matPropsBase;
-        protected void Draw()
-        {
-            Graphics.DrawMesh(Mesh, transform.localToWorldMatrix,
-                              Material, 0, null, 0, _matPropsBase.MPBlock);
-        }
 
         // Mono
         override public void OnAwake()
