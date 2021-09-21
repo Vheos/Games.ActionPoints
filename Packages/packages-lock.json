@@ -52,7 +52,7 @@
       }
     },
     "vheos.tools.unitycore": {
-      "version": "file:E:/Creativity/Programs/C#/Tools/UnityCore",
+      "version": "file:E:/Creativity/Programs/C#/Tools/UnityCore/Package",
       "depth": 0,
       "source": "local",
       "dependencies": {}
