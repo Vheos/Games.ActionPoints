@@ -12,12 +12,17 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private AMousable _highlightedMousable;
         private List<Button> _heldButtons;
-        private void InitializeHeldButtonsList()
-        => _heldButtons = new List<Button>();
+        private Vector3 _previousMousePosition;
+        private bool MouseMoved
+        =>  Input.mousePosition != _previousMousePosition;
+        
         private bool TryFindMousable(out AMousable hitMousable, out RaycastHit hitInfo)
         {
             hitMousable = null;
-            if (Physics.Raycast(CameraExtended.Main.CursorRay, out hitInfo, float.PositiveInfinity, LayerMask.GetMask(nameof(AMousable)), QueryTriggerInteraction.Collide))
+            hitInfo = default;
+
+            if (CameraManager.CursorCamera.TryNonNull(out var activeCamera)
+            && Physics.Raycast(activeCamera.CursorRay(), out hitInfo, float.PositiveInfinity, LayerMask.GetMask(nameof(AMousable)), QueryTriggerInteraction.Collide))
                 hitInfo.collider.TryGetComponent(out hitMousable);
 
             return hitMousable != null;
@@ -59,16 +64,22 @@ namespace Vheos.Games.ActionPoints
         override public void PlayAwake()
         {
             base.PlayAwake();
-            InitializeHeldButtonsList();
+            _previousMousePosition = Input.mousePosition;
+            _heldButtons = new List<Button>();
         }
         override public void PlayUpdate()
         {
             base.PlayUpdate();
+            if (MouseMoved)
+                CameraManager.SetDirtyCursorCamera();
+           
             TryFindMousable(out var hitMousable, out var hitInfo);
             if (_highlightedMousable == null || !_highlightedMousable.IsHighlightLocked)
                 UpdateHighlights(hitMousable);
             if (_highlightedMousable != null)
                 UpdateButtonEvents(hitInfo);
+
+            _previousMousePosition = Input.mousePosition;
         }
 
         // Enum
