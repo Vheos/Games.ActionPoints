@@ -31,9 +31,10 @@ namespace Vheos.Games.ActionPoints
             if (button != __Button)
                 return;
 
-            _attachmentPlane = CameraExtended.Main.ScreenPlane(worldPoint);
+            _attachmentPlane = CameraManager.CursorCamera.ScreenPlane(worldPoint);
             _attachmentOffset = transform.position.OffsetTo(worldPoint);
             _isAttached = true;
+            CameraManager.LockCursorCamera(this);
         }
         public override void MouseRelease(MouseManager.Button button)
         {
@@ -42,6 +43,7 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             _isAttached = false;
+            CameraManager.UnlockCursorCamera(this);
         }
         public override bool IsHighlightLocked
         => _isAttached;
@@ -59,7 +61,7 @@ namespace Vheos.Games.ActionPoints
             transform.localScale = transform.localScale.Lerp(_targetScale, lerpAlpha);
             if (_isAttached)
             {
-                Vector3 targetPosition = CameraExtended.Main.CursorToPlanePoint(_attachmentPlane) - _attachmentOffset;
+                Vector3 targetPosition = CameraManager.CursorCamera.CursorToPlanePoint(_attachmentPlane) - _attachmentOffset;
                 transform.position = transform.position.Lerp(targetPosition, lerpAlpha);
             }
         }
