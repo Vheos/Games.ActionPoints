@@ -15,6 +15,8 @@ namespace Vheos.Games.ActionPoints
         { }
         virtual public bool IsHighlightLocked
         => false;
+        virtual public bool IsHitValid(Vector3 location)
+        => true;
 
         // Privates
         private void AssignLayer()
