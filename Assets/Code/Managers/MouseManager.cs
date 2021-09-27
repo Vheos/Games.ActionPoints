@@ -14,16 +14,18 @@ namespace Vheos.Games.ActionPoints
         private List<Button> _heldButtons;
         private Vector3 _previousMousePosition;
         private bool MouseMoved
-        =>  Input.mousePosition != _previousMousePosition;
-        
+        => Input.mousePosition != _previousMousePosition;
+
         private bool TryFindMousable(out AMousable hitMousable, out RaycastHit hitInfo)
         {
             hitMousable = null;
             hitInfo = default;
 
             if (CameraManager.CursorCamera.TryNonNull(out var activeCamera)
-            && Physics.Raycast(activeCamera.CursorRay(), out hitInfo, float.PositiveInfinity, LayerMask.GetMask(nameof(AMousable)), QueryTriggerInteraction.Collide))
-                hitInfo.collider.TryGetComponent(out hitMousable);
+            && Physics.Raycast(activeCamera.CursorRay(), out hitInfo, float.PositiveInfinity, LayerMask.GetMask(nameof(AMousable)), QueryTriggerInteraction.Collide)
+            && hitInfo.collider.TryGetComponent(out hitMousable)
+            && !hitMousable.IsHitValid(hitInfo.point))
+                hitMousable = null;
 
             return hitMousable != null;
         }
@@ -72,12 +74,14 @@ namespace Vheos.Games.ActionPoints
             base.PlayUpdate();
             if (MouseMoved)
                 CameraManager.SetDirtyCursorCamera();
-           
+
             TryFindMousable(out var hitMousable, out var hitInfo);
+
             if (_highlightedMousable == null || !_highlightedMousable.IsHighlightLocked)
                 UpdateHighlights(hitMousable);
             if (_highlightedMousable != null)
                 UpdateButtonEvents(hitInfo);
+
 
             _previousMousePosition = Input.mousePosition;
         }
