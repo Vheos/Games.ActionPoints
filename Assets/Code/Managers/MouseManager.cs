@@ -3,11 +3,12 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
+    using Tools.Extensions.Collections;
     [DisallowMultipleComponent]
     public class MouseManager : AUpdatable
     {
         // Inspector
-        [SerializeField] protected Button[] __Buttons;
+        [SerializeField] protected Button[] _Buttons;
 
         // Privates
         private AMousable _highlightedMousable;
@@ -15,19 +16,22 @@ namespace Vheos.Games.ActionPoints
         private Vector3 _previousMousePosition;
         private bool MouseMoved
         => Input.mousePosition != _previousMousePosition;
-
-        private bool TryFindMousable(out AMousable hitMousable, out RaycastHit hitInfo)
+        private bool FindMousableUnderCursor(out AMousable outMousable, out RaycastHit outInfo)
         {
-            hitMousable = null;
-            hitInfo = default;
-
-            if (CameraManager.CursorCamera.TryNonNull(out var activeCamera)
-            && Physics.Raycast(activeCamera.CursorRay(), out hitInfo, float.PositiveInfinity, LayerMask.GetMask(nameof(AMousable)), QueryTriggerInteraction.Collide)
-            && hitInfo.collider.TryGetComponent(out hitMousable)
-            && !hitMousable.IsHitValid(hitInfo.point))
-                hitMousable = null;
-
-            return hitMousable != null;
+            if (CameraManager.CursorCamera.TryNonNull(out var activeCamera))
+                foreach (var hitInfo in Physics.RaycastAll(activeCamera.CursorRay(), float.PositiveInfinity, LayerMask.GetMask(nameof(AMousable)), QueryTriggerInteraction.Collide))
+                    if (hitInfo.collider.TryGetComponent<AMousable>(out var hitMousable)
+                    && hitMousable.enabled
+                    && hitMousable.RecieveMouseEvents
+                    && hitMousable.RaycastTest(hitInfo.point))
+                    {
+                        outMousable = hitMousable;
+                        outInfo = hitInfo;
+                        return true;
+                    }
+            outMousable = null;
+            outInfo = default;
+            return false;
         }
         private void UpdateHighlights(AMousable hitMousable)
         {
@@ -36,7 +40,6 @@ namespace Vheos.Games.ActionPoints
             {
                 _highlightedMousable.MouseLoseHighlight();
                 _highlightedMousable = null;
-                _heldButtons.Clear();
             }
             // void -> clickable
             if (hitMousable != null && (_highlightedMousable == null || _highlightedMousable != hitMousable))
@@ -47,7 +50,7 @@ namespace Vheos.Games.ActionPoints
         }
         private void UpdateButtonEvents(RaycastHit hitInfo)
         {
-            foreach (var button in __Buttons)
+            foreach (var button in _Buttons)
                 // press highlighted clickable
                 if (Input.GetMouseButtonDown((int)button) && !_heldButtons.Contains(button))
                 {
@@ -75,13 +78,12 @@ namespace Vheos.Games.ActionPoints
             if (MouseMoved)
                 CameraManager.SetDirtyCursorCamera();
 
-            TryFindMousable(out var hitMousable, out var hitInfo);
+            FindMousableUnderCursor(out var hitMousable, out var hitInfo);
 
-            if (_highlightedMousable == null || !_highlightedMousable.IsHighlightLocked)
+            if (_highlightedMousable == null || _heldButtons.IsEmpty())
                 UpdateHighlights(hitMousable);
             if (_highlightedMousable != null)
                 UpdateButtonEvents(hitInfo);
-
 
             _previousMousePosition = Input.mousePosition;
         }
