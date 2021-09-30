@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -3551287784963028691
-    second: Idle01
+    second: Bird_0
   - first:
       213: -2298939645060189070
-    second: Idle02
+    second: Bird_1
   - first:
       213: 1895172606582820919
-    second: Move01
+    second: Bird_2
   - first:
       213: 5980626864169998078
-    second: Move02
+    second: Bird_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -103,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle01
+      name: Bird_0
       rect:
         serializedVersion: 2
         x: 0
         y: 18
-        width: 16
-        height: 16
+        width: 11
+        height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,13 +124,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle02
+      name: Bird_1
       rect:
         serializedVersion: 2
         x: 17
         y: 18
-        width: 16
-        height: 16
+        width: 11
+        height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,13 +145,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Move01
+      name: Bird_2
       rect:
         serializedVersion: 2
         x: 0
         y: 1
-        width: 16
-        height: 16
+        width: 11
+        height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,13 +166,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Move02
+      name: Bird_3
       rect:
         serializedVersion: 2
         x: 17
         y: 1
-        width: 16
-        height: 16
+        width: 11
+        height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
