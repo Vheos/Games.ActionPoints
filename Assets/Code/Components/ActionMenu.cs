@@ -1,37 +1,41 @@
-namespace Vheos.Games.ActionPoints.Test
+namespace Vheos.Games.ActionPoints
 {
-    using System.Collections.Generic;
     using UnityEngine;
-    using UnityEngine.EventSystems;
-    using Tools.Extensions.Math;
-    using Tools.Extensions.UnityObjects;
-    using Tools.Extensions.Sprite;
-    public class ActionMenu : AMousable
+    using Tools.UnityCore;
+    public class ActionMenu : AUpdatable
     {
-        // Inspector
-        [SerializeField] protected UIActionMenu __UIActionMenu;
+        // Publics
+        public bool IsExpanded
+        { get; private set; }
+        public void ExpandButtons()
+        {
+            foreach (var button in _buttons)
+                button.ExpandTo(Random.insideUnitCircle.normalized * 1f);
+            IsExpanded = true;
+        }
+        public void CollapseButtons()
+        {
+            foreach (var button in _buttons)
+                button.Collapse();
+            IsExpanded = false;
+        }
+        public void Toggle()
+        {
+            if (IsExpanded)
+                CollapseButtons();
+            else
+                ExpandButtons();
+        }
 
-        // Mouse
-        public override void MouseGainHighlight()
-        {
-            base.MouseGainHighlight();
-            foreach (var uiActionMenu in FindObjectsOfType<UIActionMenu>())
-                if (uiActionMenu != __UIActionMenu)
-                    uiActionMenu.Collapse();
-            __UIActionMenu.Expand();     
-        }
-        public override bool IsHitValid(Vector3 location)
-        {
-            if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
-                return spriteRenderer.sprite.PositionToPixelAlpha(location, transform) >= 0.5f;
-            return true;
-        }
+        // Privates
+        private ActionButton[] _buttons;
 
         // Mono
-        public override void PlayUpdate()
+        public override void PlayAwake()
         {
-            base.PlayUpdate();
-            __UIActionMenu.transform.position = CameraManager.FirstActive.WorldToScreenPoint(transform.position);
+            base.PlayAwake();
+            _buttons = GetComponentsInChildren<ActionButton>();
+            CollapseButtons();
         }
     }
 }
