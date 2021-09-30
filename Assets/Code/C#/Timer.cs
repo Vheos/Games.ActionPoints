@@ -41,7 +41,6 @@ namespace Vheos.Games.ActionPoints
         private float _duration;
         private bool _skipFrameZero;
         private bool _hasBeenStarted;
-        private bool _hasJustFinished;
         private float _startTime;
     }
 }
