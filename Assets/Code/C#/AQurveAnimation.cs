@@ -1,33 +1,32 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System.Collections.Generic;
     using UnityEngine;
-    abstract public class AQurveAnimation<T> : Timer
+    abstract public class AQurveAnimation : Timer
     {
         // Inspector  
-        [SerializeField] protected T __To;
-        [SerializeField] [Range(0f, 1f)] protected float __HalfTime;
-        [SerializeField] [Range(0f, 10f)] protected float __Duration;
+        [SerializeField] protected float _Duration = 0.5f;
 
         // Privates
-        protected T _from;
         protected float QurveValue
-        => Qurve.ValueAt(Progress, __HalfTime);
+        => Qurve.ValueAt(Progress);
+        protected List<AQurveAnimation> _mutualExclusives;
 
         // Publics
-        public void Start(T from, T to)
+        public void SetMutuallyExclusiveWith(AQurveAnimation anim)
         {
-            _from = from;
-            __To = to;
-            Start();
-
+            _mutualExclusives.Add(anim);
+            anim._mutualExclusives.Add(this);
         }
-        abstract public T Value
-        { get; }
 
         // Overrides
         public override float Duration
-        => __Duration;
+        => _Duration;
         public override bool SkipFrameZero
         => true;
+
+        // Constructors
+        protected AQurveAnimation()
+        => _mutualExclusives = new List<AQurveAnimation>();
     }
 }
