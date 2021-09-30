@@ -4,31 +4,44 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     static public class Qurve
     {
+        // CONST
+        private const float HALFTIME_PRECISION = 0.01f;
+        private const float DEFAULT_DEFAULT_HALFTIME = 0.2f;
+
         // Publics
+        static public float DefaultHalfTime
+        {
+            get => _defaultHalfTime;
+            set => _defaultHalfTime = value.Clamp(0f + HALFTIME_PRECISION, 1f - HALFTIME_PRECISION);
+        }
+        static public float ValueAt(float progress)
+        => ValueAt(progress, _defaultHalfTime);
         static public float ValueAt(float progress, float halfTime)
         {
-            if (halfTime < 0.01f)
+            if (progress <= 0f || halfTime < 0f + HALFTIME_PRECISION)
                 return 0f;
+            else if (progress >= 1f || halfTime > 1f - HALFTIME_PRECISION)
+                return 1f;
             else if (halfTime == 0.5f)
                 return progress;
-            else if (halfTime > 0.99f)
-                return 1f;
 
-            float a = _animationCurve.Evaluate(halfTime);
+            float a = _paramsByHalfTime.Evaluate(halfTime);
             return (1 - a.Pow(progress))
                  / (1 - a);
         }
 
         // Privates
-        static private AnimationCurve _animationCurve;
+        static private AnimationCurve _paramsByHalfTime;
+        static private float _defaultHalfTime;
 
         // Initializers
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static private void StaticInitialize()
         {
-            _animationCurve = NewUtility.CreateLinearAnimationCurve
+            _defaultHalfTime = DEFAULT_DEFAULT_HALFTIME;
+            _paramsByHalfTime = NewUtility.CreateLinearAnimationCurve
             (
-            #region Precision: 0.01
+            #region Cached values
                 (0.01f, 7.8886090522100655e-031f),
                 (0.02f, 8.8817841970016606e-016f),
                 (0.03f, 9.2398902451231934e-011f),
