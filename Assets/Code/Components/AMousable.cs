@@ -13,10 +13,12 @@ namespace Vheos.Games.ActionPoints
         { }
         virtual public void MouseRelease(MouseManager.Button button)
         { }
-        virtual public bool IsHighlightLocked
-        => false;
-        virtual public bool IsHitValid(Vector3 location)
+        virtual public bool RaycastTest(Vector3 location)
         => true;
+
+        // Publics
+        public bool RecieveMouseEvents
+        { get; protected set; }
 
         // Privates
         private void AssignLayer()
@@ -27,6 +29,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             AssignLayer();
+            RecieveMouseEvents = true;
         }
     }
 }
