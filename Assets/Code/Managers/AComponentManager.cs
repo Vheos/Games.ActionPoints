@@ -5,6 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using System.Linq;
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(-1)]
     abstract public class AComponentManager<T> : AUpdatable where T : Behaviour
     {
         // Publics
