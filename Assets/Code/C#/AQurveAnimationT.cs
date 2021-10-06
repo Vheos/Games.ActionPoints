@@ -4,7 +4,7 @@ namespace Vheos.Games.ActionPoints
     abstract public class AQurveAnimation<T> : AQurveAnimation where T : struct
     {
         // Inspector  
-        [SerializeField] protected T _To = default;
+        public T _To = default;
 
         // Privates
         protected T _from;

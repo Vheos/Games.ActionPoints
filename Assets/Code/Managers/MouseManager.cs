@@ -8,7 +8,7 @@ namespace Vheos.Games.ActionPoints
     public class MouseManager : AUpdatable
     {
         // Inspector
-        [SerializeField] protected Button[] _Buttons;
+        public Button[] _Buttons;
 
         // Privates
         private AMousable _highlightedMousable;

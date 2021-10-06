@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     abstract public class AQurveAnimation : Timer
     {
         // Inspector  
-        [SerializeField] protected float _Duration = 0.5f;
+        public float _Duration = 0.5f;
 
         // Privates
         protected float QurveValue
