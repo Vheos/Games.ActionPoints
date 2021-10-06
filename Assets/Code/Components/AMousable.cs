@@ -2,6 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.UnityCore;
+    [RequireComponent(typeof(Collider))]
     abstract public class AMousable : AUpdatable
     {
         // Virtuals
@@ -18,7 +19,7 @@ namespace Vheos.Games.ActionPoints
 
         // Publics
         public bool RecieveMouseEvents
-        { get; protected set; }
+        { get; set; }
 
         // Privates
         private void AssignLayer()
