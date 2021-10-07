@@ -45,12 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140265e8217b3f7469cc1141b1147089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ButtonPrefab: {fileID: 1200835588950954827, guid: daceaa88ec33ca14aa2793a23fce633c, type: 3}
-  _Actions:
-  - {fileID: 11400000, guid: 239806782e1eace4d8294bc8cb7762d1, type: 2}
-  - {fileID: 11400000, guid: 114c3c2a74c1ae9448ddbddf4780bcce, type: 2}
-  - {fileID: 11400000, guid: fa8f903931d95294981d3f56a9156827, type: 2}
-  - {fileID: 11400000, guid: bd03eb5788b4ef746b1fb5b68f6e0fad, type: 2}
+  _MaxAngle: 180
+  _Radius: 0.6
   _ExpandScaleAnim:
     _Duration: 0.5
     _To: {x: 0, y: 0}
@@ -67,6 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Target: {fileID: 0}
+  _Offset: {x: 0, y: 0, z: 0}
   _HalfTime: 0.1
 --- !u!114 &4740446974637155973
 MonoBehaviour:
@@ -81,4 +78,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Target: {fileID: 0}
+  _Offset: {x: 0, y: 0, z: 0}
   _HalfTime: 0.1

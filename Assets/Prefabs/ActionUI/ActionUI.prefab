@@ -46,3 +46,4 @@ MonoBehaviour:
   _WheelPrefab: {fileID: 1860824612872176148, guid: 6df0fc3976789d5438413b027737049a, type: 3}
   _ButtonPrefab: {fileID: 1200835588950954827, guid: daceaa88ec33ca14aa2793a23fce633c, type: 3}
   _PointsBarPrefab: {fileID: 1313598395280984248, guid: 778c2d56a343ff0408712d9a3e3f8d79, type: 3}
+  _PointPrefab: {fileID: 3268621003688216130, guid: c4bdd922fcbf43d4a8474866e7d8f6d2, type: 3}
