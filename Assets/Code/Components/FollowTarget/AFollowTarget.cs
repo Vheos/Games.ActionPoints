@@ -6,6 +6,7 @@ namespace Vheos.Games.ActionPoints
     {
         // Inspector
         public Transform _Target = null;
+        public Vector3 _Offset;
         [Range(0f, 1f)] public float _HalfTime = 0.25f;
 
         // Publics
