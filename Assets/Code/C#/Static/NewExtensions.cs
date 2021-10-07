@@ -113,6 +113,12 @@ namespace Vheos.Games.ActionPoints
 
             return Quaternion.AngleAxis(b, a) * t;
         }
+        static public void SetLocalX(this Transform t, float a)
+        {
+            Vector3 temp = t.localPosition;
+            temp.x = a;
+            t.localPosition = temp;
+        }
 
         // Vector
         /// <summary> Returns the on-screen distance between this vector and a from camera b's perspective. </summary>
@@ -131,11 +137,9 @@ namespace Vheos.Games.ActionPoints
         static public Vector3 ScreenDirectionAwayFrom(this Vector3 t, Vector3 a, Camera b)
         => (b.WorldToScreenPoint(t) - b.WorldToScreenPoint(a)).normalized;
         public static Vector2 PerpendicularCW(this Vector2 t)
-        => new Vector2(t.y, -t.x); 
+        => new Vector2(t.y, -t.x);
         public static Vector2 PerpendicularCCW(this Vector2 t)
         => new Vector2(-t.y, t.x);
-        
-
 
         // Edge points
         /// <summary> Returns a point on this rectangle's edge given direction a. </summary>
