@@ -31,6 +31,9 @@ Shader "Custom/UI-Line"
             #pragma fragment frag
             #pragma target 2.0
             #include "UnityCG.cginc"
+            // Functions
+            void PremultiplyAlpha(inout fixed4 color)
+			{ color.rgb *= color.a; }
 
             struct appdata_t
             {
@@ -63,8 +66,9 @@ Shader "Custom/UI-Line"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.texcoord+ _Time.y * -_TextureFlowSpeed);
-                return col;
+                fixed4 color = tex2D(_MainTex, i.texcoord+ _Time.y * -_TextureFlowSpeed);
+                PremultiplyAlpha(color);
+                return color;
             }
             ENDCG
         }
