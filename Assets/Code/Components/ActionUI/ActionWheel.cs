@@ -6,14 +6,11 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
 
-    [RequireComponent(typeof(MoveTowards))]
-    [RequireComponent(typeof(RotateAs))]
     public class ActionWheel : AUpdatable
     {
         // Inspector
-        [Range(90, 270)]public float _MaxAngle = 180f;
+        [Range(90, 270)] public float _MaxAngle = 180f;
         [Range(0.5f, 2f)] public float _Radius = 2 / 3f;
-        public List<AAction> _Actions = new List<AAction>();
         public QAnimVector2 _ExpandScaleAnim = new QAnimVector2();
 
         // Publics
@@ -77,17 +74,16 @@ namespace Vheos.Games.ActionPoints
         private List<ActionButton> _buttons;
         private void Initialize()
         {
+            _buttons = new List<ActionButton>();
+            foreach (var action in UI.Character._Actions)
+                _buttons.Add(ActionButton.Create(UI._ButtonPrefab, this, action));
+            CollapseButtons();
+
             if (TryGetComponent<MoveTowards>(out var moveTowards))
                 moveTowards._Target = UI.Character.transform;
             if (TryGetComponent<RotateAs>(out var rotateAs))
                 rotateAs._Target = CameraManager.FirstActive.transform;
 
-            _buttons = new List<ActionButton>();
-            foreach (var button in GetComponentsInChildren<ActionButton>())
-                _buttons.Add(button);
-            foreach (var action in _Actions)
-                _buttons.Add(ActionButton.Create(UI._ButtonPrefab, this, action));
-            CollapseButtons();
         }
 
         // Mono

@@ -12,6 +12,7 @@ namespace Vheos.Games.ActionPoints
         public GameObject _WheelPrefab = null;
         public GameObject _ButtonPrefab = null;
         public GameObject _PointsBarPrefab = null;
+        public GameObject _PointPrefab = null;
 
         // Publics
         static public ActionUI Create(GameObject prefab, Character character)
