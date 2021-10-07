@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: ActionAttack
   m_EditorClassIdentifier: 
   Sprite: {fileID: -7814885851622180520, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+  ActionPointsCost: 3
+  FocusPointsCost: 1

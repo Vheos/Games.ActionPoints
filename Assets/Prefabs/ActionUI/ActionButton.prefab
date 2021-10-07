@@ -46,14 +46,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _TransparencyThreshold: 0.5
-  _Action: {fileID: 11400000, guid: b433a609931986f48a7e1b9bd50dcae4, type: 2}
   _HighlightScaleMultiplier: 1.25
   _HighlightScaleAnim:
-    _Duration: 0.5
+    _Duration: 0.25
     _To: {x: 0, y: 0}
   _AlignMoveAnim:
-    _Duration: 0.5
+    _Duration: 0.25
     _To: {x: 0, y: 0}
+  _ActivityColorAnim:
+    _Duration: 0.25
+    _To: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &4861503552348188200
 SpriteRenderer:
   m_ObjectHideFlags: 0
