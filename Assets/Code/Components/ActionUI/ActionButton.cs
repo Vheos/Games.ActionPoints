@@ -11,9 +11,10 @@ namespace Vheos.Games.ActionPoints
         [Range(1f, 2f)] public float _HighlightScaleMultiplier = 1.25f;
         public QAnimVector2 _HighlightScaleAnim = new QAnimVector2();
         public QAnimVector2 _AlignMoveAnim = new QAnimVector2();
+        public QAnimColor _ActivityColorAnim = new QAnimColor();
 
         // Publics
-        static public ActionButton Create(GameObject prefab, ActionWheel wheel, AAction action)
+        static public ActionButton Create(GameObject prefab, ActionWheel wheel, Action action)
         {
             ActionButton newButton = Instantiate(prefab).GetComponent<ActionButton>();
             newButton.name = nameof(ActionButton);
@@ -30,15 +31,23 @@ namespace Vheos.Games.ActionPoints
         => _AlignMoveAnim.Start(transform.localPosition.XY(), targetLocalPosition);
 
         // Privates
-        private AAction _action;
+        private Action _action;
         private Vector2 _originalScale;
-        public void Initialize()
+        private void Initialize()
         {
             _spriteRenderer.sprite = _action.Sprite;
             _spriteRenderer.color = Wheel.UI.Character._Color;
 
             _originalScale = transform.localScale;
             _spriteRenderer.sortingOrder++;
+
+            UpdateActiveStatus(Wheel.UI.Character.ActionPointsCount, Wheel.UI.Character.FocusPointsCount);
+            Wheel.UI.Character.OnPointsCountChanged += UpdateActiveStatus;            
+        }
+        private void UpdateActiveStatus(int actionPointsCount, int focusPointsCount)
+        {
+            Color targetColor = actionPointsCount >= _action.ActionPointsCost ? Wheel.UI.Character._Color : Wheel._InactiveColor;
+            _ActivityColorAnim.Start(_spriteRenderer.color, targetColor);
         }
 
         // Mouse
@@ -71,6 +80,8 @@ namespace Vheos.Games.ActionPoints
                 transform.localScale = _HighlightScaleAnim.Value;
             if (_AlignMoveAnim.IsActive)
                 transform.localPosition = _AlignMoveAnim.Value;
+            if (_ActivityColorAnim.IsActive)
+                _spriteRenderer.color = _ActivityColorAnim.Value;
         }
     }
 }
