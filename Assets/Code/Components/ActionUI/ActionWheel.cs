@@ -12,6 +12,7 @@ namespace Vheos.Games.ActionPoints
         [Range(90, 270)] public float _MaxAngle = 180f;
         [Range(0.5f, 2f)] public float _Radius = 2 / 3f;
         public QAnimVector2 _ExpandScaleAnim = new QAnimVector2();
+        public Color _InactiveColor = new Color(0.25f, 0.25f, 0.25f, 0.25f);
 
         // Publics
         static public ActionWheel Create(GameObject prefab, ActionUI ui)
