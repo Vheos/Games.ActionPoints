@@ -65,8 +65,8 @@ namespace Vheos.Games.ActionPoints
         private void UpdateVisualProgresses()
         {
             float lerpAlpha = NewUtility.LerpHalfTimeToAlpha(_HalfTime);
-            _visualActionProgress = _visualActionProgress.Lerp(UI.Character._ActionProgress, lerpAlpha);
-            _visualFocusProgress = _visualFocusProgress.Lerp(UI.Character._FocusProgress, lerpAlpha);
+            _visualActionProgress = _visualActionProgress.Lerp(UI.Character.ActionProgress, lerpAlpha);
+            _visualFocusProgress = _visualFocusProgress.Lerp(UI.Character.FocusProgress, lerpAlpha);
         }
         private void UpdatePoints()
         {
