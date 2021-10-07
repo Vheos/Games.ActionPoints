@@ -379,8 +379,8 @@ MonoBehaviour:
   _Right: 102
   _Down: 119
   _Up: 114
-  _MovementSpeed: 10
-  _RotationSpeed: 10
+  _MovementSpeed: 5
+  _RotationSpeed: 5
   _RotationInvertX: 0
   _RotationInvertY: 1
 --- !u!20 &423863155
@@ -829,7 +829,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1389980838}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6747162, y: 1.0196567, z: 1.0569178}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1165,7 +1165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2577891044044771581, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.08183e-15
+      value: -4.9144246e-15
       objectReference: {fileID: 0}
     - target: {fileID: 2577891044044771581, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1481,6 +1481,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2577891044044771582, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+      propertyPath: _ActionSpeed
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577891044044771582, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
       propertyPath: _actionButtonSprites.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -1504,6 +1508,10 @@ PrefabInstance:
       propertyPath: _Target
       value: 
       objectReference: {fileID: 1355496848}
+    - target: {fileID: 6645642164658842245, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+      propertyPath: _Offset.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6645642164658842245, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
       propertyPath: _Offset.y
       value: 0.25
