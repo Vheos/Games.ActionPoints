@@ -9,26 +9,52 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         public GameObject _ActionUIPrefab = null;
         public Color _Color = Color.white;
-        public List<AAction> _Actions = new List<AAction>();
+        public List<Action> _Actions = new List<Action>();
         public int _MaxPoints = 5;
         public float _ActionSpeed = 1f;
         public float _FocusSpeed = 0.5f;
         public float _ExhaustSpeed = 0.5f;
-        public float _ActionProgress = 0f;
-        public float _FocusProgress = 0f;
+
+        // Publics
+        public delegate void PointsCountChanged(int actionPointsCount, int foucsPointsCount);
+        public PointsCountChanged OnPointsCountChanged;
+        public float ActionProgress
+        { get; private set; }
+        public float FocusProgress
+        { get; private set; }
+        public int ActionPointsCount
+        => ActionProgress.RoundTowardsZero();
+        public int FocusPointsCount
+        => FocusProgress.RoundDown();
 
         // Private
         private ActionUI _actionUI;
+        private float _previousActionProgress;
+        private float _previousFocusProgress;
         private void UpdateProgresses(float deltaTime)
         {
-            _ActionProgress += deltaTime * _ActionSpeed;
-            if(_ActionProgress > _MaxPoints)
+            ActionProgress += deltaTime * _ActionSpeed;
+            if (ActionProgress > _MaxPoints)
             {
-                deltaTime = (_ActionProgress - _MaxPoints) / _ActionSpeed;
-                _ActionProgress = _MaxPoints;
-                _FocusProgress += deltaTime * _FocusSpeed;
-                _FocusProgress = _FocusProgress.ClampMax(_ActionProgress);
+                deltaTime = (ActionProgress - _MaxPoints) / _ActionSpeed;
+                ActionProgress = _MaxPoints;
+                FocusProgress += deltaTime * _FocusSpeed;
+                FocusProgress = FocusProgress.ClampMax(ActionProgress);
             }
+        }
+        private void InvokePointsCountChangedEvents()
+        {
+            int previousActionsPointsCount = _previousActionProgress.RoundTowardsZero();
+            int previousFocusPointsCount = _previousFocusProgress.RoundTowardsZero();
+            int currentActionPointsCount = ActionProgress.RoundTowardsZero();
+            int currentFocusPointsCount = FocusProgress.RoundTowardsZero();
+
+            if (previousActionsPointsCount != ActionPointsCount
+            || previousFocusPointsCount != FocusPointsCount)
+                OnPointsCountChanged?.Invoke(currentActionPointsCount, currentFocusPointsCount);
+
+            _previousActionProgress = ActionProgress;
+            _previousFocusProgress = FocusProgress;
         }
 
         // Mouse
@@ -47,11 +73,9 @@ namespace Vheos.Games.ActionPoints
         // Mono
         public override void PlayUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-                _ActionProgress -= _MaxPoints / 2f;
-
             base.PlayUpdate();
             UpdateProgresses(Time.deltaTime);
+            InvokePointsCountChangedEvents();
         }
         public override void PlayAwake()
         {
