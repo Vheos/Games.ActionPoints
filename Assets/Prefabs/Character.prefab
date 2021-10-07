@@ -51,6 +51,16 @@ MonoBehaviour:
   _TransparencyThreshold: 0.5
   _ActionUIPrefab: {fileID: 26440852318934822, guid: a8e94a12ea3b6094290911fc6c6cb467, type: 3}
   _Color: {r: 1, g: 1, b: 1, a: 1}
+  _Actions:
+  - {fileID: 11400000, guid: 239806782e1eace4d8294bc8cb7762d1, type: 2}
+  - {fileID: 11400000, guid: 114c3c2a74c1ae9448ddbddf4780bcce, type: 2}
+  - {fileID: 11400000, guid: fa8f903931d95294981d3f56a9156827, type: 2}
+  _MaxPoints: 5
+  _ActionSpeed: 0.5
+  _FocusSpeed: 0
+  _ExhaustSpeed: 0.25
+  _ActionProgress: 0
+  _FocusProgress: 0
 --- !u!114 &6645642164658842245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,7 +155,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2577891044044771577}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.7, y: 0.5, z: 0}
