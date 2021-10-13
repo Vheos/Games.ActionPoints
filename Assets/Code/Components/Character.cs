@@ -3,9 +3,12 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.Extensions.Math;
-
+    [RequireComponent(typeof(SpriteOutline))]
     public class Character : AMousableSprite
     {
+        // Constants
+        const string UI_ROOT_NAME = "UI";
+
         // Inspector
         public GameObject _ActionUIPrefab = null;
         public Color _Color = Color.white;
@@ -26,11 +29,25 @@ namespace Vheos.Games.ActionPoints
         => ActionProgress.RoundTowardsZero();
         public int FocusPointsCount
         => FocusProgress.RoundDown();
+        public void GainTargeting(Action action)
+        {
+            _spriteOutline.Grow();
+        }
+        public void LoseTargeting()
+        {
+            _spriteOutline.Shrink();
+        }
+        public void ChangeActionPoints(int diff)
+        => ActionProgress += diff;
+        public void ChangeFocusPoints(int diff)
+        => FocusProgress += diff;
 
         // Private
-        private ActionUI _actionUI;
+        static private Transform _uiRoot;
+        private UIBase _actionUI;
         private float _previousActionProgress;
         private float _previousFocusProgress;
+        private SpriteOutline _spriteOutline;
         private void UpdateProgresses(float deltaTime)
         {
             ActionProgress += deltaTime * _ActionSpeed;
@@ -58,7 +75,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Mouse
-        public override void MousePress(MouseManager.Button button, Vector3 location)
+        public override void MousePress(CursorManager.Button button, Vector3 location)
         {
             base.MousePress(button, location);
             _actionUI.ToggleWheel();
@@ -80,8 +97,13 @@ namespace Vheos.Games.ActionPoints
         public override void PlayAwake()
         {
             base.PlayAwake();
-            _actionUI = ActionUI.Create(_ActionUIPrefab, this);
+            _spriteOutline = GetComponent<SpriteOutline>();
             _spriteRenderer.color = _Color;
+
+            if (_uiRoot == null)
+                _uiRoot = new GameObject(UI_ROOT_NAME).transform;
+            _actionUI = _uiRoot.CreateChild<UIBase>(_ActionUIPrefab);
+            _actionUI.Character = this;
         }
 
 #if UNITY_EDITOR
