@@ -21,6 +21,14 @@ namespace Vheos.Games.ActionPoints
             r = t;
             return r != null;
         }
+        static public void GOActivate(this Component t)
+        => t.gameObject.SetActive(true);
+        static public void GODeactivate(this Component t)
+        => t.gameObject.SetActive(false);
+        static public Color NewA(this Color t, float a)
+        => new Color(t.r, t.g, t.b, a);
+        static public T CreateChild<T>(this Component t, GameObject prefab) where T : Component
+        => GameObject.Instantiate(prefab, t.transform).GetComponent<T>();
 
         // Image
         static public void SetA(this Image t, float a)
