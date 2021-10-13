@@ -1,11 +1,12 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-Shader "Custom/UI-Line" 
+Shader "Custom/UI-TargetingLine" 
 {
     Properties 
     {
         _MainTex ("Texture", 2D) = "white" {}
         _TextureFlowSpeed ("Texture flow speed", float) = 0
+        [Enum(Per Tile, 0, Per Unit, 1)] _TextureFlowMode ("Texture flow mode", int) = 0
     }
 
     SubShader
@@ -38,37 +39,42 @@ Shader "Custom/UI-Line"
             struct appdata_t
             {
                 float4 vertex : POSITION;
+                fixed4 color    : COLOR;
                 float2 texcoord : TEXCOORD0;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct v2f 
             {
                 float4 vertex : SV_POSITION;
+                fixed4 color    : COLOR;
                 float2 texcoord : TEXCOORD0;
-                UNITY_VERTEX_OUTPUT_STEREO
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float _TextureFlowSpeed;
+            int _TextureFlowMode;
+            float4 _Color;
 
             v2f vert (appdata_t v)
             {
                 v2f o;
-                UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                o.color = v.color;
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 color = tex2D(_MainTex, i.texcoord+ _Time.y * -_TextureFlowSpeed);
+                fixed flowOffset = _Time.y * _TextureFlowSpeed;
+                if(_TextureFlowMode == 1)
+                    flowOffset *= _MainTex_ST.x;
+
+                fixed4 color = tex2D(_MainTex, i.texcoord - flowOffset);
+                color *= i.color;
                 PremultiplyAlpha(color);
-                return color;
+                return  color;
             }
             ENDCG
         }
