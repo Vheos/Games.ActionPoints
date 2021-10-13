@@ -94,9 +94,9 @@ Shader "Custom/UI-SpriteRenderer"
 
                 UNITY_SETUP_INSTANCE_ID (IN);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-
+                 
                 OUT.vertex = UnityFlipSprite(IN.vertex, _Flip);
-                OUT.vertex = UnityObjectToClipPos(OUT.vertex);
+                OUT.vertex = UnityObjectToClipPos(OUT.vertex);              
                 OUT.texcoord = IN.texcoord;
                 OUT.color = IN.color * _Color * _RendererColor;
 
@@ -112,7 +112,7 @@ Shader "Custom/UI-SpriteRenderer"
                 fixed4 c = tex2D(_MainTex, IN.texcoord);
                 #if ETC1_EXTERNAL_ALPHA
                     fixed4 alpha = tex2D(_AlphaTex, uv);
-                    color.a = lerp(color.a, alpha.r, _EnableExternalAlpha);
+                    c.a = lerp(c.a, alpha.r, _EnableExternalAlpha);
                 #endif
                 c *= IN.color;                
                 c.rgb *= c.a;
