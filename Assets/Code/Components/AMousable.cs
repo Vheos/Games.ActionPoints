@@ -10,9 +10,11 @@ namespace Vheos.Games.ActionPoints
         { }
         virtual public void MouseLoseHighlight()
         { }
-        virtual public void MousePress(MouseManager.Button button, Vector3 location)
+        virtual public void MousePress(CursorManager.Button button, Vector3 location)
         { }
-        virtual public void MouseRelease(MouseManager.Button button)
+        virtual public void MouseHold(CursorManager.Button button, Vector3 location)
+        { }
+        virtual public void MouseRelease(CursorManager.Button button, Vector3 location)
         { }
         virtual public bool RaycastTest(Vector3 location)
         => true;
