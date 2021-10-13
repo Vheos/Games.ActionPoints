@@ -6,26 +6,13 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
 
-    public class ActionWheel : AUpdatable
+    public class UIWheel : AUpdatable, IUIHierarchy
     {
         // Inspector
-        [Range(90, 270)] public float _MaxAngle = 180f;
-        [Range(0.5f, 2f)] public float _Radius = 2 / 3f;
         public QAnimVector2 _ExpandScaleAnim = new QAnimVector2();
-        public Color _InactiveColor = new Color(0.25f, 0.25f, 0.25f, 0.25f);
 
         // Publics
-        static public ActionWheel Create(GameObject prefab, ActionUI ui)
-        {
-            ActionWheel newWheel = Instantiate(prefab).GetComponent<ActionWheel>();
-            newWheel.name = nameof(ActionWheel);
-            newWheel.BecomeChildOf(ui);
-            newWheel.UI = ui;
-
-            newWheel.Initialize();
-            return newWheel;
-        }
-        public ActionUI UI
+        public UIBase UI
         { get; private set; }
         public bool IsExpanded
         { get; private set; }
@@ -43,7 +30,7 @@ namespace Vheos.Games.ActionPoints
             _ExpandScaleAnim.Start(transform.localScale, Vector3.one);
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = true;
-            AlignButtons(GetWheelDirection(UI.Character.GetComponent<SnapTo>()), _Radius, _MaxAngle);
+            AlignButtons(GetWheelDirection(UI.Character.GetComponent<SnapTo>()), UI._WheelRadius, UI._WheelMaxAngle);
             IsExpanded = true;
         }
         public void CollapseButtons()
@@ -72,22 +59,29 @@ namespace Vheos.Games.ActionPoints
             Vector2 screenDirection = edgeFrom.ScreenOffsetTo(edgeTo, CameraManager.FirstActive).XY().PerpendicularCCW().normalized;
             return screenDirection;
         }
-        private List<ActionButton> _buttons;
-        private void Initialize()
+        private List<UIButton> _buttons;
+
+        // Mono
+        public override void PlayStart()
         {
-            _buttons = new List<ActionButton>();
-            foreach (var action in UI.Character._Actions)
-                _buttons.Add(ActionButton.Create(UI._ButtonPrefab, this, action));
-            CollapseButtons();
+            base.PlayStart();
+            name = GetType().Name;
+            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
             if (TryGetComponent<MoveTowards>(out var moveTowards))
                 moveTowards._Target = UI.Character.transform;
             if (TryGetComponent<RotateAs>(out var rotateAs))
                 rotateAs._Target = CameraManager.FirstActive.transform;
 
+            _buttons = new List<UIButton>();
+            foreach (var action in UI.Character._Actions)
+            {
+                UIButton newButton = this.CreateChild<UIButton>(UI._PrefabButton);
+                newButton.Action = action;
+                _buttons.Add(newButton);
+            }
+            CollapseButtons();
         }
-
-        // Mono
         public override void PlayUpdate()
         {
             base.PlayUpdate();
