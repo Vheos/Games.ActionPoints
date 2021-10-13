@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 731e1d2e9e36631488933b45066fdacd, type: 3}
+  m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
   m_Name: ActionEat
   m_EditorClassIdentifier: 
   Sprite: {fileID: 4491553773363795640, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+  ActionPointsCost: 1
+  FocusPointsCost: 0
+  IsTargeted: 0

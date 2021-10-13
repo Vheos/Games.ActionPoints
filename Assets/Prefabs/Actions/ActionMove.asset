@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ebe1f685488bdf4888f1f9651b596f7, type: 3}
+  m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
   m_Name: ActionMove
   m_EditorClassIdentifier: 
   Sprite: {fileID: 100665763937561807, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+  ActionPointsCost: 0
+  FocusPointsCost: 1
+  IsTargeted: 1

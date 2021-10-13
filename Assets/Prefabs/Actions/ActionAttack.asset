@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f02b13466e2334488b41b52701a7570, type: 3}
+  m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
   m_Name: ActionAttack
   m_EditorClassIdentifier: 
   Sprite: {fileID: -7814885851622180520, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
-  ActionPointsCost: 3
-  FocusPointsCost: 1
+  ActionPointsCost: 2
+  FocusPointsCost: 0
+  IsTargeted: 1
