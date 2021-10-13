@@ -4,11 +4,22 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.Collections;
+    using Tools.Extensions.UnityObjects;
     [DisallowMultipleComponent]
-    public class MouseManager : AUpdatable
+    public class CursorManager : AUpdatable
     {
         // Inspector
         public Button[] _Buttons;
+
+        // Publics
+        static public Plane CursorPlane
+        { get; set; }
+        static public Transform CursorTransform
+        { get; private set; }
+        static public AMousable CursorMousable
+        { get; private set; }
+        static public RaycastHit CursorMousableHitInfo
+        { get; private set; }
 
         // Privates
         private AMousable _highlightedMousable;
@@ -16,7 +27,7 @@ namespace Vheos.Games.ActionPoints
         private Vector3 _previousMousePosition;
         private bool MouseMoved
         => Input.mousePosition != _previousMousePosition;
-        private bool FindMousableUnderCursor(out AMousable outMousable, out RaycastHit outInfo)
+        private void UpdateCursorMousable()
         {
             if (CameraManager.CursorCamera.TryNonNull(out var activeCamera))
                 foreach (var hitInfo in Physics.RaycastAll(activeCamera.CursorRay(), float.PositiveInfinity, LayerMask.GetMask(nameof(AMousable)), QueryTriggerInteraction.Collide))
@@ -25,13 +36,13 @@ namespace Vheos.Games.ActionPoints
                     && hitMousable.RecieveMouseEvents
                     && hitMousable.RaycastTest(hitInfo.point))
                     {
-                        outMousable = hitMousable;
-                        outInfo = hitInfo;
-                        return true;
+                        CursorMousable = hitMousable;
+                        CursorMousableHitInfo = hitInfo;
+                        return;
                     }
-            outMousable = null;
-            outInfo = default;
-            return false;
+
+            CursorMousable = null;
+            CursorMousableHitInfo = default;
         }
         private void UpdateHighlights(AMousable hitMousable)
         {
@@ -51,18 +62,24 @@ namespace Vheos.Games.ActionPoints
         private void UpdateButtonEvents(RaycastHit hitInfo)
         {
             foreach (var button in _Buttons)
-                // press highlighted clickable
+            {   // Press highlighted clickable
                 if (Input.GetMouseButtonDown((int)button) && !_heldButtons.Contains(button))
                 {
                     _heldButtons.Add(button);
                     _highlightedMousable.MousePress(button, hitInfo.point);
                 }
-                // release highlighted clickable
+                // Release highlighted clickable
                 else if (Input.GetMouseButtonUp((int)button) && _heldButtons.Contains(button))
                 {
-                    _highlightedMousable.MouseRelease(button);
+                    _highlightedMousable.MouseRelease(button, hitInfo.point);
                     _heldButtons.Remove(button);
                 }
+                // Hold
+                if (Input.GetMouseButton((int)button))
+                {
+                    _highlightedMousable.MouseHold(button, hitInfo.point);
+                }
+            }
         }
 
         // Mono
@@ -71,6 +88,11 @@ namespace Vheos.Games.ActionPoints
             base.PlayAwake();
             _previousMousePosition = Input.mousePosition;
             _heldButtons = new List<Button>();
+            CursorTransform = new GameObject(nameof(CursorTransform)).transform;
+            CursorTransform.BecomeChildOf(this);
+
+            //
+            CursorPlane = new Plane(Vector3.back, Vector3.zero);
         }
         override public void PlayUpdate()
         {
@@ -78,12 +100,15 @@ namespace Vheos.Games.ActionPoints
             if (MouseMoved)
                 CameraManager.SetDirtyCursorCamera();
 
-            FindMousableUnderCursor(out var hitMousable, out var hitInfo);
-
+            UpdateCursorMousable();
             if (_highlightedMousable == null || _heldButtons.IsEmpty())
-                UpdateHighlights(hitMousable);
+                UpdateHighlights(CursorMousable);
             if (_highlightedMousable != null)
-                UpdateButtonEvents(hitInfo);
+                UpdateButtonEvents(CursorMousableHitInfo);
+
+            Ray cursorRay = CameraManager.FirstActive.CursorRay();
+            if (CursorPlane.Raycast(cursorRay, out var distance))
+                CursorTransform.position = cursorRay.GetPoint(distance);
 
             _previousMousePosition = Input.mousePosition;
         }
