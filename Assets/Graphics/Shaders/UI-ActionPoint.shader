@@ -3,12 +3,12 @@
 	Properties
 	{
 		// Common
-		Shape("Shape", 2D) = "white" {}
 		[Enum(Right, 0, Up, 1)] Direction ("Direction", Int) = 0
 		BezelWidth("Bezel width", Range(0, 0.5)) = 0.1
 		[MaterialToggle] IgnoreBezel("Ignore bezel", Int) = 1
 
 		// Color
+		[PerRendererData] Shape("Shape", 2D) = "white" {}
 		[PerRendererData] ColorA("Color A", Color) = (0, 1, 1, 1)
 		[PerRendererData] ColorB("Color B", Color) = (1, 1, 1, 1)
 		[PerRendererData] ColorC("Color C", Color) = (0, 0, 0, 1)
