@@ -6,6 +6,19 @@ namespace Vheos.Games.ActionPoints
     {
         // Overrides
         public override void Follow(Transform target, float lerpAlpha)
-        => transform.position = transform.position.Lerp(target.position + _Offset, lerpAlpha);
+        {
+            Vector3 targetPosition = target.position + _Offset;
+            if (_LockedAxes != 0)
+            {
+                Vector3 currentPosition = transform.position;
+                if (_LockedAxes.HasFlag(Axes.X))
+                    targetPosition.x = currentPosition.x;
+                if (_LockedAxes.HasFlag(Axes.Y))
+                    targetPosition.y = currentPosition.y;
+                if (_LockedAxes.HasFlag(Axes.Z))
+                    targetPosition.z = currentPosition.z;
+            }
+            transform.position = transform.position.Lerp(targetPosition, lerpAlpha);
+        }
     }
 }
