@@ -13,7 +13,6 @@ namespace Vheos.Games.ActionPoints
         public bool CanBeUsed(Character character)
         {
             return character.ActionProgress >= 0
-                && character.ActionPointsCount >= ActionPointsCost
                 && character.FocusPointsCount >= FocusPointsCost;
         }
         public void Use(Character user, Character target)
