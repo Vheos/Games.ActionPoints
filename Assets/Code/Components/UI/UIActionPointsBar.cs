@@ -23,6 +23,13 @@ namespace Vheos.Games.ActionPoints
                 _points[i].UpdateLocalProgresses(i, _visualActionProgress, _visualFocusProgress);
         }
 
+        // Publics
+        public void NotifyExhausted()
+        {
+            for (int i = 0; i <= UI.Character.ActionPointsCount.Abs(); i++)
+                _points[i].PlayCantUseAnim();
+        }
+
         // Mono
         public override void PlayStart()
         {

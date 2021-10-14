@@ -12,10 +12,10 @@ namespace Vheos.Games.ActionPoints
         [Header("Buttons")]
         [Range(90, 270)] public float _WheelMaxAngle = 180f;
         [Range(0.5f, 2f)] public float _WheelRadius = 2 / 3f;
-        [Range(1f, 2f)] public float _ButtonHighlightedScale = 1.25f;
-        public Color _ButtonUnusableColor = 3.Inv().ToVector4();
 
         [Header("Points")]
+        public Texture _PointActionShape = null;
+        public Texture _PointFocusShape = null;
         public Color _PointBackgroundColor = Color.black;
         public Color _PointActionColor = Color.white;
         public Color _PointExhaustColor = Color.red;
@@ -59,13 +59,16 @@ namespace Vheos.Games.ActionPoints
         }
         public void StartTargeting(Transform from, Transform to)
         {
-            CursorManager.CursorPlane = CameraManager.FirstActive.ScreenPlane(from.position);
+            CursorManager.SetCursorDistance(from);
             _targetingLine.Activate(from, to);
         }
         public void StopTargeting()
         => _targetingLine.Deactivate();
         public bool TryGetTarget(out Character target)
         => _targetingLine.TryGetTarget(out target);
+        public void NotifyExhausted()
+        =>            _pointsBar.NotifyExhausted();
+        
 
         // Privates
         private UIWheel _wheel;
