@@ -7,9 +7,16 @@ namespace Vheos.Games.ActionPoints
     public class UIButton : AMousableSprite, IUIHierarchy
     {
         // Inspector
-        public QAnimVector2 _HighlightScaleAnim = new QAnimVector2();
-        public QAnimVector2 _AlignMoveAnim = new QAnimVector2();
-        public QAnimColor _UsabilityColorAnim = new QAnimColor();
+        [Range(0.1f, 1f)] public float _HighlightDuration = 0.5f;
+        [Range(1.0f, 2f)] public float _HighlightScale = 1.25f;
+        [Range(0.1f, 1f)] public float _ClickDuration = 0.1f;
+        [Range(0.5f, 1f)] public float _ClickScale = 0.9f;
+        [Range(0.5f, 1f)] public float _ClickColorScale = 0.9f;
+        [Range(0.1f, 1f)] public float _UnusableDuration = 0.5f;
+        public Color _UnusableColor = 3.Inv().ToVector4();
+        [HideInInspector] public QAnimVector2 _ScaleAnim = new QAnimVector2();
+        [HideInInspector] public QAnimVector2 _PositionAnim = new QAnimVector2();
+        [HideInInspector] public QAnimColor _ColorAnim = new QAnimColor();
 
         // Publics
         public UIBase UI
@@ -17,7 +24,7 @@ namespace Vheos.Games.ActionPoints
         public Action Action
         { get; set; }
         public void MoveTo(Vector2 targetLocalPosition)
-        => _AlignMoveAnim.Start(transform.localPosition.XY(), targetLocalPosition);
+        => _PositionAnim.Start(transform.localPosition.XY(), targetLocalPosition);
 
         // Privates
         private UICostPointsBar _costPointsBar;
@@ -29,33 +36,50 @@ namespace Vheos.Games.ActionPoints
             if (!isActiveAndEnabled)
                 return;
 
-            Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character._Color : UI._ButtonUnusableColor;
-            _UsabilityColorAnim.Start(_spriteRenderer.color, targetColor);
+            Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character._Color : _UnusableColor;
+            _ColorAnim.Start(_spriteRenderer.color, targetColor, _UnusableDuration);
         }
 
         // Mouse
         override public void MouseGainHighlight()
         {
             base.MouseGainHighlight();
-            _HighlightScaleAnim.Start(transform.localScale, _originalScale * UI._ButtonHighlightedScale);
-        }
-        override public void MouseLoseHighlight()
-        {
-            base.MouseLoseHighlight();
-            _HighlightScaleAnim.Start(transform.localScale, _originalScale);
+            if (!Action.CanBeUsed(UI.Character))
+                return;
+
+            _ScaleAnim.Start(transform.localScale, _originalScale * _HighlightScale, _HighlightDuration);
         }
         public override void MousePress(CursorManager.Button button, Vector3 location)
         {
             base.MousePress(button, location);
+            if (UI.Character.IsExhausted)
+            {
+                UI.NotifyExhausted();
+                return;
+            }
+            else if (UI.Character.FocusPointsCount < Action.FocusPointsCost)
+            {
+                _costPointsBar.NotifyUnfocused();
+                return;
+            }
+            else if (!Action.CanBeUsed(UI.Character))
+                return;
+
             if (Action.IsTargeted)
             {
                 UI.StartTargeting(transform, CursorManager.CursorTransform);
                 _isTargeting = true;
             }
+
+            _ScaleAnim.Start(transform.localScale, transform.localScale * _ClickScale, _ClickDuration);
+            _ColorAnim.Start(_spriteRenderer.color, _spriteRenderer.color * _ClickColorScale, _ClickDuration);
         }
         public override void MouseHold(CursorManager.Button button, Vector3 location)
         {
             base.MouseHold(button, location);
+            if (!Action.CanBeUsed(UI.Character))
+                return;
+
             if (_isTargeting)
             {
                 UI.TryGetTarget(out var newTarget);
@@ -68,12 +92,16 @@ namespace Vheos.Games.ActionPoints
                 {
                     _target = newTarget;
                     _target.GainTargeting(Action);
+                    UI.Character.LookAt(_target.transform);
                 }
             }
         }
         public override void MouseRelease(CursorManager.Button button, Vector3 location)
         {
             base.MouseRelease(button, location);
+            if (!Action.CanBeUsed(UI.Character))
+                return;
+
             if (_isTargeting)
             {
                 UI.StopTargeting();
@@ -85,6 +113,14 @@ namespace Vheos.Games.ActionPoints
                 _target = null;
                 _isTargeting = false;
             }
+
+            _ScaleAnim.Start(transform.localScale, _originalScale * _HighlightScale, _ClickDuration);
+            _ColorAnim.Start(_spriteRenderer.color, UI.Character._Color, _ClickDuration);
+        }
+        override public void MouseLoseHighlight()
+        {
+            base.MouseLoseHighlight();
+            _ScaleAnim.Start(transform.localScale, _originalScale, _HighlightDuration);
         }
 
         // Mono
@@ -99,7 +135,7 @@ namespace Vheos.Games.ActionPoints
             _originalScale = transform.localScale;
 
             UpdateUsability(UI.Character.ActionPointsCount, UI.Character.FocusPointsCount);
-            UI.Character.OnPointsCountChanged += UpdateUsability;
+            UI.Character.OnActionPointsCountChanged += UpdateUsability;
 
             _costPointsBar = this.CreateChild<UICostPointsBar>(UI._PrefabCostPointsBar);
             _costPointsBar.Button = this;
@@ -107,12 +143,12 @@ namespace Vheos.Games.ActionPoints
         public override void PlayUpdate()
         {
             base.PlayUpdate();
-            if (_HighlightScaleAnim.IsActive)
-                transform.localScale = _HighlightScaleAnim.Value;
-            if (_AlignMoveAnim.IsActive)
-                transform.localPosition = _AlignMoveAnim.Value;
-            if (_UsabilityColorAnim.IsActive)
-                _spriteRenderer.color = _UsabilityColorAnim.Value;
+            if (_ScaleAnim.IsActive)
+                transform.localScale = _ScaleAnim.Value;
+            if (_PositionAnim.IsActive)
+                transform.localPosition = _PositionAnim.Value;
+            if (_ColorAnim.IsActive)
+                _spriteRenderer.color = _ColorAnim.Value;
         }
     }
 }

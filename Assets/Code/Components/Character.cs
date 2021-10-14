@@ -3,14 +3,13 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.Extensions.Math;
+    using Tools.Extensions.UnityObjects;
+
     [RequireComponent(typeof(SpriteOutline))]
+    [RequireComponent(typeof(Animator))]
     public class Character : AMousableSprite
     {
-        // Constants
-        const string UI_ROOT_NAME = "UI";
-
         // Inspector
-        public GameObject _ActionUIPrefab = null;
         public Color _Color = Color.white;
         public List<Action> _Actions = new List<Action>();
         public int _MaxPoints = 5;
@@ -19,8 +18,9 @@ namespace Vheos.Games.ActionPoints
         public float _ExhaustSpeed = 0.5f;
 
         // Publics
-        public delegate void PointsCountChanged(int actionPointsCount, int foucsPointsCount);
-        public PointsCountChanged OnPointsCountChanged;
+        public delegate void PointsCountChanged(int previous, int current);
+        public PointsCountChanged OnActionPointsCountChanged;
+        public PointsCountChanged OnFocusPointsCountChanged;
         public float ActionProgress
         { get; private set; }
         public float FocusProgress
@@ -29,6 +29,12 @@ namespace Vheos.Games.ActionPoints
         => ActionProgress.RoundTowardsZero();
         public int FocusPointsCount
         => FocusProgress.RoundDown();
+        public bool IsExhausted
+        => ActionProgress < 0;
+        public void ChangeActionPoints(int diff)
+        => ActionProgress += diff;
+        public void ChangeFocusPoints(int diff)
+        => FocusProgress += diff;
         public void GainTargeting(Action action)
         {
             _spriteOutline.Grow();
@@ -37,17 +43,24 @@ namespace Vheos.Games.ActionPoints
         {
             _spriteOutline.Shrink();
         }
-        public void ChangeActionPoints(int diff)
-        => ActionProgress += diff;
-        public void ChangeFocusPoints(int diff)
-        => FocusProgress += diff;
+        public void LookAt(Transform targetTransform)
+        {
+            if (targetTransform == transform)
+                return;
+
+            if (TryGetComponent<RotateTowards>(out var rotateTowards))
+                rotateTowards._Target = targetTransform;
+            else
+                transform.rotation.SetLookRotation(transform.DirectionTowards(targetTransform));
+        }
 
         // Private
-        static private Transform _uiRoot;
         private UIBase _actionUI;
         private float _previousActionProgress;
         private float _previousFocusProgress;
         private SpriteOutline _spriteOutline;
+        private Animator _animator;
+        private Vector3 _previousPosition;
         private void UpdateProgresses(float deltaTime)
         {
             ActionProgress += deltaTime * _ActionSpeed;
@@ -62,13 +75,16 @@ namespace Vheos.Games.ActionPoints
         private void InvokePointsCountChangedEvents()
         {
             int previousActionsPointsCount = _previousActionProgress.RoundTowardsZero();
-            int previousFocusPointsCount = _previousFocusProgress.RoundTowardsZero();
             int currentActionPointsCount = ActionProgress.RoundTowardsZero();
-            int currentFocusPointsCount = FocusProgress.RoundTowardsZero();
+            if (previousActionsPointsCount != ActionPointsCount)
+                OnActionPointsCountChanged?.Invoke(previousActionsPointsCount, currentActionPointsCount);
+            else if (_previousActionProgress < 0 && ActionProgress >= 0)
+                OnActionPointsCountChanged(0, 0);
 
-            if (previousActionsPointsCount != ActionPointsCount
-            || previousFocusPointsCount != FocusPointsCount)
-                OnPointsCountChanged?.Invoke(currentActionPointsCount, currentFocusPointsCount);
+            int previousFocusPointsCount = _previousFocusProgress.RoundTowardsZero();
+            int currentFocusPointsCount = FocusProgress.RoundTowardsZero();
+            if (previousFocusPointsCount != FocusPointsCount)
+                OnFocusPointsCountChanged?.Invoke(previousFocusPointsCount, currentFocusPointsCount);
 
             _previousActionProgress = ActionProgress;
             _previousFocusProgress = FocusProgress;
@@ -93,16 +109,20 @@ namespace Vheos.Games.ActionPoints
             base.PlayUpdate();
             UpdateProgresses(Time.deltaTime);
             InvokePointsCountChangedEvents();
+
+            float speed = _previousPosition.DistanceTo(transform.position) / Time.deltaTime;
+            _animator.SetFloat("Speed", speed);
+
+            _previousPosition = transform.position;
         }
         public override void PlayAwake()
         {
             base.PlayAwake();
+            _animator = GetComponent<Animator>();
             _spriteOutline = GetComponent<SpriteOutline>();
             _spriteRenderer.color = _Color;
 
-            if (_uiRoot == null)
-                _uiRoot = new GameObject(UI_ROOT_NAME).transform;
-            _actionUI = _uiRoot.CreateChild<UIBase>(_ActionUIPrefab);
+            _actionUI = UIManager.HierarchyRoot.CreateChild<UIBase>(UIManager.PrefabUIBase);
             _actionUI.Character = this;
         }
 
