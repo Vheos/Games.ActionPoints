@@ -17,14 +17,27 @@ namespace Vheos.Games.ActionPoints
         protected void CreatePoints(int count, GameObject prefab)
         {
             for (int i = 0; i < count; i++)
-                _points.Add(this.CreateChild<T>(prefab));
+            {
+                T newPoint = this.CreateChild<T>(prefab);
+                _points.Add(newPoint);
+                newPoint.Index = i;
+            }
         }
         protected void AlignPoints()
         {
+            int index = 0;
+            foreach (var alignmentVector in GetAlignmentVectors())
+            {
+                _points[index].transform.localPosition = alignmentVector * _points[index].transform.localScale.XY();
+                index++;
+            }
+        }
+        virtual protected IEnumerable<Vector2> GetAlignmentVectors()
+        {
             for (int i = 0; i < _points.Count; i++)
             {
-                float localX = (i - _points.Count.Sub(1) / 2f) * (1 + UI._PointsSpacing) * _points[i].transform.localScale.x;
-                _points[i].transform.SetLocalX(localX);
+                float localX = (i - _points.Count.Sub(1) / 2f) * (1 + UI._PointsSpacing);
+                yield return new Vector2(localX, 0);
             }
         }
 

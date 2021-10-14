@@ -7,11 +7,27 @@ namespace Vheos.Games.ActionPoints
 
     abstract public class AUIPoint : ACustomDrawable, IUIHierarchy
     {
+        // Inspector 
+        public float _CantUseScale = 2.0f;
+        public QAnimVector2 _CantUseScaleAnim = new QAnimVector2();
+
         // Publics
         public UIBase UI
         { get; private set; }
+        public int Index
+        { get; set; }
+        public void PlayCantUseAnim()
+        => _CantUseScaleAnim.Start(_originalScale, _originalScale * _CantUseScale);
+
+        // Private
+        private Vector2 _originalScale;
 
         // MProps
+        public Texture Shape
+        {
+            get => GetTexture(nameof(MProp.Shape));
+            set => SetTexture(nameof(MProp.Shape), value);
+        }
         public Color BackgroundColor
         {
             get => GetColor(nameof(MProp.ColorC));
@@ -44,6 +60,7 @@ namespace Vheos.Games.ActionPoints
         }
         private enum MProp
         {
+            Shape,
             ColorA,
             ColorB,
             ColorC,
@@ -59,9 +76,18 @@ namespace Vheos.Games.ActionPoints
             name = GetType().Name;
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
+            _originalScale = transform.localScale;
+            Shape = UI._PointActionShape;
             BackgroundColor = UI._PointBackgroundColor;
             ActionColor = UI._PointActionColor;
             FocusColor = UI._PointFocusColor;
+        }
+
+        public override void PlayUpdate()
+        {
+            base.PlayUpdate();
+            if (_CantUseScaleAnim.IsActive)
+                transform.localScale = _CantUseScaleAnim.Value;
         }
     }
 }
