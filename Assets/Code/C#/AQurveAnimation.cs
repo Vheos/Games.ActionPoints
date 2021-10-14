@@ -2,22 +2,48 @@ namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
     using UnityEngine;
+    using Tools.Extensions.Math;
     abstract public class AQurveAnimation : Timer
     {
         // Inspector  
         public float _Duration = 0.5f;
-
-        // Privates
-        protected float QurveValue
-        => Qurve.ValueAt(Progress);
-        protected List<AQurveAnimation> _mutualExclusives;
+        public bool _IsBoomerang = false;
 
         // Publics
-        public void SetMutuallyExclusiveWith(AQurveAnimation anim)
+        public float QurveValue
         {
-            _mutualExclusives.Add(anim);
-            anim._mutualExclusives.Add(this);
+            get
+            {
+                float qurveValue = Qurve.ValueAt(Progress);
+                if (_IsBoomerang)
+                    qurveValue = qurveValue.Sub(0.5f).Abs().Neg().Add(0.5f);
+                return qurveValue;
+            }
         }
+        public void SetPriorityAbove(AQurveAnimation anim)
+        {
+            _lowerAnims.Add(anim);
+            anim._higherAnims.Add(this);
+        }
+        public void SetPriorityBelow(AQurveAnimation anim)
+        {
+            _higherAnims.Add(anim);
+            anim._lowerAnims.Add(this);
+        }
+        public void SetInterruptingWith(AQurveAnimation anim)
+        {
+            _lowerAnims.Add(anim);
+            anim._lowerAnims.Add(this);
+        }
+        public void SetWaitingWith(AQurveAnimation anim)
+        {
+            _higherAnims.Add(anim);
+            anim._higherAnims.Add(this);
+        }
+
+        // Privates
+        protected List<AQurveAnimation> _higherAnims;
+        protected List<AQurveAnimation> _lowerAnims;
 
         // Overrides
         public override float Duration
@@ -27,6 +53,9 @@ namespace Vheos.Games.ActionPoints
 
         // Constructors
         protected AQurveAnimation()
-        => _mutualExclusives = new List<AQurveAnimation>();
+        {
+            _lowerAnims = new List<AQurveAnimation>();
+            _higherAnims = new List<AQurveAnimation>();
+        }
     }
 }
