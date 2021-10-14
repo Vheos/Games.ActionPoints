@@ -25,10 +25,26 @@ namespace Vheos.Games.ActionPoints
         => t.gameObject.SetActive(true);
         static public void GODeactivate(this Component t)
         => t.gameObject.SetActive(false);
-        static public Color NewA(this Color t, float a)
-        => new Color(t.r, t.g, t.b, a);
         static public T CreateChild<T>(this Component t, GameObject prefab) where T : Component
         => GameObject.Instantiate(prefab, t.transform).GetComponent<T>();
+
+        // IsBetween
+        static public bool IsBetween(this int t, int a, int b)
+        => t >= a && t <= b;
+        static public bool IsBetween(this int t, int a, float b)
+        => t >= a && t <= b;
+        static public bool IsBetween(this int t, float a, int b)
+        => t >= a && t <= b;
+        static public bool IsBetween(this int t, float a, float b)
+        => t >= a && t <= b;
+        static public bool IsBetween(this float t, int a, int b)
+        => t >= a && t <= b;
+        static public bool IsBetween(this float t, int a, float b)
+        => t >= a && t <= b;
+        static public bool IsBetween(this float t, float a, int b)
+        => t >= a && t <= b;
+        static public bool IsBetween(this float t, float a, float b)
+        => t >= a && t <= b;
 
         // Image
         static public void SetA(this Image t, float a)
@@ -37,6 +53,8 @@ namespace Vheos.Games.ActionPoints
             newColor.a = a;
             t.color = newColor;
         }
+        static public Color NewA(this Color t, float a)
+        => new Color(t.r, t.g, t.b, a);
 
         // Sprite
         /// <summary> Returns coords of a pixel at the given position. </summary>
