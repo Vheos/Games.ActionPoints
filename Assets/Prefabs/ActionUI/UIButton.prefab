@@ -46,14 +46,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _TransparencyThreshold: 0.5
-  _HighlightScaleAnim:
+  _HighlightDuration: 0.5
+  _HighlightScale: 1.25
+  _ClickDuration: 0.1
+  _ClickScale: 0.9
+  _ClickColorScale: 0.9
+  _UnusableDuration: 0.5
+  _UnusableColor: {r: 0.25, g: 0.25, b: 0.25, a: 0.5019608}
+  _ScaleAnim:
     _Duration: 0.5
+    _IsBoomerang: 0
+    _From: {x: 0, y: 0}
     _To: {x: 0, y: 0}
-  _AlignMoveAnim:
+  _PositionAnim:
     _Duration: 0.5
+    _IsBoomerang: 0
+    _From: {x: 0, y: 0}
     _To: {x: 0, y: 0}
-  _UsabilityColorAnim:
+  _ColorAnim:
     _Duration: 0.5
+    _IsBoomerang: 0
+    _From: {r: 0, g: 0, b: 0, a: 0}
     _To: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &4861503552348188200
 SpriteRenderer:

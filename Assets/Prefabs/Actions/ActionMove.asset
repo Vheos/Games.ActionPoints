@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ActionMove
   m_EditorClassIdentifier: 
   Sprite: {fileID: 100665763937561807, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
-  ActionPointsCost: 0
-  FocusPointsCost: 1
+  ActionPointsCost: 4
+  FocusPointsCost: 0
   IsTargeted: 1

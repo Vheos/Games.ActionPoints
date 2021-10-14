@@ -45,19 +45,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _WheelMaxAngle: 180
   _WheelRadius: 0.6666667
-  _ButtonHighlightedScale: 1.25
-  _ButtonUnusableColor: {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 0.33333334}
+  _PointActionShape: {fileID: 2800000, guid: dd698da49620fea479a7bed6e340e9d2, type: 3}
+  _PointFocusShape: {fileID: 2800000, guid: b48440f8228df7d4b80bf111256dee75, type: 3}
   _PointBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
-  _PointActionColor: {r: 1, g: 1, b: 1, a: 1}
+  _PointActionColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   _PointExhaustColor: {r: 1, g: 0.25, b: 0.25, a: 1}
-  _PointFocusColor: {r: 0, g: 0.75, b: 0.75, a: 1}
+  _PointFocusColor: {r: 0.25, g: 1, b: 1, a: 1}
   _PointPartialProgressOpacity: 0.25
   _PointVisualProgressHalfTime: 0.1
-  _PointsSpacing: 0
+  _PointsSpacing: -0.1
   _LineTiling: 5
+  _LineStartOpacity: 0.25
   _LineStartWidth: 0.1
   _LineEndWidthRatio: 0.25
-  _LineStartOpacity: 0.25
   _PrefabTargetingLine: {fileID: 2624133503734992603, guid: 12d8d4a25df4b8a45837df81cedf91c7, type: 3}
   _PrefabActionPointsBar: {fileID: 1313598395280984248, guid: 778c2d56a343ff0408712d9a3e3f8d79, type: 3}
   _PrefabActionPoint: {fileID: 3268621003688216130, guid: c4bdd922fcbf43d4a8474866e7d8f6d2, type: 3}

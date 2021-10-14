@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ActionJump
   m_EditorClassIdentifier: 
   Sprite: {fileID: 0}
-  ActionPointsCost: 1
+  ActionPointsCost: 4
   FocusPointsCost: 1
   IsTargeted: 1

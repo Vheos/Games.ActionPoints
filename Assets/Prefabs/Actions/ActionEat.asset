@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ActionEat
   m_EditorClassIdentifier: 
   Sprite: {fileID: 4491553773363795640, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
-  ActionPointsCost: 1
-  FocusPointsCost: 0
+  ActionPointsCost: 3
+  FocusPointsCost: 2
   IsTargeted: 0

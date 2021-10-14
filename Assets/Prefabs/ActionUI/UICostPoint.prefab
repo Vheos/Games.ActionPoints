@@ -45,6 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909a857ee62ff3b4aa9fe6a88715d8ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CANT_USE_SCALE: 4
+  _ExhaustedScaleAnim:
+    _Duration: 0.5
+    _IsBoomerang: 1
+    _From: {x: 0, y: 0}
+    _To: {x: 0, y: 0}
+  _Opacity: 0.75
 --- !u!33 &-2558410197517170183
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -91,7 +98,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1652410771
+  m_SortingLayer: 1
+  m_SortingOrder: 3
   m_AdditionalVertexStreams: {fileID: 0}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2577891044044771581}
   - component: {fileID: 2577891044044771582}
   - component: {fileID: 6645642164658842245}
+  - component: {fileID: -3630120515583964117}
   - component: {fileID: 2577891044044771579}
   - component: {fileID: -428951047976933685}
   - component: {fileID: 1175068193691336511}
@@ -50,7 +51,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _TransparencyThreshold: 0.5
-  _ActionUIPrefab: {fileID: 26440852318934822, guid: a8e94a12ea3b6094290911fc6c6cb467, type: 3}
   _Color: {r: 1, g: 1, b: 1, a: 1}
   _Actions:
   - {fileID: 11400000, guid: 239806782e1eace4d8294bc8cb7762d1, type: 2}
@@ -72,8 +72,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 878668fde8b6fa24cad2f4e3b8ca067c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _RunInEditor: 1
   _Snappable: {fileID: 0}
-  _Offset: {x: 0, y: 0, z: 0}
+  _Offset: {x: 0, y: 0.25, z: 0}
+  _HalfTime: 0.2
+--- !u!114 &-3630120515583964117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577891044044771577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07f7245573ae24247b4b02bb5a213555, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Target: {fileID: 0}
+  _Offset: {x: 0, y: -90, z: 0}
+  _LockedAxes: 5
   _HalfTime: 0.1
 --- !u!212 &2577891044044771579
 SpriteRenderer:
