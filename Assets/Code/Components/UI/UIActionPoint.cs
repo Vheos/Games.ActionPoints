@@ -7,9 +7,6 @@ namespace Vheos.Games.ActionPoints
 
     public class UIActionPoint : AUIPoint
     {
-        // Constants
-        const float ANIMATION_THRESHOLD = 0.99f;
-
         // Inspector
         public QAnimFloat _ActionOpacityAnim = new QAnimFloat();
 
@@ -19,19 +16,18 @@ namespace Vheos.Games.ActionPoints
             ActionProgress = visualActionProgress.Abs().Sub(index).Clamp01();
             ActionColor = visualActionProgress >= 0 ? UI._PointActionColor : UI._PointExhaustColor;
             FocusProgress = visualFocusProgress.Sub(index).Clamp01();
-
-            if (_previousActionProgress < ANIMATION_THRESHOLD
-            && ActionProgress >= ANIMATION_THRESHOLD)
-                _ActionOpacityAnim.Start(Opacity, 1f);
-            else if (_previousActionProgress >= ANIMATION_THRESHOLD
-            && ActionProgress < ANIMATION_THRESHOLD)
-                _ActionOpacityAnim.Start(Opacity, UI._PointPartialProgressOpacity);
-
-            _previousActionProgress = ActionProgress;
         }
 
         // Privates
-        private float _previousActionProgress;
+        private void UpdateOpacityOnPointsCountChange(int previousCount, int currentCount)
+        {
+            previousCount = previousCount.Abs();
+            currentCount = currentCount.Abs();
+            if (Index >= previousCount && Index <= currentCount - 1)
+                _ActionOpacityAnim.Start(Opacity, 1f);
+            if (Index >= currentCount && Index <= previousCount - 1)
+                _ActionOpacityAnim.Start(Opacity, UI._PointPartialProgressOpacity);
+        }
 
         // Mono
         public override void PlayStart()
@@ -40,6 +36,7 @@ namespace Vheos.Games.ActionPoints
             name = GetType().Name;
 
             Opacity = UI._PointPartialProgressOpacity;
+            UI.Character.OnActionPointsCountChanged += UpdateOpacityOnPointsCountChange;
         }
         public override void PlayUpdate()
         {
