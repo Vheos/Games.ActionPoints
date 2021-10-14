@@ -5,29 +5,51 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Collections;
     using Tools.Extensions.UnityObjects;
+    using Tools.Extensions.Math;
+
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(-1)]
     public class CursorManager : AUpdatable
     {
         // Inspector
         public Button[] _Buttons;
+        public GameObject _CursorPrefab;
 
         // Publics
-        static public Plane CursorPlane
-        { get; set; }
         static public Transform CursorTransform
         { get; private set; }
         static public AMousable CursorMousable
         { get; private set; }
         static public RaycastHit CursorMousableHitInfo
         { get; private set; }
+        static public void SetCursorDistance(float distance)
+        => _cursorDistance = distance;
+        static public void SetCursorDistance(Vector3 worldPoint)
+        => _cursorDistance = CameraManager.FirstActive.transform.position.DistanceTo(worldPoint);
+        static public void SetCursorDistance(Transform transform)
+        => _cursorDistance = CameraManager.FirstActive.DistanceTo(transform);
 
         // Privates
-        private AMousable _highlightedMousable;
-        private List<Button> _heldButtons;
-        private Vector3 _previousMousePosition;
-        private bool MouseMoved
+        static private AMousable _highlightedMousable;
+        static private List<Button> _heldButtons;
+        static private Vector3 _previousMousePosition;
+        static private float _cursorDistance;
+        static private bool MouseMoved
         => Input.mousePosition != _previousMousePosition;
-        private void UpdateCursorMousable()
+        static private void CreateCursorTransform(GameObject prefab, Component parent)
+        {
+            if (prefab != null)
+            {
+                Cursor.visible = false;
+                CursorTransform = Instantiate(prefab).transform;
+            }
+            else
+                CursorTransform = new GameObject().transform;
+
+            CursorTransform.name = nameof(CursorTransform);
+            CursorTransform.BecomeChildOf(parent);
+        }
+        static private void UpdateCursorMousable()
         {
             if (CameraManager.CursorCamera.TryNonNull(out var activeCamera))
                 foreach (var hitInfo in Physics.RaycastAll(activeCamera.CursorRay(), float.PositiveInfinity, LayerMask.GetMask(nameof(AMousable)), QueryTriggerInteraction.Collide))
@@ -44,7 +66,7 @@ namespace Vheos.Games.ActionPoints
             CursorMousable = null;
             CursorMousableHitInfo = default;
         }
-        private void UpdateHighlights(AMousable hitMousable)
+        static private void UpdateHighlights(AMousable hitMousable)
         {
             // clickable -> void
             if (_highlightedMousable != null && (hitMousable == null || _highlightedMousable != hitMousable))
@@ -59,9 +81,9 @@ namespace Vheos.Games.ActionPoints
                 _highlightedMousable.MouseGainHighlight();
             }
         }
-        private void UpdateButtonEvents(RaycastHit hitInfo)
+        static private void UpdateButtonEvents(IEnumerable<Button> buttons, RaycastHit hitInfo)
         {
-            foreach (var button in _Buttons)
+            foreach (var button in buttons)
             {   // Press highlighted clickable
                 if (Input.GetMouseButtonDown((int)button) && !_heldButtons.Contains(button))
                 {
@@ -88,11 +110,7 @@ namespace Vheos.Games.ActionPoints
             base.PlayAwake();
             _previousMousePosition = Input.mousePosition;
             _heldButtons = new List<Button>();
-            CursorTransform = new GameObject(nameof(CursorTransform)).transform;
-            CursorTransform.BecomeChildOf(this);
-
-            //
-            CursorPlane = new Plane(Vector3.back, Vector3.zero);
+            CreateCursorTransform(_CursorPrefab, this);
         }
         override public void PlayUpdate()
         {
@@ -104,11 +122,9 @@ namespace Vheos.Games.ActionPoints
             if (_highlightedMousable == null || _heldButtons.IsEmpty())
                 UpdateHighlights(CursorMousable);
             if (_highlightedMousable != null)
-                UpdateButtonEvents(CursorMousableHitInfo);
+                UpdateButtonEvents(_Buttons, CursorMousableHitInfo);
 
-            Ray cursorRay = CameraManager.FirstActive.CursorRay();
-            if (CursorPlane.Raycast(cursorRay, out var distance))
-                CursorTransform.position = cursorRay.GetPoint(distance);
+            CursorTransform.position = CameraManager.FirstActive.CursorToWorldPoint(_cursorDistance);
 
             _previousMousePosition = Input.mousePosition;
         }
