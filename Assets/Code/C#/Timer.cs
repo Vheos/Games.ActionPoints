@@ -21,7 +21,7 @@ namespace Vheos.Games.ActionPoints
         => _duration;
         virtual public bool SkipFrameZero
         => _skipFrameZero;
-        public void Start()
+        virtual public void Start()
         {
             _startTime = Time.time;
             if (SkipFrameZero)
