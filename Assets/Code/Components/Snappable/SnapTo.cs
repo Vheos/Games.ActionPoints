@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     public class SnapTo : AUpdatable
     {
         // Inspector
+        public bool _RunInEditor = true;
         public ASnappable _Snappable = null;
         public Vector3 _Offset = Vector3.zero;
         [Range(0f, 1f)] public float _HalfTime = 0.1f;
@@ -38,7 +39,7 @@ namespace Vheos.Games.ActionPoints
         public override void EditUpdate()
         {
             base.EditUpdate();
-            if (_Snappable == null)
+            if (_Snappable == null || !_RunInEditor)
                 return;
 
             Snap(_Snappable, 1f);
