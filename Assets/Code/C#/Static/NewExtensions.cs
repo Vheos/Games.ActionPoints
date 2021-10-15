@@ -27,6 +27,8 @@ namespace Vheos.Games.ActionPoints
         => t.gameObject.SetActive(false);
         static public T CreateChild<T>(this Component t, GameObject prefab) where T : Component
         => GameObject.Instantiate(prefab, t.transform).GetComponent<T>();
+        static public Color Lerp(this Color t, Color a, float b)
+        => Color.LerpUnclamped(t, a, b);
 
         // IsBetween
         static public bool IsBetween(this int t, int a, int b)
