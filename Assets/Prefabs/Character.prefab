@@ -75,7 +75,7 @@ MonoBehaviour:
   _RunInEditor: 1
   _Snappable: {fileID: 0}
   _Offset: {x: 0, y: 0.25, z: 0}
-  _HalfTime: 0.2
+  _HalfTime: 0.5
 --- !u!114 &-3630120515583964117
 MonoBehaviour:
   m_ObjectHideFlags: 0

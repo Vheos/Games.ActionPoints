@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909a857ee62ff3b4aa9fe6a88715d8ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _CantUseScale: 2
+  _CantUseScale: 3
   _CantUseAnimDuration: 0.5
   _Opacity: 0.75
 --- !u!33 &-2558410197517170183
