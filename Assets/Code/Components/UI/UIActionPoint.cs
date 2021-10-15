@@ -8,7 +8,7 @@ namespace Vheos.Games.ActionPoints
     public class UIActionPoint : AUIPoint
     {
         // Inspector
-        public QAnimFloat _ActionOpacityAnim = new QAnimFloat();
+        [Range(0f, 1f)] public float _AnimDuration;
 
         // Publics
         public void UpdateLocalProgresses(int index, float visualActionProgress, float visualFocusProgress)
@@ -24,9 +24,9 @@ namespace Vheos.Games.ActionPoints
             previousCount = previousCount.Abs();
             currentCount = currentCount.Abs();
             if (Index >= previousCount && Index <= currentCount - 1)
-                _ActionOpacityAnim.Start(Opacity, 1f);
+                AnimationManager.Animate((this, null), v => Opacity = v, Opacity, 1f, _AnimDuration);
             if (Index >= currentCount && Index <= previousCount - 1)
-                _ActionOpacityAnim.Start(Opacity, UI._PointPartialProgressOpacity);
+                AnimationManager.Animate((this, null), v => Opacity = v, Opacity, UI._PointPartialProgressOpacity, _AnimDuration);
         }
 
         // Mono
@@ -37,12 +37,6 @@ namespace Vheos.Games.ActionPoints
 
             Opacity = UI._PointPartialProgressOpacity;
             UI.Character.OnActionPointsCountChanged += UpdateOpacityOnPointsCountChange;
-        }
-        public override void PlayUpdate()
-        {
-            base.PlayUpdate();
-            if (_ActionOpacityAnim.IsActive)
-                Opacity = _ActionOpacityAnim.Value;
         }
     }
 }

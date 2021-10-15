@@ -159,12 +159,7 @@ MonoBehaviour:
   _Material: {fileID: 2100000, guid: bf23bf4a084b65144bebacd18b68a16b, type: 2}
   _Thickness: 0.02
   _Color: {r: 1, g: 1, b: 1, a: 1}
-  _ThicknessAnim:
-    _Duration: 0.3333333
-    _To: 0
-  _ColorAnim:
-    _Duration: 0.3333333
-    _To: {r: 0, g: 0, b: 0, a: 0}
+  _AnimDuration: 0.2
 --- !u!95 &1175068193691336511
 Animator:
   serializedVersion: 3

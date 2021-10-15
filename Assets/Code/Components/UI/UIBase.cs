@@ -24,12 +24,6 @@ namespace Vheos.Games.ActionPoints
         [Range(0f, 1f)] public float _PointVisualProgressHalfTime = 0.1f;
         [Range(-0.5f, +0.5f)] public float _PointsSpacing = 0;
 
-        [Header("Targeting Line")]
-        [Range(0f, 10f)] public float _LineTiling = 5f;
-        [Range(0f, 1f)] public float _LineStartOpacity = 0.25f;
-        [Range(0f, 1f)] public float _LineStartWidth = 0.1f;
-        [Range(0f, 1f)] public float _LineEndWidthRatio = 0.25f;
-
         [Header("Prefabs")]
         public GameObject _PrefabTargetingLine = null;
         public GameObject _PrefabActionPointsBar = null;

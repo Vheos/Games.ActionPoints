@@ -53,21 +53,7 @@ MonoBehaviour:
   _ClickColorScale: 0.9
   _UnusableDuration: 0.5
   _UnusableColor: {r: 0.25, g: 0.25, b: 0.25, a: 0.5019608}
-  _ScaleAnim:
-    _Duration: 0.5
-    _IsBoomerang: 0
-    _From: {x: 0, y: 0}
-    _To: {x: 0, y: 0}
-  _PositionAnim:
-    _Duration: 0.5
-    _IsBoomerang: 0
-    _From: {x: 0, y: 0}
-    _To: {x: 0, y: 0}
-  _ColorAnim:
-    _Duration: 0.5
-    _IsBoomerang: 0
-    _From: {r: 0, g: 0, b: 0, a: 0}
-    _To: {r: 0, g: 0, b: 0, a: 0}
+  _AnimDuration: 0.5
 --- !u!212 &4861503552348188200
 SpriteRenderer:
   m_ObjectHideFlags: 0

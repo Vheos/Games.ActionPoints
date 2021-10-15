@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     public class UIWheel : AUpdatable, IUIHierarchy
     {
         // Inspector
-        public QAnimVector2 _ExpandScaleAnim = new QAnimVector2();
+        [Range(0f, 1f)] public float _AnimDuration;
 
         // Publics
         public UIBase UI
@@ -27,7 +27,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void ExpandButtons()
         {
-            _ExpandScaleAnim.Start(transform.localScale, Vector3.one);
+            transform.AnimateLocalScale(Vector3.one, _AnimDuration);
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = true;
             AlignButtons(GetWheelDirection(UI.Character.GetComponent<SnapTo>()), UI._WheelRadius, UI._WheelMaxAngle);
@@ -35,7 +35,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void CollapseButtons()
         {
-            _ExpandScaleAnim.Start(transform.localScale, Vector3.zero);
+            transform.AnimateLocalScale(Vector3.zero, _AnimDuration);
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = false;
             IsExpanded = false;
@@ -81,12 +81,6 @@ namespace Vheos.Games.ActionPoints
                 _buttons.Add(newButton);
             }
             CollapseButtons();
-        }
-        public override void PlayUpdate()
-        {
-            base.PlayUpdate();
-            if (_ExpandScaleAnim.IsActive)
-                transform.localScale = _ExpandScaleAnim.Value;
         }
     }
 }
