@@ -26,14 +26,18 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
         public void Activate(Transform from, Transform to)
         {
-            this.GOActivate();
-            AnimationManager.Animate((this, null), SetWidth, _lineRenderer.startWidth, _StartWidth, _WidthAnimDuration);
             _from = from;
             _to = to;
+            _isDeactivating = false;
             UpdatePositionsAndTiling();
+            this.GOActivate();
+            AnimationManager.Animate((this, null), SetWidth, _lineRenderer.startWidth, _StartWidth, _WidthAnimDuration);
         }
         public void Deactivate()
-        => AnimationManager.Animate((this, null), SetWidth, _lineRenderer.startWidth, 0f, _WidthAnimDuration, this.GODeactivate);
+        {
+            _isDeactivating = true;
+            AnimationManager.Animate((this, null), SetWidth, _lineRenderer.startWidth, 0f, _WidthAnimDuration, false, this.GODeactivate);
+        }
 
         public void UpdatePositionsAndTiling()
         {
@@ -54,6 +58,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
+        private bool _isDeactivating;
         private void SetWidth(float width)
         {
             _lineRenderer.startWidth = width;
@@ -75,7 +80,8 @@ namespace Vheos.Games.ActionPoints
         public override void PlayUpdate()
         {
             base.PlayUpdate();
-            UpdatePositionsAndTiling();
+            if (!_isDeactivating)
+                UpdatePositionsAndTiling();
         }
     }
 }

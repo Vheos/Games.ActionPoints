@@ -24,7 +24,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void Shrink()
         {
-            AnimationManager.Animate((this, null), v => _currentThickness = v, _currentThickness, 0f, _AnimDuration, () => enabled = false);
+            AnimationManager.Animate((this, null), v => _currentThickness = v, _currentThickness, 0f, _AnimDuration, false, () => enabled = false);
             _outlineSpriteRenderer.AnimateColor(_Color.NewA(0f), _AnimDuration);
         }
 
