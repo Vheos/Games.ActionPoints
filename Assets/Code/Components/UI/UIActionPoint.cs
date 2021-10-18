@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Vheos.Tools.Extensions.Math;
 
     public class UIActionPoint : AUIPoint
-    {
+    {       
         // Inspector
         [Range(0f, 1f)] public float _AnimDuration;
 
@@ -24,9 +24,9 @@ namespace Vheos.Games.ActionPoints
             previousCount = previousCount.Abs();
             currentCount = currentCount.Abs();
             if (Index >= previousCount && Index <= currentCount - 1)
-                AnimationManager.Animate((this, null), v => Opacity = v, Opacity, 1f, _AnimDuration);
+                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, 1f, _AnimDuration);
             if (Index >= currentCount && Index <= previousCount - 1)
-                AnimationManager.Animate((this, null), v => Opacity = v, Opacity, UI._PointPartialProgressOpacity, _AnimDuration);
+                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, UI._PointPartialProgressOpacity, _AnimDuration);
         }
 
         // Mono

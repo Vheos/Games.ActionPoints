@@ -16,11 +16,6 @@ namespace Vheos.Games.ActionPoints
         [Range(0f, 1f)] public float _EndWidthRatio = 0.25f;
         [Range(0f, 1f)] public float _WidthAnimDuration = 0.5f;
 
-        // Privates
-        private LineRenderer _lineRenderer;
-        private Transform _from;
-        private Transform _to;
-
         // Publics
         public UIBase UI
         { get; private set; }
@@ -31,14 +26,13 @@ namespace Vheos.Games.ActionPoints
             _isDeactivating = false;
             UpdatePositionsAndTiling();
             this.GOActivate();
-            AnimationManager.Animate((this, null), SetWidth, _lineRenderer.startWidth, _StartWidth, _WidthAnimDuration);
+            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, _StartWidth, _WidthAnimDuration);
         }
         public void Deactivate()
         {
             _isDeactivating = true;
-            AnimationManager.Animate((this, null), SetWidth, _lineRenderer.startWidth, 0f, _WidthAnimDuration, false, this.GODeactivate);
+            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, 0f, _WidthAnimDuration, false, this.GODeactivate);
         }
-
         public void UpdatePositionsAndTiling()
         {
             _lineRenderer.SetPosition(0, _from.position);
@@ -58,6 +52,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
+        private LineRenderer _lineRenderer;
+        private Transform _from;
+        private Transform _to;
         private bool _isDeactivating;
         private void SetWidth(float width)
         {

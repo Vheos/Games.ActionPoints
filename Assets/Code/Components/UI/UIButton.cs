@@ -22,7 +22,7 @@ namespace Vheos.Games.ActionPoints
         public Action Action
         { get; set; }
         public void MoveTo(Vector2 targetLocalPosition)
-        => transform.AnimateLocalPosition(targetLocalPosition, _AnimDuration);
+        => transform.AnimateLocalPosition(this, targetLocalPosition, _AnimDuration);
 
         // Privates
         private UICostPointsBar _costPointsBar;
@@ -35,7 +35,7 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character._Color : _UnusableColor;
-            _spriteRenderer.AnimateColor(targetColor, _UnusableDuration);
+            _spriteRenderer.AnimateColor(this, targetColor, _UnusableDuration);
         }
 
         // Mouse
@@ -45,7 +45,7 @@ namespace Vheos.Games.ActionPoints
             if (!Action.CanBeUsed(UI.Character))
                 return;
 
-            transform.AnimateLocalScale(_originalScale * _HighlightScale, _HighlightDuration);
+            transform.AnimateLocalScale(this, _originalScale * _HighlightScale, _HighlightDuration);
         }
         public override void MousePress(CursorManager.Button button, Vector3 location)
         {
@@ -69,8 +69,8 @@ namespace Vheos.Games.ActionPoints
                 _isTargeting = true;
             }
 
-            transform.AnimateLocalScale(transform.localScale * _ClickScale, _ClickDuration);
-            _spriteRenderer.AnimateColor(_spriteRenderer.color * _ClickColorScale, _ClickDuration);
+            transform.AnimateLocalScale(this, transform.localScale * _ClickScale, _ClickDuration);
+            _spriteRenderer.AnimateColor(this, _spriteRenderer.color * _ClickColorScale, _ClickDuration);
         }
         public override void MouseHold(CursorManager.Button button, Vector3 location)
         {
@@ -113,13 +113,13 @@ namespace Vheos.Games.ActionPoints
             }
 
 
-            transform.AnimateLocalScale(_originalScale * _HighlightScale, _ClickDuration);
-            _spriteRenderer.AnimateColor(UI.Character._Color, _ClickDuration);
+            transform.AnimateLocalScale(this, _originalScale * _HighlightScale, _ClickDuration);
+            _spriteRenderer.AnimateColor(this, UI.Character._Color, _ClickDuration);
         }
         override public void MouseLoseHighlight()
         {
             base.MouseLoseHighlight();
-            transform.AnimateLocalScale(_originalScale, _HighlightDuration);
+            transform.AnimateLocalScale(this, _originalScale, _HighlightDuration);
         }
 
         // Mono

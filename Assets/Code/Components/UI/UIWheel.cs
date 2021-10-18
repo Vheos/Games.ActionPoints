@@ -27,7 +27,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void ExpandButtons()
         {
-            transform.AnimateLocalScale(Vector3.one, _AnimDuration);
+            transform.AnimateLocalScale(this, Vector3.one, _AnimDuration);
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = true;
             AlignButtons(GetWheelDirection(UI.Character.GetComponent<SnapTo>()), UI._WheelRadius, UI._WheelMaxAngle);
@@ -35,7 +35,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void CollapseButtons()
         {
-            transform.AnimateLocalScale(Vector3.zero, _AnimDuration);
+            transform.AnimateLocalScale(this, Vector3.zero, _AnimDuration);
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = false;
             IsExpanded = false;

@@ -4,15 +4,16 @@ namespace Vheos.Games.ActionPoints
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-    using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.General;
+    using Tools.UtilityN;
+    using AnimationGUID = System.ValueTuple<UnityEngine.GameObject, string>;
 
-    public class AnimationManager : AUpdatable
+    public class AnimationManager
     {
         // Private
-        static private AnimationManager _instance;
-        static private Dictionary<(UnityEngine.Object Instance, string UID), Coroutine> _coroutinesByGUID;
+        static private Dictionary<AnimationGUID, Coroutine> _coroutinesByGUID;
+        static private Dictionary<ComponentProperty, string> _uidsByComponentProperty;
         static private IEnumerator CoroutineWhile(Func<bool> test, System.Action action, System.Action finalAction)
         {
             while (test())
@@ -24,7 +25,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Publics
-        static public void Animate<T>((UnityEngine.Object Instance, string UID) guid, Action<T> assignFunction, T from, T to, float duration,
+        static public void Animate<T>(MonoBehaviour owner, string uid, Action<T> assignFunction, T from, T to, float duration,
             bool boomerang = false, System.Action finalAction = null) where T : struct
         {
             float startTime = Time.time;
@@ -50,10 +51,11 @@ namespace Vheos.Games.ActionPoints
                 _ => throw new NotImplementedException(),
             };
 
-            if (_coroutinesByGUID.TryGetNonNull(guid, out var oldCoroutine))
-                _instance.StopCoroutine(oldCoroutine);
+            AnimationGUID guid = (owner.gameObject, uid);
+            if (_coroutinesByGUID.TryGetNonNull(guid, out var coroutine))
+                owner.StopCoroutine(coroutine);
 
-            _coroutinesByGUID[guid] = _instance.StartCoroutine(CoroutineWhile
+            _coroutinesByGUID[guid] = owner.StartCoroutine(CoroutineWhile
             (
                 () => elapsed() < duration,
                 typedAssignFunction,
@@ -65,18 +67,28 @@ namespace Vheos.Games.ActionPoints
                 }
             ));
         }
-        static public void StopAnimation(Coroutine coroutine)
-        => _instance.StopCoroutine(coroutine);
+        static public void Animate<T>(MonoBehaviour owner, ComponentProperty property, Action<T> assignFunction, T from, T to, float duration,
+            bool boomerang = false, System.Action finalAction = null) where T : struct
+        => Animate(owner, _uidsByComponentProperty[property], assignFunction, from, to, duration, boomerang, finalAction);
 
-        // Mono
-        public override void PlayAwake()
+        // Initializers
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static private void StaticInitialize()
         {
-            base.PlayAwake();
-            _instance = this;
-            _coroutinesByGUID = new Dictionary<(UnityEngine.Object Instance, string UID), Coroutine>();
+            _coroutinesByGUID = new Dictionary<AnimationGUID, Coroutine>();
+            _uidsByComponentProperty = new Dictionary<ComponentProperty, string>();
+            foreach (var commonUID in Utility.GetEnumValues<ComponentProperty>())
+                _uidsByComponentProperty.Add(commonUID, Guid.NewGuid().ToString());
         }
 
         // Definitions
+        public enum ComponentProperty
+        {
+            TransformPosition,
+            TransformRotation,
+            TransformScale,
+            SpriteRendererColor,
+        }
         private struct GenericParams<T>
         {
             // Publics
@@ -96,53 +108,62 @@ namespace Vheos.Games.ActionPoints
 
     static public class AnimationManager_Extensions
     {
-        // UIDs
-        static private readonly string GUID_TRANSFORM_POSITION = Guid.NewGuid().ToString();
-        static private readonly string GUID_TRANSFORM_ROTATION = Guid.NewGuid().ToString();
-        static private readonly string GUID_TRANSFORM_SCALE = Guid.NewGuid().ToString();
-        static private readonly string GUID_SPRITERENDERER_COLOR = Guid.NewGuid().ToString();
+        // MonoBehaviour
+        static public void Animate<T>(this MonoBehaviour t, string uid, Action<T> assignFunction, T from, T to, float duration,
+           bool boomerang = false, System.Action finalAction = null) where T : struct
+        => AnimationManager.Animate(t, uid, assignFunction, from, to, duration, boomerang, finalAction);
+        static public void Animate<T>(this MonoBehaviour t, AnimationManager.ComponentProperty property, Action<T> assignFunction, T from, T to, float duration,
+           bool boomerang = false, System.Action finalAction = null) where T : struct
+        => AnimationManager.Animate(t, property, assignFunction, from, to, duration, boomerang, finalAction);
 
         // Transform (from, to)
-        static public void AnimateLocalPosition(this Transform t, Vector3 from, Vector3 to, float duration,
+        static public void AnimateLocalPosition(this Transform t, MonoBehaviour owner, Vector3 from, Vector3 to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => AnimationManager.Animate((t, GUID_TRANSFORM_POSITION), v => t.localPosition = v, from, to, duration, boomerang, finalAction);
-        static public void AnimateWorldPosition(this Transform t, Vector3 from, Vector3 to, float duration,
+        => AnimationManager.Animate(owner, AnimationManager.ComponentProperty.TransformPosition,
+           v => t.localPosition = v, from, to, duration, boomerang, finalAction);
+        static public void AnimateWorldPosition(this Transform t, MonoBehaviour owner, Vector3 from, Vector3 to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => AnimationManager.Animate((t, GUID_TRANSFORM_POSITION), v => t.position = v, from, to, duration, boomerang, finalAction);
-        static public void AnimateLocalRotation(this Transform t, Quaternion from, Quaternion to, float duration,
+        => AnimationManager.Animate(owner, AnimationManager.ComponentProperty.TransformPosition,
+           v => t.position = v, from, to, duration, boomerang, finalAction);
+        static public void AnimateLocalRotation(this Transform t, MonoBehaviour owner, Quaternion from, Quaternion to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => AnimationManager.Animate((t, GUID_TRANSFORM_ROTATION), v => t.localRotation = v, from, to, duration, boomerang, finalAction);
-        static public void AnimateWorldRotation(this Transform t, Quaternion from, Quaternion to, float duration,
+        => AnimationManager.Animate(owner, AnimationManager.ComponentProperty.TransformRotation,
+           v => t.localRotation = v, from, to, duration, boomerang, finalAction);
+        static public void AnimateWorldRotation(this Transform t, MonoBehaviour owner, Quaternion from, Quaternion to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => AnimationManager.Animate((t, GUID_TRANSFORM_ROTATION), v => t.rotation = v, from, to, duration, boomerang, finalAction);
-        static public void AnimateLocalScale(this Transform t, Vector3 from, Vector3 to, float duration,
+        => AnimationManager.Animate(owner, AnimationManager.ComponentProperty.TransformRotation,
+           v => t.rotation = v, from, to, duration, boomerang, finalAction);
+        static public void AnimateLocalScale(this Transform t, MonoBehaviour owner, Vector3 from, Vector3 to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => AnimationManager.Animate((t, GUID_TRANSFORM_SCALE), v => t.localScale = v, from, to, duration, boomerang, finalAction);
+        => AnimationManager.Animate(owner, AnimationManager.ComponentProperty.TransformScale,
+           v => t.localScale = v, from, to, duration, boomerang, finalAction);
 
         // Transform (to)
-        static public void AnimateLocalPosition(this Transform t, Vector3 to, float duration,
+        static public void AnimateLocalPosition(this Transform t, MonoBehaviour owner, Vector3 to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => t.AnimateLocalPosition(t.localPosition, to, duration, boomerang, finalAction);
-        static public void AnimateWorldPosition(this Transform t, Vector3 to, float duration,
+        => t.AnimateLocalPosition(owner, t.localPosition, to, duration, boomerang, finalAction);
+        static public void AnimateWorldPosition(this Transform t, MonoBehaviour owner, Vector3 to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => t.AnimateWorldPosition(t.position, to, duration, boomerang, finalAction);
-        static public void AnimateLocalRotation(this Transform t, Quaternion to, float duration,
+        => t.AnimateWorldPosition(owner, t.position, to, duration, boomerang, finalAction);
+        static public void AnimateLocalRotation(this Transform t, MonoBehaviour owner, Quaternion to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => t.AnimateLocalRotation(t.localRotation, to, duration, boomerang, finalAction);
-        static public void AnimateWorldRotation(this Transform t, Quaternion to, float duration,
+        => t.AnimateLocalRotation(owner, t.localRotation, to, duration, boomerang, finalAction);
+        static public void AnimateWorldRotation(this Transform t, MonoBehaviour owner, Quaternion to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => t.AnimateWorldRotation(t.rotation, to, duration, boomerang, finalAction);
-        static public void AnimateLocalScale(this Transform t, Vector3 to, float duration,
+        => t.AnimateWorldRotation(owner, t.rotation, to, duration, boomerang, finalAction);
+        static public void AnimateLocalScale(this Transform t, MonoBehaviour owner, Vector3 to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => t.AnimateLocalScale(t.localScale, to, duration, boomerang, finalAction);
+        => t.AnimateLocalScale(owner, t.localScale, to, duration, boomerang, finalAction);
 
         // SpriteRenderer (from, to)
-        static public void AnimateColor(this SpriteRenderer t, Color from, Color to, float duration, bool boomerang = false, System.Action finalAction = null)
-            => AnimationManager.Animate((t, GUID_SPRITERENDERER_COLOR), v => t.color = v, from, to, duration, boomerang, finalAction);
+        static public void AnimateColor(this SpriteRenderer t, MonoBehaviour owner, Color from, Color to, float duration,
+            bool boomerang = false, System.Action finalAction = null)
+        => AnimationManager.Animate(owner, AnimationManager.ComponentProperty.SpriteRendererColor,
+           v => t.color = v, from, to, duration, boomerang, finalAction);
 
         // SpriteRenderer (to)
-        static public void AnimateColor(this SpriteRenderer t, Color to, float duration,
+        static public void AnimateColor(this SpriteRenderer t, MonoBehaviour owner, Color to, float duration,
             bool boomerang = false, System.Action finalAction = null)
-            => t.AnimateColor(t.color, to, duration, boomerang, finalAction);
+        => t.AnimateColor(owner, t.color, to, duration, boomerang, finalAction);
     }
 }

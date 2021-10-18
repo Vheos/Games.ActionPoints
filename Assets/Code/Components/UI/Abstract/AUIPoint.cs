@@ -17,7 +17,7 @@ namespace Vheos.Games.ActionPoints
         public int Index
         { get; set; }
         public void PlayCantUseAnim()
-        => transform.AnimateLocalScale(_originalScale, _originalScale * _CantUseScale, _CantUseAnimDuration, true);
+        => transform.AnimateLocalScale(this, _originalScale, _originalScale * _CantUseScale, _CantUseAnimDuration, true);
 
         // Private
         private Vector2 _originalScale;
