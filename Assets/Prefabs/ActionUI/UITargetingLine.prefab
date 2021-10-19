@@ -44,7 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e89676703e62da845aff30f58c37d5bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _AnimDuration: 0.5
+  _Tiling: 5
+  _StartOpacity: 0.25
+  _StartWidth: 0.1
+  _EndWidthRatio: 0.25
+  _WidthAnimDuration: 0.5
 --- !u!120 &2576022645275345885
 LineRenderer:
   m_ObjectHideFlags: 0

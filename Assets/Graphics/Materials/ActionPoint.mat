@@ -29,17 +29,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - BezelWidth: 0.25
+    - BezelWidth: 0.2
     - Direction: 0
     - IgnoreBezel: 1
-    - Opacity: 1
-    - ThresholdA: 0.25
-    - ThresholdB: 0.5
+    - Opacity: 0
+    - ThresholdA: 0
+    - ThresholdB: 0
     - _Culling: 2
     - _Direction: 1
     - _TextureFlowSpeed: 0
     m_Colors:
-    - ColorA: {r: 0, g: 1, b: 1, a: 1}
-    - ColorB: {r: 1, g: 1, b: 1, a: 1}
-    - ColorC: {r: 0, g: 0, b: 0, a: 1}
+    - ColorA: {r: 0, g: 0, b: 0, a: 0}
+    - ColorB: {r: 0, g: 0, b: 0, a: 0}
+    - ColorC: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
