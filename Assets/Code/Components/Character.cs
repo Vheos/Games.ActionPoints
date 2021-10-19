@@ -32,9 +32,15 @@ namespace Vheos.Games.ActionPoints
         public bool IsExhausted
         => ActionProgress < 0;
         public void ChangeActionPoints(int diff)
-        => ActionProgress += diff;
+        {
+            ActionProgress += diff;
+            ActionProgress.Clamp(-_MaxPoints, +_MaxPoints);
+        }
         public void ChangeFocusPoints(int diff)
-        => FocusProgress += diff;
+        {
+            FocusProgress += diff;
+            FocusProgress.Clamp(0, _MaxPoints);
+        }
         public void GainTargeting(Action action)
         {
             _spriteOutline.Grow();
