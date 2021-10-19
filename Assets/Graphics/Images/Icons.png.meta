@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: 4491553773363795640
     second: Eat
+  - first:
+      213: -2235351154195819768
+    second: Wound
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -104,7 +107,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 128
         width: 128
         height: 128
       alignment: 0
@@ -125,7 +128,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 0
+        y: 128
         width: 128
         height: 128
       alignment: 0
@@ -146,7 +149,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 256
-        y: 0
+        y: 128
         width: 128
         height: 128
       alignment: 0
@@ -158,6 +161,27 @@ TextureImporter:
       bones: []
       spriteID: 8b61aee0c54355e30800000000000000
       internalID: 4491553773363795640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wound
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80316e9f7ff6af0e0800000000000000
+      internalID: -2235351154195819768
       vertices: []
       indices: 
       edges: []
