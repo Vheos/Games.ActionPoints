@@ -47,18 +47,14 @@ namespace Vheos.Games.ActionPoints
         public override void MousePress(CursorManager.Button button, Vector3 location)
         {
             base.MousePress(button, location);
-            if (UI.Character.IsExhausted)
+            if (!Action.CanBeUsed(UI.Character))
             {
-                UI.NotifyExhausted();
+                if (UI.Character.IsExhausted)
+                    UI.NotifyExhausted();
+                if (UI.Character.FocusPointsCount < Action._FocusPointsCost)
+                    _costPointsBar.NotifyUnfocused();
                 return;
             }
-            else if (UI.Character.FocusPointsCount < Action._FocusPointsCost)
-            {
-                _costPointsBar.NotifyUnfocused();
-                return;
-            }
-            else if (!Action.CanBeUsed(UI.Character))
-                return;
 
             if (Action._IsTargeted)
             {
@@ -72,8 +68,6 @@ namespace Vheos.Games.ActionPoints
         public override void MouseHold(CursorManager.Button button, Vector3 location)
         {
             base.MouseHold(button, location);
-            if (!Action.CanBeUsed(UI.Character))
-                return;
 
             if (_isTargeting)
             {
@@ -97,7 +91,9 @@ namespace Vheos.Games.ActionPoints
             if (!Action.CanBeUsed(UI.Character))
                 return;
 
-            if (_isTargeting)
+            if (!Action._IsTargeted)
+                Action.Use(UI.Character, null);
+            else if (_isTargeting)
             {
                 UI.StopTargeting();
                 if (_target != null)
@@ -108,8 +104,6 @@ namespace Vheos.Games.ActionPoints
                 _target = null;
                 _isTargeting = false;
             }
-            else
-                Action.Use(UI.Character, null);
 
             transform.AnimateLocalScale(this, _originalScale * _HighlightScale, _ClickDuration);
             _spriteRenderer.AnimateColor(this, UI.Character._Color, _ClickDuration);
