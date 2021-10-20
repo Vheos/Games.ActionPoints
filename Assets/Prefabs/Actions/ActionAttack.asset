@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
   m_Name: ActionAttack
   m_EditorClassIdentifier: 
-  Sprite: {fileID: -7814885851622180520, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
-  ActionPointsCost: 2
-  FocusPointsCost: 0
-  IsTargeted: 1
+  _Sprite: {fileID: -7814885851622180520, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+  _ActionPointsCost: 2
+  _FocusPointsCost: 0
+  _IsTargeted: 1
+  _ActionScripts:
+  - {fileID: 11400000, guid: 293d67315c1294940b961f5d304cbea6, type: 2}

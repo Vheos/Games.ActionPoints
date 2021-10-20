@@ -54,13 +54,10 @@ MonoBehaviour:
   _PointPartialProgressOpacity: 0.25
   _PointVisualProgressHalfTime: 0.1
   _PointsSpacing: -0.1
-  _LineTiling: 5
-  _LineStartOpacity: 0.25
-  _LineStartWidth: 0.1
-  _LineEndWidthRatio: 0.25
   _PrefabTargetingLine: {fileID: 2624133503734992603, guid: 12d8d4a25df4b8a45837df81cedf91c7, type: 3}
   _PrefabActionPointsBar: {fileID: 1313598395280984248, guid: 778c2d56a343ff0408712d9a3e3f8d79, type: 3}
   _PrefabActionPoint: {fileID: 3268621003688216130, guid: c4bdd922fcbf43d4a8474866e7d8f6d2, type: 3}
+  _PrefabWound: {fileID: 7024997350785011153, guid: 129ffa06ae0c591469755d703b278baf, type: 3}
   _PrefabWheel: {fileID: 1860824612872176148, guid: 6df0fc3976789d5438413b027737049a, type: 3}
   _PrefabButton: {fileID: 1200835588950954827, guid: daceaa88ec33ca14aa2793a23fce633c, type: 3}
   _PrefabCostPointsBar: {fileID: 7439159745179712452, guid: 246dd04db34b0ac4d84e688244ae4dd4, type: 3}

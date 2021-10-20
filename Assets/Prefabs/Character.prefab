@@ -56,10 +56,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 239806782e1eace4d8294bc8cb7762d1, type: 2}
   - {fileID: 11400000, guid: 114c3c2a74c1ae9448ddbddf4780bcce, type: 2}
   - {fileID: 11400000, guid: fa8f903931d95294981d3f56a9156827, type: 2}
-  _MaxPoints: 4
-  _ActionSpeed: 0.5
+  _RawMaxPoints: 4
+  _ActionSpeed: 0.4
   _FocusSpeed: 0
-  _ExhaustSpeed: 0.25
+  _ExhaustSpeed: 0.2
 --- !u!114 &6645642164658842245
 MonoBehaviour:
   m_ObjectHideFlags: 0
