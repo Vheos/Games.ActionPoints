@@ -14,7 +14,7 @@ namespace Vheos.Games.ActionPoints
         [Range(0.5f, 1f)] public float _ClickColorScale = 0.9f;
         [Range(0.1f, 1f)] public float _UnusableDuration = 0.5f;
         public Color _UnusableColor = 3.Inv().ToVector4();
-        [Range(0f, 1f)] public float _AnimDuration;
+        [Range(0f, 1f)] public float _AnimDuration = 0.5f;
 
         // Publics
         public UIBase UI
@@ -29,11 +29,8 @@ namespace Vheos.Games.ActionPoints
         private Vector2 _originalScale;
         private bool _isTargeting;
         private Character _target;
-        private void UpdateUsability(int actionPointsCount, int focusPointsCount)
+        private void UpdateUsability()
         {
-            if (!isActiveAndEnabled)
-                return;
-
             Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character._Color : _UnusableColor;
             _spriteRenderer.AnimateColor(this, targetColor, _UnusableDuration);
         }
@@ -55,7 +52,7 @@ namespace Vheos.Games.ActionPoints
                 UI.NotifyExhausted();
                 return;
             }
-            else if (UI.Character.FocusPointsCount < Action.FocusPointsCost)
+            else if (UI.Character.FocusPointsCount < Action._FocusPointsCost)
             {
                 _costPointsBar.NotifyUnfocused();
                 return;
@@ -63,7 +60,7 @@ namespace Vheos.Games.ActionPoints
             else if (!Action.CanBeUsed(UI.Character))
                 return;
 
-            if (Action.IsTargeted)
+            if (Action._IsTargeted)
             {
                 UI.StartTargeting(transform, CursorManager.CursorTransform);
                 _isTargeting = true;
@@ -111,7 +108,8 @@ namespace Vheos.Games.ActionPoints
                 _target = null;
                 _isTargeting = false;
             }
-
+            else
+                Action.Use(UI.Character, null);
 
             transform.AnimateLocalScale(this, _originalScale * _HighlightScale, _ClickDuration);
             _spriteRenderer.AnimateColor(this, UI.Character._Color, _ClickDuration);
@@ -129,14 +127,15 @@ namespace Vheos.Games.ActionPoints
             name = GetType().Name;
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
-            _spriteRenderer.sprite = Action.Sprite;
+            _spriteRenderer.sprite = Action._Sprite;
             _spriteRenderer.color = UI.Character._Color;
             _originalScale = transform.localScale;
 
-            UpdateUsability(UI.Character.ActionPointsCount, UI.Character.FocusPointsCount);
-            UI.Character.OnActionPointsCountChanged += UpdateUsability;
+            UpdateUsability();
+            UI.Character.OnActionPointsCountChanged += (a, f) => UpdateUsability();
+            UI.Character.OnExhaustStateChanged += (s) => UpdateUsability();
 
-            _costPointsBar = this.CreateChild<UICostPointsBar>(UI._PrefabCostPointsBar);
+            _costPointsBar = this.CreateChildComponent<UICostPointsBar>(UI._PrefabCostPointsBar);
             _costPointsBar.Button = this;
         }
     }
