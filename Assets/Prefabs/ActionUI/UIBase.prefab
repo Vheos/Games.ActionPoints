@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c2d96615259f39438c7db11a816f0a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _WheelMaxAngle: 180
+  _WheelMaxAngle: 150
   _WheelRadius: 0.6666667
   _PointActionShape: {fileID: 2800000, guid: dd698da49620fea479a7bed6e340e9d2, type: 3}
   _PointFocusShape: {fileID: 2800000, guid: b48440f8228df7d4b80bf111256dee75, type: 3}
