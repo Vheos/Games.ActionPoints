@@ -10,12 +10,13 @@ namespace Vheos.Games.ActionPoints
         [Range(0, 5)] public int _ActionPointsCost = 1;
         [Range(0, 5)] public int _FocusPointsCost = 1;
         public bool _IsTargeted = false;
-        public AActionScript[] _ActionScripts = new AActionScript[0];
+        public AActionScript.Data[] _ScriptDataArray = new AActionScript.Data[1];
 
         // Publics
         public bool CanBeUsed(Character character)
         {
             return !character.IsExhausted
+                && character.ActionPointsCount + character.MaxActionPoints >= _ActionPointsCost
                 && character.FocusPointsCount >= _FocusPointsCost;
         }
         public void Use(Character user, Character target)
@@ -23,8 +24,10 @@ namespace Vheos.Games.ActionPoints
             Debug.Log($"{user.name} is using {name}" + (target != null ? $" on {target.name}" : ""));
             user.ChangeActionPoints(-_ActionPointsCost);
             user.ChangeFocusPoints(-_FocusPointsCost);
-            foreach (var script in _ActionScripts)
-                script.Invoke(user, target);
+            foreach (var scriptValuesTuple in _ScriptDataArray)
+                scriptValuesTuple.Invoke(user, target);
         }
+
+
     }
 }
