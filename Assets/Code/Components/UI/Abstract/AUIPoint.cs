@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     {
         // Inspector 
         public float _CantUseScale = 2.0f;
-        public QAnimVector2 _CantUseScaleAnim = new QAnimVector2();
+        [Range(0f, 1f)] public float _CantUseAnimDuration;
 
         // Publics
         public UIBase UI
@@ -17,7 +17,7 @@ namespace Vheos.Games.ActionPoints
         public int Index
         { get; set; }
         public void PlayCantUseAnim()
-        => _CantUseScaleAnim.Start(_originalScale, _originalScale * _CantUseScale);
+        => transform.AnimateLocalScale(this, _originalScale, _originalScale * _CantUseScale, _CantUseAnimDuration, true);
 
         // Private
         private Vector2 _originalScale;
@@ -81,13 +81,6 @@ namespace Vheos.Games.ActionPoints
             BackgroundColor = UI._PointBackgroundColor;
             ActionColor = UI._PointActionColor;
             FocusColor = UI._PointFocusColor;
-        }
-
-        public override void PlayUpdate()
-        {
-            base.PlayUpdate();
-            if (_CantUseScaleAnim.IsActive)
-                transform.localScale = _CantUseScaleAnim.Value;
         }
     }
 }

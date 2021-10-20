@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine.UI;
     using Tools.UtilityN;
     using Tools.Extensions.Math;
-    using Tools.Extensions.Sprite;
+    using Tools.Extensions.UnityObjects;
 
     static public class NewExtensions
     {
@@ -25,80 +25,12 @@ namespace Vheos.Games.ActionPoints
         => t.gameObject.SetActive(true);
         static public void GODeactivate(this Component t)
         => t.gameObject.SetActive(false);
-        static public T CreateChild<T>(this Component t, GameObject prefab) where T : Component
-        => GameObject.Instantiate(prefab, t.transform).GetComponent<T>();
 
-        // IsBetween
-        static public bool IsBetween(this int t, int a, int b)
-        => t >= a && t <= b;
-        static public bool IsBetween(this int t, int a, float b)
-        => t >= a && t <= b;
-        static public bool IsBetween(this int t, float a, int b)
-        => t >= a && t <= b;
-        static public bool IsBetween(this int t, float a, float b)
-        => t >= a && t <= b;
-        static public bool IsBetween(this float t, int a, int b)
-        => t >= a && t <= b;
-        static public bool IsBetween(this float t, int a, float b)
-        => t >= a && t <= b;
-        static public bool IsBetween(this float t, float a, int b)
-        => t >= a && t <= b;
-        static public bool IsBetween(this float t, float a, float b)
-        => t >= a && t <= b;
-
-        // Image
-        static public void SetA(this Image t, float a)
-        {
-            Color newColor = t.color;
-            newColor.a = a;
-            t.color = newColor;
-        }
+        // Color
+        static public Color Lerp(this Color t, Color a, float b)
+        => Color.LerpUnclamped(t, a, b);
         static public Color NewA(this Color t, float a)
         => new Color(t.r, t.g, t.b, a);
-
-        // Sprite
-        /// <summary> Returns coords of a pixel at the given position. </summary>
-        static public Vector2Int PositionToPixelCoords(this Sprite t, Vector3 position, Transform transform = null)
-        {
-            if (transform != null)
-                position = position.Untransform(transform);
-            return Vector2Int.FloorToInt(t.RectPixels().center + position.XY() * t.pixelsPerUnit);
-        }
-        /// <summary> Returns color of a pixel at the given position. </summary>
-        static public Color PositionToPixelColor(this Sprite t, Vector3 position, Transform transform = null)
-        {
-            Vector2Int pixelPosition = t.PositionToPixelCoords(position, transform);
-            return t.Texture().GetPixel(pixelPosition.x, pixelPosition.y);
-        }
-        /// <summary> Returns alpha of a pixel at the given position. </summary>
-        static public float PositionToPixelAlpha(this Sprite t, Vector3 position, Transform transform = null)
-        => t.PositionToPixelColor(position, transform).a;
-        /// <summary> Returns position at the given pixel. </summary>
-        static public Vector3 PixelCoordsToPosition(this Sprite t, Vector2Int pixel, Transform transform = null)
-        {
-
-            Vector3 position = (pixel - t.RectPixels().center) / t.pixelsPerUnit;
-            if (transform != null)
-                position = position.Transform(transform);
-            return position;
-        }
-
-        // Camera
-        static public Ray CursorRay(this Camera t)
-        => t.ScreenPointToRay(Input.mousePosition);
-        static public Plane ScreenPlane(this Camera t, Vector3 worldPoint)
-        => new Plane(t.transform.forward.Neg(), worldPoint);
-        static public Vector3 CursorToWorldPoint(this Camera t, float distanceFromCamera)
-        => t.ScreenToWorldPoint(Input.mousePosition.XY().Append(distanceFromCamera));
-        static public Vector3 CursorToPlanePoint(this Camera t, Plane plane)
-        {
-            Ray ray = t.CursorRay();
-            if (plane.Raycast(ray, out float distance))
-                return ray.GetPoint(distance);
-            return float.NaN.ToVector3();
-        }
-        static public Vector3 CursorToScreenPlanePoint(this Camera t, Vector3 worldPoint)
-        => t.CursorToPlanePoint(t.ScreenPlane(worldPoint));
 
         // Input
         /// <summary> Checks if this key has just been pressed. </summary>
@@ -114,19 +46,6 @@ namespace Vheos.Games.ActionPoints
         static public bool Up(this KeyCode t)
         => !Input.GetKey(t);
 
-        // Transform
-        /// <summary> Applies chosen a transform to this direction. </summary>
-        static public Vector3 TransformDirection(this Vector2 t, Transform a)
-        => a.TransformDirection(t);
-        /// <summary> Reverts chosen a transform from this direction. </summary>
-        static public Vector3 UntransformDirection(this Vector2 t, Transform a)
-        => a.InverseTransformDirection(t);
-        /// <summary> Applies chosen a transform to this direction. </summary>
-        static public Vector3 TransformDirection(this Vector3 t, Transform a)
-        => a.TransformDirection(t);
-        /// <summary> Reverts chosen a transform from this direction. </summary>
-        static public Vector3 UntransformDirection(this Vector3 t, Transform a)
-        => a.InverseTransformDirection(t);
         /// <summary> Returns this vector projected on a plane with normal a. </summary>
         static public Vector3 ProjectVectorOnPlane(this Vector3 t, Vector3 a)
         => Vector3.ProjectOnPlane(t, a);
@@ -145,27 +64,6 @@ namespace Vheos.Games.ActionPoints
             temp.x = a;
             t.localPosition = temp;
         }
-
-        // Vector
-        /// <summary> Returns the on-screen distance between this vector and a from camera b's perspective. </summary>
-        static public float ScreenDistanceTo(this Vector3 t, Vector3 a, Camera b)
-        => (b.WorldToScreenPoint(a) - b.WorldToScreenPoint(t)).magnitude;
-        /// <summary> Returns the on-screen offset from this vector to a from camera b's perspective. </summary>
-        static public Vector3 ScreenOffsetTo(this Vector3 t, Vector3 a, Camera b)
-        => (b.WorldToScreenPoint(a) - b.WorldToScreenPoint(t));
-        /// <summary> Returns the on-screen offset from a to this vector from camera b's perspective. </summary>
-        static public Vector3 ScreenOffsetFrom(this Vector3 t, Vector3 a, Camera b)
-        => (b.WorldToScreenPoint(t) - b.WorldToScreenPoint(a));
-        /// <summary> Returns the on-screen direction from this vector towards a from camera b's perspective. </summary>
-        static public Vector3 ScreenDirectionTowards(this Vector3 t, Vector3 a, Camera b)
-        => (b.WorldToScreenPoint(a) - b.WorldToScreenPoint(t)).normalized;
-        /// <summary> Returns the on-screen direction from a towards this vector from camera b's perspective. </summary>
-        static public Vector3 ScreenDirectionAwayFrom(this Vector3 t, Vector3 a, Camera b)
-        => (b.WorldToScreenPoint(t) - b.WorldToScreenPoint(a)).normalized;
-        public static Vector2 PerpendicularCW(this Vector2 t)
-        => new Vector2(t.y, -t.x);
-        public static Vector2 PerpendicularCCW(this Vector2 t)
-        => new Vector2(-t.y, t.x);
 
         // Edge points
         /// <summary> Returns a point on this rectangle's edge given direction a. </summary>

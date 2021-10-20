@@ -45,12 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Tiling: 5
+  _StartOpacity: 0.25
   _StartWidth: 0.1
   _EndWidthRatio: 0.25
-  _StartTransparency: 0.25
-  _WidthAnim:
-    _Duration: 0.33333334
-    _To: 0
+  _WidthAnimDuration: 0.5
 --- !u!120 &2576022645275345885
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -91,7 +89,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1652410771
   m_SortingLayer: 1
-  m_SortingOrder: 3
+  m_SortingOrder: 40
   m_Positions: []
   m_Parameters:
     serializedVersion: 3

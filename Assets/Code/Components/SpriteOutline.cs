@@ -13,20 +13,19 @@ namespace Vheos.Games.ActionPoints
         public Material _Material = null;
         [Range(0f, 0.1f)] public float _Thickness = 0.02f;
         public Color _Color = Color.white;
-        public QAnimFloat _ThicknessAnim = new QAnimFloat();
-        public QAnimColor _ColorAnim = new QAnimColor();
+        [Range(0f, 1f)] public float _AnimDuration = 0.5f;
 
         // Public
-        public void Grow()
+        public void Show()
         {
             enabled = true;
-            _ThicknessAnim.Start(_currentThickness, _Thickness);
-            _ColorAnim.Start(_outlineSpriteRenderer.color, _Color);
+            this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, _Thickness, _AnimDuration);
+            _outlineSpriteRenderer.AnimateColor(this, _Color, _AnimDuration);
         }
-        public void Shrink()
+        public void Hide()
         {
-            _ThicknessAnim.Start(_currentThickness, 0f);
-            _ColorAnim.Start(_outlineSpriteRenderer.color, _Color.NewA(0f));
+            this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, 0f, _AnimDuration, false, () => enabled = false);
+            _outlineSpriteRenderer.AnimateColor(this, _Color.NewA(0f), _AnimDuration);
         }
 
         // Private
@@ -64,20 +63,10 @@ namespace Vheos.Games.ActionPoints
             _outlineSpriteRenderer.sharedMaterial = _Material;
             _outlineSpriteRenderer.sortingOrder = _spriteRenderer.sortingOrder - 1;
             _outlineSpriteRenderer.GODeactivate();
-            UpdateMaterialProperties();
         }
         public override void PlayUpdateLate()
         {
             base.PlayUpdate();
-
-            if (_ThicknessAnim.IsActive)
-                _currentThickness = _ThicknessAnim.Value;
-            else if (_ThicknessAnim._To == 0)
-                enabled = false;
-
-            if (_ColorAnim.IsActive)
-                _outlineSpriteRenderer.color = _ColorAnim.Value;
-
             UpdateMaterialProperties();
         }
         public override void PlayEnable()

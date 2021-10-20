@@ -24,16 +24,11 @@ namespace Vheos.Games.ActionPoints
         [Range(0f, 1f)] public float _PointVisualProgressHalfTime = 0.1f;
         [Range(-0.5f, +0.5f)] public float _PointsSpacing = 0;
 
-        [Header("Targeting Line")]
-        [Range(0f, 10f)] public float _LineTiling = 5f;
-        [Range(0f, 1f)] public float _LineStartOpacity = 0.25f;
-        [Range(0f, 1f)] public float _LineStartWidth = 0.1f;
-        [Range(0f, 1f)] public float _LineEndWidthRatio = 0.25f;
-
         [Header("Prefabs")]
         public GameObject _PrefabTargetingLine = null;
         public GameObject _PrefabActionPointsBar = null;
         public GameObject _PrefabActionPoint = null;
+        public GameObject _PrefabWound= null;
         public GameObject _PrefabWheel = null;
         public GameObject _PrefabButton = null;
         public GameObject _PrefabCostPointsBar = null;
@@ -82,9 +77,9 @@ namespace Vheos.Games.ActionPoints
             name = GetType().Name;
             UI = this;
 
-            _wheel = this.CreateChild<UIWheel>(_PrefabWheel);
-            _pointsBar = this.CreateChild<UIActionPointsBar>(_PrefabActionPointsBar);
-            _targetingLine = this.CreateChild<UITargetingLine>(_PrefabTargetingLine);
+            _wheel = this.CreateChildComponent<UIWheel>(_PrefabWheel);
+            _pointsBar = this.CreateChildComponent<UIActionPointsBar>(_PrefabActionPointsBar);
+            _targetingLine = this.CreateChildComponent<UITargetingLine>(_PrefabTargetingLine);
         }
     }
 }

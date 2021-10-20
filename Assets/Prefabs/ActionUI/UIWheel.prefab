@@ -45,11 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140265e8217b3f7469cc1141b1147089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ExpandScaleAnim:
-    _Duration: 0.5
-    _IsBoomerang: 0
-    _From: {x: 0, y: 0}
-    _To: {x: 0, y: 0}
+  _AnimDuration: 0.5
 --- !u!114 &6300216047889983146
 MonoBehaviour:
   m_ObjectHideFlags: 0

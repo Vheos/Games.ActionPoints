@@ -6,9 +6,9 @@ namespace Vheos.Games.ActionPoints
     using Vheos.Tools.Extensions.Math;
 
     public class UIActionPoint : AUIPoint
-    {
+    {       
         // Inspector
-        public QAnimFloat _ActionOpacityAnim = new QAnimFloat();
+        [Range(0f, 1f)] public float _AnimDuration;
 
         // Publics
         public void UpdateLocalProgresses(int index, float visualActionProgress, float visualFocusProgress)
@@ -19,14 +19,23 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
+        private UIWound _uiWound;
         private void UpdateOpacityOnPointsCountChange(int previousCount, int currentCount)
         {
             previousCount = previousCount.Abs();
             currentCount = currentCount.Abs();
-            if (Index >= previousCount && Index <= currentCount - 1)
-                _ActionOpacityAnim.Start(Opacity, 1f);
-            if (Index >= currentCount && Index <= previousCount - 1)
-                _ActionOpacityAnim.Start(Opacity, UI._PointPartialProgressOpacity);
+            if (Index >= previousCount && Index < currentCount)
+                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, 1f, _AnimDuration);
+            if (Index >= currentCount && Index < previousCount)
+                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, UI._PointPartialProgressOpacity, _AnimDuration);
+        }
+        private void UpdateWoundVisibility(int previousCount, int currentCount)
+        {
+            int indexFromLast = UI.Character._RawMaxPoints - Index -1;
+            if (indexFromLast >= previousCount && indexFromLast < currentCount)
+                _uiWound.Show();
+            if (indexFromLast >= currentCount && indexFromLast < previousCount)
+                _uiWound.Hide();
         }
 
         // Mono
@@ -37,12 +46,9 @@ namespace Vheos.Games.ActionPoints
 
             Opacity = UI._PointPartialProgressOpacity;
             UI.Character.OnActionPointsCountChanged += UpdateOpacityOnPointsCountChange;
-        }
-        public override void PlayUpdate()
-        {
-            base.PlayUpdate();
-            if (_ActionOpacityAnim.IsActive)
-                Opacity = _ActionOpacityAnim.Value;
+
+            _uiWound = this.CreateChildComponent<UIWound>(UI._PrefabWound);
+            UI.Character.OnWoundsCountChanged += UpdateWoundVisibility;
         }
     }
 }

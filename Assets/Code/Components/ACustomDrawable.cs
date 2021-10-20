@@ -20,8 +20,7 @@ namespace Vheos.Games.ActionPoints
         => _mprops.GetTexture(name);
         protected void SetFloat(string name, float value)
         {
-            if (_mprops.GetFloat(name) == value
-            && _mprops.HasFloat(name))
+            if (_mprops.GetFloat(name) == value)
                 return;
 
             _mprops.SetFloat(name, value);
@@ -29,8 +28,7 @@ namespace Vheos.Games.ActionPoints
         }
         protected void SetColor(string name, Color value)
         {
-            if (_mprops.GetColor(name) == value
-            && _mprops.HasColor(name))
+            if (_mprops.GetColor(name) == value)
                 return;
 
             _mprops.SetColor(name, value);
@@ -38,8 +36,7 @@ namespace Vheos.Games.ActionPoints
         }
         protected void SetTexture(string name, Texture value)
         {
-            if (_mprops.GetTexture(name) == value
-            && _mprops.HasTexture(name))
+            if (_mprops.GetTexture(name) == value)
                 return;
 
             _mprops.SetTexture(name, value);

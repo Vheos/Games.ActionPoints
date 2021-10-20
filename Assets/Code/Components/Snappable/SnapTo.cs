@@ -15,15 +15,10 @@ namespace Vheos.Games.ActionPoints
         // Public
         public bool IsActive
         => isActiveAndEnabled && _Snappable != null;
-        public Vector3 SnappableOffset
-        => _Snappable.transform.position.OffsetTo(transform.position - _Offset);
-        public Vector3 LocalSnappableOffset
-        => transform.position.Sub(_Offset).Untransform(_Snappable.transform);
-        public void Snap(ASnappable snappable, float lerpAlpha)
-        {
-            Vector3 targetPosition = snappable.GetClosestSurfacePoint(transform.position - _Offset);
-            transform.position = transform.position.Lerp(targetPosition + _Offset, lerpAlpha);
-        }
+        public Vector3 TargetPosition
+        => _Snappable.GetClosestSurfacePoint(transform.position - _Offset) + _Offset;
+        public void Snap(float lerpAlpha)
+        => transform.position = transform.position.Lerp(TargetPosition, lerpAlpha);
 
         // Mono
         public override void PlayUpdate()
@@ -32,7 +27,7 @@ namespace Vheos.Games.ActionPoints
             if (_Snappable == null)
                 return;
 
-            Snap(_Snappable, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
+            Snap(NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         }
 
 #if UNITY_EDITOR
@@ -42,7 +37,7 @@ namespace Vheos.Games.ActionPoints
             if (_Snappable == null || !_RunInEditor)
                 return;
 
-            Snap(_Snappable, 1f);
+            Snap(1f);
         }
 #endif
     }

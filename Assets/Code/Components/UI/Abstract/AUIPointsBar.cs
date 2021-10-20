@@ -18,7 +18,7 @@ namespace Vheos.Games.ActionPoints
         {
             for (int i = 0; i < count; i++)
             {
-                T newPoint = this.CreateChild<T>(prefab);
+                T newPoint = this.CreateChildComponent<T>(prefab);
                 _points.Add(newPoint);
                 newPoint.Index = i;
             }

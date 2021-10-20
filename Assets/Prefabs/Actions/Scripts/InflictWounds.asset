@@ -9,11 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
-  m_Name: ActionMove
+  m_Script: {fileID: 11500000, guid: 61e713b95b08bc44dae5ca5ef9f4819d, type: 3}
+  m_Name: InflictWounds
   m_EditorClassIdentifier: 
-  _Sprite: {fileID: 100665763937561807, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
-  _ActionPointsCost: 1
-  _FocusPointsCost: 0
-  _IsTargeted: 0
-  _ActionScripts: []
+  _Amount: 2

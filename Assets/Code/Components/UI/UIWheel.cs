@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     public class UIWheel : AUpdatable, IUIHierarchy
     {
         // Inspector
-        public QAnimVector2 _ExpandScaleAnim = new QAnimVector2();
+        [Range(0f, 1f)] public float _AnimDuration;
 
         // Publics
         public UIBase UI
@@ -27,7 +27,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void ExpandButtons()
         {
-            _ExpandScaleAnim.Start(transform.localScale, Vector3.one);
+            transform.AnimateLocalScale(this, Vector3.one, _AnimDuration);
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = true;
             AlignButtons(GetWheelDirection(UI.Character.GetComponent<SnapTo>()), UI._WheelRadius, UI._WheelMaxAngle);
@@ -35,7 +35,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void CollapseButtons()
         {
-            _ExpandScaleAnim.Start(transform.localScale, Vector3.zero);
+            transform.AnimateLocalScale(this, Vector3.zero, _AnimDuration);
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = false;
             IsExpanded = false;
@@ -54,9 +54,11 @@ namespace Vheos.Games.ActionPoints
             if (snapTo == null || !snapTo.IsActive)
                 return Vector2.up;
 
-            Vector3 edgeFrom = snapTo.SnappableOffset.Rotate(snapTo._Snappable.transform.forward, -1);
-            Vector3 edgeTo = snapTo.SnappableOffset.Rotate(snapTo._Snappable.transform.forward, +1);
-            Vector2 screenDirection = edgeFrom.ScreenOffsetTo(edgeTo, CameraManager.FirstActive).XY().PerpendicularCCW().normalized;
+            Transform snappable = snapTo._Snappable.transform;
+            Vector3 offsetFromSnappable = snappable.position.OffsetTo(snapTo.TargetPosition - snapTo._Offset);
+            Vector3 edgeFrom = snappable.position + offsetFromSnappable.Rotate(snappable.forward, -1);
+            Vector3 edgeTo = snappable.position + offsetFromSnappable.Rotate(snappable.forward, +1);
+            Vector2 screenDirection = edgeFrom.ScreenOffsetTo(edgeTo, CameraManager.FirstActive).PerpendicularCCW().normalized;
             return screenDirection;
         }
         private List<UIButton> _buttons;
@@ -76,17 +78,11 @@ namespace Vheos.Games.ActionPoints
             _buttons = new List<UIButton>();
             foreach (var action in UI.Character._Actions)
             {
-                UIButton newButton = this.CreateChild<UIButton>(UI._PrefabButton);
+                UIButton newButton = this.CreateChildComponent<UIButton>(UI._PrefabButton);
                 newButton.Action = action;
                 _buttons.Add(newButton);
             }
             CollapseButtons();
-        }
-        public override void PlayUpdate()
-        {
-            base.PlayUpdate();
-            if (_ExpandScaleAnim.IsActive)
-                transform.localScale = _ExpandScaleAnim.Value;
         }
     }
 }

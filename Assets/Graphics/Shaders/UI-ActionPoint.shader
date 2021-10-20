@@ -9,12 +9,12 @@
 
 		// Color
 		[PerRendererData] Shape("Shape", 2D) = "white" {}
-		[PerRendererData] ColorA("Color A", Color) = (0, 1, 1, 1)
-		[PerRendererData] ColorB("Color B", Color) = (1, 1, 1, 1)
-		[PerRendererData] ColorC("Color C", Color) = (0, 0, 0, 1)
-		[PerRendererData] ThresholdA("Threshold A", Range(0, 1)) = 0.25
-		[PerRendererData] ThresholdB("Threshold B", Range(0, 1)) = 0.5
-		[PerRendererData] Opacity("Opacity", Range(0, 1)) = 1
+		[PerRendererData] ColorA("Color A", Color) = (0, 0, 0, 0)
+		[PerRendererData] ColorB("Color B", Color) = (0, 0, 0, 0)
+		[PerRendererData] ColorC("Color C", Color) = (0, 0, 0, 0)
+		[PerRendererData] ThresholdA("Threshold A", Range(0, 1)) = 0
+		[PerRendererData] ThresholdB("Threshold B", Range(0, 1)) = 0
+		[PerRendererData] Opacity("Opacity", Range(0, 1)) = 0
 	}
 
 	SubShader

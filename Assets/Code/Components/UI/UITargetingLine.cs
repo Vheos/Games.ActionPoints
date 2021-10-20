@@ -10,33 +10,34 @@ namespace Vheos.Games.ActionPoints
     public class UITargetingLine : AUpdatable, IUIHierarchy
     {
         // Inspector
-        public QAnimFloat _WidthAnim = new QAnimFloat();
-
-        // Privates
-        private LineRenderer _lineRenderer;
-        private Transform _from;
-        private Transform _to;
+        [Range(0f, 10f)] public float _Tiling = 5f;
+        [Range(0f, 1f)] public float _StartOpacity = 0.25f;
+        [Range(0f, 1f)] public float _StartWidth = 0.1f;
+        [Range(0f, 1f)] public float _EndWidthRatio = 0.25f;
+        [Range(0f, 1f)] public float _WidthAnimDuration = 0.5f;
 
         // Publics
         public UIBase UI
         { get; private set; }
         public void Activate(Transform from, Transform to)
         {
-            this.GOActivate();
-            _WidthAnim.Start(_lineRenderer.startWidth, UI._LineStartWidth);
             _from = from;
             _to = to;
+            _isDeactivating = false;
             UpdatePositionsAndTiling();
+            this.GOActivate();
+            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, _StartWidth, _WidthAnimDuration);
         }
         public void Deactivate()
         {
-            _WidthAnim.Start(_lineRenderer.startWidth, 0f);
+            _isDeactivating = true;
+            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, 0f, _WidthAnimDuration, false, this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
         {
             _lineRenderer.SetPosition(0, _from.position);
             _lineRenderer.SetPosition(1, _to.position);
-            _lineRenderer.sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * UI._LineTiling, 1);
+            _lineRenderer.sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * _Tiling, 1);
         }
         public bool TryGetTarget(out Character target)
         {
@@ -50,8 +51,19 @@ namespace Vheos.Games.ActionPoints
             return false;
         }
 
+        // Privates
+        private LineRenderer _lineRenderer;
+        private Transform _from;
+        private Transform _to;
+        private bool _isDeactivating;
+        private void SetWidth(float width)
+        {
+            _lineRenderer.startWidth = width;
+            _lineRenderer.endWidth = width * _EndWidthRatio;
+        }
+
         // Mono
-        public override void PlayStart()
+        public override void PlayAwake()
         {
             base.PlayStart();
             name = GetType().Name;
@@ -59,22 +71,13 @@ namespace Vheos.Games.ActionPoints
 
             _lineRenderer = GetComponent<LineRenderer>();
             _lineRenderer.positionCount = 2;
-            _lineRenderer.startColor = UI.Character._Color.NewA(UI._LineStartOpacity);
+            _lineRenderer.startColor = UI.Character._Color.NewA(_StartOpacity);
             this.GODeactivate();
         }
         public override void PlayUpdate()
         {
             base.PlayUpdate();
-
-            if (_WidthAnim.IsActive)
-            {
-                _lineRenderer.startWidth = _WidthAnim.Value;
-                _lineRenderer.endWidth = _WidthAnim.Value * UI._LineEndWidthRatio;
-            }
-            else if (_WidthAnim._To == 0f)
-                this.GODeactivate();
-
-            if (_WidthAnim._To != 0f)
+            if (!_isDeactivating)
                 UpdatePositionsAndTiling();
         }
     }

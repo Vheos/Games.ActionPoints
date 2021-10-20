@@ -13,7 +13,7 @@ namespace Vheos.Games.ActionPoints
         { get; set; }
         public void NotifyUnfocused()
         {
-            for (int i = 0; i < Button.Action.FocusPointsCost; i++)
+            for (int i = 0; i < Button.Action._FocusPointsCost; i++)
                 _points[_points.Count - 1 - i].PlayCantUseAnim();
         }
 
@@ -57,7 +57,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayStart();
             transform.localPosition = Button.transform.localScale.Mul(+0.5f, -1f, 0f);
-            int pointsCount = Button.Action.ActionPointsCost + Button.Action.FocusPointsCost;
+            int pointsCount = Button.Action._ActionPointsCost + Button.Action._FocusPointsCost;
             CreatePoints(pointsCount, UI._PrefabCostPoint);
             AlignPoints();
 
