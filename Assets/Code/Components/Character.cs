@@ -16,6 +16,8 @@ namespace Vheos.Games.ActionPoints
         public float _ActionSpeed = 1f;
         public float _FocusSpeed = 0.5f;
         public float _ExhaustSpeed = 0.5f;
+        public float _BluntArmor = 0f;
+        public float _SharpArmor = 0f;
 
         // Publics
         // Action
@@ -63,11 +65,11 @@ namespace Vheos.Games.ActionPoints
 
         // Private
         private UIBase _actionUI;
+        private SpriteOutline _spriteOutline;
+        private Animator _animator;
         private float _previousActionProgress;
         private float _previousFocusProgress;
         private int _previousWoundsCount;
-        private SpriteOutline _spriteOutline;
-        private Animator _animator;
         private Vector3 _previousPosition;
         private void UpdateProgresses(float deltaTime)
         {
@@ -79,6 +81,12 @@ namespace Vheos.Games.ActionPoints
                 FocusProgress += deltaTime * _FocusSpeed;
                 FocusProgress = FocusProgress.ClampMax(ActionProgress);
             }
+        }
+        private void UpdateWalkAnimation(float deltaTime)
+        {
+            float speed = _previousPosition.DistanceTo(transform.position) / deltaTime;
+            _animator.SetFloat("Speed", speed);
+            _previousPosition = transform.position;
         }
 
         // Events
@@ -120,14 +128,6 @@ namespace Vheos.Games.ActionPoints
             base.MousePress(button, location);
             _actionUI.ToggleWheel();
         }
-        /*
-        public override void MouseGainHighlight()
-        {
-            base.MouseGainHighlight();
-            _actionUI.CollapseOtherWheels();
-            _actionUI.ExpandWheel();
-        }
-        */
 
         // Mono
         public override void PlayUpdate()
@@ -135,11 +135,7 @@ namespace Vheos.Games.ActionPoints
             base.PlayUpdate();
             UpdateProgresses(Time.deltaTime);
             InvokeEvents();
-
-            float speed = _previousPosition.DistanceTo(transform.position) / Time.deltaTime;
-            _animator.SetFloat("Speed", speed);
-
-            _previousPosition = transform.position;
+            UpdateWalkAnimation(Time.deltaTime);
         }
         public override void PlayAwake()
         {
