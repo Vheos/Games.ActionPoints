@@ -54,9 +54,11 @@ namespace Vheos.Games.ActionPoints
             if (snapTo == null || !snapTo.IsActive)
                 return Vector2.up;
 
-            Vector3 edgeFrom = snapTo.SnappableOffset.Rotate(snapTo._Snappable.transform.forward, -1);
-            Vector3 edgeTo = snapTo.SnappableOffset.Rotate(snapTo._Snappable.transform.forward, +1);
-            Vector2 screenDirection = edgeFrom.ScreenOffsetTo(edgeTo, CameraManager.FirstActive).XY().PerpendicularCCW().normalized;
+            Transform snappable = snapTo._Snappable.transform;
+            Vector3 offsetFromSnappable = snappable.position.OffsetTo(snapTo.TargetPosition - snapTo._Offset);
+            Vector3 edgeFrom = snappable.position + offsetFromSnappable.Rotate(snappable.forward, -1);
+            Vector3 edgeTo = snappable.position + offsetFromSnappable.Rotate(snappable.forward, +1);
+            Vector2 screenDirection = edgeFrom.ScreenOffsetTo(edgeTo, CameraManager.FirstActive).PerpendicularCCW().normalized;
             return screenDirection;
         }
         private List<UIButton> _buttons;
@@ -76,7 +78,7 @@ namespace Vheos.Games.ActionPoints
             _buttons = new List<UIButton>();
             foreach (var action in UI.Character._Actions)
             {
-                UIButton newButton = this.CreateChild<UIButton>(UI._PrefabButton);
+                UIButton newButton = this.CreateChildComponent<UIButton>(UI._PrefabButton);
                 newButton.Action = action;
                 _buttons.Add(newButton);
             }
