@@ -18,7 +18,7 @@ namespace Vheos.Games.ActionPoints
             Opacity = _Opacity;
             ActionProgress = 1f;
 
-            bool isActionPoint = Index < CostPointsBar.Button.Action.ActionPointsCost;
+            bool isActionPoint = Index < CostPointsBar.Button.Action._ActionPointsCost;
             FocusProgress = isActionPoint ? 0f : 1f;
             Shape = isActionPoint ? UI._PointActionShape : UI._PointFocusShape;
         }

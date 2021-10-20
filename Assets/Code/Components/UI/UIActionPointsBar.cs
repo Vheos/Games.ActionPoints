@@ -40,7 +40,7 @@ namespace Vheos.Games.ActionPoints
             if (TryGetComponent<RotateAs>(out var rotateAs))
                 rotateAs._Target = CameraManager.FirstActive.transform;
 
-            CreatePoints(UI.Character._MaxPoints, UI._PrefabActionPoint);
+            CreatePoints(UI.Character._RawMaxPoints, UI._PrefabActionPoint);
             AlignPoints();
         }
         override public void PlayUpdate()

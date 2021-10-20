@@ -16,13 +16,13 @@ namespace Vheos.Games.ActionPoints
         [Range(0f, 1f)] public float _AnimDuration = 0.5f;
 
         // Public
-        public void Grow()
+        public void Show()
         {
             enabled = true;
             this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, _Thickness, _AnimDuration);
             _outlineSpriteRenderer.AnimateColor(this, _Color, _AnimDuration);
         }
-        public void Shrink()
+        public void Hide()
         {
             this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, 0f, _AnimDuration, false, () => enabled = false);
             _outlineSpriteRenderer.AnimateColor(this, _Color.NewA(0f), _AnimDuration);
