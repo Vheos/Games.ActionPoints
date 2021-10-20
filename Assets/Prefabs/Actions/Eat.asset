@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
-  m_Name: ActionJump
+  m_Name: Eat
   m_EditorClassIdentifier: 
-  Sprite: {fileID: 0}
-  ActionPointsCost: 4
-  FocusPointsCost: 1
-  IsTargeted: 1
+  _Sprite: {fileID: 4491553773363795640, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+  _ActionPointsCost: 3
+  _FocusPointsCost: 0
+  _IsTargeted: 1
+  _ActionScripts:
+  - {fileID: 11400000, guid: 52fa80295418b71419460e528d66cfdf, type: 2}
