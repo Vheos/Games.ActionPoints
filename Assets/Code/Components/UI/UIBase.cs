@@ -28,6 +28,7 @@ namespace Vheos.Games.ActionPoints
         public GameObject _PrefabTargetingLine = null;
         public GameObject _PrefabActionPointsBar = null;
         public GameObject _PrefabActionPoint = null;
+        public GameObject _PrefabWound= null;
         public GameObject _PrefabWheel = null;
         public GameObject _PrefabButton = null;
         public GameObject _PrefabCostPointsBar = null;
@@ -76,9 +77,9 @@ namespace Vheos.Games.ActionPoints
             name = GetType().Name;
             UI = this;
 
-            _wheel = this.CreateChild<UIWheel>(_PrefabWheel);
-            _pointsBar = this.CreateChild<UIActionPointsBar>(_PrefabActionPointsBar);
-            _targetingLine = this.CreateChild<UITargetingLine>(_PrefabTargetingLine);
+            _wheel = this.CreateChildComponent<UIWheel>(_PrefabWheel);
+            _pointsBar = this.CreateChildComponent<UIActionPointsBar>(_PrefabActionPointsBar);
+            _targetingLine = this.CreateChildComponent<UITargetingLine>(_PrefabTargetingLine);
         }
     }
 }

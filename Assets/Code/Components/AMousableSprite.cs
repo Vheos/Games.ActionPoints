@@ -1,6 +1,8 @@
 namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
+    using Tools.Extensions.UnityObjects;
+
     [RequireComponent(typeof(SpriteRenderer))]
     abstract public class AMousableSprite : AMousable
     {
