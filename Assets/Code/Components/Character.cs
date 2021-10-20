@@ -12,42 +12,43 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         public Color _Color = Color.white;
         public List<Action> _Actions = new List<Action>();
-        public int _MaxPoints = 5;
+        public int _RawMaxPoints = 5;
         public float _ActionSpeed = 1f;
         public float _FocusSpeed = 0.5f;
         public float _ExhaustSpeed = 0.5f;
 
         // Publics
-        public delegate void PointsCountChanged(int previous, int current);
-        public PointsCountChanged OnActionPointsCountChanged;
-        public PointsCountChanged OnFocusPointsCountChanged;
+        // Action
         public float ActionProgress
-        { get; private set; }
-        public float FocusProgress
         { get; private set; }
         public int ActionPointsCount
         => ActionProgress.RoundTowardsZero();
-        public int FocusPointsCount
-        => FocusProgress.RoundDown();
+        public void ChangeActionPoints(int diff)
+        => ActionProgress = ActionProgress.Add(diff).Clamp(-MaxActionPoints, +MaxActionPoints);
+        public int MaxActionPoints
+        => _RawMaxPoints - WoundsCount;
         public bool IsExhausted
         => ActionProgress < 0;
-        public void ChangeActionPoints(int diff)
-        {
-            ActionProgress += diff;
-            ActionProgress.Clamp(-_MaxPoints, +_MaxPoints);
-        }
+        // Focus
+        public float FocusProgress
+        { get; private set; }
+        public int FocusPointsCount
+        => FocusProgress.RoundTowardsZero();
         public void ChangeFocusPoints(int diff)
-        {
-            FocusProgress += diff;
-            FocusProgress.Clamp(0, _MaxPoints);
-        }
+        => FocusProgress = FocusProgress.Add(diff).ClampMax(ActionProgress).ClampMin(0f);
+        // Wounds
+        public int WoundsCount
+        { get; private set; }
+        public void ChangeWoundsCount(int diff)
+        => WoundsCount = WoundsCount.Add(diff).Clamp(0, _RawMaxPoints);
+        // Other
         public void GainTargeting(Action action)
         {
-            _spriteOutline.Grow();
+            _spriteOutline.Show();
         }
         public void LoseTargeting()
         {
-            _spriteOutline.Shrink();
+            _spriteOutline.Hide();
         }
         public void LookAt(Transform targetTransform)
         {
@@ -64,37 +65,54 @@ namespace Vheos.Games.ActionPoints
         private UIBase _actionUI;
         private float _previousActionProgress;
         private float _previousFocusProgress;
+        private int _previousWoundsCount;
         private SpriteOutline _spriteOutline;
         private Animator _animator;
         private Vector3 _previousPosition;
         private void UpdateProgresses(float deltaTime)
         {
             ActionProgress += deltaTime * _ActionSpeed;
-            if (ActionProgress > _MaxPoints)
+            if (ActionProgress > MaxActionPoints)
             {
-                deltaTime = (ActionProgress - _MaxPoints) / _ActionSpeed;
-                ActionProgress = _MaxPoints;
+                deltaTime = (ActionProgress - MaxActionPoints) / _ActionSpeed;
+                ActionProgress = MaxActionPoints;
                 FocusProgress += deltaTime * _FocusSpeed;
                 FocusProgress = FocusProgress.ClampMax(ActionProgress);
             }
         }
-        private void InvokePointsCountChangedEvents()
+
+        // Events
+        private void InvokeEvents()
         {
             int previousActionsPointsCount = _previousActionProgress.RoundTowardsZero();
             int currentActionPointsCount = ActionProgress.RoundTowardsZero();
             if (previousActionsPointsCount != ActionPointsCount)
                 OnActionPointsCountChanged?.Invoke(previousActionsPointsCount, currentActionPointsCount);
-            else if (_previousActionProgress < 0 && ActionProgress >= 0)
-                OnActionPointsCountChanged(0, 0);
 
             int previousFocusPointsCount = _previousFocusProgress.RoundTowardsZero();
             int currentFocusPointsCount = FocusProgress.RoundTowardsZero();
             if (previousFocusPointsCount != FocusPointsCount)
                 OnFocusPointsCountChanged?.Invoke(previousFocusPointsCount, currentFocusPointsCount);
 
+            if (_previousActionProgress < 0 && ActionProgress >= 0)
+                OnExhaustStateChanged?.Invoke(false);
+            else if (_previousActionProgress >= 0 && ActionProgress < 0)
+                OnExhaustStateChanged?.Invoke(true);
+
+            if (_previousWoundsCount != WoundsCount)
+                OnWoundsCountChanged?.Invoke(_previousWoundsCount, WoundsCount);
+
             _previousActionProgress = ActionProgress;
             _previousFocusProgress = FocusProgress;
+            _previousWoundsCount = WoundsCount;
         }
+        public delegate void PointsCountChanged(int previous, int current);
+        public delegate void ExhaustStateChangedZero(bool isExhausted);
+        public delegate void WoundsCountChanged(int previous, int current);
+        public PointsCountChanged OnActionPointsCountChanged;
+        public PointsCountChanged OnFocusPointsCountChanged;
+        public ExhaustStateChangedZero OnExhaustStateChanged;
+        public WoundsCountChanged OnWoundsCountChanged;
 
         // Mouse
         public override void MousePress(CursorManager.Button button, Vector3 location)
@@ -102,19 +120,21 @@ namespace Vheos.Games.ActionPoints
             base.MousePress(button, location);
             _actionUI.ToggleWheel();
         }
+        /*
         public override void MouseGainHighlight()
         {
             base.MouseGainHighlight();
             _actionUI.CollapseOtherWheels();
             _actionUI.ExpandWheel();
         }
+        */
 
         // Mono
         public override void PlayUpdate()
         {
             base.PlayUpdate();
             UpdateProgresses(Time.deltaTime);
-            InvokePointsCountChangedEvents();
+            InvokeEvents();
 
             float speed = _previousPosition.DistanceTo(transform.position) / Time.deltaTime;
             _animator.SetFloat("Speed", speed);
@@ -128,10 +148,15 @@ namespace Vheos.Games.ActionPoints
             _spriteOutline = GetComponent<SpriteOutline>();
             _spriteRenderer.color = _Color;
 
-            _actionUI = UIManager.HierarchyRoot.CreateChild<UIBase>(UIManager.PrefabUIBase);
+            _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.PrefabUIBase);
             _actionUI.Character = this;
         }
-
+        public override void PlayDestroy()
+        {
+            base.PlayDestroy();
+            if (_actionUI != null)
+                _actionUI.DestroyObject();
+        }
 #if UNITY_EDITOR
         public override void EditAwake()
         {
