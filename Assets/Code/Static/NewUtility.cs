@@ -37,6 +37,9 @@ namespace Vheos.Games.ActionPoints
                 point = point.Transform(circleTransform);
             return point;
         }
-
+        static public bool Roll(float chance = 0.5f)
+        => Random.value < chance;
+        static public bool Flip()
+        => Roll(0.5f);
     }
 }
