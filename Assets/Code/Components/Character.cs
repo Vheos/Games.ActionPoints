@@ -12,12 +12,12 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         public Color _Color = Color.white;
         public List<Action> _Actions = new List<Action>();
-        public int _RawMaxPoints = 5;
-        public float _ActionSpeed = 1f;
-        public float _FocusSpeed = 0.5f;
-        public float _ExhaustSpeed = 0.5f;
-        public float _BluntArmor = 0f;
-        public float _SharpArmor = 0f;
+        [Range(1, 10)] public int _RawMaxPoints = 5;
+        [Range(0f, 1f)] public float _ActionSpeed = 1f;
+        [Range(0f, 1f)] public float _FocusSpeed = 0.5f;
+        [Range(0f, 1f)] public float _ExhaustSpeed = 0.5f;
+        [Range(0f, 100f)] public float _BluntArmor = 0f;
+        [Range(0f, 100f)] public float _SharpArmor = 0f;
 
         // Publics
         // Action
@@ -41,6 +41,11 @@ namespace Vheos.Games.ActionPoints
         // Damage
         public float CalculateTotalDamage(float blunt, float sharp, float raw)
         {
+            blunt += 0 - _BluntArmor;
+            sharp *= 1 - _SharpArmor / 100f;
+            blunt.SetClampMin(0);
+            sharp.SetClampMin(0);
+            raw.SetClampMin(0);
             return blunt + sharp + raw;
         }
         public void DealTotalDamage(float totalDamage)
