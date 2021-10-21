@@ -38,10 +38,25 @@ namespace Vheos.Games.ActionPoints
         => FocusProgress.RoundTowardsZero();
         public void ChangeFocusPoints(int diff)
         => FocusProgress = FocusProgress.Add(diff).ClampMax(ActionProgress).ClampMin(0f);
+        // Damage
+        public float CalculateTotalDamage(float blunt, float sharp, float raw)
+        {
+            return blunt + sharp + raw;
+        }
+        public void DealTotalDamage(float totalDamage)
+        {        
+            int sureWounds = totalDamage.Div(100f).RoundDown();         
+            float remainingDamage = totalDamage - sureWounds;        
+            int rolledWounds = remainingDamage.RollPercent().To01();
+            int totalWounds = sureWounds + rolledWounds;
+
+            _actionUI.PopDamage(transform.position, totalDamage, totalWounds);
+            ChangeWoundsCount(totalWounds);
+        }
         // Wounds
         public int WoundsCount
         { get; private set; }
-        public void ChangeWoundsCount(int diff)
+        private void ChangeWoundsCount(int diff)
         => WoundsCount = WoundsCount.Add(diff).Clamp(0, _RawMaxPoints);
         // Other
         public void GainTargeting(Action action)
