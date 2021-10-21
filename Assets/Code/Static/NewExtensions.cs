@@ -25,12 +25,45 @@ namespace Vheos.Games.ActionPoints
         => t.gameObject.SetActive(true);
         static public void GODeactivate(this Component t)
         => t.gameObject.SetActive(false);
+        static public float RandomMinMax(this Vector2 t)
+        => UnityEngine.Random.Range(t.x, t.y);
+        static public Quaternion ToZRotation(this float t)
+        => Quaternion.Euler(0, 0, t);
+        static public bool Roll(this float t)
+        => UnityEngine.Random.value < t;
+        static public bool RollPercent(this float t)
+        => t.Div(100f).Roll();
+
+        // Bool
+        static public int To01(this bool t)
+        => t ? 1 : 0;
+        static public int Map(this bool t, int a, int b)
+        => t ? a : b;
+        static public float Map(this bool t, float a, float b)
+        => t ? a : b;
 
         // Color
-        static public Color Lerp(this Color t, Color a, float b)
-        => Color.LerpUnclamped(t, a, b);
         static public Color NewA(this Color t, float a)
         => new Color(t.r, t.g, t.b, a);
+
+        /// <summary> Lerps from this color to a at alpha b. </summary>
+        static public Color Lerp(this Color t, Color a, float b)
+        => new Color(t.r.Lerp(a.r, b), t.g.Lerp(a.g, b), t.b.Lerp(a.b, b), t.a.Lerp(a.a, b));
+        /// <summary> Lerps from this color to a at alpha b (clamped between 0 and 1). </summary>
+        static public Color LerpClamped(this Color t, Color a, float b)
+        => new Color(t.r.LerpClamped(a.r, b), t.g.LerpClamped(a.g, b), t.b.LerpClamped(a.b, b), t.a.LerpClamped(a.a, b));
+        /// <summary> Maps this color from the range [a, b] to [c, d]. </summary>
+        static public Color Map(this Color t, Color a, Color b, Color c, Color d)
+        => new Color(t.r.Map(a.r, b.r, c.r, d.r), t.g.Map(a.g, b.g, c.g, d.g), t.b.Map(a.b, b.b, c.b, d.b), t.a.Map(a.a, b.a, c.a, d.a));
+        /// <summary> Maps this color from the range [a, b] to [c, d] (with clamped output). </summary>
+        static public Color MapClamped(this Color t, Color a, Color b, Color c, Color d)
+        => new Color(t.r.MapClamped(a.r, b.r, c.r, d.r), t.g.MapClamped(a.g, b.g, c.g, d.g), t.b.MapClamped(a.b, b.b, c.b, d.b), t.a.MapClamped(a.a, b.a, c.a, d.a));
+        /// <summary> Maps this color from the range [a, b] to [0, 1]. </summary>
+        static public Color MapTo01(this Color t, Color a, Color b)
+        => new Color(t.r.MapTo01(a.r, b.r), t.g.MapTo01(a.g, b.g), t.b.MapTo01(a.b, b.b), t.a.MapTo01(a.a, b.a));
+        /// <summary> Maps this color from the range [0, 1] to [a, b]. </summary>
+        static public Color MapFrom01(this Color t, Color a, Color b)
+        => new Color(t.r.MapFrom01(a.r, b.r), t.g.MapFrom01(a.g, b.g), t.b.MapFrom01(a.b, b.b), t.a.MapFrom01(a.a, b.a));
 
         // Input
         /// <summary> Checks if this key has just been pressed. </summary>
