@@ -3,8 +3,8 @@ namespace Vheos.Games.ActionPoints.ActionScripts
     using UnityEngine;
     using Tools.Extensions.Math;
 
-    [CreateAssetMenu(fileName = nameof(DealDamage), menuName = "ActionScripts/" + nameof(DealDamage))]
-    public class DealDamage : AActionScript
+    [CreateAssetMenu(fileName = nameof(DealDamage), menuName = CONTEXT_MENU_PATH + nameof(DealDamage))]
+    public class DealDamage : AActionEffect
     {
         // Overrides
         protected override int RequiredValuesCount
@@ -12,12 +12,12 @@ namespace Vheos.Games.ActionPoints.ActionScripts
         override public void Invoke(Character user, Character target, params float[] values)
         {
             // Params
-            int blunt = values[0].Round();
-            int sharp = values[1].Round();
-            int raw = values[2].Round();
+            float blunt = values[0];
+            float sharp = values[1];
+            float raw = values[2];
 
             // Execute
-            target.ChangeWoundsCount(blunt + sharp + raw);
+            target.DealTotalDamage(target.CalculateTotalDamage(blunt, sharp, raw));
         }
     }
 }
