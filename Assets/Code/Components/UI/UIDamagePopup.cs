@@ -23,13 +23,14 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public void Initialize(Vector3 position, float damage, int wounds)
         {
-            transform.position = position;
-
             bool isWound = wounds > 0;
             float lerpAlpha = isWound ? 1f : damage / 100f;
             _textMesh.fontSize = _SizeCurve.Evaluate(lerpAlpha);
             _textMesh.color = _ColorCurve.Evaluate(lerpAlpha);
             _textMesh.text = damage.RoundDown().ToString();
+
+            transform.position = position;
+            transform.rotation = CameraManager.FirstActive.transform.rotation;
 
             FadeIn();
             if (isWound)
@@ -42,7 +43,7 @@ namespace Vheos.Games.ActionPoints
         {
             Vector2 direction = NewUtility.PointOnCircle(_AngleRandomRange.RandomMinMax() - 90f, 1f, true);
             if (_AlignTextRotationToDirection)
-                transform.localRotation = Quaternion.LookRotation(Vector3.forward, direction);
+                transform.localRotation = Quaternion.LookRotation(transform.forward, direction);
             transform.AnimateLocalPosition(this, direction * _Distance, _FadeInDuration);
             _textMesh.AnimateAlpha(this, 1f, _FadeInDuration, false, StayUp);
         }
