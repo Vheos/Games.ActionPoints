@@ -28,11 +28,13 @@ namespace Vheos.Games.ActionPoints
         public GameObject _PrefabTargetingLine = null;
         public GameObject _PrefabActionPointsBar = null;
         public GameObject _PrefabActionPoint = null;
-        public GameObject _PrefabWound= null;
+        public GameObject _PrefabWound = null;
         public GameObject _PrefabWheel = null;
         public GameObject _PrefabButton = null;
         public GameObject _PrefabCostPointsBar = null;
         public GameObject _PrefabCostPoint = null;
+        public GameObject _PrefabPopupHandler = null;
+        public GameObject _PrefabDamagePopup = null;
 
         // Publics
         public UIBase UI
@@ -62,13 +64,15 @@ namespace Vheos.Games.ActionPoints
         public bool TryGetTarget(out Character target)
         => _targetingLine.TryGetTarget(out target);
         public void NotifyExhausted()
-        =>            _pointsBar.NotifyExhausted();
-        
+        => _pointsBar.NotifyExhausted();
+        public void PopDamage(Vector3 position, float damage, int wounds)
+        => _popupHandler.PopDamage(position, damage, wounds);
 
         // Privates
         private UIWheel _wheel;
         private UIActionPointsBar _pointsBar;
         private UITargetingLine _targetingLine;
+        private UIPopupHandler _popupHandler;
 
         // Mono
         public override void PlayStart()
@@ -77,9 +81,11 @@ namespace Vheos.Games.ActionPoints
             name = GetType().Name;
             UI = this;
 
+            transform.position = Character.transform.position;
             _wheel = this.CreateChildComponent<UIWheel>(_PrefabWheel);
             _pointsBar = this.CreateChildComponent<UIActionPointsBar>(_PrefabActionPointsBar);
             _targetingLine = this.CreateChildComponent<UITargetingLine>(_PrefabTargetingLine);
+            _popupHandler = this.CreateChildComponent<UIPopupHandler>(_PrefabPopupHandler);
         }
     }
 }
