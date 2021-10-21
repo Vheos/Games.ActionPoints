@@ -33,7 +33,7 @@ namespace Vheos.Games.ActionPoints
         {
             int indexFromLast = UI.Character._RawMaxPoints - Index -1;
             if (indexFromLast >= previousCount && indexFromLast < currentCount)
-                _uiWound.Show();
+                _uiWound.Show(Index);
             if (indexFromLast >= currentCount && indexFromLast < previousCount)
                 _uiWound.Hide();
         }

@@ -13,10 +13,13 @@ namespace Vheos.Games.ActionPoints
         [Range(0f, 2f)] public float _FadeDistance = 1f;
 
         // Pubilcs
-        public void Show()
+        public void Show(int index)
         {
             this.GOActivate();
-            transform.localRotation = Quaternion.Euler(0f, 0f, -Random.Range(_AngleRandomRange.x, _AngleRandomRange.y));
+            float randFrom = index.IsEven() ? _AngleRandomRange.AvgComp() : _AngleRandomRange.x;
+            float randTo = index.IsEven() ? _AngleRandomRange.y : _AngleRandomRange.AvgComp();
+            transform.localRotation = Quaternion.Euler(0f, 0f, -Random.Range(randFrom, randTo));
+
             Vector2 fadeInPosition = Vector2.up.Mul(_FadeDistance).Rotate(transform.localRotation);
             transform.AnimateLocalPosition(this, fadeInPosition, Vector2.zero, _AnimDuration);
             _spriteRenderer.AnimateColor(this, _spriteRenderer.color.NewA(1f), _AnimDuration);
