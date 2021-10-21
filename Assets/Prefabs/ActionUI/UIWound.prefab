@@ -45,9 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _AnimDuration: 0.5
-  _AngleRandomRange: {x: 30, y: 60}
+  _AngleRandomRange: {x: 15, y: 75}
   _FadeDistance: 1
-  _FadeScale: 2
 --- !u!212 &7024997350785011158
 SpriteRenderer:
   m_ObjectHideFlags: 0

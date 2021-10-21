@@ -89,7 +89,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1652410771
   m_SortingLayer: 1
-  m_SortingOrder: 40
+  m_SortingOrder: 50
   m_Positions: []
   m_Parameters:
     serializedVersion: 3

@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Attack
   m_EditorClassIdentifier: 
   _Sprite: {fileID: -7814885851622180520, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
-  _ActionPointsCost: 2
+  _ActionPointsCost: 0
   _FocusPointsCost: 0
   _IsTargeted: 1
-  _ScriptDataArray:
-  - _Script: {fileID: 11400000, guid: 293d67315c1294940b961f5d304cbea6, type: 2}
+  _EffectDataArray:
+  - _Effect: {fileID: 11400000, guid: f18ee305bcc86a94e9cb42c01f8703cd, type: 2}
+    _Direction: 0
     _Values:
-    - 1
-    _SwapUserAndTarget: 0
+    - 0
+    - 0
+    - 20

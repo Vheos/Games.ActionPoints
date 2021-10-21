@@ -62,3 +62,5 @@ MonoBehaviour:
   _PrefabButton: {fileID: 1200835588950954827, guid: daceaa88ec33ca14aa2793a23fce633c, type: 3}
   _PrefabCostPointsBar: {fileID: 7439159745179712452, guid: 246dd04db34b0ac4d84e688244ae4dd4, type: 3}
   _PrefabCostPoint: {fileID: 3698136610871772143, guid: be4997228db8b9d49ba01bb4c37b2b23, type: 3}
+  _PrefabPopupHandler: {fileID: 9059173901925859170, guid: 019bff7e799d64549b90df503ff726ce, type: 3}
+  _PrefabDamagePopup: {fileID: 717975481978446541, guid: bc8ce54443cc22047bb41a8c880f6c06, type: 3}
