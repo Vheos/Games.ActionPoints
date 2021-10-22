@@ -4,6 +4,8 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.Extensions.Collections;
     using Tools.UtilityN;
+    using Tools.Extensions.General;
+
     public class CameraManager : AComponentManager<Camera>
     {
         // Publics
@@ -14,9 +16,11 @@ namespace Vheos.Games.ActionPoints
                 if (_cursorCameraDirty
                 && _cursorCameraLocks.IsEmpty()
                 && FindCursorCamera().TryNonNull(out var newCursorCamera))
+                {
                     _cursorCamera = newCursorCamera;
+                    _cursorCameraDirty = false;
+                }
 
-                _cursorCameraDirty = false;
                 return _cursorCamera;
             }
         }
@@ -47,6 +51,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             _cursorCameraLocks = new List<Behaviour>();
+            CursorManager.OnCameraMoved += (from, to) => SetDirtyCursorCamera();
         }
     }
 }
