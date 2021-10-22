@@ -24,6 +24,7 @@ namespace Vheos.Games.ActionPoints
         { get; set; }
 
         // Privates
+        protected Collider _mousableCollider;
         private void AssignLayer()
         => gameObject.layer = LayerMask.NameToLayer(nameof(AMousable));
 
@@ -31,6 +32,7 @@ namespace Vheos.Games.ActionPoints
         public override void PlayAwake()
         {
             base.PlayAwake();
+            _mousableCollider = GetComponent<Collider>();
             AssignLayer();
             RecieveMouseEvents = true;
         }
