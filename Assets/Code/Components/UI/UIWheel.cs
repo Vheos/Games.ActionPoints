@@ -5,6 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
+    using Tools.Extensions.General;
 
     public class UIWheel : AUpdatable, IUIHierarchy
     {
@@ -30,7 +31,9 @@ namespace Vheos.Games.ActionPoints
             transform.AnimateLocalScale(this, Vector3.one, _AnimDuration);
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = true;
-            AlignButtons(GetWheelDirection(UI.Character.GetComponent<SnapTo>()), UI._WheelRadius, UI._WheelMaxAngle);
+
+
+            AlignButtons(GetWheelDirection(), UI._WheelRadius, UI._WheelMaxAngle);
             IsExpanded = true;
         }
         public void CollapseButtons()
@@ -49,17 +52,13 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
-        static private Vector2 GetWheelDirection(SnapTo snapTo)
+        private Vector2 GetWheelDirection()
         {
-            if (snapTo == null || !snapTo.IsActive)
-                return Vector2.up;
+            if (!UI.Character.Team.TryNonNull(out var team)
+            || team.Count <= 1)
+                return Vector3.up;
 
-            Transform snappable = snapTo._Snappable.transform;
-            Vector3 offsetFromSnappable = snappable.position.OffsetTo(snapTo.TargetPosition - snapTo._Offset);
-            Vector3 edgeFrom = snappable.position + offsetFromSnappable.Rotate(snappable.forward, -1);
-            Vector3 edgeTo = snappable.position + offsetFromSnappable.Rotate(snappable.forward, +1);
-            Vector2 screenDirection = edgeFrom.ScreenOffsetTo(edgeTo, CameraManager.FirstActive).PerpendicularCCW().normalized;
-            return screenDirection;
+            return team.Midpoint.ScreenOffsetTo(UI.Character.transform.position, CameraManager.FirstActive).normalized;            
         }
         private List<UIButton> _buttons;
 
