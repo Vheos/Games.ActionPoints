@@ -4,13 +4,14 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
+    using Tools.Extensions.General;
 
     [RequireComponent(typeof(SpriteOutline))]
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(TeamMember))]
     public class Character : AMousableSprite
     {
         // Inspector
-        public Color _Color = Color.white;
         public List<Action> _Actions = new List<Action>();
         [Range(1, 10)] public int _RawMaxPoints = 5;
         [Range(0f, 1f)] public float _ActionSpeed = 1f;
@@ -49,9 +50,9 @@ namespace Vheos.Games.ActionPoints
             return blunt + sharp + raw;
         }
         public void DealTotalDamage(float totalDamage)
-        {        
-            int sureWounds = totalDamage.Div(100f).RoundDown();         
-            float remainingDamage = totalDamage - sureWounds;        
+        {
+            int sureWounds = totalDamage.Div(100f).RoundDown();
+            float remainingDamage = totalDamage - sureWounds;
             int rolledWounds = remainingDamage.RollPercent().To01();
             int totalWounds = sureWounds + rolledWounds;
 
@@ -64,14 +65,8 @@ namespace Vheos.Games.ActionPoints
         private void ChangeWoundsCount(int diff)
         => WoundsCount = WoundsCount.Add(diff).Clamp(0, _RawMaxPoints);
         // Other
-        public void GainTargeting(Action action)
-        {
-            _spriteOutline.Show();
-        }
-        public void LoseTargeting()
-        {
-            _spriteOutline.Hide();
-        }
+        public Bounds LocalBounds
+        => _mousableCollider.LocalBounds();
         public void LookAt(Transform targetTransform)
         {
             if (targetTransform == transform)
@@ -82,10 +77,15 @@ namespace Vheos.Games.ActionPoints
             else
                 transform.rotation.SetLookRotation(transform.DirectionTowards(targetTransform));
         }
+        public Team Team
+        => _teamMember.Team;
+        public Color Color
+        => Team != null ? Team._Color : Color.white;
 
         // Private
         private UIBase _actionUI;
         private SpriteOutline _spriteOutline;
+        private TeamMember _teamMember;
         private Animator _animator;
         private float _previousActionProgress;
         private float _previousFocusProgress;
@@ -108,6 +108,11 @@ namespace Vheos.Games.ActionPoints
             _animator.SetFloat("Speed", speed);
             _previousPosition = transform.position;
         }
+        private void UpdateColors()
+        {
+            _spriteRenderer.color = Color;
+            _spriteOutline._Color = Color;
+        }
 
         // Events
         private void InvokeEvents()
@@ -129,10 +134,6 @@ namespace Vheos.Games.ActionPoints
 
             if (_previousWoundsCount != WoundsCount)
                 OnWoundsCountChanged?.Invoke(_previousWoundsCount, WoundsCount);
-
-            _previousActionProgress = ActionProgress;
-            _previousFocusProgress = FocusProgress;
-            _previousWoundsCount = WoundsCount;
         }
         public delegate void PointsCountChanged(int previous, int current);
         public delegate void ExhaustStateChangedZero(bool isExhausted);
@@ -143,29 +144,45 @@ namespace Vheos.Games.ActionPoints
         public WoundsCountChanged OnWoundsCountChanged;
 
         // Mouse
+        public override void MouseGainHighlight()
+        {
+            base.MouseGainHighlight();
+            _spriteOutline.Show();
+        }
         public override void MousePress(CursorManager.Button button, Vector3 location)
         {
             base.MousePress(button, location);
             _actionUI.ToggleWheel();
         }
+        public override void MouseLoseHighlight()
+        {
+            base.MouseLoseHighlight();
+            _spriteOutline.Hide();
+        }
 
         // Mono
-        public override void PlayUpdate()
-        {
-            base.PlayUpdate();
-            UpdateProgresses(Time.deltaTime);
-            InvokeEvents();
-            UpdateWalkAnimation(Time.deltaTime);
-        }
         public override void PlayAwake()
         {
             base.PlayAwake();
             _animator = GetComponent<Animator>();
             _spriteOutline = GetComponent<SpriteOutline>();
-            _spriteRenderer.color = _Color;
+            _teamMember = GetComponent<TeamMember>();
 
             _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.PrefabUIBase);
             _actionUI.Character = this;
+
+            UpdateColors();
+        }
+        public override void PlayUpdate()
+        {
+            base.PlayUpdate();
+            UpdateProgresses(Time.deltaTime);
+            UpdateWalkAnimation(Time.deltaTime);
+            InvokeEvents();
+
+            _previousActionProgress = ActionProgress;
+            _previousFocusProgress = FocusProgress;
+            _previousWoundsCount = WoundsCount;
         }
         public override void PlayDestroy()
         {
@@ -173,11 +190,15 @@ namespace Vheos.Games.ActionPoints
             if (_actionUI != null)
                 _actionUI.DestroyObject();
         }
+
 #if UNITY_EDITOR
         public override void EditAwake()
         {
             base.EditAwake();
-            GetComponent<SpriteRenderer>().color = _Color;
+            if (GetComponent<TeamMember>()._StartingTeam.TryNonNull(out var team))
+                GetComponent<SpriteRenderer>().color = team._Color;
+            else
+                GetComponent<SpriteRenderer>().color = Color.white;
         }
 #endif
     }
