@@ -7,12 +7,12 @@ namespace Vheos.Games.ActionPoints
     public class UIButton : AMousableSprite, IUIHierarchy
     {
         // Inspector
-        [Range(0.1f, 1f)] public float _HighlightDuration = 0.5f;
-        [Range(1.0f, 2f)] public float _HighlightScale = 1.25f;
-        [Range(0.1f, 1f)] public float _ClickDuration = 0.1f;
+        [Range(0f, 1f)] public float _HighlightDuration = 0.5f;
+        [Range(1f, 2f)] public float _HighlightScale = 1.25f;
+        [Range(0f, 1f)] public float _ClickDuration = 0.1f;
         [Range(0.5f, 1f)] public float _ClickScale = 0.9f;
         [Range(0.5f, 1f)] public float _ClickColorScale = 0.9f;
-        [Range(0.1f, 1f)] public float _UnusableDuration = 0.5f;
+        [Range(0f, 1f)] public float _UnusableDuration = 0.5f;
         public Color _UnusableColor = 3.Inv().ToVector4();
         [Range(0f, 1f)] public float _AnimDuration = 0.5f;
 
@@ -28,10 +28,9 @@ namespace Vheos.Games.ActionPoints
         private UICostPointsBar _costPointsBar;
         private Vector2 _originalScale;
         private bool _isTargeting;
-        private Character _target;
         private void UpdateUsability()
         {
-            Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character._Color : _UnusableColor;
+            Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character.Color : _UnusableColor;
             _spriteRenderer.AnimateColor(this, targetColor, _UnusableDuration);
         }
 
@@ -69,21 +68,9 @@ namespace Vheos.Games.ActionPoints
         {
             base.MouseHold(button, location);
 
-            if (_isTargeting)
-            {
-                UI.TryGetTarget(out var newTarget);
-                if (_target != null && (newTarget == null || _target != newTarget))
-                {
-                    _target.LoseTargeting();
-                    _target = null;
-                }
-                if (newTarget != null && (_target == null || _target != newTarget))
-                {
-                    _target = newTarget;
-                    _target.GainTargeting(Action);
-                    UI.Character.LookAt(_target.transform);
-                }
-            }
+            if (_isTargeting
+            && UI.TryGetCursorCharacter(out var target))
+                UI.Character.LookAt(target.transform);
         }
         public override void MouseRelease(CursorManager.Button button, Vector3 location)
         {
@@ -96,17 +83,13 @@ namespace Vheos.Games.ActionPoints
             else if (_isTargeting)
             {
                 UI.StopTargeting();
-                if (_target != null)
-                {
-                    Action.Use(UI.Character, _target);
-                    _target.LoseTargeting();
-                }
-                _target = null;
+                if (UI.TryGetCursorCharacter(out var target))
+                    Action.Use(UI.Character, target);
                 _isTargeting = false;
             }
 
             transform.AnimateLocalScale(this, _originalScale * _HighlightScale, _ClickDuration);
-            _spriteRenderer.AnimateColor(this, UI.Character._Color, _ClickDuration);
+            _spriteRenderer.AnimateColor(this, UI.Character.Color, _ClickDuration);
         }
         override public void MouseLoseHighlight()
         {
@@ -122,7 +105,7 @@ namespace Vheos.Games.ActionPoints
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
             _spriteRenderer.sprite = Action._Sprite;
-            _spriteRenderer.color = UI.Character._Color;
+            _spriteRenderer.color = UI.Character.Color;
             _originalScale = transform.localScale;
 
             UpdateUsability();
