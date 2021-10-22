@@ -2,6 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.Extensions.Math;
+    using Tools.Extensions.UnityObjects;
 
     static public class NewUtility
     {
@@ -41,5 +42,13 @@ namespace Vheos.Games.ActionPoints
         => Random.value < chance;
         static public bool Flip()
         => Roll(0.5f);
+        static public RaycastHit[] RaycastFromCamera(Camera camera, int layerMask, bool hitTriggers, bool sortByDistance)
+        {
+            QueryTriggerInteraction triggerInteraction = hitTriggers ? QueryTriggerInteraction.Collide : QueryTriggerInteraction.Ignore;
+            RaycastHit[] hits = Physics.RaycastAll(camera.CursorRay(), float.PositiveInfinity, layerMask, triggerInteraction);
+            if (sortByDistance)
+                hits = hits.SortedByDistanceFrom(camera);
+            return hits;
+        }
     }
 }
