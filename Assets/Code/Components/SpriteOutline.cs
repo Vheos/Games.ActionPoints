@@ -13,19 +13,20 @@ namespace Vheos.Games.ActionPoints
         public Material _Material = null;
         [Range(0f, 0.1f)] public float _Thickness = 0.02f;
         public Color _Color = Color.white;
-        [Range(0f, 1f)] public float _AnimDuration = 0.5f;
+        [Range(0f, 1f)] public float _FadeInDuration = 0.5f;
+        [Range(0f, 1f)] public float _FadeOutDuration = 0.5f;
 
         // Public
         public void Show()
         {
             enabled = true;
-            this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, _Thickness, _AnimDuration);
-            _outlineSpriteRenderer.AnimateColor(this, _Color, _AnimDuration);
+            this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, _Thickness, _FadeInDuration);
+            _outlineSpriteRenderer.AnimateColor(this, _Color, _FadeInDuration);
         }
         public void Hide()
         {
-            this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, 0f, _AnimDuration, false, () => enabled = false);
-            _outlineSpriteRenderer.AnimateColor(this, _Color.NewA(0f), _AnimDuration);
+            this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, 0f, _FadeOutDuration, false, () => enabled = false);
+            _outlineSpriteRenderer.AnimateColor(this, _Color.NewA(0f), _FadeOutDuration);
         }
 
         // Private
