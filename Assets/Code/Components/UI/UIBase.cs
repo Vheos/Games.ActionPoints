@@ -61,8 +61,8 @@ namespace Vheos.Games.ActionPoints
         }
         public void StopTargeting()
         => _targetingLine.Deactivate();
-        public bool TryGetTarget(out Character target)
-        => _targetingLine.TryGetTarget(out target);
+        public bool TryGetCursorCharacter(out Character target)
+        => _targetingLine.TryGetCursorCharacter(out target);
         public void NotifyExhausted()
         => _pointsBar.NotifyExhausted();
         public void PopDamage(Vector3 position, float damage, int wounds)

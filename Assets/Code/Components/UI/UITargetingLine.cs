@@ -5,6 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
+    using Tools.Extensions.General;
 
     [RequireComponent(typeof(LineRenderer))]
     public class UITargetingLine : AUpdatable, IUIHierarchy
@@ -39,7 +40,7 @@ namespace Vheos.Games.ActionPoints
             _lineRenderer.SetPosition(1, _to.position);
             _lineRenderer.sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * _Tiling, 1);
         }
-        public bool TryGetTarget(out Character target)
+        public bool TryGetCursorCharacter(out Character target)
         {
             if (CursorManager.CursorMousable.TryNonNull(out var mousable)
             && mousable.TryGetComponent<Character>(out var character))
@@ -71,7 +72,7 @@ namespace Vheos.Games.ActionPoints
 
             _lineRenderer = GetComponent<LineRenderer>();
             _lineRenderer.positionCount = 2;
-            _lineRenderer.startColor = UI.Character._Color.NewA(_StartOpacity);
+            _lineRenderer.startColor = UI.Character.Color.NewA(_StartOpacity);
             this.GODeactivate();
         }
         public override void PlayUpdate()
