@@ -21,7 +21,7 @@ namespace Vheos.Games.ActionPoints
             Func<float> qurveValue = boomerang switch
             {
                 false => () => Qurve.ValueAt(elapsed() / duration),
-                true => () => Qurve.ValueAt(elapsed() / duration).Sub(0.5f).Abs().Neg().Add(0.5f),
+                true => () => Qurve.ValueAt(elapsed() / duration).Sub(0.5f).Abs().Neg().Add(0.5f).Mul(2f),
             };
             T finalValue = boomerang switch
             {
