@@ -1,6 +1,7 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Globalization;
     using UnityEngine;
     using UnityEngine.UI;
     using Tools.UtilityN;
@@ -16,11 +17,6 @@ namespace Vheos.Games.ActionPoints
                 if (t.HasFlag(flag))
                     action(flag);
         }
-        static public bool TryNonNull<T>(this T t, out T r) where T : UnityEngine.Object
-        {
-            r = t;
-            return r != null;
-        }
         static public void GOActivate(this Component t)
         => t.gameObject.SetActive(true);
         static public void GODeactivate(this Component t)
@@ -33,6 +29,56 @@ namespace Vheos.Games.ActionPoints
         => UnityEngine.Random.value < t;
         static public bool RollPercent(this float t)
         => t.Div(100f).Roll();
+        static public string ToInvariant(this float t)
+        => t.ToString(CultureInfo.InvariantCulture);
+        static public string ToInvariant(this float t, string format)
+        => t.ToString(format, CultureInfo.InvariantCulture);
+
+        // Legacy
+        /// <summary> Returns this array of hits sorted by distance from point a. </summary>
+        static public RaycastHit[] SortedByDistanceFrom(this RaycastHit[] t, Vector3 a)
+        {
+            RaycastHit[] r = t.MakeCopy();
+            for (int i = 0; i < r.Length; i++)
+            {
+                int jMin = i;
+                for (int j = i + 1; j < r.Length; j++)
+                    if (a.DistanceTo(r[j].point) < a.DistanceTo(r[jMin].point))
+                        jMin = j;
+
+                if (jMin != i)
+                    r[i].SwapWith(ref r[jMin]);
+            }
+
+            return r;
+        }
+        /// <summary> Returns this array of hits sorted by distance from object a. </summary>
+        static public RaycastHit[] SortedByDistanceFrom(this RaycastHit[] t, GameObject a)
+        => t.SortedByDistanceFrom(a.transform.position);
+        /// <summary> Returns this array of hits sorted by distance from object a. </summary>
+        static public RaycastHit[] SortedByDistanceFrom(this RaycastHit[] t, Component a)
+        => t.SortedByDistanceFrom(a.gameObject);
+        /// <summary> Returns a shallow copy of this array. </summary>
+        static public T[] MakeCopy<T>(this T[] t)
+        {
+            T[] r = new T[t.Length];
+            t.CopyTo(r, 0);
+            return r;
+        }
+        /// <summary> Swaps the references of this object and a. </summary>
+        static public void SwapWith<T>(this T t, T a) where T : class
+        {
+            T temp = t;
+            t = a;
+            a = temp;
+        }
+        /// <summary> Swaps the references of this object and a. </summary>
+        static public void SwapWith<T>(ref this T t, ref T a) where T : struct
+        {
+            T temp = t;
+            t = a;
+            a = temp;
+        }
 
         // Bool
         static public int To01(this bool t)
@@ -80,7 +126,7 @@ namespace Vheos.Games.ActionPoints
         => !Input.GetKey(t);
 
         /// <summary> Returns this vector projected on a plane with normal a. </summary>
-        static public Vector3 ProjectVectorOnPlane(this Vector3 t, Vector3 a)
+        static public Vector3 ProjectOnPlane(this Vector3 t, Vector3 a)
         => Vector3.ProjectOnPlane(t, a);
         static public Vector3 Rotate(this Vector2 t, Vector3 a, float b, bool inDegrees = true)
         => t.Append().Rotate(a, b, inDegrees);
