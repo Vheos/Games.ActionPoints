@@ -3,7 +3,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
     using UnityEngine;
     using Tools.Extensions.Math;
 
-    [CreateAssetMenu(fileName = nameof(DealDamage), menuName = CONTEXT_MENU_PATH + nameof(DealDamage))]
+    [CreateAssetMenu(fileName = nameof(DealDamage), menuName = CONTEXT_MENU_PATH + nameof(DealDamage), order = 2)]
     public class DealDamage : AActionEffect
     {
         // Overrides

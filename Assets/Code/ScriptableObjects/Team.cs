@@ -4,7 +4,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.Extensions.General;
 
-    [CreateAssetMenu(fileName = nameof(Team), menuName = nameof(Team))]
+    [CreateAssetMenu(fileName = nameof(Team), menuName = nameof(Team), order = 4)]
     public class Team : ScriptableObject
     {
         // Inspector
@@ -12,8 +12,7 @@ namespace Vheos.Games.ActionPoints
 
         // Public
         public IEnumerable<TeamMember> Members
-        => _membersByTeam[this];
-           
+        => _membersByTeam[this];           
         
         public int Count
         => _membersByTeam[this].Count;

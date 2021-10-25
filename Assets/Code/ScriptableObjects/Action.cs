@@ -2,7 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
 
-    [CreateAssetMenu(fileName = nameof(Action), menuName = nameof(Action))]
+    [CreateAssetMenu(fileName = nameof(Action), menuName = nameof(Action), order = 1)]
     public class Action : ScriptableObject
     {
         // Inspector
@@ -10,6 +10,7 @@ namespace Vheos.Games.ActionPoints
         [Range(0, 5)] public int _ActionPointsCost = 1;
         [Range(0, 5)] public int _FocusPointsCost = 1;
         public bool _IsTargeted = false;
+        public ActionAnimation _Animation = null;
         public AActionEffect.Data[] _EffectDataArray = new AActionEffect.Data[1];
 
         // Publics
