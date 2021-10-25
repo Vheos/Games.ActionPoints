@@ -144,7 +144,7 @@ namespace Vheos.Games.ActionPoints
                 OnCameraMoved?.Invoke(_previousMousePosition, Input.mousePosition);
         }
         public delegate void CameraMoved(Vector2 from, Vector2 to);
-        static public CameraMoved OnCameraMoved;
+        static public event CameraMoved OnCameraMoved;
 
         // Enum
         public enum Button
