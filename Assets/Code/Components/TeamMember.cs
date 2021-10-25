@@ -1,7 +1,5 @@
 namespace Vheos.Games.ActionPoints
 {
-    using UnityEngine;
-    using Tools.Extensions.UnityObjects;
     using Vheos.Tools.UnityCore;
 
     public class TeamMember : APlayable
