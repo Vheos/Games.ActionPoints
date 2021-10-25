@@ -58,6 +58,7 @@ namespace Vheos.Games.ActionPoints
             if (Action._IsTargeted)
             {
                 UI.StartTargeting(transform, CursorManager.CursorTransform);
+                UI.Character.ActionAnimator.AnimateState(Action._Animation.Charge);
                 _isTargeting = true;
             }
 
@@ -84,7 +85,12 @@ namespace Vheos.Games.ActionPoints
             {
                 UI.StopTargeting();
                 if (UI.TryGetCursorCharacter(out var target))
+                {
+                    UI.Character.ActionAnimator.AnimateState(Action._Animation.Release);
                     Action.Use(UI.Character, target);
+                }
+                else
+                    UI.Character.ActionAnimator.AnimateState(Action._Animation.Idle);
                 _isTargeting = false;
             }
 
