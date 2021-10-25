@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
 
     [DisallowMultipleComponent]
-    abstract public class ASnappable : AUpdatable
+    abstract public class ASnappable : APlayable
     {
         // Public
         abstract public Vector3 GetClosestSurfacePointLocal(Vector3 point);

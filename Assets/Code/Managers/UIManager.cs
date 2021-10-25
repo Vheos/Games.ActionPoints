@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
 
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-1)]
-    public class UIManager : AUpdatable
+    public class UIManager : APlayable
     {
         // Constants
         private const string UI_ROOT_NAME = "UI";

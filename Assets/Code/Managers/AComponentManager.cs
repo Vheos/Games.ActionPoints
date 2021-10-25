@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using System.Linq;
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-1)]
-    abstract public class AComponentManager<T> : AUpdatable where T : Behaviour
+    abstract public class AComponentManager<T> : APlayable where T : Behaviour
     {
         // Publics
         static public T FirstActive

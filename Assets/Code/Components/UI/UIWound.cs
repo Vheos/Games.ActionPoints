@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
 
     [RequireComponent(typeof(SpriteRenderer))]
-    public class UIWound : AUpdatable, IUIHierarchy
+    public class UIWound : APlayable, IUIHierarchy
     {
         // Inspector
         [Range(0f, 1f)] public float _AnimDuration = 0.5f;

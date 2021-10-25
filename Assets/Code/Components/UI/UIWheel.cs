@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
 
-    public class UIWheel : AUpdatable, IUIHierarchy
+    public class UIWheel : APlayable, IUIHierarchy
     {
         // Inspector
         [Range(0f, 1f)] public float _AnimDuration;

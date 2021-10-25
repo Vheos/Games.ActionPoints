@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
 
-    public class UIBase : AUpdatable, IUIHierarchy
+    public class UIBase : APlayable, IUIHierarchy
     {
         // Inspector
         [Header("Buttons")]

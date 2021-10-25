@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
 
-    public class UIPopupHandler : AUpdatable, IUIHierarchy
+    public class UIPopupHandler : APlayable, IUIHierarchy
     {
         // Inspector
 

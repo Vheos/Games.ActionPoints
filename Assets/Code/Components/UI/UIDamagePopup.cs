@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
 
-    public class UIDamagePopup : AUpdatable
+    public class UIDamagePopup : APlayable
     {
         // Inspector
         public Vector2 _AngleRandomRange = new Vector2(-15, +15);
