@@ -1,3 +1,5 @@
+// change AMousable to component (from abstract class)
+
 namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
@@ -32,6 +34,11 @@ namespace Vheos.Games.ActionPoints
         => _RawMaxPoints - WoundsCount;
         public bool IsExhausted
         => ActionProgress < 0;
+        public Vector3 CombatPosition
+        { get; private set; }
+        public ActionAnimator ActionAnimator
+        => GetComponent<ActionAnimator>();
+
         // Focus
         public float FocusProgress
         { get; private set; }
@@ -138,10 +145,10 @@ namespace Vheos.Games.ActionPoints
         public delegate void PointsCountChanged(int previous, int current);
         public delegate void ExhaustStateChangedZero(bool isExhausted);
         public delegate void WoundsCountChanged(int previous, int current);
-        public PointsCountChanged OnActionPointsCountChanged;
-        public PointsCountChanged OnFocusPointsCountChanged;
-        public ExhaustStateChangedZero OnExhaustStateChanged;
-        public WoundsCountChanged OnWoundsCountChanged;
+        public event PointsCountChanged OnActionPointsCountChanged;
+        public event PointsCountChanged OnFocusPointsCountChanged;
+        public event ExhaustStateChangedZero OnExhaustStateChanged;
+        public event WoundsCountChanged OnWoundsCountChanged;
 
         // Mouse
         public override void MouseGainHighlight()
@@ -171,6 +178,7 @@ namespace Vheos.Games.ActionPoints
             _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.PrefabUIBase);
             _actionUI.Character = this;
 
+            CombatPosition = TryGetComponent<SnapTo>(out var snapTo) ? snapTo.TargetPosition : transform.position;
             UpdateColors();
         }
         public override void PlayUpdate()
