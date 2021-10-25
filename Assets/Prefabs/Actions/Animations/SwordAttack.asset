@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996a1c6b18850864ab72286a5eb471c7, type: 3}
+  m_Name: SwordAttack
+  m_EditorClassIdentifier: 
+  Idle:
+    _ForwardDistance: 0
+    _ArmLength: 0.25
+    _ArmRotation: {x: 0, y: 0, z: 330}
+    _HandRotation: {x: 0, y: 0, z: 330}
+    _AnimDurationForwardDistance: 1
+    _AnimDurationArmLength: -1
+    _AnimDurationArmRotation: 1
+    _AnimDurationHandRotation: 1
+  Charge:
+    _ForwardDistance: 0
+    _ArmLength: 0
+    _ArmRotation: {x: 45, y: 0, z: 390}
+    _HandRotation: {x: 0, y: 0, z: 360}
+    _AnimDurationForwardDistance: 0.5
+    _AnimDurationArmLength: -1
+    _AnimDurationArmRotation: 0.5
+    _AnimDurationHandRotation: 0.5
+  Release:
+    _ForwardDistance: 0
+    _ArmLength: 1
+    _ArmRotation: {x: 75, y: 0, z: 240}
+    _HandRotation: {x: 0, y: 0, z: 270}
+    _AnimDurationForwardDistance: 0.25
+    _AnimDurationArmLength: -1
+    _AnimDurationArmRotation: 0.25
+    _AnimDurationHandRotation: 0.25
