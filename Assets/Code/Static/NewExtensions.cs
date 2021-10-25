@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UtilityN;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
+    using System.Collections.Generic;
 
     static public class NewExtensions
     {
@@ -33,6 +34,28 @@ namespace Vheos.Games.ActionPoints
         => t.ToString(CultureInfo.InvariantCulture);
         static public string ToInvariant(this float t, string format)
         => t.ToString(format, CultureInfo.InvariantCulture);
+        static public GameObject CreateChildGameObject(this GameObject t, string name = null)
+        {
+            GameObject r = new GameObject();
+            if (name != null)
+                r.name = name;
+            r.BecomeChildOf(t);
+            return r;
+        }
+        static public GameObject CreateChildGameObject(this Component t, string name = null)
+        => t.gameObject.CreateChildGameObject(name);
+
+        // Float
+        static public Vector2 Append(this float t, float y = 0f)
+        => new Vector2(t, y);
+        static public Vector3 Append(this float t, float y, float z)
+        => new Vector3(t, y, z);
+        static public Vector3 Append(this float t, Vector2 a)
+        => new Vector3(t, a.x, a.y);
+        static public Vector4 Append(this float t, float y, float z, float w)
+        => new Vector4(t, y, z, w);
+        static public Vector3 Append(this float t, Vector3 a)
+        => new Vector4(t, a.x, a.y, a.z);
 
         // Legacy
         /// <summary> Returns this array of hits sorted by distance from point a. </summary>
