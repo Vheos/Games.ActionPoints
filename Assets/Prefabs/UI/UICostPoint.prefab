@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _CantUseScale: 3
   _CantUseAnimDuration: 0.5
-  _Opacity: 0.75
+  _Opacity: 1
 --- !u!33 &-2558410197517170183
 MeshFilter:
   m_ObjectHideFlags: 0
