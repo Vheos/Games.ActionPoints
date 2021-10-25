@@ -7,8 +7,9 @@ namespace Vheos.Games.ActionPoints.Editor
     using System.Reflection;
     using UnityEngine;
     using UnityEditor;
+
     [CustomPropertyDrawer(typeof(EnumMaskAttribute))]
-    public class EnumMaskPropertyDrawer : PropertyDrawer
+    public class EnumMask_PropertyDrawer : PropertyDrawer
     {
         Dictionary<string, bool> openFoldouts = new Dictionary<string, bool>();
 
