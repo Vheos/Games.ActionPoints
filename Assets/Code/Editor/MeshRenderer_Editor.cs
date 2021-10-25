@@ -1,8 +1,10 @@
+#if UNITY_EDITOR
 namespace Vheos.Games.ActionPoints.Editor
 {
     using UnityEngine;
     using UnityEditor;
     using System.Linq;
+
     [CustomEditor(typeof(MeshRenderer))]
     public class MeshRendererSortingEditor : Editor
     {
@@ -39,3 +41,4 @@ namespace Vheos.Games.ActionPoints.Editor
         }
     }
 }
+#endif
