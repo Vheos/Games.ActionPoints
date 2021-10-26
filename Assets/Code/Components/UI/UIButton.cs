@@ -86,11 +86,11 @@ namespace Vheos.Games.ActionPoints
                 UI.StopTargeting();
                 if (UI.TryGetCursorCharacter(out var target))
                 {
-                    UI.Character.ActionAnimator.AnimateState(Action._Animation.Release);
+                    UI.Character.ActionAnimator.AnimateStateThenIdle(Action._Animation.Release);
                     Action.Use(UI.Character, target);
                 }
                 else
-                    UI.Character.ActionAnimator.AnimateState(Action._Animation.Idle);
+                    UI.Character.ActionAnimator.AnimateState(UI.Character.Tool._Idle);
                 _isTargeting = false;
             }
 
