@@ -1,7 +1,7 @@
 namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
-    using Vheos.Tools.Extensions.Math;
+    using Tools.Extensions.Math;
     public class MoveTowards : AFollowTarget
     {
         // Overrides

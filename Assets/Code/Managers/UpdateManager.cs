@@ -1,7 +1,7 @@
 namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
-    using Vheos.Tools.UnityCore; 
+    using Tools.UnityCore; 
     
     public class UpdateManager : AUpdateManager
     {

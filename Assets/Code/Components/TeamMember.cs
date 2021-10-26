@@ -1,6 +1,6 @@
 namespace Vheos.Games.ActionPoints
 {
-    using Vheos.Tools.UnityCore;
+    using Tools.UnityCore;
 
     public class TeamMember : APlayable
     {

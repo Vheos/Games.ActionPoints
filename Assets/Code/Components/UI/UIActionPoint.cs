@@ -3,7 +3,7 @@ namespace Vheos.Games.ActionPoints
     using System;
     using UnityEngine;
     using Tools.Extensions.UnityObjects;
-    using Vheos.Tools.Extensions.Math;
+    using Tools.Extensions.Math;
 
     public class UIActionPoint : AUIPoint
     {       
