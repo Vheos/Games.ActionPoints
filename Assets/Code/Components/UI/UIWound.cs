@@ -21,14 +21,20 @@ namespace Vheos.Games.ActionPoints
             transform.localRotation = Quaternion.Euler(0f, 0f, -Random.Range(randFrom, randTo));
 
             Vector2 fadeInPosition = Vector2.up.Mul(_FadeDistance).Rotate(transform.localRotation);
-            transform.AnimateLocalPosition(this, fadeInPosition, Vector2.zero, _AnimDuration);
-            _spriteRenderer.AnimateColor(this, _spriteRenderer.color.NewA(1f), _AnimDuration);
+            using (AnimationManager.Group(this, null, _AnimDuration))
+            {
+                transform.GroupAnimateLocalPosition(fadeInPosition, Vector2.zero);
+                _spriteRenderer.GroupAnimateColor(_spriteRenderer.color.NewA(1f));
+            }
         }
         public void Hide()
         {
             Vector2 fadeOutPosition = Vector2.right.Mul(_FadeDistance).Rotate(transform.localRotation);
-            transform.AnimateLocalPosition(this, fadeOutPosition, _AnimDuration);
-            _spriteRenderer.AnimateColor(this, _spriteRenderer.color.NewA(0f), _AnimDuration, false, this.GODeactivate);
+            using (AnimationManager.Group(this, null, _AnimDuration, this.GODeactivate))
+            {
+                transform.GroupAnimateLocalPosition(fadeOutPosition);
+                _spriteRenderer.GroupAnimateColor(_spriteRenderer.color.NewA(0f));
+            }
         }
 
         // Privates

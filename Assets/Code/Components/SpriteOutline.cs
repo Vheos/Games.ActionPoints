@@ -20,13 +20,19 @@ namespace Vheos.Games.ActionPoints
         public void Show()
         {
             enabled = true;
-            this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, _Thickness, _FadeInDuration);
-            _outlineSpriteRenderer.AnimateColor(this, _Color, _FadeInDuration);
+            using (AnimationManager.Group(this, null, _FadeInDuration))
+            {
+                this.GroupAnimate(v => _currentThickness = v, _currentThickness, _Thickness);
+                _outlineSpriteRenderer.GroupAnimateColor(_Color);
+            }
         }
         public void Hide()
         {
-            this.Animate(nameof(_currentThickness), v => _currentThickness = v, _currentThickness, 0f, _FadeOutDuration, false, () => enabled = false);
-            _outlineSpriteRenderer.AnimateColor(this, _Color.NewA(0f), _FadeOutDuration);
+            using (AnimationManager.Group(this, null, _FadeOutDuration, () => enabled = false))
+            {
+                this.GroupAnimate(v => _currentThickness = v, _currentThickness, 0f);
+                _outlineSpriteRenderer.GroupAnimateColor(_Color.NewA(0f));
+            }
         }
 
         // Private

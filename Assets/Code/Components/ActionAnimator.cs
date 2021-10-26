@@ -10,9 +10,6 @@ namespace Vheos.Games.ActionPoints
         // Const
         private const string ARM_NAME = "Arm";
         private const string HAND_NAME = "Hand";
-        private const string ARM_LENGTH_UID = "ArmLength";
-        private const string ARM_ROTATION_UID = "ArmRotation";
-        private const string HAND_ROTATION_UID = "HandRotation";
 
         // Inspector
         public GameObject _Parent;
@@ -20,17 +17,17 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public void AnimateState(ActionAnimation.StateData state)
         {
-            if (state._ForwardDistanceEnabled)
-                transform.AnimatePosition(this, GetComponent<Character>().CombatPosition + transform.right * state._ForwardDistance, state._Duration);
-
-            if (state._ArmLengthEnabled)
-                AnimationManager.Animate(this, ARM_LENGTH_UID, v => _arm.Length = v, _arm.Length, state._ArmLength, state._Duration);
-
-            if (state._ArmRotationEnabled)
-                _arm.transform.AnimateLocalRotation(this, ARM_ROTATION_UID, state._ArmRotation, state._Duration);
-
-            if (state._HandRotationEnabled)
-                _handTransform.AnimateLocalRotation(this, HAND_ROTATION_UID, state._HandRotation, state._Duration);
+            using (AnimationManager.Group(this, null, state._Duration))
+            {
+                if (state._ForwardDistanceEnabled)
+                    transform.GroupAnimatePosition(GetComponent<Character>().CombatPosition + transform.right * state._ForwardDistance);
+                if (state._ArmLengthEnabled)
+                    AnimationManager.GroupAnimate(v => _arm.Length = v, _arm.Length, state._ArmLength);
+                if (state._ArmRotationEnabled)
+                    _arm.transform.GroupAnimateLocalRotation(state._ArmRotation);
+                if (state._HandRotationEnabled)
+                    _handTransform.GroupAnimateLocalRotation(state._HandRotation);
+            }
         }
 
         // Privates

@@ -34,7 +34,7 @@ namespace Vheos.Games.ActionPoints
             _textMesh.text = damage.RoundDown().ToString();
             if (_PercentSignSize > 0f)
                 _textMesh.text += $"<size={_PercentSignSize.ToInvariant("F2")}>%</size>";
-            
+
             FadeIn();
             if (isWound)
                 Pulse();
@@ -48,11 +48,18 @@ namespace Vheos.Games.ActionPoints
             Vector3 direction = localDirection.Rotate(CameraManager.FirstActive.transform.rotation);
             if (_AlignTextRotationToDirection)
                 transform.localRotation = Quaternion.LookRotation(transform.forward, localDirection);
-            transform.AnimateLocalPosition(this, direction * _Distance, _FadeInDuration);
-            _textMesh.AnimateAlpha(this, 1f, _FadeInDuration, false, StayUp);
+
+            using (AnimationManager.Group(this, null, _FadeInDuration, StayUp))
+            {
+                transform.GroupAnimateLocalPosition(direction * _Distance);
+                _textMesh.GroupAnimateAlpha(1f);
+            }
         }
         private void StayUp()
-        => AnimationManager.Wait(this, AnimationManager.ComponentProperty.TextMeshProAlpha, _StayUpDuration, FadeOut);
+        {
+            var componentProperty = AnimationManager.GetUID(AnimationManager.ComponentProperty.TextMeshProAlpha);
+            AnimationManager.Wait(this, componentProperty, _StayUpDuration, FadeOut);
+        }
         private void FadeOut()
         => _textMesh.AnimateAlpha(this, 0f, _FadeOutDuration, false, () => this.DestroyObject());
         private void Pulse()
