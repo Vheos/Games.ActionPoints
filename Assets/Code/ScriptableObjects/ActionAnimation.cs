@@ -8,7 +8,6 @@ namespace Vheos.Games.ActionPoints
     public class ActionAnimation : ScriptableObject
     {
         // Inspector
-        public StateData Idle;
         public StateData Charge;
         public StateData Release;
 
@@ -19,7 +18,7 @@ namespace Vheos.Games.ActionPoints
             // Inspector
             [Range(0f, 1f)] public float _Duration;
             [Range(0f, 1f)] public float _WaitTime;
-            [Range(-1f, 1f)] public float _ForwardDistance;
+            [Range(-0.5f, +0.5f)] public float _ForwardDistance;
             [Range(0f, 1f)] public float _ArmLength;
             public Vector3 _ArmRotation;
             public Vector3 _HandRotation;
