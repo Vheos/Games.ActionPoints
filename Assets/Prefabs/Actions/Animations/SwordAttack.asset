@@ -13,29 +13,35 @@ MonoBehaviour:
   m_Name: SwordAttack
   m_EditorClassIdentifier: 
   Idle:
+    _Duration: 0
+    _WaitTime: 0
     _ForwardDistance: 0
     _ArmLength: 0.25
     _ArmRotation: {x: 0, y: 0, z: 330}
     _HandRotation: {x: 0, y: 0, z: 330}
-    _AnimDurationForwardDistance: 1
-    _AnimDurationArmLength: -1
-    _AnimDurationArmRotation: 1
-    _AnimDurationHandRotation: 1
+    _ForwardDistanceEnabled: 0
+    _ArmLengthEnabled: 0
+    _ArmRotationEnabled: 1
+    _HandRotationEnabled: 1
   Charge:
-    _ForwardDistance: 0
+    _Duration: 0.12
+    _WaitTime: 0
+    _ForwardDistance: -0.25
     _ArmLength: 0
     _ArmRotation: {x: 45, y: 0, z: 390}
     _HandRotation: {x: 0, y: 0, z: 360}
-    _AnimDurationForwardDistance: 0.5
-    _AnimDurationArmLength: -1
-    _AnimDurationArmRotation: 0.5
-    _AnimDurationHandRotation: 0.5
+    _ForwardDistanceEnabled: 1
+    _ArmLengthEnabled: 0
+    _ArmRotationEnabled: 1
+    _HandRotationEnabled: 1
   Release:
-    _ForwardDistance: 0
+    _Duration: 0
+    _WaitTime: 0.5
+    _ForwardDistance: 0.25
     _ArmLength: 1
     _ArmRotation: {x: 75, y: 0, z: 240}
     _HandRotation: {x: 0, y: 0, z: 270}
-    _AnimDurationForwardDistance: 0.25
-    _AnimDurationArmLength: -1
-    _AnimDurationArmRotation: 0.25
-    _AnimDurationHandRotation: 0.25
+    _ForwardDistanceEnabled: 1
+    _ArmLengthEnabled: 0
+    _ArmRotationEnabled: 1
+    _HandRotationEnabled: 1
