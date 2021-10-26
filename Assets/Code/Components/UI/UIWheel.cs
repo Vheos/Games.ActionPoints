@@ -32,7 +32,6 @@ namespace Vheos.Games.ActionPoints
             foreach (var button in _buttons)
                 button.RecieveMouseEvents = true;
 
-
             AlignButtons(GetWheelDirection(), UI._WheelRadius, UI._WheelMaxAngle);
             IsExpanded = true;
         }

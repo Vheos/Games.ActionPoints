@@ -8,8 +8,8 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.General;
 
-    [DisallowMultipleComponent]
     [DefaultExecutionOrder(-1)]
+    [DisallowMultipleComponent]
     public class CursorManager : AUpdatable
     {
         // Inspector
@@ -51,6 +51,7 @@ namespace Vheos.Games.ActionPoints
         static private void UpdateCursorMousable()
         {
             if (CameraManager.CursorCamera.TryNonNull(out var activeCamera))
+            {
                 foreach (var hitInfo in NewUtility.RaycastFromCamera(activeCamera, LayerMask.GetMask(nameof(AMousable)), true, true))
                     if (hitInfo.collider.TryGetComponent<AMousable>(out var hitMousable)
                     && hitMousable.enabled
@@ -61,6 +62,7 @@ namespace Vheos.Games.ActionPoints
                         CursorMousableHitInfo = hitInfo;
                         return;
                     }
+            }
 
             CursorMousable = null;
             CursorMousableHitInfo = new RaycastHit

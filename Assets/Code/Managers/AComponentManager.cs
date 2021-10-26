@@ -4,8 +4,9 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using System.Linq;
-    [DisallowMultipleComponent]
+
     [DefaultExecutionOrder(-1)]
+    [DisallowMultipleComponent]
     abstract public class AComponentManager<T> : APlayable where T : Behaviour
     {
         // Publics
