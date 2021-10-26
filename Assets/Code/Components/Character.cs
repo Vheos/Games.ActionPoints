@@ -11,6 +11,7 @@ namespace Vheos.Games.ActionPoints
     [RequireComponent(typeof(SpriteOutline))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(TeamMember))]
+    [RequireComponent(typeof(ActionAnimator))]
     public class Character : AMousableSprite
     {
         // Inspector
@@ -21,6 +22,7 @@ namespace Vheos.Games.ActionPoints
         [Range(0f, 1f)] public float _ExhaustSpeed = 0.5f;
         [Range(0f, 100f)] public float _BluntArmor = 0f;
         [Range(0f, 100f)] public float _SharpArmor = 0f;
+        public Tool _StartingTool;
 
         // Publics
         // Action
@@ -34,11 +36,6 @@ namespace Vheos.Games.ActionPoints
         => _RawMaxPoints - WoundsCount;
         public bool IsExhausted
         => ActionProgress < 0;
-        public Vector3 CombatPosition
-        { get; private set; }
-        public ActionAnimator ActionAnimator
-        => GetComponent<ActionAnimator>();
-
         // Focus
         public float FocusProgress
         { get; private set; }
@@ -88,12 +85,33 @@ namespace Vheos.Games.ActionPoints
         => _teamMember.Team;
         public Color Color
         => Team != null ? Team._Color : Color.white;
+        public Vector3 CombatPosition
+        { get; private set; }
+        public ActionAnimator ActionAnimator
+        => GetComponent<ActionAnimator>();
+        public Transform HandTransform
+        => _actionAnimator.HandTransform;
+        public Tool Tool
+        { get; private set; }
+        public void Equip(Tool tool)
+        {
+            if (tool == null)
+                return;
+
+            Tool = tool;
+            Tool.GetEquippedBy(this);
+        }
+        public void Unequip()
+        {
+            if (Tool == null)
+                return;
+
+            Tool.GetUnequipped();
+            Tool = null;
+        }
 
         // Private
         private UIBase _actionUI;
-        private SpriteOutline _spriteOutline;
-        private TeamMember _teamMember;
-        private Animator _animator;
         private float _previousActionProgress;
         private float _previousFocusProgress;
         private int _previousWoundsCount;
@@ -119,6 +137,18 @@ namespace Vheos.Games.ActionPoints
         {
             _spriteRenderer.color = Color;
             _spriteOutline._Color = Color;
+        }
+        // Components
+        private SpriteOutline _spriteOutline;
+        private TeamMember _teamMember;
+        private Animator _animator;
+        private ActionAnimator _actionAnimator;
+        private void CacheComponents()
+        {
+            _animator = GetComponent<Animator>();
+            _spriteOutline = GetComponent<SpriteOutline>();
+            _teamMember = GetComponent<TeamMember>();
+            _actionAnimator = GetComponent<ActionAnimator>();
         }
 
         // Events
@@ -171,15 +201,18 @@ namespace Vheos.Games.ActionPoints
         public override void PlayAwake()
         {
             base.PlayAwake();
-            _animator = GetComponent<Animator>();
-            _spriteOutline = GetComponent<SpriteOutline>();
-            _teamMember = GetComponent<TeamMember>();
+            CacheComponents();
 
             _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.PrefabUIBase);
             _actionUI.Character = this;
 
             CombatPosition = TryGetComponent<SnapTo>(out var snapTo) ? snapTo.TargetPosition : transform.position;
             UpdateColors();
+        }
+        public override void PlayStart()
+        {
+            base.PlayStart();
+            Equip(_StartingTool);
         }
         public override void PlayUpdate()
         {
