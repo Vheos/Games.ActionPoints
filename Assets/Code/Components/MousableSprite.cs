@@ -5,10 +5,10 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
 
     [RequireComponent(typeof(SpriteRenderer))]
-    abstract public class AMousableSprite : AMousable
+    abstract public class MousableSprite : Mousable
     {
         // Inspector
-        [Range(0f, 1f)] public float _TransparencyThreshold = 0.5f;
+        [SerializeField] [Range(0f, 1f)] protected float _TransparencyThreshold = 0.5f;
 
         // Privates
         protected SpriteRenderer _spriteRenderer;
@@ -22,7 +22,7 @@ namespace Vheos.Games.ActionPoints
             return true;
         }
 
-        // Mono
+        // Play
         public override void PlayAwake()
         {
             base.PlayAwake();

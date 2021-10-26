@@ -5,26 +5,27 @@ namespace Vheos.Games.ActionPoints
 
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-1)]
-    public class UIManager : APlayable
+    public class UIManager : ABaseComponent
     {
         // Constants
         private const string UI_ROOT_NAME = "UI";
 
         // Inspector
-        public GameObject _PrefabUIBase = null;
+        [SerializeField] protected UISettings _Settings = null;
+        [SerializeField] protected UIPrefabs _Prefabs = null;
 
         // Publics
-        static public GameObject PrefabUIBase
-        => _instance._PrefabUIBase;
+        static public UISettings Settings
+        => _instance._Settings;
+        static public UIPrefabs Prefabs
+        => _instance._Prefabs;
         static public Transform HierarchyRoot
-        { get; private set; }
-        static public Camera Camera
         { get; private set; }
 
         // Privates
         static private UIManager _instance;
 
-        // Mono
+        // Play
         public override void PlayAwake()
         {
             base.PlayAwake();

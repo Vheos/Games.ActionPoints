@@ -8,12 +8,14 @@ namespace Vheos.Games.ActionPoints
     public class Team : ScriptableObject
     {
         // Inspector
-        public Color _Color;
+        [SerializeField] protected Color _Color = Color.white;
 
         // Public
+        public Color Color
+        => _Color;
         public IEnumerable<TeamMember> Members
-        => _membersByTeam[this];           
-        
+        => _membersByTeam[this];
+
         public int Count
         => _membersByTeam[this].Count;
         public Vector3 Midpoint
@@ -33,7 +35,7 @@ namespace Vheos.Games.ActionPoints
         => _membersByTeam[this].Add(member);
         public void TryInitialize()
         {
-            if(!_membersByTeam.ContainsKey(this))
+            if (!_membersByTeam.ContainsKey(this))
                 _membersByTeam[this] = new List<TeamMember>();
         }
 

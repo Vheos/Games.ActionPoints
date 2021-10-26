@@ -7,14 +7,24 @@ namespace Vheos.Games.ActionPoints
     public class Action : ScriptableObject
     {
         // Inspector
-        public Sprite _Sprite = null;
-        [Range(0, 5)] public int _ActionPointsCost = 1;
-        [Range(0, 5)] public int _FocusPointsCost = 1;
-        public bool _IsTargeted = false;
-        public ActionAnimation _Animation = null;
-        public AActionEffect.Data[] _EffectDataArray = new AActionEffect.Data[1];
+        [SerializeField] protected Sprite _Sprite = null;
+        [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 1;
+        [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 1;
+        [SerializeField] protected bool _IsTargeted = false;
+        [SerializeField] protected ActionAnimation _Animation = null;
+        [SerializeField] protected AActionEffect.Data[] _EffectDataArray = new AActionEffect.Data[1];
 
         // Publics
+        public Sprite Sprite
+        => _Sprite;
+        public int ActionPointsCost
+        => _ActionPointsCost;
+        public int FocusPointsCost
+        => _FocusPointsCost;
+        public bool IsTargeted
+        => _IsTargeted;
+        public ActionAnimation Animation
+        => _Animation;
         public bool CanBeUsed(Character character)
         {
             return !character.IsExhausted
@@ -23,13 +33,10 @@ namespace Vheos.Games.ActionPoints
         }
         public void Use(Character user, Character target)
         {
-            Debug.Log($"{user.name} is using {name}" + (target != null ? $" on {target.name}" : ""));
             user.ChangeActionPoints(-_ActionPointsCost);
             user.ChangeFocusPoints(-_FocusPointsCost);
             foreach (var effectData in _EffectDataArray)
                 effectData.Invoke(user, target);
         }
-
-
     }
 }

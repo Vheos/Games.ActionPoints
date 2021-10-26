@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2577891044044771581}
+  - component: {fileID: 60107475646933465}
+  - component: {fileID: 3522306608810605067}
   - component: {fileID: 2577891044044771582}
   - component: {fileID: 2381005829110229899}
   - component: {fileID: 6645642164658842245}
@@ -41,6 +43,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &60107475646933465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577891044044771577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3522306608810605067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577891044044771577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b366e7cda0f7714b99fca9abac17136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2577891044044771582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,7 +79,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 010d4d301a7c4b14c9b9341d5e54ad38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _TransparencyThreshold: 0.5
   _Actions:
   - {fileID: 11400000, guid: 239806782e1eace4d8294bc8cb7762d1, type: 2}
   - {fileID: 11400000, guid: 114c3c2a74c1ae9448ddbddf4780bcce, type: 2}
@@ -64,6 +89,7 @@ MonoBehaviour:
   _ExhaustSpeed: 0.15
   _BluntArmor: 0
   _SharpArmor: 0
+  _StartingTool: {fileID: 0}
 --- !u!114 &2381005829110229899
 MonoBehaviour:
   m_ObjectHideFlags: 0

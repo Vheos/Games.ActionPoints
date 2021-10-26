@@ -1,23 +1,16 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System;
     using UnityEngine;
-    using Tools.Extensions.UnityObjects;
-    using Tools.Extensions.Math;
 
     abstract public class AUIPoint : ACustomDrawable, IUIHierarchy
     {
-        // Inspector 
-        public float _CantUseScale = 2.0f;
-        [Range(0f, 1f)] public float _CantUseAnimDuration;
-
         // Publics
         public UIBase UI
         { get; private set; }
         public int Index
         { get; set; }
         public void PlayCantUseAnim()
-        => transform.AnimateLocalScale(this, _originalScale, _originalScale * _CantUseScale, _CantUseAnimDuration, true);
+        => transform.AnimateLocalScale(this, _originalScale, _originalScale * UIManager.Settings._PointCantUseScale, UIManager.Settings._PointCantUseAnimDuration, null, QAnimator.AnimationStyle.Boomerang);
 
         // Private
         private Vector2 _originalScale;
@@ -69,18 +62,18 @@ namespace Vheos.Games.ActionPoints
             Opacity,
         }
 
-        // Mono
-        public override void PlayStart()
+        // Play
+        public override void PlayAwake()
         {
-            base.PlayStart();
+            base.PlayAwake();
             name = GetType().Name;
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
             _originalScale = transform.localScale;
-            Shape = UI._PointActionShape;
-            BackgroundColor = UI._PointBackgroundColor;
-            ActionColor = UI._PointActionColor;
-            FocusColor = UI._PointFocusColor;
+            Shape = UIManager.Settings._PointActionShape;
+            BackgroundColor = UIManager.Settings._PointBackgroundColor;
+            ActionColor = UIManager.Settings._PointActionColor;
+            FocusColor = UIManager.Settings._PointFocusColor;
         }
     }
 }

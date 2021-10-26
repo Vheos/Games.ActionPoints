@@ -1,13 +1,16 @@
 namespace Vheos.Games.ActionPoints
 {
+    using UnityEngine;
     using Tools.UnityCore;
 
-    public class TeamMember : APlayable
+    public class TeamMember : ABaseComponent
     {
         // Inspector
-        public Team _StartingTeam;
+        [SerializeField] protected Team _StartingTeam;
 
         // Publics
+        public Team StartingTeam
+        => _StartingTeam;
         public Team Team
         { get; private set; }
         public void ChangeTeam(Team newTeam)
@@ -32,7 +35,7 @@ namespace Vheos.Games.ActionPoints
             Team.AddMember(this);
         }
 
-        // Mono
+        // Play
         public override void PlayEnable()
         {
             base.PlayEnable();

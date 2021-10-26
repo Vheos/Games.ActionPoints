@@ -2,16 +2,12 @@ namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
     using UnityEngine;
-    using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
 
-    public class UIWheel : APlayable, IUIHierarchy
+    public class UIWheel : ABaseComponent, IUIHierarchy
     {
-        // Inspector
-        [Range(0f, 1f)] public float _AnimDuration;
-
         // Publics
         public UIBase UI
         { get; private set; }
@@ -28,18 +24,18 @@ namespace Vheos.Games.ActionPoints
         }
         public void ExpandButtons()
         {
-            transform.AnimateLocalScale(this, Vector3.one, _AnimDuration);
+            transform.AnimateLocalScale(this, Vector3.one, UIManager.Settings._WheelAnimDuration);
             foreach (var button in _buttons)
-                button.RecieveMouseEvents = true;
+                button.Get<Mousable>().enabled = true;
 
-            AlignButtons(GetWheelDirection(), UI._WheelRadius, UI._WheelMaxAngle);
+            AlignButtons(GetWheelDirection(), UIManager.Settings._WheelRadius, UIManager.Settings._WheelMaxAngle);
             IsExpanded = true;
         }
         public void CollapseButtons()
         {
-            transform.AnimateLocalScale(this, Vector3.zero, _AnimDuration);
+            transform.AnimateLocalScale(this, Vector3.zero, UIManager.Settings._WheelAnimDuration);
             foreach (var button in _buttons)
-                button.RecieveMouseEvents = false;
+                button.Get<Mousable>().enabled = false;
             IsExpanded = false;
         }
         public void Toggle()
@@ -57,11 +53,11 @@ namespace Vheos.Games.ActionPoints
             || team.Count <= 1)
                 return Vector3.up;
 
-            return team.Midpoint.ScreenOffsetTo(UI.Character.transform.position, CameraManager.FirstActive).normalized;            
+            return team.Midpoint.ScreenOffsetTo(UI.Character.transform.position, CameraManager.FirstActive).normalized;
         }
         private List<UIButton> _buttons;
 
-        // Mono
+        // Play
         public override void PlayStart()
         {
             base.PlayStart();
@@ -69,14 +65,14 @@ namespace Vheos.Games.ActionPoints
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
             if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards._Target = UI.Character.transform;
+                moveTowards.Target = UI.Character.transform;
             if (TryGetComponent<RotateAs>(out var rotateAs))
-                rotateAs._Target = CameraManager.FirstActive.transform;
+                rotateAs.Target = CameraManager.FirstActive.transform;
 
             _buttons = new List<UIButton>();
-            foreach (var action in UI.Character._Actions)
+            foreach (var action in UI.Character.Actions)
             {
-                UIButton newButton = this.CreateChildComponent<UIButton>(UI._PrefabButton);
+                UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Prefabs.Button);
                 newButton.Action = action;
                 _buttons.Add(newButton);
             }

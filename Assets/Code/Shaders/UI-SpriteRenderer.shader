@@ -111,7 +111,7 @@ Shader "Custom/UI-SpriteRenderer"
             {
                 fixed4 c = tex2D(_MainTex, IN.texcoord);
                 #if ETC1_EXTERNAL_ALPHA
-                    fixed4 alpha = tex2D(_AlphaTex, uv);
+                    fixed4 alpha = tex2D(_AlphaTex, IN.texcoord);
                     c.a = lerp(c.a, alpha.r, _EnableExternalAlpha);
                 #endif
                 c *= IN.color;                

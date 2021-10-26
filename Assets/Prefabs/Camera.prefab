@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5560417539369938378}
+  - component: {fileID: 2564581830335087609}
   - component: {fileID: 5560417539369938381}
-  - component: {fileID: 5560417539369938380}
+  - component: {fileID: 8562167666811676286}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -32,6 +33,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 20, y: 20, z: 0}
+--- !u!114 &2564581830335087609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5560417539369938383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &5560417539369938381
 Camera:
   m_ObjectHideFlags: 0
@@ -75,7 +88,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &5560417539369938380
+--- !u!114 &8562167666811676286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,7 +97,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5560417539369938383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8438a8600fdb350489f7451bed2e7c85, type: 3}
+  m_Script: {fileID: 11500000, guid: 18ddb5da9f438d243ba4db32c44f39a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _ControlMode: 324
@@ -95,6 +108,6 @@ MonoBehaviour:
   _Down: 119
   _Up: 114
   _MovementSpeed: 5
-  _RotationSpeed: 5
+  _RotationSpeed: 7.5
   _RotationInvertX: 0
   _RotationInvertY: 1

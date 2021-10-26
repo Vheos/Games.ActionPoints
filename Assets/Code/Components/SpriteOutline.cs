@@ -7,20 +7,25 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
 
     [RequireComponent(typeof(SpriteRenderer))]
-    public class SpriteOutline : AUpdatable
+    public class SpriteOutline : ABaseComponent
     {
         // Inspector
-        public Material _Material = null;
-        [Range(0f, 0.1f)] public float _Thickness = 0.02f;
-        public Color _Color = Color.white;
-        [Range(0f, 1f)] public float _FadeInDuration = 0.5f;
-        [Range(0f, 1f)] public float _FadeOutDuration = 0.5f;
+        [SerializeField] protected Material _Material = null;
+        [SerializeField] [Range(0f, 0.1f)] protected float _Thickness = 0.02f;
+        [SerializeField] protected Color _Color = Color.white;
+        [SerializeField] [Range(0f, 1f)] protected float _FadeInDuration = 0.5f;
+        [SerializeField] [Range(0f, 1f)] protected float _FadeOutDuration = 0.5f;
 
         // Public
+        public Color Color
+        {
+            get => _Color;
+            set => _Color = value;
+        }
         public void Show()
         {
             enabled = true;
-            using (AnimationManager.Group(this, null, _FadeInDuration))
+            using (QAnimator.Group(this, null, _FadeInDuration))
             {
                 this.GroupAnimate(v => _currentThickness = v, _currentThickness, _Thickness);
                 _outlineSpriteRenderer.GroupAnimateColor(_Color);
@@ -28,7 +33,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void Hide()
         {
-            using (AnimationManager.Group(this, null, _FadeOutDuration, () => enabled = false))
+            using (QAnimator.Group(this, null, _FadeOutDuration, () => enabled = false))
             {
                 this.GroupAnimate(v => _currentThickness = v, _currentThickness, 0f);
                 _outlineSpriteRenderer.GroupAnimateColor(_Color.NewA(0f));
@@ -58,7 +63,7 @@ namespace Vheos.Games.ActionPoints
         static private void StaticInitialize()
         => _mprops = null;
 
-        // Mono
+        // Play
         public override void PlayAwake()
         {
             base.PlayAwake();
@@ -71,11 +76,6 @@ namespace Vheos.Games.ActionPoints
             _outlineSpriteRenderer.sortingOrder = _spriteRenderer.sortingOrder - 1;
             _outlineSpriteRenderer.GODeactivate();
         }
-        public override void PlayUpdateLate()
-        {
-            base.PlayUpdate();
-            UpdateMaterialProperties();
-        }
         public override void PlayEnable()
         {
             base.PlayEnable();
@@ -86,6 +86,14 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayDisable();
             _outlineSpriteRenderer.GODeactivate();
+        }
+        protected override void SubscribeToEvents()
+        {
+            base.SubscribeToEvents();
+            OnPlayUpdateLate += () =>
+            {
+                UpdateMaterialProperties();
+            };
         }
     }
 }

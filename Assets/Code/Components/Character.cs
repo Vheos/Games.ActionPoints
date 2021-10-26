@@ -8,21 +8,27 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
 
-    [RequireComponent(typeof(SpriteOutline))]
-    [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(TeamMember))]
-    [RequireComponent(typeof(ActionAnimator))]
-    public class Character : AMousableSprite
+    public class Character : ABaseComponent
     {
         // Inspector
-        public List<Action> _Actions = new List<Action>();
-        [Range(1, 10)] public int _RawMaxPoints = 5;
-        [Range(0f, 1f)] public float _ActionSpeed = 1f;
-        [Range(0f, 1f)] public float _FocusSpeed = 0.5f;
-        [Range(0f, 1f)] public float _ExhaustSpeed = 0.5f;
-        [Range(0f, 100f)] public float _BluntArmor = 0f;
-        [Range(0f, 100f)] public float _SharpArmor = 0f;
-        public Tool _StartingTool;
+        [SerializeField] protected List<Action> _Actions = new List<Action>();
+        [SerializeField] [Range(1, 10)] protected int _RawMaxPoints = 5;
+        [SerializeField] [Range(0f, 1f)] protected float _ActionSpeed = 1f;
+        [SerializeField] [Range(0f, 1f)] protected float _FocusSpeed = 0.5f;
+        [SerializeField] [Range(0f, 1f)] protected float _ExhaustSpeed = 0.5f;
+        [SerializeField] [Range(0f, 100f)] protected float _BluntArmor = 0f;
+        [SerializeField] [Range(0f, 100f)] protected float _SharpArmor = 0f;
+        [SerializeField] protected Tool _StartingTool;
+
+        // Cached components
+        protected override System.Type[] ComponentsTypesToCache => new[]
+        {
+            typeof(SpriteRenderer),
+            typeof(SpriteOutline),
+            typeof(Animator),
+            typeof(ActionAnimator),
+            typeof(TeamMember),
+        };
 
         // Publics
         // Action
@@ -32,6 +38,8 @@ namespace Vheos.Games.ActionPoints
         => ActionProgress.RoundTowardsZero();
         public void ChangeActionPoints(int diff)
         => ActionProgress = ActionProgress.Add(diff).Clamp(-MaxActionPoints, +MaxActionPoints);
+        public int RawMaxActionPoints
+        => _RawMaxPoints;
         public int MaxActionPoints
         => _RawMaxPoints - WoundsCount;
         public bool IsExhausted
@@ -69,28 +77,28 @@ namespace Vheos.Games.ActionPoints
         private void ChangeWoundsCount(int diff)
         => WoundsCount = WoundsCount.Add(diff).Clamp(0, _RawMaxPoints);
         // Other
-        public Bounds LocalBounds
-        => _mousableCollider.LocalBounds();
+        public IEnumerable<Action> Actions
+        => _Actions;
         public void LookAt(Transform targetTransform)
         {
             if (targetTransform == transform)
                 return;
 
             if (TryGetComponent<RotateTowards>(out var rotateTowards))
-                rotateTowards._Target = targetTransform;
+                rotateTowards.Target = targetTransform;
             else
                 transform.rotation.SetLookRotation(transform.DirectionTowards(targetTransform));
         }
         public Team Team
-        => _teamMember.Team;
+        => Get<TeamMember>().Team;
         public Color Color
-        => Team != null ? Team._Color : Color.white;
+        => Team != null ? Team.Color : Color.white;
         public Vector3 CombatPosition
         { get; private set; }
         public ActionAnimator ActionAnimator
         => GetComponent<ActionAnimator>();
         public Transform HandTransform
-        => _actionAnimator.HandTransform;
+        => Get<ActionAnimator>().HandTransform;
         public Tool Tool
         { get; private set; }
         public void Equip(Tool tool)
@@ -130,25 +138,13 @@ namespace Vheos.Games.ActionPoints
         private void UpdateWalkAnimation(float deltaTime)
         {
             float speed = _previousPosition.DistanceTo(transform.position) / deltaTime;
-            _animator.SetFloat("Speed", speed);
+            Get<Animator>().SetFloat("Speed", speed);
             _previousPosition = transform.position;
         }
         private void UpdateColors()
         {
-            _spriteRenderer.color = Color;
-            _spriteOutline._Color = Color;
-        }
-        // Components
-        private SpriteOutline _spriteOutline;
-        private TeamMember _teamMember;
-        private Animator _animator;
-        private ActionAnimator _actionAnimator;
-        private void CacheComponents()
-        {
-            _animator = GetComponent<Animator>();
-            _spriteOutline = GetComponent<SpriteOutline>();
-            _teamMember = GetComponent<TeamMember>();
-            _actionAnimator = GetComponent<ActionAnimator>();
+            Get<SpriteRenderer>().color = Color;
+            Get<SpriteOutline>().Color = Color;
         }
 
         // Events
@@ -180,33 +176,15 @@ namespace Vheos.Games.ActionPoints
         public event ExhaustStateChangedZero OnExhaustStateChanged;
         public event WoundsCountChanged OnWoundsCountChanged;
 
-        // Mouse
-        public override void MouseGainHighlight()
-        {
-            base.MouseGainHighlight();
-            _spriteOutline.Show();
-        }
-        public override void MousePress(CursorManager.Button button, Vector3 location)
-        {
-            base.MousePress(button, location);
-            _actionUI.ToggleWheel();
-        }
-        public override void MouseLoseHighlight()
-        {
-            base.MouseLoseHighlight();
-            _spriteOutline.Hide();
-        }
-
-        // Mono
+        // Playable
         public override void PlayAwake()
         {
             base.PlayAwake();
-            CacheComponents();
 
-            _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.PrefabUIBase);
+            _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Prefabs.Base);
             _actionUI.Character = this;
 
-            CombatPosition = TryGetComponent<SnapTo>(out var snapTo) ? snapTo.TargetPosition : transform.position;
+            CombatPosition = TryGetComponent<SnapTo>(out var snapTo) && snapTo.IsActive ? snapTo.TargetPosition : transform.position;
             UpdateColors();
         }
         public override void PlayStart()
@@ -214,30 +192,45 @@ namespace Vheos.Games.ActionPoints
             base.PlayStart();
             Equip(_StartingTool);
         }
-        public override void PlayUpdate()
-        {
-            base.PlayUpdate();
-            UpdateProgresses(Time.deltaTime);
-            UpdateWalkAnimation(Time.deltaTime);
-            InvokeEvents();
-
-            _previousActionProgress = ActionProgress;
-            _previousFocusProgress = FocusProgress;
-            _previousWoundsCount = WoundsCount;
-        }
         public override void PlayDestroy()
         {
             base.PlayDestroy();
             if (_actionUI != null)
                 _actionUI.DestroyObject();
         }
+        protected override void SubscribeToEvents()
+        {
+            base.SubscribeToEvents();
+            OnPlayUpdate += () =>
+            {
+                UpdateProgresses(Time.deltaTime);
+                UpdateWalkAnimation(Time.deltaTime);
+                InvokeEvents();
+
+                _previousActionProgress = ActionProgress;
+                _previousFocusProgress = FocusProgress;
+                _previousWoundsCount = WoundsCount;
+            };
+            OnMouseGainHighlight += () =>
+            {
+                Get<SpriteOutline>().Show();
+            };
+            OnMousePress += (button, position) =>
+            {
+                _actionUI.ToggleWheel();
+            };
+            OnMouseLoseHighlight += () =>
+            {
+                Get<SpriteOutline>().Hide();
+            };
+        }
 
 #if UNITY_EDITOR
         public override void EditAwake()
         {
             base.EditAwake();
-            if (GetComponent<TeamMember>()._StartingTeam.TryNonNull(out var team))
-                GetComponent<SpriteRenderer>().color = team._Color;
+            if (GetComponent<TeamMember>().StartingTeam.TryNonNull(out var team))
+                GetComponent<SpriteRenderer>().color = team.Color;
             else
                 GetComponent<SpriteRenderer>().color = Color.white;
         }

@@ -1,25 +1,20 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System.Collections.Generic;
     using UnityEngine;
-    using Tools.UnityCore;
-    using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
 
-    public class UIPopupHandler : APlayable, IUIHierarchy
+    public class UIPopupHandler : ABaseComponent, IUIHierarchy
     {
-        // Inspector
-
         // Publics
         public UIBase UI
         { get; private set; }
         public void PopDamage(Vector3 position, float damage, int wounds)
         {
-            UIDamagePopup newPopup = this.CreateChildComponent<UIDamagePopup>(UI._PrefabDamagePopup);
-            newPopup.Initialize(position, damage, wounds);          
+            UIDamagePopup newPopup = this.CreateChildComponent<UIDamagePopup>(UIManager.Prefabs.DamagePopup);
+            newPopup.Initialize(position, damage, wounds);
         }
 
-        // Mono
+        // Play
         public override void PlayStart()
         {
             base.PlayStart();

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6947857575563295756}
   - component: {fileID: -4738960106083088739}
   m_Layer: 0
-  m_Name: UIBase
+  m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

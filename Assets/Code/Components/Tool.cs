@@ -5,12 +5,14 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
 
     [RequireComponent(typeof(SpriteRenderer))]
-    public class Tool : APlayable
+    public class Tool : ABaseComponent
     {
         // Inspector
-        public ActionAnimation.StateData _Idle;
+        [SerializeField] protected ActionAnimation.StateData _Idle;
 
         // Publics
+        public ActionAnimation.StateData Idle
+        => _Idle;
         public Character Character
         { get; private set; }
         public void GetEquippedBy(Character character)
@@ -25,10 +27,5 @@ namespace Vheos.Games.ActionPoints
             this.GODeactivate();
             this.Unparent();
         }
-        // Privates
-
-
-        // Mono
-
     }
 }

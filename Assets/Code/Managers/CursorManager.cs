@@ -10,16 +10,16 @@ namespace Vheos.Games.ActionPoints
 
     [DefaultExecutionOrder(-1)]
     [DisallowMultipleComponent]
-    public class CursorManager : AUpdatable
+    public class CursorManager : ABaseComponent
     {
         // Inspector
-        public Button[] _Buttons;
-        public GameObject _CursorPrefab;
+       [SerializeField]  protected Button[] _Buttons;
+       [SerializeField]  protected GameObject _CursorPrefab;
 
         // Publics
         static public Transform CursorTransform
         { get; private set; }
-        static public AMousable CursorMousable
+        static public Mousable CursorMousable
         { get; private set; }
         static public RaycastHit CursorMousableHitInfo
         { get; private set; }
@@ -31,8 +31,8 @@ namespace Vheos.Games.ActionPoints
         => _cursorDistance = CameraManager.FirstActive.DistanceTo(transform);
 
         // Privates
-        static private Dictionary<Button, AMousable> _lockedMousablesByButton;
-        static private AMousable _previousCursorMousable;
+        static private Dictionary<Button, Mousable> _lockedMousablesByButton;
+        static private Mousable _previousCursorMousable;
         static private Vector3 _previousMousePosition;
         static private float _cursorDistance;
         static private void CreateCursorTransform(GameObject prefab, Component parent)
@@ -52,10 +52,9 @@ namespace Vheos.Games.ActionPoints
         {
             if (CameraManager.CursorCamera.TryNonNull(out var activeCamera))
             {
-                foreach (var hitInfo in NewUtility.RaycastFromCamera(activeCamera, LayerMask.GetMask(nameof(AMousable)), true, true))
-                    if (hitInfo.collider.TryGetComponent<AMousable>(out var hitMousable)
+                foreach (var hitInfo in NewUtility.RaycastFromCamera(activeCamera, LayerMask.GetMask(nameof(Mousable)), true, true))
+                    if (hitInfo.collider.TryGetComponent<Mousable>(out var hitMousable)
                     && hitMousable.enabled
-                    && hitMousable.RecieveMouseEvents
                     && hitMousable.RaycastTest(hitInfo.point))
                     {
                         CursorMousable = hitMousable;
@@ -114,7 +113,15 @@ namespace Vheos.Games.ActionPoints
             }
         }
 
-        // Mono
+        // Events
+        static public void InvokeEvents()
+        {
+            if (Input.mousePosition != _previousMousePosition)
+                OnCameraMoved?.Invoke(_previousMousePosition, Input.mousePosition);
+        }
+        static public event System.Action<Vector2, Vector2> OnCameraMoved;
+
+        // Play
         override public void PlayAwake()
         {
             base.PlayAwake();
@@ -123,32 +130,25 @@ namespace Vheos.Games.ActionPoints
             CreateCursorTransform(_CursorPrefab, this);
             OnCameraMoved = null;
 
-            _lockedMousablesByButton = new Dictionary<Button, AMousable>();
-
+            _lockedMousablesByButton = new Dictionary<Button, Mousable>();
         }
-        override public void PlayUpdate()
+        protected override void SubscribeToEvents()
         {
-            base.PlayUpdate();
-            UpdateCursorMousable();
-            UpdateHighlights();
-            UpdateButtonEvents(_Buttons);
-            CursorTransform.position = CameraManager.FirstActive.CursorToWorldPoint(_cursorDistance);
-            InvokeEvents();
+            base.SubscribeToEvents();
+            OnPlayUpdate += () =>
+            {
+                UpdateCursorMousable();
+                UpdateHighlights();
+                UpdateButtonEvents(_Buttons);
+                CursorTransform.position = CameraManager.FirstActive.CursorToWorldPoint(_cursorDistance);
+                InvokeEvents();
 
-            _previousMousePosition = Input.mousePosition;
-            _previousCursorMousable = CursorMousable;
+                _previousMousePosition = Input.mousePosition;
+                _previousCursorMousable = CursorMousable;
+            };
         }
 
-        // Events
-        static public void InvokeEvents()
-        {
-            if (Input.mousePosition != _previousMousePosition)
-                OnCameraMoved?.Invoke(_previousMousePosition, Input.mousePosition);
-        }
-        public delegate void CameraMoved(Vector2 from, Vector2 to);
-        static public event CameraMoved OnCameraMoved;
-
-        // Enum
+        // Defines
         public enum Button
         {
             Left = 0,

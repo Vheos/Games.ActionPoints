@@ -2,19 +2,15 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.Extensions.UnityObjects;
-    using Tools.Extensions.Math;
 
-    public class UIButton : AMousableSprite, IUIHierarchy
+    public class UIButton : ABaseComponent, IUIHierarchy
     {
-        // Inspector
-        [Range(0f, 1f)] public float _HighlightDuration = 0.5f;
-        [Range(1f, 2f)] public float _HighlightScale = 1.25f;
-        [Range(0f, 1f)] public float _ClickDuration = 0.1f;
-        [Range(0.5f, 1f)] public float _ClickScale = 0.9f;
-        [Range(0.5f, 1f)] public float _ClickColorScale = 0.9f;
-        [Range(0f, 1f)] public float _UnusableDuration = 0.5f;
-        public Color _UnusableColor = 3.Inv().ToVector4();
-        [Range(0f, 1f)] public float _AnimDuration = 0.5f;
+        // CachedComponents
+        protected override System.Type[] ComponentsTypesToCache => new[]
+        {
+           typeof(Mousable),
+           typeof(SpriteRenderer),
+        };
 
         // Publics
         public UIBase UI
@@ -22,7 +18,7 @@ namespace Vheos.Games.ActionPoints
         public Action Action
         { get; set; }
         public void MoveTo(Vector2 targetLocalPosition)
-        => transform.AnimateLocalPosition(this, targetLocalPosition, _AnimDuration);
+        => transform.AnimateLocalPosition(this, targetLocalPosition, UIManager.Settings._ButtonAnimDuration);
 
         // Privates
         private UICostPointsBar _costPointsBar;
@@ -30,96 +26,93 @@ namespace Vheos.Games.ActionPoints
         private bool _isTargeting;
         private void UpdateUsability()
         {
-            Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character.Color : _UnusableColor;
-            _spriteRenderer.AnimateColor(this, targetColor, _UnusableDuration);
+            Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character.Color : UIManager.Settings._UnusableColor;
+            Get<SpriteRenderer>().AnimateColor(this, targetColor, UIManager.Settings._UnusableDuration);
         }
 
-        // Mouse
-        override public void MouseGainHighlight()
-        {
-            base.MouseGainHighlight();
-            if (!Action.CanBeUsed(UI.Character))
-                return;
-
-            transform.AnimateLocalScale(this, _originalScale * _HighlightScale, _HighlightDuration);
-        }
-        public override void MousePress(CursorManager.Button button, Vector3 location)
-        {
-            base.MousePress(button, location);
-            if (!Action.CanBeUsed(UI.Character))
-            {
-                if (UI.Character.IsExhausted)
-                    UI.NotifyExhausted();
-                if (UI.Character.FocusPointsCount < Action._FocusPointsCost)
-                    _costPointsBar.NotifyUnfocused();
-                return;
-            }
-
-            if (Action._IsTargeted)
-            {
-                UI.StartTargeting(transform, CursorManager.CursorTransform);
-                UI.Character.ActionAnimator.AnimateState(Action._Animation.Charge);
-                _isTargeting = true;
-            }
-
-            transform.AnimateLocalScale(this, transform.localScale * _ClickScale, _ClickDuration);
-            _spriteRenderer.AnimateColor(this, _spriteRenderer.color * _ClickColorScale, _ClickDuration);
-        }
-        public override void MouseHold(CursorManager.Button button, Vector3 location)
-        {
-            base.MouseHold(button, location);
-
-            if (_isTargeting
-            && UI.TryGetCursorCharacter(out var target))
-                UI.Character.LookAt(target.transform);
-        }
-        public override void MouseRelease(CursorManager.Button button, Vector3 location)
-        {
-            base.MouseRelease(button, location);
-            if (!Action.CanBeUsed(UI.Character))
-                return;
-
-            if (!Action._IsTargeted)
-                Action.Use(UI.Character, null);
-            else if (_isTargeting)
-            {
-                UI.StopTargeting();
-                if (UI.TryGetCursorCharacter(out var target))
-                {
-                    UI.Character.ActionAnimator.AnimateStateThenIdle(Action._Animation.Release);
-                    Action.Use(UI.Character, target);
-                }
-                else
-                    UI.Character.ActionAnimator.AnimateState(UI.Character.Tool._Idle);
-                _isTargeting = false;
-            }
-
-            transform.AnimateLocalScale(this, _originalScale * _HighlightScale, _ClickDuration);
-            _spriteRenderer.AnimateColor(this, UI.Character.Color, _ClickDuration);
-        }
-        override public void MouseLoseHighlight()
-        {
-            base.MouseLoseHighlight();
-            transform.AnimateLocalScale(this, _originalScale, _HighlightDuration);
-        }
-
-        // Mono
+        // Play
         public override void PlayStart()
         {
             base.PlayStart();
             name = GetType().Name;
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
-            _spriteRenderer.sprite = Action._Sprite;
-            _spriteRenderer.color = UI.Character.Color;
+            Get<SpriteRenderer>().sprite = Action.Sprite;
+            Get<SpriteRenderer>().color = UI.Character.Color;
             _originalScale = transform.localScale;
 
             UpdateUsability();
             UI.Character.OnActionPointsCountChanged += (a, f) => UpdateUsability();
             UI.Character.OnExhaustStateChanged += (s) => UpdateUsability();
 
-            _costPointsBar = this.CreateChildComponent<UICostPointsBar>(UI._PrefabCostPointsBar);
+            _costPointsBar = this.CreateChildComponent<UICostPointsBar>(UIManager.Prefabs.CostPointsBar);
             _costPointsBar.Button = this;
+        }
+        protected override void SubscribeToEvents()
+        {
+            base.SubscribeToEvents();
+            OnMouseGainHighlight += () =>
+            {
+                if (!Action.CanBeUsed(UI.Character))
+                    return;
+
+                transform.AnimateLocalScale(this, _originalScale * UIManager.Settings._HighlightScale, UIManager.Settings._HighlightDuration);
+            };
+            OnMousePress += (button, position) =>
+            {
+                if (!Action.CanBeUsed(UI.Character))
+                {
+                    if (UI.Character.IsExhausted)
+                        UI.NotifyExhausted();
+
+                    if (UI.Character.FocusPointsCount < Action.FocusPointsCost)
+                        _costPointsBar.NotifyUnfocused();
+                    return;
+                }
+
+                if (Action.IsTargeted)
+                {
+                    UI.StartTargeting(transform, CursorManager.CursorTransform);
+                    UI.Character.ActionAnimator.AnimateState(Action.Animation.Charge);
+                    _isTargeting = true;
+                }
+
+                transform.AnimateLocalScale(this, transform.localScale * UIManager.Settings._ClickScale, UIManager.Settings._ClickDuration);
+                Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * UIManager.Settings._ClickColorScale, UIManager.Settings._ClickDuration);
+            };
+            OnMouseHold += (button, position) =>
+            {
+                if (_isTargeting
+                && UI.TryGetCursorCharacter(out var target))
+                    UI.Character.LookAt(target.transform);
+            };
+            OnMouseRelease += (button, position) =>
+            {
+                if (!Action.CanBeUsed(UI.Character))
+                    return;
+
+                if (!Action.IsTargeted)
+                    Action.Use(UI.Character, null);
+                else if (_isTargeting)
+                {
+                    UI.StopTargeting();
+                    if (UI.TryGetCursorCharacter(out var target))
+                    {
+                        UI.Character.ActionAnimator.AnimateStateThenIdle(Action.Animation.Release);
+                        Action.Use(UI.Character, target);
+                    }
+                    else
+                        UI.Character.ActionAnimator.AnimateState(UI.Character.Tool.Idle);
+                    _isTargeting = false;
+                }
+
+                transform.AnimateLocalScale(this, _originalScale * UIManager.Settings._HighlightScale, UIManager.Settings._ClickDuration);
+                Get<SpriteRenderer>().AnimateColor(this, UI.Character.Color, UIManager.Settings._ClickDuration);
+            };
+            OnMouseLoseHighlight += () =>
+            {
+                transform.AnimateLocalScale(this, _originalScale, UIManager.Settings._HighlightDuration);
+            };
         }
     }
 }

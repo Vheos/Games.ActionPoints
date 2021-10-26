@@ -1,41 +1,10 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System.Collections.Generic;
     using UnityEngine;
-    using Tools.UnityCore;
-    using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
 
-    public class UIBase : APlayable, IUIHierarchy
+    public class UIBase : ABaseComponent, IUIHierarchy
     {
-        // Inspector
-        [Header("Buttons")]
-        [Range(90, 270)] public float _WheelMaxAngle = 180f;
-        [Range(0.5f, 2f)] public float _WheelRadius = 2 / 3f;
-
-        [Header("Points")]
-        public Texture _PointActionShape = null;
-        public Texture _PointFocusShape = null;
-        public Color _PointBackgroundColor = Color.black;
-        public Color _PointActionColor = Color.white;
-        public Color _PointExhaustColor = Color.red;
-        public Color _PointFocusColor = Color.cyan;
-        [Range(0f, 1f)] public float _PointPartialProgressOpacity = 0.25f;
-        [Range(0f, 1f)] public float _PointVisualProgressHalfTime = 0.1f;
-        [Range(-0.5f, +0.5f)] public float _PointsSpacing = 0;
-
-        [Header("Prefabs")]
-        public GameObject _PrefabTargetingLine = null;
-        public GameObject _PrefabActionPointsBar = null;
-        public GameObject _PrefabActionPoint = null;
-        public GameObject _PrefabWound = null;
-        public GameObject _PrefabWheel = null;
-        public GameObject _PrefabButton = null;
-        public GameObject _PrefabCostPointsBar = null;
-        public GameObject _PrefabCostPoint = null;
-        public GameObject _PrefabPopupHandler = null;
-        public GameObject _PrefabDamagePopup = null;
-
         // Publics
         public UIBase UI
         { get; private set; }
@@ -74,7 +43,7 @@ namespace Vheos.Games.ActionPoints
         private UITargetingLine _targetingLine;
         private UIPopupHandler _popupHandler;
 
-        // Mono
+        // Play
         public override void PlayStart()
         {
             base.PlayStart();
@@ -82,10 +51,10 @@ namespace Vheos.Games.ActionPoints
             UI = this;
 
             transform.position = Character.transform.position;
-            _wheel = this.CreateChildComponent<UIWheel>(_PrefabWheel);
-            _pointsBar = this.CreateChildComponent<UIActionPointsBar>(_PrefabActionPointsBar);
-            _targetingLine = this.CreateChildComponent<UITargetingLine>(_PrefabTargetingLine);
-            _popupHandler = this.CreateChildComponent<UIPopupHandler>(_PrefabPopupHandler);
+            _wheel = this.CreateChildComponent<UIWheel>(UIManager.Prefabs.Wheel);
+            _pointsBar = this.CreateChildComponent<UIActionPointsBar>(UIManager.Prefabs.ActionPointsBar);
+            _targetingLine = this.CreateChildComponent<UITargetingLine>(UIManager.Prefabs.TargetingLine);
+            _popupHandler = this.CreateChildComponent<UIPopupHandler>( UIManager.Prefabs.PopupHandler);
         }
     }
 }

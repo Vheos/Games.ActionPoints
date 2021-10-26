@@ -26,7 +26,7 @@ MonoBehaviour:
   Release:
     _Duration: 0.25
     _WaitTime: 0.25
-    _ForwardDistance: 0.1
+    _ForwardDistance: 0.3
     _ArmLength: 0.375
     _ArmRotation: {x: -30, y: 0, z: 0}
     _HandRotation: {x: 0, y: 0, z: -90}

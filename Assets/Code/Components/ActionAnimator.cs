@@ -5,35 +5,35 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.General;
     [RequireComponent(typeof(Character))]
-    public class ActionAnimator : APlayable
+    public class ActionAnimator : ABaseComponent
     {
         // Const
         private const string ARM_NAME = "Arm";
         private const string HAND_NAME = "Hand";
 
         // Inspector
-        public GameObject _Parent;
+       [SerializeField]  protected GameObject _Parent;
 
         // Publics
         public void AnimateStateThenIdle(ActionAnimation.StateData state)
         {
-            void returnToIdle() => AnimateState(_character.Tool._Idle);
-            void stayUpAfterRelease() => AnimationManager.Wait(this, null, state._WaitTime, returnToIdle);
+            void returnToIdle() => AnimateState(_character.Tool.Idle, null, QAnimator.AnimationStyle.InvertedArc);
+            void stayUpAfterRelease() => QAnimator.Wait(this, null, state._WaitTime, returnToIdle);
 
-            AnimateState(state, stayUpAfterRelease);
+            AnimateState(state, returnToIdle);
         }
-        public void AnimateState(ActionAnimation.StateData state, System.Action finalAction = null)
+        public void AnimateState(ActionAnimation.StateData state, System.Action finalAction = null, QAnimator.AnimationStyle style = QAnimator.AnimationStyle.Normal)
         {
-            using (AnimationManager.Group(this, null, state._Duration, finalAction))
+            using (QAnimator.Group(this, null, state._Duration, finalAction, style))
             {
                 if (state._ForwardDistanceEnabled)
                     transform.GroupAnimatePosition(_character.CombatPosition + transform.right * state._ForwardDistance);
                 if (state._ArmLengthEnabled)
-                    AnimationManager.GroupAnimate(v => _arm.Length = v, _arm.Length, state._ArmLength);
+                    QAnimator.GroupAnimate(v => _arm.Length = v, _arm.Length, state._ArmLength);
                 if (state._ArmRotationEnabled)
-                    AnimationManager.GroupAnimate(AssignArmAngles, _armAngles, state._ArmRotation);
+                    QAnimator.GroupAnimate(AssignArmAngles, _armAngles, state._ArmRotation);
                 if (state._HandRotationEnabled)
-                    AnimationManager.GroupAnimate(AssignHandAngles, _handAngles, state._HandRotation);
+                    QAnimator.GroupAnimate(AssignHandAngles, _handAngles, state._HandRotation);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Vheos.Games.ActionPoints
             HandTransform.localRotation = Quaternion.Euler(_handAngles);
         }
 
-        // Mono
+        // Play
         public override void PlayAwake()
         {
             base.PlayAwake();

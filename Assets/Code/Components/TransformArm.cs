@@ -5,13 +5,12 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
 
-    public class TransformArm : AUpdatable
+    public class TransformArm : ABaseComponent
     {
         // Inspector
-        public Color _Color;
-        [Range(0f, 1f)] public float _Length;
+        [SerializeField] [Range(0f, 1f)] protected float _Length;
 
-        // Publics
+        // Publics 
         public float Length
         {
             get => _Length;
@@ -19,19 +18,20 @@ namespace Vheos.Games.ActionPoints
             {
                 _Length = value;
                 foreach (var childTransform in this.GetChildTransforms())
-                    childTransform.localPosition = _Length.Append(childTransform.localPosition.YZ());                
+                    childTransform.localPosition = _Length.Append(childTransform.localPosition.YZ());
             }
         }
 
-        // Privates
-
-
-        // Mono
+#if UNITY_EDITOR
+        // Play
+        [SerializeField] protected Color _GizmoColor;
+        public Color GizmoColor
+        => _GizmoColor;
         public override void EditUpdate()
         {
             base.EditUpdate();
             Length = _Length;
         }
-
+#endif
     }
 }

@@ -15,7 +15,7 @@ namespace Vheos.Games.ActionPoints.Editor
 
             foreach (var childTransform in comp.GetChildTransforms())
             {
-                Gizmos.color = comp._Color;
+                Gizmos.color = comp.GizmoColor;
                 Gizmos.DrawLine(comp.transform.position, childTransform.position);
             }
         }

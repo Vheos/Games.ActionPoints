@@ -46,7 +46,7 @@ namespace Vheos.Games.ActionPoints
             return null;
         }
 
-        // Mono
+        // Play
         public override void PlayAwake()
         {
             base.PlayAwake();

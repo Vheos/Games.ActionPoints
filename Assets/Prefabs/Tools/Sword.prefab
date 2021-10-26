@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Idle:
-    _Duration: 1
+    _Duration: 0.5
     _WaitTime: 0
     _ForwardDistance: 0
     _ArmLength: 0.25

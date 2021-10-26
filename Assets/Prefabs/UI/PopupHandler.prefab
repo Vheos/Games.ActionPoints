@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3947541918496271188}
   - component: {fileID: 241584098673804499}
   m_Layer: 0
-  m_Name: UIPopupHandler
+  m_Name: PopupHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

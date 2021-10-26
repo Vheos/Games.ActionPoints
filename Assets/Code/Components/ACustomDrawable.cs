@@ -5,7 +5,8 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    abstract public class ACustomDrawable : AUpdatable
+    [RequireComponent(typeof(Updatable))]
+    abstract public class ACustomDrawable : ABaseComponent
     {
         // Virtuals
         virtual protected void AssignInspectorMProps()
@@ -61,7 +62,7 @@ namespace Vheos.Games.ActionPoints
                 _meshRenderer.SetPropertyBlock(_mprops);
         }
 
-        // Mono
+        // Play
         override public void PlayAwake()
         {
             base.PlayAwake();
@@ -70,10 +71,13 @@ namespace Vheos.Games.ActionPoints
             AssignInspectorMProps();
             UpdateDirtyMProps();
         }
-        override public void PlayUpdate()
+        protected override void SubscribeToEvents()
         {
-            base.PlayUpdate();
-            UpdateDirtyMProps();
+            base.SubscribeToEvents();
+            OnPlayUpdate += () =>
+            {
+                UpdateDirtyMProps();
+            };
         }
 
         // Editor
@@ -81,7 +85,10 @@ namespace Vheos.Games.ActionPoints
         override public void EditAwake()
         {
             base.EditAwake();
-            PlayAwake();
+            CacheMeshComponents();
+            InitializeMProps();
+            AssignInspectorMProps();
+            UpdateDirtyMProps();
         }
         override public void EditInspect()
         {

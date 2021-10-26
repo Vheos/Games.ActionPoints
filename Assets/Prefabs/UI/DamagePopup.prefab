@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: -4538020542540660095}
   - component: {fileID: 717975481978446542}
   - component: {fileID: 717975481978446543}
-  - component: {fileID: 4438983373908660428}
   m_Layer: 0
-  m_Name: UIDamageText
+  m_Name: DamagePopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -292,15 +291,3 @@ MeshRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 40
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4438983373908660428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 717975481978446541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1dd0501f22b32f4c93f992d25e34a39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

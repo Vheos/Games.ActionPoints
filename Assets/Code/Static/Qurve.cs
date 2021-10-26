@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     {
         // CONST
         private const float HALFTIME_PRECISION = 0.01f;
-        private const float DEFAULT_DEFAULT_HALFTIME = 0.2f;
+        private const float DEFAULT_DEFAULT_HALFTIME = 0.25f;
 
         // Publics
         static public float DefaultHalfTime
@@ -26,8 +26,7 @@ namespace Vheos.Games.ActionPoints
                 return progress;
 
             float a = _paramsByHalfTime.Evaluate(halfTime);
-            return (1 - a.Pow(progress))
-                 / (1 - a);
+            return (1 - a.Pow(progress)) / (1 - a);
         }
 
         // Privates

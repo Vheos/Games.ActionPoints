@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d22340c22be4e94a8d16ca7eeb32c9d, type: 3}
+  m_Name: Settings
+  m_EditorClassIdentifier: 
+  _WheelMaxAngle: 180
+  _WheelRadius: 0.6666667
+  _PointActionShape: {fileID: 0}
+  _PointFocusShape: {fileID: 0}
+  _PointBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  _PointActionColor: {r: 1, g: 1, b: 1, a: 1}
+  _PointExhaustColor: {r: 1, g: 0, b: 0, a: 1}
+  _PointFocusColor: {r: 0, g: 1, b: 1, a: 1}
+  _PointPartialProgressOpacity: 0.25
+  _PointVisualProgressHalfTime: 0.1
+  _PointsSpacing: 0
+  _PointCantUseScale: 2
+  _PointCantUseAnimDuration: 0
+  _PointAnimDuration: 0
+  _HighlightDuration: 0.5
+  _HighlightScale: 1.25
+  _ClickDuration: 0.1
+  _ClickScale: 0.9
+  _ClickColorScale: 0.9
+  _UnusableDuration: 0.5
+  _UnusableColor: {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 0.33333334}
+  _ButtonAnimDuration: 0.5
+  _Opacity: 0.5
+  _AngleRandomRange: {x: -15, y: 15}
+  _AlignTextRotationToDirection: 0
+  _Distance: 0.5
+  _FadeInDuration: 0.5
+  _StayUpDuration: 0.5
+  _FadeOutDuration: 0.5
+  _SizeCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _ColorCurve:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  _WoundPulseScale: 2
+  _WoundPulseDuration: 0.5
+  _PercentSignSize: 0.5
+  _Tiling: 5
+  _StartOpacity: 0.25
+  _StartWidth: 0.1
+  _EndWidthRatio: 0.25
+  _WidthAnimDuration: 0.5
+  _WheelAnimDuration: 0
+  _WoundAnimDuration: 0.5
+  _WoundAngleRandomRange: {x: 30, y: 60}
+  _FadeDistance: 1
