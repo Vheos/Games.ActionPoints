@@ -40,8 +40,7 @@ namespace Vheos.Games.ActionPoints.Editor
 
                 rect.y += PROPERTY_HEIGHT;
 
-                // SubProperties
-                
+                // Togglable properties                
                 foreach (var name in TOGGLABLE_PROPERTIES)
                 {
                     GUI.enabled = true;
