@@ -7,15 +7,17 @@ namespace Vheos.Games.ActionPoints
     public class UIWound : ABaseComponent, IUIHierarchy
     {
         // Pubilcs
+        public UIBase UI
+        { get; private set; }
         public void Show(int index)
         {
             this.GOActivate();
-            float randFrom = index.IsEven() ? UIManager.Settings._WoundAngleRandomRange.AvgComp() : UIManager.Settings._WoundAngleRandomRange.x;
-            float randTo = index.IsEven() ? UIManager.Settings._WoundAngleRandomRange.y : UIManager.Settings._WoundAngleRandomRange.AvgComp();
+            float randFrom = index.IsEven() ? Settings.WoundAngleRandomRange.AvgComp() : Settings.WoundAngleRandomRange.x;
+            float randTo = index.IsEven() ? Settings.WoundAngleRandomRange.y : Settings.WoundAngleRandomRange.AvgComp();
             transform.localRotation = Quaternion.Euler(0f, 0f, -Random.Range(randFrom, randTo));
 
-            Vector2 fadeInPosition = Vector2.up.Mul(UIManager.Settings._FadeDistance).Rotate(transform.localRotation);
-            using (QAnimator.Group(this, null, UIManager.Settings._WoundAnimDuration))
+            Vector2 fadeInPosition = Vector2.up.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
+            using (QAnimator.Group(this, null, Settings.WoundAnimDuration))
             {
                 transform.GroupAnimateLocalPosition(fadeInPosition, Vector2.zero);
                 _spriteRenderer.GroupAnimateColor(_spriteRenderer.color.NewA(1f));
@@ -23,8 +25,8 @@ namespace Vheos.Games.ActionPoints
         }
         public void Hide()
         {
-            Vector2 fadeOutPosition = Vector2.right.Mul(UIManager.Settings._FadeDistance).Rotate(transform.localRotation);
-            using (QAnimator.Group(this, null, UIManager.Settings._WoundAnimDuration, this.GODeactivate))
+            Vector2 fadeOutPosition = Vector2.right.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
+            using (QAnimator.Group(this, null, Settings.WoundAnimDuration, this.GODeactivate))
             {
                 transform.GroupAnimateLocalPosition(fadeOutPosition);
                 _spriteRenderer.GroupAnimateColor(_spriteRenderer.color.NewA(0f));
@@ -33,9 +35,8 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         private SpriteRenderer _spriteRenderer;
-
-        public UIBase UI
-        { get; private set; }
+        private UISettings.WoundSettings Settings
+        => UIManager.Settings.Wound;
 
         // Play
         public override void PlayStart()
@@ -45,7 +46,7 @@ namespace Vheos.Games.ActionPoints
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _spriteRenderer.color = UIManager.Settings._PointExhaustColor;
+            _spriteRenderer.color = UIManager.Settings.ActionPoint.ExhaustColor;
             Hide();
         }
     }

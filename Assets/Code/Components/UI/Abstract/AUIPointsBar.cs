@@ -13,6 +13,8 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         protected List<T> _points;
+        protected UISettings.ActionPointSettings Settings
+        => UIManager.Settings.ActionPoint;
         protected void CreatePoints(int count, GameObject prefab)
         {
             for (int i = 0; i < count; i++)
@@ -35,7 +37,7 @@ namespace Vheos.Games.ActionPoints
         {
             for (int i = 0; i < _points.Count; i++)
             {
-                float localX = (i - _points.Count.Sub(1) / 2f) * (1 + UIManager.Settings._PointsSpacing);
+                float localX = (i - _points.Count.Sub(1) / 2f) * (1 + Settings.Spacing);
                 yield return new Vector2(localX, 0);
             }
         }

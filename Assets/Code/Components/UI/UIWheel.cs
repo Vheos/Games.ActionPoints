@@ -24,16 +24,16 @@ namespace Vheos.Games.ActionPoints
         }
         public void ExpandButtons()
         {
-            transform.AnimateLocalScale(this, Vector3.one, UIManager.Settings._WheelAnimDuration);
+            transform.AnimateLocalScale(this, Vector3.one, Settings.AnimDuration);
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = true;
 
-            AlignButtons(GetWheelDirection(), UIManager.Settings._WheelRadius, UIManager.Settings._WheelMaxAngle);
+            AlignButtons(GetWheelDirection(), Settings.Radius, Settings.MaxAngle);
             IsExpanded = true;
         }
         public void CollapseButtons()
         {
-            transform.AnimateLocalScale(this, Vector3.zero, UIManager.Settings._WheelAnimDuration);
+            transform.AnimateLocalScale(this, Vector3.zero, Settings.AnimDuration);
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = false;
             IsExpanded = false;
@@ -47,6 +47,8 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
+        private UISettings.WheelSettings Settings
+        => UIManager.Settings.Wheel;
         private Vector2 GetWheelDirection()
         {
             if (!UI.Character.Team.TryNonNull(out var team)
@@ -72,7 +74,7 @@ namespace Vheos.Games.ActionPoints
             _buttons = new List<UIButton>();
             foreach (var action in UI.Character.Actions)
             {
-                UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Prefabs.Button);
+                UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Settings.Prefab.Button);
                 newButton.Action = action;
                 _buttons.Add(newButton);
             }

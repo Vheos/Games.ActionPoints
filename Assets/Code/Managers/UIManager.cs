@@ -12,13 +12,10 @@ namespace Vheos.Games.ActionPoints
 
         // Inspector
         [SerializeField] protected UISettings _Settings = null;
-        [SerializeField] protected UIPrefabs _Prefabs = null;
 
         // Publics
         static public UISettings Settings
         => _instance._Settings;
-        static public UIPrefabs Prefabs
-        => _instance._Prefabs;
         static public Transform HierarchyRoot
         { get; private set; }
 

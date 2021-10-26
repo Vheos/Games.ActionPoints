@@ -18,18 +18,18 @@ namespace Vheos.Games.ActionPoints
             _isDeactivating = false;
             UpdatePositionsAndTiling();
             this.GOActivate();
-            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, UIManager.Settings._StartWidth, UIManager.Settings._WidthAnimDuration);
+            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, Settings.StartWidth, Settings.WidthAnimDuration);
         }
         public void Deactivate()
         {
             _isDeactivating = true;
-            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, 0f, UIManager.Settings._WidthAnimDuration, this.GODeactivate);
+            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, 0f, Settings.WidthAnimDuration, this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
         {
             _lineRenderer.SetPosition(0, _from.position);
             _lineRenderer.SetPosition(1, _to.position);
-            _lineRenderer.sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * UIManager.Settings._Tiling, 1);
+            _lineRenderer.sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * Settings.Tiling, 1);
         }
         public bool TryGetCursorCharacter(out Character target)
         {
@@ -48,10 +48,12 @@ namespace Vheos.Games.ActionPoints
         private Transform _from;
         private Transform _to;
         private bool _isDeactivating;
+        private UISettings.TargetingLineSettings Settings
+        => UIManager.Settings.TargetingLine;
         private void SetWidth(float width)
         {
             _lineRenderer.startWidth = width;
-            _lineRenderer.endWidth = width * UIManager.Settings._EndWidthRatio;
+            _lineRenderer.endWidth = width * Settings.EndWidthRatio;
         }
 
         // Play
@@ -63,7 +65,7 @@ namespace Vheos.Games.ActionPoints
 
             _lineRenderer = GetComponent<LineRenderer>();
             _lineRenderer.positionCount = 2;
-            _lineRenderer.startColor = UI.Character.Color.NewA(UIManager.Settings._StartOpacity);
+            _lineRenderer.startColor = UI.Character.Color.NewA(Settings.StartOpacity);
             this.GODeactivate();
         }
         protected override void SubscribeToEvents()

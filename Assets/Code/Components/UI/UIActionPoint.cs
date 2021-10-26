@@ -6,11 +6,11 @@ namespace Vheos.Games.ActionPoints
     public class UIActionPoint : AUIPoint
     {
         // Publics
-        public void UpdateLocalProgresses(int index, float visualActionProgress, float visualFocusProgress)
+        public void UpdateLocalProgresses(float visualActionProgress, float visualFocusProgress)
         {
-            ActionProgress = visualActionProgress.Abs().Sub(index).Clamp01();
-            ActionColor = visualActionProgress >= 0 ? UIManager.Settings._PointActionColor : UIManager.Settings._PointExhaustColor;
-            FocusProgress = visualFocusProgress.Sub(index).Clamp01();
+            ActionProgress = visualActionProgress.Abs().Sub(Index).Clamp01();
+            ActionColor = visualActionProgress >= 0 ? Settings.ActionColor : Settings.ExhaustColor;
+            FocusProgress = visualFocusProgress.Sub(Index).Clamp01();
         }
 
         // Privates
@@ -20,9 +20,9 @@ namespace Vheos.Games.ActionPoints
             previousCount = previousCount.Abs();
             currentCount = currentCount.Abs();
             if (Index >= previousCount && Index < currentCount)
-                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, 1f, UIManager.Settings._PointAnimDuration);
+                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, 1f, Settings.AnimDuration);
             if (Index >= currentCount && Index < previousCount)
-                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, UIManager.Settings._PointPartialProgressOpacity, UIManager.Settings._PointAnimDuration);
+                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, Settings.PartialProgressOpacity, Settings.AnimDuration);
         }
         private void UpdateWoundVisibility(int previousCount, int currentCount)
         {
@@ -39,10 +39,10 @@ namespace Vheos.Games.ActionPoints
             base.PlayAwake();
             name = GetType().Name;
 
-            Opacity = UIManager.Settings._PointPartialProgressOpacity;
+            Opacity = Settings.PartialProgressOpacity;
             UI.Character.OnActionPointsCountChanged += UpdateOpacityOnPointsCountChange;
 
-            _uiWound = this.CreateChildComponent<UIWound>(UIManager.Prefabs.Wound);
+            _uiWound = this.CreateChildComponent<UIWound>(UIManager.Settings.Prefab.Wound);
             UI.Character.OnWoundsCountChanged += UpdateWoundVisibility;
         }
     }

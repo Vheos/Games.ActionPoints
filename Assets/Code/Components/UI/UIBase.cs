@@ -51,10 +51,10 @@ namespace Vheos.Games.ActionPoints
             UI = this;
 
             transform.position = Character.transform.position;
-            _wheel = this.CreateChildComponent<UIWheel>(UIManager.Prefabs.Wheel);
-            _pointsBar = this.CreateChildComponent<UIActionPointsBar>(UIManager.Prefabs.ActionPointsBar);
-            _targetingLine = this.CreateChildComponent<UITargetingLine>(UIManager.Prefabs.TargetingLine);
-            _popupHandler = this.CreateChildComponent<UIPopupHandler>( UIManager.Prefabs.PopupHandler);
+            _wheel = this.CreateChildComponent<UIWheel>(UIManager.Settings.Prefab.Wheel);
+            _pointsBar = this.CreateChildComponent<UIActionPointsBar>(UIManager.Settings.Prefab.ActionPointsBar);
+            _targetingLine = this.CreateChildComponent<UITargetingLine>(UIManager.Settings.Prefab.TargetingLine);
+            _popupHandler = this.CreateChildComponent<UIPopupHandler>(UIManager.Settings.Prefab.PopupHandler);
         }
     }
 }

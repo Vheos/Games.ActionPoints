@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8814995318805333584}
   - component: {fileID: 8814995318805333585}
   - component: {fileID: 8814995318805333587}
+  - component: {fileID: 6336682340486193707}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -83,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86dba22612658c46aa4f6e8eebc5223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Buttons: 0000000001000000
+  _Buttons: 00000000
   _CursorPrefab: {fileID: 0}
 --- !u!114 &8814995318805333587
 MonoBehaviour:
@@ -97,4 +98,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a063ad534495043b81dc60ef464340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _PrefabUIBase: {fileID: 26440852318934822, guid: a8e94a12ea3b6094290911fc6c6cb467, type: 3}
+  _Settings: {fileID: 11400000, guid: f366411b083bf41469797feff83bfc6e, type: 2}
+--- !u!114 &6336682340486193707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8814995318805333588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06c18e0706bb02c46b7725e9455222a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _TimeScale: 1
+  _UpdatesPerSecond: 60
+  _FixedUpdatesPerSecond: 50

@@ -181,7 +181,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
 
-            _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Prefabs.Base);
+            _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Settings.Prefab.Base);
             _actionUI.Character = this;
 
             CombatPosition = TryGetComponent<SnapTo>(out var snapTo) && snapTo.IsActive ? snapTo.TargetPosition : transform.position;

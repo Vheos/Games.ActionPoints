@@ -56,7 +56,7 @@ namespace Vheos.Games.ActionPoints
             base.PlayStart();
             transform.localPosition = Button.transform.localScale.Mul(+0.5f, -1f, 0f);
             int pointsCount = Button.Action.ActionPointsCost + Button.Action.FocusPointsCost;
-            CreatePoints(pointsCount, UIManager.Prefabs.CostPoint);
+            CreatePoints(pointsCount, UIManager.Settings.Prefab.CostPoint);
             AlignPoints();
 
             foreach (var point in _points)

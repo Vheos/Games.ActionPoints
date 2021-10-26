@@ -16,14 +16,14 @@ namespace Vheos.Games.ActionPoints
         private float _visualFocusProgress;
         private void UpdateVisualProgresses()
         {
-            float lerpAlpha = NewUtility.LerpHalfTimeToAlpha(UIManager.Settings._PointVisualProgressHalfTime);
+            float lerpAlpha = NewUtility.LerpHalfTimeToAlpha(Settings.VisualProgressHalfTime);
             _visualActionProgress = _visualActionProgress.Lerp(UI.Character.ActionProgress, lerpAlpha);
             _visualFocusProgress = _visualFocusProgress.Lerp(UI.Character.FocusProgress, lerpAlpha);
         }
         private void UpdatePoints()
         {
             for (int i = 0; i < _points.Count; i++)
-                _points[i].UpdateLocalProgresses(i, _visualActionProgress, _visualFocusProgress);
+                _points[i].UpdateLocalProgresses(_visualActionProgress, _visualFocusProgress);
         }
 
         // Play
@@ -35,7 +35,7 @@ namespace Vheos.Games.ActionPoints
             if (TryGetComponent<RotateAs>(out var rotateAs))
                 rotateAs.Target = CameraManager.FirstActive.transform;
 
-            CreatePoints(UI.Character.RawMaxActionPoints, UIManager.Prefabs.ActionPoint);
+            CreatePoints(UI.Character.RawMaxActionPoints, UIManager.Settings.Prefab.ActionPoint);
             AlignPoints();
         }
         protected override void SubscribeToEvents()

@@ -18,16 +18,18 @@ namespace Vheos.Games.ActionPoints
         public Action Action
         { get; set; }
         public void MoveTo(Vector2 targetLocalPosition)
-        => transform.AnimateLocalPosition(this, targetLocalPosition, UIManager.Settings._ButtonAnimDuration);
+        => transform.AnimateLocalPosition(this, targetLocalPosition, Settings.AnimDuration);
 
         // Privates
         private UICostPointsBar _costPointsBar;
         private Vector2 _originalScale;
         private bool _isTargeting;
+        private UISettings.ButtonSettings Settings
+        => UIManager.Settings.Button;
         private void UpdateUsability()
         {
-            Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character.Color : UIManager.Settings._UnusableColor;
-            Get<SpriteRenderer>().AnimateColor(this, targetColor, UIManager.Settings._UnusableDuration);
+            Color targetColor = Action.CanBeUsed(UI.Character) ? UI.Character.Color : Settings.UnusableColor;
+            Get<SpriteRenderer>().AnimateColor(this, targetColor, Settings.UnusableDuration);
         }
 
         // Play
@@ -45,7 +47,7 @@ namespace Vheos.Games.ActionPoints
             UI.Character.OnActionPointsCountChanged += (a, f) => UpdateUsability();
             UI.Character.OnExhaustStateChanged += (s) => UpdateUsability();
 
-            _costPointsBar = this.CreateChildComponent<UICostPointsBar>(UIManager.Prefabs.CostPointsBar);
+            _costPointsBar = this.CreateChildComponent<UICostPointsBar>(UIManager.Settings.Prefab.CostPointsBar);
             _costPointsBar.Button = this;
         }
         protected override void SubscribeToEvents()
@@ -56,7 +58,7 @@ namespace Vheos.Games.ActionPoints
                 if (!Action.CanBeUsed(UI.Character))
                     return;
 
-                transform.AnimateLocalScale(this, _originalScale * UIManager.Settings._HighlightScale, UIManager.Settings._HighlightDuration);
+                transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.HighlightDuration);
             };
             OnMousePress += (button, position) =>
             {
@@ -77,8 +79,8 @@ namespace Vheos.Games.ActionPoints
                     _isTargeting = true;
                 }
 
-                transform.AnimateLocalScale(this, transform.localScale * UIManager.Settings._ClickScale, UIManager.Settings._ClickDuration);
-                Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * UIManager.Settings._ClickColorScale, UIManager.Settings._ClickDuration);
+                transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
+                Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
             };
             OnMouseHold += (button, position) =>
             {
@@ -106,12 +108,12 @@ namespace Vheos.Games.ActionPoints
                     _isTargeting = false;
                 }
 
-                transform.AnimateLocalScale(this, _originalScale * UIManager.Settings._HighlightScale, UIManager.Settings._ClickDuration);
-                Get<SpriteRenderer>().AnimateColor(this, UI.Character.Color, UIManager.Settings._ClickDuration);
+                transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.ClickDuration);
+                Get<SpriteRenderer>().AnimateColor(this, UI.Character.Color, Settings.ClickDuration);
             };
             OnMouseLoseHighlight += () =>
             {
-                transform.AnimateLocalScale(this, _originalScale, UIManager.Settings._HighlightDuration);
+                transform.AnimateLocalScale(this, _originalScale, Settings.HighlightDuration);
             };
         }
     }

@@ -10,12 +10,12 @@ namespace Vheos.Games.ActionPoints
         public override void PlayStart()
         {
             base.PlayStart();
-            Opacity = UIManager.Settings._Opacity;
+            Opacity = Settings.CostOpacity;
             ActionProgress = 1f;
 
             bool isActionPoint = Index < CostPointsBar.Button.Action.ActionPointsCost;
             FocusProgress = isActionPoint ? 0f : 1f;
-            Shape = isActionPoint ? UIManager.Settings._PointActionShape : UIManager.Settings._PointFocusShape;
+            Shape = isActionPoint ? Settings.ActionShape : Settings.FocusShape;
         }
     }
 }

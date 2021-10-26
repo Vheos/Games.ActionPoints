@@ -10,10 +10,12 @@ namespace Vheos.Games.ActionPoints
         public int Index
         { get; set; }
         public void PlayCantUseAnim()
-        => transform.AnimateLocalScale(this, _originalScale, _originalScale * UIManager.Settings._PointCantUseScale, UIManager.Settings._PointCantUseAnimDuration, null, QAnimator.AnimationStyle.Boomerang);
+        => transform.AnimateLocalScale(this, _originalScale, _originalScale * Settings.CantUseScale, Settings.CantUseAnimDuration, null, QAnimator.AnimationStyle.Boomerang);
 
         // Private
         private Vector2 _originalScale;
+        protected UISettings.ActionPointSettings Settings
+        => UIManager.Settings.ActionPoint;
 
         // MProps
         public Texture Shape
@@ -70,10 +72,10 @@ namespace Vheos.Games.ActionPoints
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
             _originalScale = transform.localScale;
-            Shape = UIManager.Settings._PointActionShape;
-            BackgroundColor = UIManager.Settings._PointBackgroundColor;
-            ActionColor = UIManager.Settings._PointActionColor;
-            FocusColor = UIManager.Settings._PointFocusColor;
+            Shape = Settings.ActionShape;
+            BackgroundColor = Settings.BackgroundColor;
+            ActionColor = Settings.ActionColor;
+            FocusColor = Settings.FocusColor;
         }
     }
 }
