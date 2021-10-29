@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     {
         // CONST
         private const float HALFTIME_PRECISION = 0.01f;
-        private const float DEFAULT_DEFAULT_HALFTIME = 0.25f;
+        private const float DEFAULT_DEFAULT_HALFTIME = 0.2f;
 
         // Publics
         static public float DefaultHalfTime

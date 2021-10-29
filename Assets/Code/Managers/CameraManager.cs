@@ -50,6 +50,7 @@ namespace Vheos.Games.ActionPoints
         public override void PlayAwake()
         {
             base.PlayAwake();
+            _cursorCamera = FirstActive;
             _cursorCameraLocks = new List<Behaviour>();
             CursorManager.OnCameraMoved += (from, to) => SetDirtyCursorCamera();
         }

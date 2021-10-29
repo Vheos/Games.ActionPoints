@@ -1,16 +1,17 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.General;
-    [RequireComponent(typeof(MeshFilter))]
-    [RequireComponent(typeof(MeshRenderer))]
-    [RequireComponent(typeof(Updatable))]
+
     abstract public class ACustomDrawable : ABaseComponent
     {
-        // Virtuals
-        virtual protected void AssignInspectorMProps()
-        { }
+        // Cache
+        protected override Type[] ComponentsTypesToCache => new[]
+        {
+            typeof(MeshRenderer),
+        };
 
         // MProps
         protected float GetFloat(string name)
@@ -45,36 +46,30 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
-        protected MeshFilter _meshFilter;
-        protected MeshRenderer _meshRenderer;
+        virtual protected void AssignInspectorMProps()
+        { }
         private MaterialPropertyBlock _mprops;
         private bool _hasDirtyMProps;
         private void InitializeMProps()
         => _mprops = new MaterialPropertyBlock();
-        private void CacheMeshComponents()
-        {
-            _meshFilter = GetComponent<MeshFilter>();
-            _meshRenderer = GetComponent<MeshRenderer>();
-        }
         private void UpdateDirtyMProps()
         {
             if (_hasDirtyMProps.Consume())
-                _meshRenderer.SetPropertyBlock(_mprops);
+                Get<MeshRenderer>().SetPropertyBlock(_mprops);
         }
 
         // Play
         override public void PlayAwake()
         {
             base.PlayAwake();
-            CacheMeshComponents();
             InitializeMProps();
             AssignInspectorMProps();
             UpdateDirtyMProps();
         }
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnPlayUpdate += () =>
+            base.SubscribeToPlayEvents();
+            Updatable.OnPlayUpdate += () =>
             {
                 UpdateDirtyMProps();
             };
@@ -85,7 +80,7 @@ namespace Vheos.Games.ActionPoints
         override public void EditAwake()
         {
             base.EditAwake();
-            CacheMeshComponents();
+            // Cache components
             InitializeMProps();
             AssignInspectorMProps();
             UpdateDirtyMProps();

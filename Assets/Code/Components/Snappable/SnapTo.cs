@@ -19,10 +19,10 @@ namespace Vheos.Games.ActionPoints
         => _Snappable.GetClosestSurfacePoint(transform.position - _Offset) + _Offset;
         public void Snap(float lerpAlpha)
         => transform.position = transform.position.Lerp(TargetPosition, lerpAlpha);
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnPlayUpdate += () =>
+            base.SubscribeToPlayEvents();
+            Updatable.OnPlayUpdate += () =>
             {
                 if (_Snappable == null)
                     return;

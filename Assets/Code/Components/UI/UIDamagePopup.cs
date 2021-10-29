@@ -45,24 +45,17 @@ namespace Vheos.Games.ActionPoints
             using (QAnimator.Group(this, null, Settings.FadeInDuration, StayUp))
             {
                 transform.GroupAnimateLocalPosition(direction * Settings.Distance);
-                Get<TextMeshPro>().GroupAnimateAlpha(1f);
+                Get<TextMeshPro>().GroupAnimateAlpha(0f, 1f);
             }
         }
         private void StayUp()
         {
-            var componentProperty = QAnimator.GetUID(QAnimator.ComponentProperty.TextMeshProAlpha);
-            QAnimator.Wait(this, componentProperty, Settings.StayUpDuration, FadeOut);
+            var componentProperty = QAnimator.GetUID(QAnimator.ComponentProperty.TextMeshProColor);
+            QAnimator.Delay(this, componentProperty, Settings.StayUpDuration, FadeOut);
         }
         private void FadeOut()
         => Get<TextMeshPro>().AnimateAlpha(this, 0f, Settings.FadeOutDuration, () => this.DestroyObject());
         private void Pulse()
-        => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration,  Pulse, QAnimator.AnimationStyle.Boomerang);
-
-        // Play
-        public override void PlayAwake()
-        {
-            base.PlayAwake();
-            Get<TextMeshPro>().alpha = 0f;
-        }
+        => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration,  Pulse, QAnimator.Curve.Boomerang);
     }
 }

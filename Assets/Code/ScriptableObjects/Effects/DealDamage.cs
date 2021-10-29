@@ -17,7 +17,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
             float raw = values[2];
 
             // Execute
-            target.DealTotalDamage(target.CalculateTotalDamage(blunt, sharp, raw));
+            target.TakeTotalDamage(target.CalculateTotalDamage(blunt, sharp, raw));
         }
     }
 }

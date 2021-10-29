@@ -13,8 +13,8 @@ namespace Vheos.Games.ActionPoints
     public class CursorManager : ABaseComponent
     {
         // Inspector
-       [SerializeField]  protected Button[] _Buttons;
-       [SerializeField]  protected GameObject _CursorPrefab;
+        [SerializeField] protected Button[] _Buttons;
+        [SerializeField] protected GameObject _CursorPrefab;
 
         // Publics
         static public Transform CursorTransform
@@ -50,18 +50,15 @@ namespace Vheos.Games.ActionPoints
         }
         static private void UpdateCursorMousable()
         {
-            if (CameraManager.CursorCamera.TryNonNull(out var activeCamera))
-            {
-                foreach (var hitInfo in NewUtility.RaycastFromCamera(activeCamera, LayerMask.GetMask(nameof(Mousable)), true, true))
-                    if (hitInfo.collider.TryGetComponent<Mousable>(out var hitMousable)
-                    && hitMousable.enabled
-                    && hitMousable.RaycastTest(hitInfo.point))
-                    {
-                        CursorMousable = hitMousable;
-                        CursorMousableHitInfo = hitInfo;
-                        return;
-                    }
-            }
+            foreach (var hitInfo in NewUtility.RaycastFromCamera(CameraManager.FirstActive, LayerMask.GetMask(nameof(Mousable)), true, true))
+                if (hitInfo.collider.TryGetComponent<Mousable>(out var hitMousable)
+                && hitMousable.enabled
+                && hitMousable.PerformRaycastTests(hitInfo.point))
+                {
+                    CursorMousable = hitMousable;
+                    CursorMousableHitInfo = hitInfo;
+                    return;
+                }
 
             CursorMousable = null;
             CursorMousableHitInfo = new RaycastHit
@@ -74,12 +71,12 @@ namespace Vheos.Games.ActionPoints
             if (_previousCursorMousable != null
             && (CursorMousable == null || _previousCursorMousable != CursorMousable)
             && !_lockedMousablesByButton.ContainsValue(_previousCursorMousable))
-                _previousCursorMousable.MouseLoseHighlight();
+                _previousCursorMousable.LoseHighlight();
 
             if (CursorMousable != null
             && (_previousCursorMousable == null || _previousCursorMousable != CursorMousable)
             && !_lockedMousablesByButton.ContainsValue(CursorMousable))
-                CursorMousable.MouseGainHighlight();
+                CursorMousable.GainHighlight();
         }
         static private void UpdateButtonEvents(Button[] buttons)
         {
@@ -90,7 +87,7 @@ namespace Vheos.Games.ActionPoints
                 && !_lockedMousablesByButton.ContainsKey(button)
                 && CursorMousable != null)
                 {
-                    CursorMousable.MousePress(button, CursorMousableHitInfo.point);
+                    CursorMousable.Press(button, CursorMousableHitInfo.point);
                     _lockedMousablesByButton.Add(button, CursorMousable);
                 }
 
@@ -100,14 +97,14 @@ namespace Vheos.Games.ActionPoints
 
                 // Hold
                 if (Input.GetMouseButton((int)button))
-                    lockedMousable.MouseHold(button, CursorMousableHitInfo.point);
+                    lockedMousable.Hold(button, CursorMousableHitInfo.point);
 
                 // Release
                 if (Input.GetMouseButtonUp((int)button))
                 {
-                    lockedMousable.MouseRelease(button, CursorMousableHitInfo.point);
+                    lockedMousable.Release(button, CursorMousableHitInfo.point);
                     if (lockedMousable != CursorMousable)
-                        lockedMousable.MouseLoseHighlight();
+                        lockedMousable.LoseHighlight();
                     _lockedMousablesByButton.Remove(button);
                 }
             }
@@ -132,10 +129,10 @@ namespace Vheos.Games.ActionPoints
 
             _lockedMousablesByButton = new Dictionary<Button, Mousable>();
         }
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnPlayUpdate += () =>
+            base.SubscribeToPlayEvents();
+            Updatable.OnPlayUpdate += () =>
             {
                 UpdateCursorMousable();
                 UpdateHighlights();

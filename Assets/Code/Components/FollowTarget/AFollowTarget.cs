@@ -19,10 +19,10 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnPlayUpdate += () =>
+            base.SubscribeToPlayEvents();
+            Updatable.OnPlayUpdate += () =>
             {
                 if (_Target == null)
                     return;

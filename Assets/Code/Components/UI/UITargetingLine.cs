@@ -4,10 +4,17 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
+    using System;
 
     [RequireComponent(typeof(LineRenderer))]
     public class UITargetingLine : ABaseComponent, IUIHierarchy
     {
+        // Cache
+        protected override Type[] ComponentsTypesToCache => new[]
+        {
+            typeof(LineRenderer),
+        };
+
         // Publics
         public UIBase UI
         { get; private set; }
@@ -18,18 +25,18 @@ namespace Vheos.Games.ActionPoints
             _isDeactivating = false;
             UpdatePositionsAndTiling();
             this.GOActivate();
-            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, Settings.StartWidth, Settings.WidthAnimDuration);
+            this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, Settings.StartWidth, Settings.WidthAnimDuration);
         }
         public void Deactivate()
         {
             _isDeactivating = true;
-            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, 0f, Settings.WidthAnimDuration, this.GODeactivate);
+            this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, 0f, Settings.WidthAnimDuration, this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
         {
-            _lineRenderer.SetPosition(0, _from.position);
-            _lineRenderer.SetPosition(1, _to.position);
-            _lineRenderer.sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * Settings.Tiling, 1);
+            Get<LineRenderer>().SetPosition(0, _from.position);
+            Get<LineRenderer>().SetPosition(1, _to.position);
+            Get<LineRenderer>().sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * Settings.Tiling, 1);
         }
         public bool TryGetCursorCharacter(out Character target)
         {
@@ -44,7 +51,6 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
-        private LineRenderer _lineRenderer;
         private Transform _from;
         private Transform _to;
         private bool _isDeactivating;
@@ -52,8 +58,8 @@ namespace Vheos.Games.ActionPoints
         => UIManager.Settings.TargetingLine;
         private void SetWidth(float width)
         {
-            _lineRenderer.startWidth = width;
-            _lineRenderer.endWidth = width * Settings.EndWidthRatio;
+            Get<LineRenderer>().startWidth = width;
+            Get<LineRenderer>().endWidth = width * Settings.EndWidthRatio;
         }
 
         // Play
@@ -63,15 +69,14 @@ namespace Vheos.Games.ActionPoints
             name = GetType().Name;
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
-            _lineRenderer = GetComponent<LineRenderer>();
-            _lineRenderer.positionCount = 2;
-            _lineRenderer.startColor = UI.Character.Color.NewA(Settings.StartOpacity);
+            Get<LineRenderer>().positionCount = 2;
+            Get<LineRenderer>().startColor = UI.Character.Color.NewA(Settings.StartOpacity);
             this.GODeactivate();
         }
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnPlayUpdate += () =>
+            base.SubscribeToPlayEvents();
+            Updatable.OnPlayUpdate += () =>
             {
                 if (!_isDeactivating)
                     UpdatePositionsAndTiling();

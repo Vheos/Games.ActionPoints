@@ -8,10 +8,12 @@ namespace Vheos.Games.ActionPoints
     public class Tool : ABaseComponent
     {
         // Inspector
-        [SerializeField] protected ActionAnimation.StateData _Idle;
+        [SerializeField] protected Vector3 _LocalPositionOffset;
+        [SerializeField] protected Vector3 _LocalRotationOffset;
+        [SerializeField] protected ActionAnimation.Clip _Idle;
 
         // Publics
-        public ActionAnimation.StateData Idle
+        public ActionAnimation.Clip Idle
         => _Idle;
         public Character Character
         { get; private set; }
@@ -19,6 +21,8 @@ namespace Vheos.Games.ActionPoints
         {
             Character = character;
             this.BecomeChildOf(character.HandTransform);
+            transform.localPosition = _LocalPositionOffset;
+            transform.localRotation = Quaternion.Euler(_LocalRotationOffset);
             this.GOActivate();
         }
         public void GetUnequipped()

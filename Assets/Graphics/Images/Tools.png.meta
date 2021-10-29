@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: 6232742816020895870
     second: Sword
+  - first:
+      213: -3569232777630780389
+    second: Torch
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -55,7 +58,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 10
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -104,9 +107,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1
-        width: 10
-        height: 16
+        y: 0
+        width: 11
+        height: 18
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,10 +127,10 @@ TextureImporter:
       name: Pickaxe
       rect:
         serializedVersion: 2
-        x: 12
-        y: 1
-        width: 15
-        height: 16
+        x: 11
+        y: 0
+        width: 17
+        height: 18
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,10 +148,10 @@ TextureImporter:
       name: Sword
       rect:
         serializedVersion: 2
-        x: 29
-        y: 1
-        width: 15
-        height: 15
+        x: 28
+        y: 0
+        width: 17
+        height: 17
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,6 +161,27 @@ TextureImporter:
       bones: []
       spriteID: e781b4591962f7650800000000000000
       internalID: 6232742816020895870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 0
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b14f2a803b9877ec0800000000000000
+      internalID: -3569232777630780389
       vertices: []
       indices: 
       edges: []

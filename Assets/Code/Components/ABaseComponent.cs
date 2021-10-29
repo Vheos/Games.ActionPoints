@@ -13,172 +13,111 @@ namespace Vheos.Games.ActionPoints
         APlayable
 #endif
     {
-        // Events
-        public event System.Action OnPlayUpdate
-        {
-            add
-            {
-                if (TryGetComponentOrThrowWarning<Updatable>(out var handler, nameof(OnPlayUpdate)))
-                    handler.OnPlayUpdate += value;
-            }
-            remove
-            {
-                if (TryGetComponentOrThrowWarning<Updatable>(out var handler, nameof(OnPlayUpdate)))
-                    handler.OnPlayUpdate -= value;
-            }
-        }
-        public event System.Action OnPlayUpdateLate
-        {
-            add
-            {
-                if (TryGetComponentOrThrowWarning<Updatable>(out var handler, nameof(OnPlayUpdateLate)))
-                    handler.OnPlayUpdateLate += value;
-            }
-            remove
-            {
-                if (TryGetComponentOrThrowWarning<Updatable>(out var handler, nameof(OnPlayUpdateLate)))
-                    handler.OnPlayUpdateLate -= value;
-            }
-        }
-        public event System.Action OnPlayUpdateFixed
-        {
-            add
-            {
-                if (TryGetComponentOrThrowWarning<Updatable>(out var handler, nameof(OnPlayUpdateFixed)))
-                    handler.OnPlayUpdateFixed += value;
-            }
-            remove
-            {
-                if (TryGetComponentOrThrowWarning<Updatable>(out var handler, nameof(OnPlayUpdateFixed)))
-                    handler.OnPlayUpdateFixed -= value;
-            }
-        }
-        public event System.Action OnMouseGainHighlight
-        {
-            add
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMouseGainHighlight)))
-                    handler.OnMouseGainHighlight += value;
-            }
-            remove
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMouseGainHighlight)))
-                    handler.OnMouseGainHighlight -= value;
-            }
-        }
-        public event System.Action OnMouseLoseHighlight
-        {
-            add
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMouseLoseHighlight)))
-                    handler.OnMouseLoseHighlight += value;
-            }
-            remove
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMouseLoseHighlight)))
-                    handler.OnMouseLoseHighlight -= value;
-            }
-        }
-        public event System.Action<CursorManager.Button, Vector3> OnMousePress
-        {
-            add
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMousePress)))
-                    handler.OnMousePress += value;
-            }
-            remove
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMousePress)))
-                    handler.OnMousePress -= value;
-            }
-        }
-        public event System.Action<CursorManager.Button, Vector3> OnMouseHold
-        {
-            add
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMouseHold)))
-                    handler.OnMouseHold += value;
-            }
-            remove
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMouseHold)))
-                    handler.OnMouseHold -= value;
-            }
-        }
-        public event System.Action<CursorManager.Button, Vector3> OnMouseRelease
-        {
-            add
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMouseRelease)))
-                    handler.OnMouseRelease += value;
-            }
-            remove
-            {
-                if (TryGetComponentOrThrowWarning<Mousable>(out var handler, nameof(OnMouseRelease)))
-                    handler.OnMouseRelease -= value;
-            }
-        }
-
-        // Virtuals
-        virtual protected void SubscribeToEvents()
-        { }
-        virtual protected Type[] ComponentsTypesToCache
-        => new Type[0];
-
         // Publics
         public T Get<T>() where T : Component
-        => (T)_cachedComponentsByType[typeof(T)];
+        => (T)_cachedComponentsByTypeByGameObject[gameObject][typeof(T)];
+        public Updatable Updatable
+        => GetComponentOrThrowWarning<Updatable>();
+        public Mousable Mousable
+        => GetComponentOrThrowWarning<Mousable>();
+        public SpriteChangable SpriteChangable
+        => GetComponentOrThrowWarning<SpriteChangable>();
+        public Movable Movable
+        => GetComponentOrThrowWarning<Movable>();
 
         // Privates
-        private Dictionary<Type, Component> _cachedComponentsByType;
-        private void CacheComponents()
+        virtual protected void SubscribeToPlayEvents()
+        { }
+        virtual protected Type[] ComponentsTypesToCache
+        => null;
+        static private Dictionary<GameObject, Dictionary<Type, Component>> _cachedComponentsByTypeByGameObject;
+        private void TryCacheComponents()
         {
-            _cachedComponentsByType = new Dictionary<Type, Component>();
-            foreach (var type in ComponentsTypesToCache)
+            if (!ComponentsTypesToCache.TryNonNull(out var componentTypesToCache))
+                return;
+
+            if (!_cachedComponentsByTypeByGameObject.ContainsKey(gameObject))
+                _cachedComponentsByTypeByGameObject[gameObject] = new Dictionary<Type, Component>();
+
+            foreach (var type in componentTypesToCache)
             {
+                if (_cachedComponentsByTypeByGameObject[gameObject].ContainsKey(type))
+                    continue;
                 if (!type.IsAssignableTo<Component>())
                 {
-                    ThrowWarningAboutWrongType(type);
-                    continue;
-                }
-                if (_cachedComponentsByType.ContainsKey(type))
-                {
-                    ThrowWarningAboutDuplicateType(type);
+                    WarningWrongType(type);
                     continue;
                 }
                 if (!TryGetComponent(type, out var component))
                 {
-                    ThrowWarningAboutComponentNotFound(type);
+                    WarningComponentNotFound(type);
                     continue;
                 }
-                _cachedComponentsByType.Add(type, component);
+                _cachedComponentsByTypeByGameObject[gameObject].Add(type, component);
             }
         }
-        private bool TryGetComponentOrThrowWarning<T>(out T component, string eventName) where T : Component
+        private T GetComponentOrThrowWarning<T>() where T : Component
         {
-            if (TryGetComponent(out component))
-                return true;
-
-            ThrowWarningAboutEventHandlerNotFound(eventName);
-            return false;
+            T r = GetComponent<T>();
+            if (r == null)
+                WarningEventHandlerNotFound<T>();
+            return r;
         }
 
         // Warnings
-        private void ThrowWarningAboutEventHandlerNotFound(string eventName)
-        => Debug.LogWarning($"EventHandlerNotFound   -   gameobject {name}, component {GetType().Name}, event {eventName}");
-        private void ThrowWarningAboutWrongType(Type type)
-        => Debug.LogWarning($"WrongType   -   gameobject {name}, component {GetType().Name}, type {type}");
-        private void ThrowWarningAboutDuplicateType(Type type)
-        => Debug.LogWarning($"DuplicateType   -   gameobject {name}, component {GetType().Name}, type {type}");
-        private void ThrowWarningAboutComponentNotFound(Type type)
-        => Debug.LogWarning($"ComopnentNotFound   -   gameobject {name}, component {GetType().Name}, type {type}");
+        private void WarningEventHandlerNotFound<T>()
+        => Debug.LogWarning($"{nameof(ABaseComponent)} / EventHandlerNotFound   -   gameobject {name}, component {GetType().Name}, type {typeof(T)}");
+        private void WarningWrongType(Type type)
+        => Debug.LogWarning($"{nameof(ABaseComponent)} / WrongType   -   gameobject {name}, component {GetType().Name}, type {type}");
+        private void WarningComponentNotFound(Type type)
+        => Debug.LogWarning($"{nameof(ABaseComponent)} / ComopnentNotFound   -   gameobject {name}, component {GetType().Name}, type {type}");
+
+        // Initializers
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static private void StaticInitialize()
+        => _cachedComponentsByTypeByGameObject = new Dictionary<GameObject, Dictionary<Type, Component>>();
 
         // Play
         public override void PlayAwake()
         {
             base.PlayAwake();
-            CacheComponents();
-            SubscribeToEvents();
+            TryCacheComponents();
+            SubscribeToPlayEvents();
         }
+
+#if UNITY_EDITOR
+        // Debug
+        [ContextMenu(nameof(PrintLocalCache))]
+        public void PrintLocalCache()
+        {
+            int localCachedCount = _cachedComponentsByTypeByGameObject[gameObject].Count;
+            int localAllCount = GetComponents<Component>().Length - 1;
+            Debug.Log($"{name.ToUpper()} ({localCachedCount}/{localAllCount})");
+            foreach (var componentByType in _cachedComponentsByTypeByGameObject[gameObject])
+                Debug.Log($"\t- {componentByType.Key.Name}");
+            Debug.Log($"");
+        }
+        [ContextMenu(nameof(PrintGlobalCache))]
+        public void PrintGlobalCache()
+        {
+            int cachedCount = 0;
+            int allCount = 0;
+            foreach (var componentByTypeByGameObject in _cachedComponentsByTypeByGameObject)
+            {
+                int localCachedCount = componentByTypeByGameObject.Value.Count;
+                int localAllCount = componentByTypeByGameObject.Key.GetComponents<Component>().Length - 1;
+                Debug.Log($"{componentByTypeByGameObject.Key.name.ToUpper()} ({localCachedCount}/{localAllCount})");
+                foreach (var componentByType in componentByTypeByGameObject.Value)
+                    Debug.Log($"\t- {componentByType.Key.Name}");
+                Debug.Log($"");
+                cachedCount += localCachedCount;
+                allCount += localAllCount;
+            }
+            Debug.Log($"Cached GameObjects: {_cachedComponentsByTypeByGameObject.Count}");
+            Debug.Log($"Cached Components: {cachedCount}");
+            Debug.Log($"All Components: {allCount}");
+            Debug.Log($"");
+        }
+#endif
     }
 }

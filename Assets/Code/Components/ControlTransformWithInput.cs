@@ -20,10 +20,10 @@ namespace Vheos.Games.ActionPoints.Test
        [SerializeField]  protected bool _RotationInvertY = true;
 
         // Mono
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnPlayUpdate += () =>
+            base.SubscribeToPlayEvents();
+            Updatable.OnPlayUpdate += () =>
             {
                 if (_ControlMode == KeyCode.None || _ControlMode.Down())
                 {

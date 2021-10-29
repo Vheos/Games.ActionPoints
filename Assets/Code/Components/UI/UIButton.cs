@@ -50,17 +50,17 @@ namespace Vheos.Games.ActionPoints
             _costPointsBar = this.CreateChildComponent<UICostPointsBar>(UIManager.Settings.Prefab.CostPointsBar);
             _costPointsBar.Button = this;
         }
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnMouseGainHighlight += () =>
+            base.SubscribeToPlayEvents();
+            Mousable.OnGainHighlight += () =>
             {
                 if (!Action.CanBeUsed(UI.Character))
                     return;
 
                 transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.HighlightDuration);
             };
-            OnMousePress += (button, position) =>
+            Mousable.OnPress += (button, position) =>
             {
                 if (!Action.CanBeUsed(UI.Character))
                 {
@@ -75,20 +75,20 @@ namespace Vheos.Games.ActionPoints
                 if (Action.IsTargeted)
                 {
                     UI.StartTargeting(transform, CursorManager.CursorTransform);
-                    UI.Character.ActionAnimator.AnimateState(Action.Animation.Charge);
+                    UI.Character.ActionAnimator.Animate(Action.Animation.Charge);
                     _isTargeting = true;
                 }
 
                 transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
                 Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
             };
-            OnMouseHold += (button, position) =>
+            Mousable.OnHold += (button, position) =>
             {
                 if (_isTargeting
                 && UI.TryGetCursorCharacter(out var target))
                     UI.Character.LookAt(target.transform);
             };
-            OnMouseRelease += (button, position) =>
+            Mousable.OnRelease += (button, position) =>
             {
                 if (!Action.CanBeUsed(UI.Character))
                     return;
@@ -100,18 +100,18 @@ namespace Vheos.Games.ActionPoints
                     UI.StopTargeting();
                     if (UI.TryGetCursorCharacter(out var target))
                     {
-                        UI.Character.ActionAnimator.AnimateStateThenIdle(Action.Animation.Release);
+                        UI.Character.ActionAnimator.Animate(Action.Animation.Release);
                         Action.Use(UI.Character, target);
                     }
                     else
-                        UI.Character.ActionAnimator.AnimateState(UI.Character.Tool.Idle);
+                        UI.Character.ActionAnimator.Animate(Action.Animation.Cancel);
                     _isTargeting = false;
                 }
 
                 transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.ClickDuration);
                 Get<SpriteRenderer>().AnimateColor(this, UI.Character.Color, Settings.ClickDuration);
             };
-            OnMouseLoseHighlight += () =>
+            Mousable.OnLoseHighlight += () =>
             {
                 transform.AnimateLocalScale(this, _originalScale, Settings.HighlightDuration);
             };

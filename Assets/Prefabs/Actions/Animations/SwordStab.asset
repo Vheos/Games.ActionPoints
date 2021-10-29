@@ -12,25 +12,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 996a1c6b18850864ab72286a5eb471c7, type: 3}
   m_Name: SwordStab
   m_EditorClassIdentifier: 
-  Charge:
-    _Duration: 0.5
-    _WaitTime: 0
-    _ForwardDistance: -0.1
-    _ArmLength: 0.125
-    _ArmRotation: {x: -30, y: 0, z: 120}
-    _HandRotation: {x: 0, y: 0, z: -210}
-    _ForwardDistanceEnabled: 1
-    _ArmLengthEnabled: 1
-    _ArmRotationEnabled: 1
-    _HandRotationEnabled: 1
-  Release:
-    _Duration: 0.25
-    _WaitTime: 0.25
-    _ForwardDistance: 0.3
-    _ArmLength: 0.375
-    _ArmRotation: {x: -30, y: 0, z: 0}
-    _HandRotation: {x: 0, y: 0, z: -90}
-    _ForwardDistanceEnabled: 1
-    _ArmLengthEnabled: 1
-    _ArmRotationEnabled: 1
-    _HandRotationEnabled: 1
+  _Charge:
+  - Duration: 0.4
+    StayUpTime: 0
+    Style: 1
+    Parameters: 13
+    ForwardDistance: -0.1
+    ArmLength: 0.25
+    ArmRotation: {x: -30, y: 0, z: 120}
+    HandRotation: {x: 0, y: 0, z: -210}
+    ForwardDistanceUseIdle: 0
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+  _Cancel:
+  - Duration: 0.8
+    StayUpTime: 0
+    Style: 1
+    Parameters: 2147483647
+    ForwardDistance: 0
+    ArmLength: 0
+    ArmRotation: {x: 0, y: 0, z: 0}
+    HandRotation: {x: 0, y: 0, z: 0}
+    ForwardDistanceUseIdle: 1
+    ArmLengthUseIdle: 1
+    ArmRotationUseIdle: 1
+    HandRotationUseIdle: 1
+  _Release:
+  - Duration: 0.2
+    StayUpTime: 0.1
+    Style: 1
+    Parameters: 2147483647
+    ForwardDistance: 0.3
+    ArmLength: 0.6
+    ArmRotation: {x: -30, y: 0, z: 0}
+    HandRotation: {x: 0, y: 0, z: -90}
+    ForwardDistanceUseIdle: 0
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+  - Duration: 0.8
+    StayUpTime: 0
+    Style: 1
+    Parameters: 2147483647
+    ForwardDistance: 0
+    ArmLength: 0
+    ArmRotation: {x: 0, y: 0, z: 0}
+    HandRotation: {x: 0, y: 0, z: 0}
+    ForwardDistanceUseIdle: 1
+    ArmLengthUseIdle: 1
+    ArmRotationUseIdle: 1
+    HandRotationUseIdle: 1

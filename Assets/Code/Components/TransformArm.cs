@@ -8,6 +8,7 @@ namespace Vheos.Games.ActionPoints
     public class TransformArm : ABaseComponent
     {
         // Inspector
+        [SerializeField] protected Color _GizmoColor = Color.cyan;
         [SerializeField] [Range(0f, 1f)] protected float _Length;
 
         // Publics 
@@ -24,7 +25,6 @@ namespace Vheos.Games.ActionPoints
 
 #if UNITY_EDITOR
         // Play
-        [SerializeField] protected Color _GizmoColor;
         public Color GizmoColor
         => _GizmoColor;
         public override void EditUpdate()

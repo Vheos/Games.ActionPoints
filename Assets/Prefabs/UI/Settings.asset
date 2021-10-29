@@ -64,9 +64,9 @@ MonoBehaviour:
   _DamagePopup:
     AngleRandomRange: {x: -15, y: 15}
     AlignTextRotationToDirection: 0
-    Distance: 0.5
-    FadeInDuration: 0.5
-    StayUpDuration: 0.5
+    Distance: 0.75
+    FadeInDuration: 0.25
+    StayUpDuration: 0.75
     FadeOutDuration: 0.5
     SizeCurve:
       serializedVersion: 2
@@ -166,6 +166,6 @@ MonoBehaviour:
       m_Mode: 0
       m_NumColorKeys: 7
       m_NumAlphaKeys: 2
-    WoundPulseScale: 2
+    WoundPulseScale: 1.25
     WoundPulseDuration: 0.5
-    PercentSignSize: 0.5
+    PercentSignSize: 0

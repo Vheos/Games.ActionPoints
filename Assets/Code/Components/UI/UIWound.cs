@@ -1,12 +1,20 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
-    using Tools.Extensions.Math;
+    using Tools.Extensions.Math;    
 
     [RequireComponent(typeof(SpriteRenderer))]
     public class UIWound : ABaseComponent, IUIHierarchy
-    {
-        // Pubilcs
+    {   
+        // Cache
+        protected override Type[] ComponentsTypesToCache => new[]
+        {
+            typeof(SpriteRenderer),
+        };
+
+
+        // Publics
         public UIBase UI
         { get; private set; }
         public void Show(int index)
@@ -14,13 +22,13 @@ namespace Vheos.Games.ActionPoints
             this.GOActivate();
             float randFrom = index.IsEven() ? Settings.WoundAngleRandomRange.AvgComp() : Settings.WoundAngleRandomRange.x;
             float randTo = index.IsEven() ? Settings.WoundAngleRandomRange.y : Settings.WoundAngleRandomRange.AvgComp();
-            transform.localRotation = Quaternion.Euler(0f, 0f, -Random.Range(randFrom, randTo));
+            transform.localRotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(randFrom, randTo).Neg());
 
             Vector2 fadeInPosition = Vector2.up.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
             using (QAnimator.Group(this, null, Settings.WoundAnimDuration))
             {
                 transform.GroupAnimateLocalPosition(fadeInPosition, Vector2.zero);
-                _spriteRenderer.GroupAnimateColor(_spriteRenderer.color.NewA(1f));
+                Get<SpriteRenderer>().GroupAnimateAlpha(1f);
             }
         }
         public void Hide()
@@ -29,12 +37,11 @@ namespace Vheos.Games.ActionPoints
             using (QAnimator.Group(this, null, Settings.WoundAnimDuration, this.GODeactivate))
             {
                 transform.GroupAnimateLocalPosition(fadeOutPosition);
-                _spriteRenderer.GroupAnimateColor(_spriteRenderer.color.NewA(0f));
+                Get<SpriteRenderer>().GroupAnimateAlpha(0f);
             }
         }
 
         // Privates
-        private SpriteRenderer _spriteRenderer;
         private UISettings.WoundSettings Settings
         => UIManager.Settings.Wound;
 
@@ -45,8 +52,7 @@ namespace Vheos.Games.ActionPoints
             name = GetType().Name;
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-            _spriteRenderer.color = UIManager.Settings.ActionPoint.ExhaustColor;
+            Get<SpriteRenderer>().color = UIManager.Settings.ActionPoint.ExhaustColor;
             Hide();
         }
     }

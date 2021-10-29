@@ -4,6 +4,9 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.UnityCore;
     using Tools.Extensions.General;
+    using Tools.Extensions.Collections;
+    using System;
+
     [RequireComponent(typeof(Character))]
     public class ActionAnimator : ABaseComponent
     {
@@ -12,38 +15,45 @@ namespace Vheos.Games.ActionPoints
         private const string HAND_NAME = "Hand";
 
         // Inspector
-       [SerializeField]  protected GameObject _Parent;
+        [SerializeField] protected GameObject _Parent;
+
+        // CacheComponents
+        protected override Type[] ComponentsTypesToCache => new[]
+        {
+            typeof(Character),
+        };
 
         // Publics
-        public void AnimateStateThenIdle(ActionAnimation.StateData state)
+        public Transform HandTransform
+        { get; private set; }
+        public void Animate(ActionAnimation.Clip clip)
         {
-            void returnToIdle() => AnimateState(_character.Tool.Idle, null, QAnimator.AnimationStyle.InvertedArc);
-            void stayUpAfterRelease() => QAnimator.Wait(this, null, state._WaitTime, returnToIdle);
-
-            AnimateState(state, returnToIdle);
-        }
-        public void AnimateState(ActionAnimation.StateData state, System.Action finalAction = null, QAnimator.AnimationStyle style = QAnimator.AnimationStyle.Normal)
-        {
-            using (QAnimator.Group(this, null, state._Duration, finalAction, style))
-            {
-                if (state._ForwardDistanceEnabled)
-                    transform.GroupAnimatePosition(_character.CombatPosition + transform.right * state._ForwardDistance);
-                if (state._ArmLengthEnabled)
-                    QAnimator.GroupAnimate(v => _arm.Length = v, _arm.Length, state._ArmLength);
-                if (state._ArmRotationEnabled)
-                    QAnimator.GroupAnimate(AssignArmAngles, _armAngles, state._ArmRotation);
-                if (state._HandRotationEnabled)
-                    QAnimator.GroupAnimate(AssignHandAngles, _handAngles, state._HandRotation);
+            ActionAnimation.Clip idle = Get<Character>().Idle;
+            using (QAnimator.Group(this, null, clip.Duration, null, clip.Style))
+            {                
+                if (clip.ForwardDistanceEnabled)
+                    transform.GroupAnimatePosition(Get<Character>().CombatPosition + transform.right * clip.GetForwardDistance(idle));
+                if (clip.ArmLengthEnabled)
+                    QAnimator.GroupAnimate(v => _arm.Length = v, _arm.Length, clip.GetArmLength(idle));
+                if (clip.ArmRotationEnabled)
+                    QAnimator.GroupAnimate(AssignArmAngles, _armAngles, clip.GetArmRotation(idle));
+                if (clip.HandRotationEnabled)
+                    QAnimator.GroupAnimate(AssignHandAngles, _handAngles, clip.GetHandRotation(idle));
             }
+        }
+        public void Animate(ActionAnimation.Clip[] clips, int clipIndex = 0)
+        {
+            if (clipIndex >= clips.Length)
+                return;
+
+            Animate(clips[clipIndex]);
+            QAnimator.Delay(this, null, clips[clipIndex].TotalTime, () => Animate(clips, ++clipIndex));
         }
 
         // Privates
-        private Character _character;
         private TransformArm _arm;
         private Vector3 _armAngles;
         private Vector3 _handAngles;
-        public Transform HandTransform
-        { get; private set; }
         private void FindOrCreateArm()
         {
             if (!_Parent.FindChild<TransformArm>(ARM_NAME).TryNonNull(out _arm))
@@ -70,7 +80,6 @@ namespace Vheos.Games.ActionPoints
         public override void PlayAwake()
         {
             base.PlayAwake();
-            _character = GetComponent<Character>();
             FindOrCreateArm();
             FindOrCreateHand();
         }

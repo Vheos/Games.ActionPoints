@@ -18,6 +18,13 @@ namespace Vheos.Games.ActionPoints
                 if (t.HasFlag(flag))
                     action(flag);
         }
+        static public int SetFlagsCount(this int v)
+        {
+            v -= (v >> 1) & 0x55555555;
+            v = (v & 0x33333333) + ((v >> 2) & 0x33333333);
+            int c = ((v + (v >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;
+            return c;
+        }
         static public void GOActivate(this Component t)
         => t.gameObject.SetActive(true);
         static public void GODeactivate(this Component t)

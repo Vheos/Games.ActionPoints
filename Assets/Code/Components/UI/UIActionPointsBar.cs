@@ -38,10 +38,10 @@ namespace Vheos.Games.ActionPoints
             CreatePoints(UI.Character.RawMaxActionPoints, UIManager.Settings.Prefab.ActionPoint);
             AlignPoints();
         }
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnPlayUpdate += () =>
+            base.SubscribeToPlayEvents();
+            Updatable.OnPlayUpdate += () =>
             {
                 UpdateVisualProgresses();
                 UpdatePoints();

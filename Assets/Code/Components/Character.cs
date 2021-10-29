@@ -19,6 +19,7 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] [Range(0f, 100f)] protected float _BluntArmor = 0f;
         [SerializeField] [Range(0f, 100f)] protected float _SharpArmor = 0f;
         [SerializeField] protected Tool _StartingTool;
+        [SerializeField] protected ActionAnimation.Clip _Idle;
 
         // Cached components
         protected override System.Type[] ComponentsTypesToCache => new[]
@@ -27,11 +28,10 @@ namespace Vheos.Games.ActionPoints
             typeof(SpriteOutline),
             typeof(Animator),
             typeof(ActionAnimator),
-            typeof(TeamMember),
+            typeof(Teamable),
         };
 
-        // Publics
-        // Action
+        // Publics (action)
         public float ActionProgress
         { get; private set; }
         public int ActionPointsCount
@@ -61,7 +61,7 @@ namespace Vheos.Games.ActionPoints
             raw.SetClampMin(0);
             return blunt + sharp + raw;
         }
-        public void DealTotalDamage(float totalDamage)
+        public void TakeTotalDamage(float totalDamage)
         {
             int sureWounds = totalDamage.Div(100f).RoundDown();
             float remainingDamage = totalDamage - sureWounds;
@@ -90,13 +90,13 @@ namespace Vheos.Games.ActionPoints
                 transform.rotation.SetLookRotation(transform.DirectionTowards(targetTransform));
         }
         public Team Team
-        => Get<TeamMember>().Team;
+        => Get<Teamable>().Team;
         public Color Color
         => Team != null ? Team.Color : Color.white;
         public Vector3 CombatPosition
         { get; private set; }
         public ActionAnimator ActionAnimator
-        => GetComponent<ActionAnimator>();
+        => Get<ActionAnimator>();
         public Transform HandTransform
         => Get<ActionAnimator>().HandTransform;
         public Tool Tool
@@ -108,6 +108,7 @@ namespace Vheos.Games.ActionPoints
 
             Tool = tool;
             Tool.GetEquippedBy(this);
+            ActionAnimator.Animate(Tool.Idle);
         }
         public void Unequip()
         {
@@ -117,15 +118,17 @@ namespace Vheos.Games.ActionPoints
             Tool.GetUnequipped();
             Tool = null;
         }
+        public ActionAnimation.Clip Idle
+        => Tool != null ? Tool.Idle : _Idle;
 
         // Private
         private UIBase _actionUI;
         private float _previousActionProgress;
         private float _previousFocusProgress;
         private int _previousWoundsCount;
-        private Vector3 _previousPosition;
-        private void UpdateProgresses(float deltaTime)
+        private void UpdateProgresses()
         {
+            float deltaTime = Time.deltaTime;
             ActionProgress += deltaTime * _ActionSpeed;
             if (ActionProgress > MaxActionPoints)
             {
@@ -134,17 +137,6 @@ namespace Vheos.Games.ActionPoints
                 FocusProgress += deltaTime * _FocusSpeed;
                 FocusProgress = FocusProgress.ClampMax(ActionProgress);
             }
-        }
-        private void UpdateWalkAnimation(float deltaTime)
-        {
-            float speed = _previousPosition.DistanceTo(transform.position) / deltaTime;
-            Get<Animator>().SetFloat("Speed", speed);
-            _previousPosition = transform.position;
-        }
-        private void UpdateColors()
-        {
-            Get<SpriteRenderer>().color = Color;
-            Get<SpriteOutline>().Color = Color;
         }
 
         // Events
@@ -168,13 +160,10 @@ namespace Vheos.Games.ActionPoints
             if (_previousWoundsCount != WoundsCount)
                 OnWoundsCountChanged?.Invoke(_previousWoundsCount, WoundsCount);
         }
-        public delegate void PointsCountChanged(int previous, int current);
-        public delegate void ExhaustStateChangedZero(bool isExhausted);
-        public delegate void WoundsCountChanged(int previous, int current);
-        public event PointsCountChanged OnActionPointsCountChanged;
-        public event PointsCountChanged OnFocusPointsCountChanged;
-        public event ExhaustStateChangedZero OnExhaustStateChanged;
-        public event WoundsCountChanged OnWoundsCountChanged;
+        public event System.Action<int, int> OnActionPointsCountChanged;
+        public event System.Action<int, int> OnFocusPointsCountChanged;
+        public event System.Action<bool> OnExhaustStateChanged;
+        public event System.Action<int, int> OnWoundsCountChanged;
 
         // Playable
         public override void PlayAwake()
@@ -183,14 +172,12 @@ namespace Vheos.Games.ActionPoints
 
             _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Settings.Prefab.Base);
             _actionUI.Character = this;
-
-            CombatPosition = TryGetComponent<SnapTo>(out var snapTo) && snapTo.IsActive ? snapTo.TargetPosition : transform.position;
-            UpdateColors();
         }
         public override void PlayStart()
         {
             base.PlayStart();
             Equip(_StartingTool);
+            CombatPosition = TryGetComponent<SnapTo>(out var snapTo) && snapTo.IsActive ? snapTo.TargetPosition : transform.position;
         }
         public override void PlayDestroy()
         {
@@ -198,30 +185,42 @@ namespace Vheos.Games.ActionPoints
             if (_actionUI != null)
                 _actionUI.DestroyObject();
         }
-        protected override void SubscribeToEvents()
+        protected override void SubscribeToPlayEvents()
         {
-            base.SubscribeToEvents();
-            OnPlayUpdate += () =>
+            base.SubscribeToPlayEvents();
+            Updatable.OnPlayUpdate += () =>
             {
-                UpdateProgresses(Time.deltaTime);
-                UpdateWalkAnimation(Time.deltaTime);
+                UpdateProgresses();
                 InvokeEvents();
 
                 _previousActionProgress = ActionProgress;
                 _previousFocusProgress = FocusProgress;
                 _previousWoundsCount = WoundsCount;
             };
-            OnMouseGainHighlight += () =>
+            Mousable.OnGainHighlight += () =>
             {
                 Get<SpriteOutline>().Show();
             };
-            OnMousePress += (button, position) =>
+            Mousable.OnPress += (button, position) =>
             {
                 _actionUI.ToggleWheel();
             };
-            OnMouseLoseHighlight += () =>
+            Mousable.OnLoseHighlight += () =>
             {
                 Get<SpriteOutline>().Hide();
+            };
+            Movable.OnMoved += (from, to) =>
+            {
+                Get<Animator>().SetFloat("Speed", from.DistanceTo(to) / Time.deltaTime);
+            };
+            Movable.OnStopped += (position) =>
+            {
+                Get<Animator>().SetFloat("Speed", 0f);
+            };
+            Get<Teamable>().OnTeamChanged += (from, to) =>
+            {
+                Get<SpriteRenderer>().color = to.Color;
+                Get<SpriteOutline>().Color = to.Color;
             };
         }
 
@@ -229,7 +228,7 @@ namespace Vheos.Games.ActionPoints
         public override void EditAwake()
         {
             base.EditAwake();
-            if (GetComponent<TeamMember>().StartingTeam.TryNonNull(out var team))
+            if (GetComponent<Teamable>().StartingTeam.TryNonNull(out var team))
                 GetComponent<SpriteRenderer>().color = team.Color;
             else
                 GetComponent<SpriteRenderer>().color = Color.white;
