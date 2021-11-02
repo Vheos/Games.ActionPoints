@@ -1,5 +1,6 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System.Collections.Generic;
     using UnityEngine;
 
     public class Combatable : ABaseComponent
@@ -8,14 +9,42 @@ namespace Vheos.Games.ActionPoints
         public event System.Action<bool> OnCombatStateChanged;
 
         // Publics
+        public Combat Combat
+        { get; private set; }
         public Vector3 AnchorPosition
         { get; private set; }
-
-
-        public bool TryStartCombat(Combatable combatable)
+        public bool IsInCombat
+        => Combat != null;
+        public void StartCombatWith(Combatable target)
         {
+            if (this.IsInCombat && target.IsInCombat
+            || this == target)
+                return;
 
-            return true;
+            if (!this.IsInCombat && !target.IsInCombat)
+            {
+                Combat newCombat = new Combat(this, target);
+                this.JoinCombat(newCombat);
+                target.JoinCombat(newCombat);
+            }
+            else if (this.IsInCombat)
+                target.JoinCombat(this.Combat);
+            else
+                this.JoinCombat(target.Combat);
+        }
+        public void LeaveCombat()
+        {
+            Combat.RemoveMember(this);
+            Combat = null;
+            OnCombatStateChanged?.Invoke(false);
+        }
+
+        // Privates
+        private void JoinCombat(Combat combat)
+        {
+            Combat = combat;
+            combat.AddMember(this);
+            OnCombatStateChanged?.Invoke(true);
         }
     }
 }
