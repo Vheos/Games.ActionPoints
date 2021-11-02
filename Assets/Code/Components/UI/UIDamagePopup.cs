@@ -7,12 +7,6 @@ namespace Vheos.Games.ActionPoints
 
     public class UIDamagePopup : ABaseComponent
     {
-        // CacheComponents
-        protected override System.Type[] ComponentsTypesToCache => new[]
-        {
-            typeof(TextMeshPro),
-        };
-
         // Publics
         public void Initialize(Vector3 position, float damage, int wounds)
         {
@@ -56,6 +50,13 @@ namespace Vheos.Games.ActionPoints
         private void FadeOut()
         => Get<TextMeshPro>().AnimateAlpha(this, 0f, Settings.FadeOutDuration, () => this.DestroyObject());
         private void Pulse()
-        => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration,  Pulse, QAnimator.Curve.Boomerang);
+        => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration, Pulse, QAnimator.Curve.Boomerang);
+
+        // Play
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<TextMeshPro>();
+        }
     }
 }

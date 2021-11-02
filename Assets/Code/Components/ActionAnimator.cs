@@ -17,12 +17,6 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [SerializeField] protected GameObject _Parent;
 
-        // CacheComponents
-        protected override Type[] ComponentsTypesToCache => new[]
-        {
-            typeof(Character),
-        };
-
         // Publics
         public Transform HandTransform
         { get; private set; }
@@ -30,7 +24,7 @@ namespace Vheos.Games.ActionPoints
         {
             ActionAnimation.Clip idle = Get<Character>().Idle;
             using (QAnimator.Group(this, null, clip.Duration, null, clip.Style))
-            {                
+            {
                 if (clip.ForwardDistanceEnabled)
                     transform.GroupAnimatePosition(Get<Character>().CombatPosition + transform.right * clip.GetForwardDistance(idle));
                 if (clip.ArmLengthEnabled)
@@ -77,6 +71,11 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<Character>();
+        }
         public override void PlayAwake()
         {
             base.PlayAwake();

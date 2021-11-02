@@ -9,12 +9,6 @@ namespace Vheos.Games.ActionPoints
     [DisallowMultipleComponent]
     sealed public class SpriteChangable : ABaseComponent
     {
-        // CacheComponent
-        protected override Type[] ComponentsTypesToCache => new[]
-        {
-            typeof(SpriteRenderer),
-        };
-
         // Events
         public event System.Action<Sprite, Sprite> OnSpriteChange;
 
@@ -22,6 +16,11 @@ namespace Vheos.Games.ActionPoints
         private Sprite _previousSprite;
 
         // Play
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<SpriteRenderer>();
+        }
         protected override void SubscribeToPlayEvents()
         {
             base.SubscribeToPlayEvents();

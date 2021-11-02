@@ -5,13 +5,6 @@ namespace Vheos.Games.ActionPoints
 
     public class UIButton : ABaseComponent, IUIHierarchy
     {
-        // CachedComponents
-        protected override System.Type[] ComponentsTypesToCache => new[]
-        {
-           typeof(Mousable),
-           typeof(SpriteRenderer),
-        };
-
         // Publics
         public UIBase UI
         { get; private set; }
@@ -33,6 +26,12 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<Mousable>();
+            AddToCache<SpriteRenderer>();
+        }
         public override void PlayStart()
         {
             base.PlayStart();
@@ -53,19 +52,19 @@ namespace Vheos.Games.ActionPoints
         protected override void SubscribeToPlayEvents()
         {
             base.SubscribeToPlayEvents();
-            Mousable.OnGainHighlight += () =>
+            Get<Mousable>().OnGainHighlight += () =>
             {
                 if (!Action.CanBeUsed(UI.Character))
                     return;
 
                 transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.HighlightDuration);
             };
-            Mousable.OnPress += (button, position) =>
+            Get<Mousable>().OnPress += (button, position) =>
             {
                 if (!Action.CanBeUsed(UI.Character))
                 {
                     if (UI.Character.IsExhausted)
-                        UI.NotifyExhausted();
+                        UI.PointsBar.NotifyExhausted();
 
                     if (UI.Character.FocusPointsCount < Action.FocusPointsCost)
                         _costPointsBar.NotifyUnfocused();
@@ -74,7 +73,7 @@ namespace Vheos.Games.ActionPoints
 
                 if (Action.IsTargeted)
                 {
-                    UI.StartTargeting(transform, CursorManager.CursorTransform);
+                    UI.TargetingLine.ShowAndFollowCursor(transform);
                     UI.Character.ActionAnimator.Animate(Action.Animation.Charge);
                     _isTargeting = true;
                 }
@@ -82,13 +81,13 @@ namespace Vheos.Games.ActionPoints
                 transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
                 Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
             };
-            Mousable.OnHold += (button, position) =>
+            Get<Mousable>().OnHold += (button, position) =>
             {
                 if (_isTargeting
-                && UI.TryGetCursorCharacter(out var target))
+                && UI.TargetingLine.TryGetCursorCharacter(out var target))
                     UI.Character.LookAt(target.transform);
             };
-            Mousable.OnRelease += (button, position) =>
+            Get<Mousable>().OnRelease += (button, position) =>
             {
                 if (!Action.CanBeUsed(UI.Character))
                     return;
@@ -97,8 +96,8 @@ namespace Vheos.Games.ActionPoints
                     Action.Use(UI.Character, null);
                 else if (_isTargeting)
                 {
-                    UI.StopTargeting();
-                    if (UI.TryGetCursorCharacter(out var target))
+                    UI.TargetingLine.Hide();
+                    if (UI.TargetingLine.TryGetCursorCharacter(out var target))
                     {
                         UI.Character.ActionAnimator.Animate(Action.Animation.Release);
                         Action.Use(UI.Character, target);
@@ -111,7 +110,7 @@ namespace Vheos.Games.ActionPoints
                 transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.ClickDuration);
                 Get<SpriteRenderer>().AnimateColor(this, UI.Character.Color, Settings.ClickDuration);
             };
-            Mousable.OnLoseHighlight += () =>
+            Get<Mousable>().OnLoseHighlight += () =>
             {
                 transform.AnimateLocalScale(this, _originalScale, Settings.HighlightDuration);
             };

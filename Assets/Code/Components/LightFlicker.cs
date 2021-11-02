@@ -11,12 +11,6 @@
         [SerializeField] [Range(1f, 2f)] protected float _MaxMultiplier = 1.1f;
         [SerializeField] [Range(0f, 1f)] protected float _FadeHalfTime = 0.5f;
 
-        // CacheComponents
-        protected override System.Type[] ComponentsTypesToCache => new[]
-        {
-            typeof(Light),
-        };
-
         // Privates
         private float _originalIntensity;
         private float _targetIntensity;
@@ -28,6 +22,11 @@
         }
 
         // Play
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<Light>();
+        }
         public override void PlayAwake()
         {
             base.PlayAwake();
