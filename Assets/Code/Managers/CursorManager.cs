@@ -114,9 +114,13 @@ namespace Vheos.Games.ActionPoints
         static public void InvokeEvents()
         {
             if (Input.mousePosition != _previousMousePosition)
-                OnCameraMoved?.Invoke(_previousMousePosition, Input.mousePosition);
+                OnCursorMoved?.Invoke(_previousMousePosition, Input.mousePosition);
+
+            if (CursorMousable != _previousCursorMousable)
+                OnCursorMousableChanged?.Invoke(_previousCursorMousable, CursorMousable);
         }
-        static public event System.Action<Vector2, Vector2> OnCameraMoved;
+        static public event System.Action<Vector2, Vector2> OnCursorMoved;
+        static public event System.Action<Mousable, Mousable> OnCursorMousableChanged;
 
         // Play
         override public void PlayAwake()
@@ -125,7 +129,7 @@ namespace Vheos.Games.ActionPoints
             _previousMousePosition = Input.mousePosition;
             _previousCursorMousable = CursorMousable;
             CreateCursorTransform(_CursorPrefab, this);
-            OnCameraMoved = null;
+            OnCursorMoved = null;
 
             _lockedMousablesByButton = new Dictionary<Button, Mousable>();
         }
