@@ -16,12 +16,12 @@ namespace Vheos.Games.ActionPoints
 
         // Defines
         [System.Serializable]
-        public struct Data
+        public class Data
         {
             // Inspector     
-            [SerializeField] private AActionEffect _Effect;
-            [SerializeField] private Direction _Direction;
-            [SerializeField] private float[] _Values; 
+            [SerializeField] protected AActionEffect _Effect = null;
+            [SerializeField] protected Direction _Direction = Direction.FromTargetToUser;
+            [SerializeField] protected float[] _Values = new float[1]; 
 
             // Privates
             private bool IsValid
@@ -42,7 +42,7 @@ namespace Vheos.Games.ActionPoints
             }
 
             // Defines
-            private enum Direction
+            protected enum Direction
             {
                 FromUserToTarget,
                 FromTargetToUser,
