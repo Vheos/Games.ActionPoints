@@ -1,10 +1,18 @@
 namespace Vheos.Games.ActionPoints
 {
     using Tools.Extensions.Math;
+    using UnityEngine;
 
     public class UIActionPointsBar : AUIPointsBar<UIActionPoint>
     {
-        // Publics
+        // Publics  
+        public void Show()
+        {
+            this.GOActivate();
+            transform.AnimateLocalScale(this, _originalScale, Settings.AnimDuration);
+        }
+        public void Hide(bool instantly = false)
+        => transform.AnimateLocalScale(this, Vector3.zero, instantly ? 0f : Settings.AnimDuration, this.GODeactivate);
         public void NotifyExhausted()
         {
             for (int i = 0; i <= UI.Character.ActionPointsCount.Abs(); i++)
@@ -12,6 +20,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
+        private Vector3 _originalScale;
         private float _visualActionProgress;
         private float _visualFocusProgress;
         private void UpdateVisualProgresses()
@@ -35,8 +44,10 @@ namespace Vheos.Games.ActionPoints
             if (TryGetComponent<RotateAs>(out var rotateAs))
                 rotateAs.Target = CameraManager.FirstActive.transform;
 
+            _originalScale = transform.localScale;
             CreatePoints(UI.Character.RawMaxActionPoints, UIManager.Settings.Prefab.ActionPoint);
             AlignPoints();
+            Hide(true);
         }
         protected override void SubscribeToPlayEvents()
         {

@@ -22,8 +22,9 @@ namespace Vheos.Games.ActionPoints
                 _buttons[i].MoveTo(targetLocalPosition);
             }
         }
-        public void ExpandButtons()
+        public void Show()
         {
+            this.GOActivate();
             transform.AnimateLocalScale(this, Vector3.one, Settings.AnimDuration);
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = true;
@@ -31,9 +32,9 @@ namespace Vheos.Games.ActionPoints
             AlignButtons(GetWheelDirection(), Settings.Radius, Settings.MaxAngle);
             IsExpanded = true;
         }
-        public void CollapseButtons()
+        public void Hide(bool instantly = false)
         {
-            transform.AnimateLocalScale(this, Vector3.zero, Settings.AnimDuration);
+            transform.AnimateLocalScale(this, Vector3.zero, instantly ? 0f : Settings.AnimDuration, this.GODeactivate);
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = false;
             IsExpanded = false;
@@ -41,9 +42,9 @@ namespace Vheos.Games.ActionPoints
         public void Toggle()
         {
             if (IsExpanded)
-                CollapseButtons();
+                Hide();
             else
-                ExpandButtons();
+                Show();
         }
 
         // Privates
@@ -51,11 +52,16 @@ namespace Vheos.Games.ActionPoints
         => UIManager.Settings.Wheel;
         private Vector2 GetWheelDirection()
         {
-            if (!UI.Character.Team.TryNonNull(out var team)
-            || team.Count <= 1)
+            Vector3 midpoint;
+            if (UI.Character.Team.TryNonNull(out var team)
+            && team.Count > 1)
+                midpoint = team.Midpoint;
+            else if (UI.Character.Combat.TryNonNull(out var combat))
+                midpoint = combat.Midpoint;
+            else
                 return Vector3.up;
 
-            return team.Midpoint.ScreenOffsetTo(UI.Character.transform.position, CameraManager.FirstActive).normalized;
+            return midpoint.ScreenOffsetTo(UI.Character.transform.position, CameraManager.FirstActive).normalized;
         }
         private List<UIButton> _buttons;
 
@@ -78,7 +84,8 @@ namespace Vheos.Games.ActionPoints
                 newButton.Action = action;
                 _buttons.Add(newButton);
             }
-            CollapseButtons();
+
+            Hide(true);
         }
     }
 }

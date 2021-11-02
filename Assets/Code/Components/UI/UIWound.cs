@@ -2,18 +2,11 @@ namespace Vheos.Games.ActionPoints
 {
     using System;
     using UnityEngine;
-    using Tools.Extensions.Math;    
+    using Tools.Extensions.Math;
 
     [RequireComponent(typeof(SpriteRenderer))]
     public class UIWound : ABaseComponent, IUIHierarchy
-    {   
-        // Cache
-        protected override Type[] ComponentsTypesToCache => new[]
-        {
-            typeof(SpriteRenderer),
-        };
-
-
+    {
         // Publics
         public UIBase UI
         { get; private set; }
@@ -31,10 +24,10 @@ namespace Vheos.Games.ActionPoints
                 Get<SpriteRenderer>().GroupAnimateAlpha(1f);
             }
         }
-        public void Hide()
+        public void Hide(bool instantly = false)
         {
             Vector2 fadeOutPosition = Vector2.right.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
-            using (QAnimator.Group(this, null, Settings.WoundAnimDuration, this.GODeactivate))
+            using (QAnimator.Group(this, null, instantly ? 0f : Settings.WoundAnimDuration, this.GODeactivate))
             {
                 transform.GroupAnimateLocalPosition(fadeOutPosition);
                 Get<SpriteRenderer>().GroupAnimateAlpha(0f);
@@ -46,6 +39,11 @@ namespace Vheos.Games.ActionPoints
         => UIManager.Settings.Wound;
 
         // Play
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<SpriteRenderer>();
+        }
         public override void PlayStart()
         {
             base.PlayStart();
@@ -53,7 +51,7 @@ namespace Vheos.Games.ActionPoints
             UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
             Get<SpriteRenderer>().color = UIManager.Settings.ActionPoint.ExhaustColor;
-            Hide();
+            Hide(true);
         }
     }
 }
