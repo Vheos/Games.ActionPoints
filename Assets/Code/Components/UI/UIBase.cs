@@ -10,38 +10,14 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
         public Character Character
         { get; set; }
-        public void ToggleWheel()
-        => _wheel.Toggle();
-        public void CollapseOtherWheels()
-        {
-            foreach (var wheel in FindObjectsOfType<UIWheel>())
-                if (wheel.IsExpanded && wheel != _wheel)
-                    wheel.CollapseButtons();
-        }
-        public void ExpandWheel()
-        {
-            if (!_wheel.IsExpanded)
-                _wheel.ExpandButtons();
-        }
-        public void StartTargeting(Transform from, Transform to)
-        {
-            CursorManager.SetCursorDistance(from);
-            _targetingLine.Activate(from, to);
-        }
-        public void StopTargeting()
-        => _targetingLine.Deactivate();
-        public bool TryGetCursorCharacter(out Character target)
-        => _targetingLine.TryGetCursorCharacter(out target);
-        public void NotifyExhausted()
-        => _pointsBar.NotifyExhausted();
-        public void PopDamage(Vector3 position, float damage, int wounds)
-        => _popupHandler.PopDamage(position, damage, wounds);
-
-        // Privates
-        private UIWheel _wheel;
-        private UIActionPointsBar _pointsBar;
-        private UITargetingLine _targetingLine;
-        private UIPopupHandler _popupHandler;
+        public UIWheel Wheel
+        { get; private set; }
+        public UIActionPointsBar PointsBar
+        { get; private set; }
+        public UITargetingLine TargetingLine
+        { get; private set; }
+        public UIPopupHandler PopupHandler
+        { get; private set; }
 
         // Play
         public override void PlayStart()
@@ -51,10 +27,39 @@ namespace Vheos.Games.ActionPoints
             UI = this;
 
             transform.position = Character.transform.position;
-            _wheel = this.CreateChildComponent<UIWheel>(UIManager.Settings.Prefab.Wheel);
-            _pointsBar = this.CreateChildComponent<UIActionPointsBar>(UIManager.Settings.Prefab.ActionPointsBar);
-            _targetingLine = this.CreateChildComponent<UITargetingLine>(UIManager.Settings.Prefab.TargetingLine);
-            _popupHandler = this.CreateChildComponent<UIPopupHandler>(UIManager.Settings.Prefab.PopupHandler);
+            Wheel = this.CreateChildComponent<UIWheel>(UIManager.Settings.Prefab.Wheel);
+            PointsBar = this.CreateChildComponent<UIActionPointsBar>(UIManager.Settings.Prefab.ActionPointsBar);
+            TargetingLine = this.CreateChildComponent<UITargetingLine>(UIManager.Settings.Prefab.TargetingLine);
+            PopupHandler = this.CreateChildComponent<UIPopupHandler>(UIManager.Settings.Prefab.PopupHandler);
         }
     }
 }
+
+/*
+public void ToggleWheel()
+=> Wheel.Toggle();
+public void CollapseOtherWheels()
+{
+    foreach (var wheel in FindObjectsOfType<UIWheel>())
+        if (wheel.IsExpanded && wheel != Wheel)
+            wheel.CollapseButtons();
+}
+public void ExpandWheel()
+{
+    if (!Wheel.IsExpanded)
+        Wheel.ExpandButtons();
+}
+public void StartTargeting(Transform from, Transform to)
+{
+    CursorManager.SetCursorDistance(from);
+    TargetingLine.Activate(from, to);
+}
+public void StopTargeting()
+=> TargetingLine.Deactivate();
+public bool TryGetCursorCharacter(out Character target)
+=> TargetingLine.TryGetCursorCharacter(out target);
+public void NotifyExhausted()
+=> PointsBar.NotifyExhausted();
+public void PopDamage(Vector3 position, float damage, int wounds)
+=> PopupHandler.PopDamage(position, damage, wounds);
+*/
