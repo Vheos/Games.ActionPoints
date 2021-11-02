@@ -52,7 +52,7 @@ namespace Vheos.Games.ActionPoints
             base.PlayAwake();
             _cursorCamera = FirstActive;
             _cursorCameraLocks = new List<Behaviour>();
-            CursorManager.OnCameraMoved += (from, to) => SetDirtyCursorCamera();
+            CursorManager.OnCursorMoved += (from, to) => SetDirtyCursorCamera();
         }
     }
 }
