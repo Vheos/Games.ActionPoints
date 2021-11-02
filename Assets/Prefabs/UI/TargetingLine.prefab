@@ -57,11 +57,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e89676703e62da845aff30f58c37d5bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Tiling: 5
-  _StartOpacity: 0.25
-  _StartWidth: 0.1
-  _EndWidthRatio: 0.25
-  _WidthAnimDuration: 0.5
 --- !u!120 &2576022645275345885
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -102,7 +97,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1652410771
   m_SortingLayer: 1
-  m_SortingOrder: 50
+  m_SortingOrder: 30
   m_Positions: []
   m_Parameters:
     serializedVersion: 3

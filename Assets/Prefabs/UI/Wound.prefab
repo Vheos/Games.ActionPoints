@@ -44,9 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c9b8477797a96478284338a069182c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _AnimDuration: 0.5
-  _AngleRandomRange: {x: 15, y: 75}
-  _FadeDistance: 1
 --- !u!212 &7024997350785011158
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -87,7 +84,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1652410771
   m_SortingLayer: 1
-  m_SortingOrder: 31
+  m_SortingOrder: 11
   m_Sprite: {fileID: -2235351154195819768, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

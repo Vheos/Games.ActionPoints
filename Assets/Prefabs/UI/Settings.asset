@@ -67,7 +67,7 @@ MonoBehaviour:
     Distance: 0.75
     FadeInDuration: 0.25
     StayUpDuration: 0.75
-    FadeOutDuration: 0.5
+    FadeOutDuration: 1
     SizeCurve:
       serializedVersion: 2
       m_Curve:
