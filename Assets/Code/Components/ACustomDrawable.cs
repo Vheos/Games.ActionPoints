@@ -4,15 +4,11 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.General;
+    using System.Collections.Generic;
+    using System.Linq;
 
     abstract public class ACustomDrawable : ABaseComponent
     {
-        // Cache
-        protected override Type[] ComponentsTypesToCache => new[]
-        {
-            typeof(MeshRenderer),
-        };
-
         // MProps
         protected float GetFloat(string name)
         => _mprops.GetFloat(name);
@@ -48,6 +44,8 @@ namespace Vheos.Games.ActionPoints
         // Privates
         virtual protected void AssignInspectorMProps()
         { }
+        virtual protected Renderer TargetRenderer
+        => Get<Renderer>();
         private MaterialPropertyBlock _mprops;
         private bool _hasDirtyMProps;
         private void InitializeMProps()
@@ -55,10 +53,15 @@ namespace Vheos.Games.ActionPoints
         private void UpdateDirtyMProps()
         {
             if (_hasDirtyMProps.Consume())
-                Get<MeshRenderer>().SetPropertyBlock(_mprops);
+                TargetRenderer.SetPropertyBlock(_mprops);
         }
 
         // Play
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<Renderer>();
+        }
         override public void PlayAwake()
         {
             base.PlayAwake();
@@ -69,10 +72,7 @@ namespace Vheos.Games.ActionPoints
         protected override void SubscribeToPlayEvents()
         {
             base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                UpdateDirtyMProps();
-            };
+            Updatable.OnPlayUpdateLate += UpdateDirtyMProps;
         }
 
         // Editor
@@ -80,7 +80,6 @@ namespace Vheos.Games.ActionPoints
         override public void EditAwake()
         {
             base.EditAwake();
-            // Cache components
             InitializeMProps();
             AssignInspectorMProps();
             UpdateDirtyMProps();
