@@ -21,16 +21,6 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected Tool _StartingTool;
         [SerializeField] protected ActionAnimation.Clip _Idle;
 
-        // Cached components
-        protected override System.Type[] ComponentsTypesToCache => new[]
-        {
-            typeof(SpriteRenderer),
-            typeof(SpriteOutline),
-            typeof(Animator),
-            typeof(ActionAnimator),
-            typeof(Teamable),
-        };
-
         // Publics (action)
         public float ActionProgress
         { get; private set; }
@@ -68,7 +58,7 @@ namespace Vheos.Games.ActionPoints
             int rolledWounds = remainingDamage.RollPercent().To01();
             int totalWounds = sureWounds + rolledWounds;
 
-            _actionUI.PopDamage(transform.position, totalDamage, totalWounds);
+            _ui.PopupHandler.PopDamage(transform.position, totalDamage, totalWounds);
             ChangeWoundsCount(totalWounds);
         }
         // Wounds
@@ -91,6 +81,8 @@ namespace Vheos.Games.ActionPoints
         }
         public Team Team
         => Get<Teamable>().Team;
+        public Combat Combat
+        => Get<Combatable>().Combat;
         public Color Color
         => Team != null ? Team.Color : Color.white;
         public Vector3 CombatPosition
@@ -122,7 +114,7 @@ namespace Vheos.Games.ActionPoints
         => Tool != null ? Tool.Idle : _Idle;
 
         // Private
-        private UIBase _actionUI;
+        private UIBase _ui;
         private float _previousActionProgress;
         private float _previousFocusProgress;
         private int _previousWoundsCount;
@@ -166,12 +158,23 @@ namespace Vheos.Games.ActionPoints
         public event System.Action<int, int> OnWoundsCountChanged;
 
         // Playable
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<Mousable>();
+            AddToCache<Movable>();
+            AddToCache<Teamable>();
+            AddToCache<Combatable>();
+            AddToCache<SpriteRenderer>();
+            AddToCache<SpriteOutline>();
+            AddToCache<Animator>();
+            AddToCache<ActionAnimator>();
+        }
         public override void PlayAwake()
         {
             base.PlayAwake();
-
-            _actionUI = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Settings.Prefab.Base);
-            _actionUI.Character = this;
+            _ui = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Settings.Prefab.Base);
+            _ui.Character = this;
         }
         public override void PlayStart()
         {
@@ -182,14 +185,17 @@ namespace Vheos.Games.ActionPoints
         public override void PlayDestroy()
         {
             base.PlayDestroy();
-            if (_actionUI != null)
-                _actionUI.DestroyObject();
+            if (_ui != null)
+                _ui.DestroyObject();
         }
         protected override void SubscribeToPlayEvents()
         {
             base.SubscribeToPlayEvents();
             Updatable.OnPlayUpdate += () =>
             {
+                if (!Get<Combatable>().IsInCombat)
+                    return;
+
                 UpdateProgresses();
                 InvokeEvents();
 
@@ -197,23 +203,25 @@ namespace Vheos.Games.ActionPoints
                 _previousFocusProgress = FocusProgress;
                 _previousWoundsCount = WoundsCount;
             };
-            Mousable.OnGainHighlight += () =>
+            Get<Mousable>().OnPress += (button, position) =>
             {
-                Get<SpriteOutline>().Show();
+                _ui.TargetingLine.ShowAndFollowCursor(transform);
             };
-            Mousable.OnPress += (button, position) =>
+            Get<Mousable>().OnRelease += (button, position) =>
             {
-                _actionUI.ToggleWheel();
+                _ui.TargetingLine.Hide();
+                if (_ui.TargetingLine.Target.TryNonNull(out var targetMousable)
+                && targetMousable.TryGetComponent<Combatable>(out var targetCombatable))
+                    if (targetCombatable.IsInCombat)
+                        targetCombatable.LeaveCombat();
+                    else
+                        Get<Combatable>().StartCombatWith(targetCombatable);
             };
-            Mousable.OnLoseHighlight += () =>
-            {
-                Get<SpriteOutline>().Hide();
-            };
-            Movable.OnMoved += (from, to) =>
+            Get<Movable>().OnMoved += (from, to) =>
             {
                 Get<Animator>().SetFloat("Speed", from.DistanceTo(to) / Time.deltaTime);
             };
-            Movable.OnStopped += (position) =>
+            Get<Movable>().OnStopped += (position) =>
             {
                 Get<Animator>().SetFloat("Speed", 0f);
             };
@@ -221,6 +229,22 @@ namespace Vheos.Games.ActionPoints
             {
                 Get<SpriteRenderer>().color = to.Color;
                 Get<SpriteOutline>().Color = to.Color;
+            };
+            Get<Combatable>().OnCombatStateChanged += (state) =>
+            {
+                if (state)
+                {
+                    _ui.PointsBar.Show();
+                    _ui.Wheel.Show();
+                }
+                else
+                {
+                    _ui.PointsBar.Hide();
+                    _ui.Wheel.Hide();
+                }
+                ActionProgress = 0f;
+                FocusProgress = 0f;
+                Get<Animator>().SetBool("IsInCombat", state);
             };
         }
 
