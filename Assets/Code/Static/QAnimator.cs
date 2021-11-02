@@ -89,10 +89,7 @@ namespace Vheos.Games.ActionPoints
             _coroutineListsByGUID[guid].Add(newCoroutine);
         }
         static public void GroupAnimate<T>(Action<T> assignFunction, T from, T to) where T : struct
-        {
-            Animate(_groupOwner, _groupUID, assignFunction, from, to, _groupDuration, _groupFinalAction, _groupStyle);
-            _groupFinalAction = null;
-        }
+        => Animate(_groupOwner, _groupUID, assignFunction, from, to, _groupDuration, null, _groupStyle);
         static public void Delay(MonoBehaviour owner, string uid, float duration, System.Action action)
         {
             if (TestForWarnings(owner, uid))
@@ -183,7 +180,11 @@ namespace Vheos.Games.ActionPoints
         static private Curve _groupStyle;
         static private CustomDisposable _groupDisposable;
         static private void FinalizeGroup()
-        => _groupOwner = null;
+        {
+            if (_groupFinalAction != null)
+                Delay(_groupOwner, _groupUID, _groupDuration, _groupFinalAction);
+            _groupOwner = null;
+        }
 
         // Initializers
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
