@@ -3,8 +3,9 @@ Shader "Custom/UITargetingLine"
     Properties
     {
         _MainTex ("Texture", 2D) = "white"
-        _TextureFlowSpeed ("Texture flow speed", float) = 0
-        [Enum(Per Tile, 0, Per Unit, 1)] _TextureFlowMode ("Texture flow mode", int) = 0
+        TextureFlowSpeed ("Texture flow speed", float) = 0
+        [Enum(Per Tile, 0, Per Unit, 1)] TextureFlowMode ("Texture flow mode", int) = 0
+        [PerRendererData] TilingX ("Tiling X", Float) = 1
     }
 
     SubShader
@@ -31,9 +32,9 @@ Shader "Custom/UITargetingLine"
 
             // Properties
             sampler2D _MainTex;
-            fixed4 _MainTex_ST;
-            float _TextureFlowSpeed;
-            int _TextureFlowMode;
+            fixed TextureFlowSpeed;
+            int TextureFlowMode;
+            fixed TilingX;
 
             // Structs
             struct VertexData
@@ -51,11 +52,11 @@ Shader "Custom/UITargetingLine"
             }
             fixed4 FragmentFunction(VertexData data) : SV_Target
             {
-                fixed flowOffset = _Time.y * _TextureFlowSpeed;
-                if(_TextureFlowMode == 1)
-                    flowOffset *= _MainTex_ST.x;
+                fixed flowOffset = _Time.y * TextureFlowSpeed;
+                if(TextureFlowMode == 1)
+                    flowOffset *= TilingX;
 
-                fixed2 finalTexcoord = AppliedST(data.texcoord, _MainTex_ST) - flowOffset;
+                fixed2 finalTexcoord = data.texcoord * fixed2(TilingX, 1) - flowOffset;
                 fixed4 color = tex2D(_MainTex, finalTexcoord) * data.color;             
                 return PremultipliedAlpha(color);
             }

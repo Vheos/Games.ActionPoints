@@ -3,7 +3,7 @@ Shader "Custom/UISpriteOutline"
     Properties
     {
         _MainTex ("Texture", 2D) = "white"
-        _Thickness ("Thickness", Float) = 0.1
+        [PerRendererData] Thickness ("Thickness", Float) = 0.1
     }
 
     SubShader
@@ -31,7 +31,7 @@ Shader "Custom/UISpriteOutline"
             // Properties
             sampler2D _MainTex;
             fixed4 _MainTex_TexelSize;
-            fixed _Thickness;
+            fixed Thickness;
 
             // Functions
             struct VertexData
@@ -47,7 +47,7 @@ Shader "Custom/UISpriteOutline"
             }
             fixed4 FragmentFunction(VertexData data) : SV_Target
             {
-                fixed2 offset = fixed2(_Thickness, 0);
+                fixed2 offset = fixed2(Thickness, 0);
                 fixed2 ratio = _MainTex_TexelSize.zw / max(_MainTex_TexelSize.z, _MainTex_TexelSize.w);
                 fixed alphaMain =  tex2D(_MainTex, data.texcoord).a;
                 fixed alphaLeft = tex2D(_MainTex, data.texcoord + offset.xy / ratio).a;

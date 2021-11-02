@@ -7,36 +7,47 @@ namespace Vheos.Games.ActionPoints
     using System;
 
     [RequireComponent(typeof(LineRenderer))]
-    public class UITargetingLine : ABaseComponent, IUIHierarchy
+    public class UITargetingLine : ACustomDrawable, IUIHierarchy
     {
-        // Cache
-        protected override Type[] ComponentsTypesToCache => new[]
-        {
-            typeof(LineRenderer),
-        };
+        // Events
+        public event Action<Mousable, Mousable> OnTargetChanged;
 
         // Publics
         public UIBase UI
         { get; private set; }
-        public void Activate(Transform from, Transform to)
+        public float TilingX
+        {
+            get => GetFloat(nameof(TilingX));
+            set => SetFloat(nameof(TilingX), value);
+        }
+        public Mousable Target
+        => CursorManager.CursorMousable;
+        public void Show(Transform from, Transform to)
         {
             _from = from;
             _to = to;
             _isDeactivating = false;
             UpdatePositionsAndTiling();
+            CursorManager.OnCursorMousableChanged += InvokeOnTargetChanged;
             this.GOActivate();
             this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, Settings.StartWidth, Settings.WidthAnimDuration);
         }
-        public void Deactivate()
+        public void ShowAndFollowCursor(Transform from)
+        {
+            CursorManager.SetCursorDistance(from);
+            Show(from, CursorManager.CursorTransform);
+        }
+        public void Hide()
         {
             _isDeactivating = true;
+            CursorManager.OnCursorMousableChanged -= InvokeOnTargetChanged;
             this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, 0f, Settings.WidthAnimDuration, this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
         {
             Get<LineRenderer>().SetPosition(0, _from.position);
             Get<LineRenderer>().SetPosition(1, _to.position);
-            Get<LineRenderer>().sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * Settings.Tiling, 1);
+            TilingX = _from.DistanceTo(_to) * Settings.Tiling;
         }
         public bool TryGetCursorCharacter(out Character target)
         {
@@ -61,8 +72,15 @@ namespace Vheos.Games.ActionPoints
             Get<LineRenderer>().startWidth = width;
             Get<LineRenderer>().endWidth = width * Settings.EndWidthRatio;
         }
+        private void InvokeOnTargetChanged(Mousable from, Mousable to)
+        => OnTargetChanged?.Invoke(from, to);
 
         // Play
+        protected override void AddToComponentCache()
+        {
+            base.AddToComponentCache();
+            AddToCache<LineRenderer>();
+        }
         public override void PlayAwake()
         {
             base.PlayAwake();
