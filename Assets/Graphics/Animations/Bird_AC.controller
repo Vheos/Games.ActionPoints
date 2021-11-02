@@ -94,7 +94,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Speed
     m_EventTreshold: 0.1
   - m_ConditionMode: 1
-    m_ConditionEvent: InCombat
+    m_ConditionEvent: IsInCombat
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4221126570359396997}
@@ -125,7 +125,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: InCombat
+  - m_Name: IsInCombat
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -208,7 +208,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Speed
     m_EventTreshold: 0.1
   - m_ConditionMode: 2
-    m_ConditionEvent: InCombat
+    m_ConditionEvent: IsInCombat
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8135600889119905895}
