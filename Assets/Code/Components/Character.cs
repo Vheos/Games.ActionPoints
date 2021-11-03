@@ -205,7 +205,15 @@ namespace Vheos.Games.ActionPoints
             };
             Get<Mousable>().OnPress += (button, position) =>
             {
-                _ui.TargetingLine.ShowAndFollowCursor(transform);
+                switch (button)
+                {
+                    case CursorManager.Button.Left:
+                        _ui.TargetingLine.ShowAndFollowCursor(transform);
+                        break;
+                    case CursorManager.Button.Middle:
+                        _ui.Wheel.Toggle();
+                        break;
+                }                
             };
             Get<Mousable>().OnRelease += (button, position) =>
             {
