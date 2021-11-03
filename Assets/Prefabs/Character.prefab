@@ -61,6 +61,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 239806782e1eace4d8294bc8cb7762d1, type: 2}
   - {fileID: 11400000, guid: 114c3c2a74c1ae9448ddbddf4780bcce, type: 2}
   - {fileID: 11400000, guid: fa8f903931d95294981d3f56a9156827, type: 2}
+  - {fileID: 11400000, guid: 02fc9dcda7e343048ace203499013b7f, type: 2}
+  - {fileID: 11400000, guid: 403ba732ffb62e04c9c5830a81f50ade, type: 2}
   _RawMaxPoints: 4
   _ActionSpeed: 0.3
   _FocusSpeed: 0
@@ -73,14 +75,16 @@ MonoBehaviour:
     StayUpTime: 0
     Style: 0
     Parameters: 2147483647
-    ForwardDistance: 0
-    ArmLength: 0.25
     ArmRotation: {x: 0, y: 0, z: 0}
+    ArmLength: 0.25
     HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 0
+    ForwardDistance: 0
     ForwardDistanceUseIdle: 0
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
 --- !u!114 &60107475646933465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Material: {fileID: 2100000, guid: bf23bf4a084b65144bebacd18b68a16b, type: 2}
-  _Thickness: 0.02
+  _Thickness: 0.5
   _Color: {r: 1, g: 1, b: 1, a: 1}
   _FadeInDuration: 0.25
   _FadeOutDuration: 0.5

@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Jump
   m_EditorClassIdentifier: 
   _Sprite: {fileID: 0}
-  _ActionPointsCost: 1
-  _FocusPointsCost: 1
-  _IsTargeted: 0
-  _ScriptDataArray:
-  - _Script: {fileID: 0}
-    _Values: []
-    _SwapUserAndTarget: 0
+  _Animation: {fileID: 0}
+  _ActionPointsCost: 0
+  _FocusPointsCost: 0
+  _IsInstant: 0
+  _EffectDataArray:
+  - _Effect: {fileID: 0}
+    _Direction: 1
+    _Values:
+    - 0

@@ -51,14 +51,46 @@ MonoBehaviour:
     StayUpTime: 0
     Style: 0
     Parameters: 14
-    ForwardDistance: 0
-    ArmLength: 0.4
     ArmRotation: {x: 0, y: 0, z: -30}
+    ArmLength: 0.4
     HandRotation: {x: 0, y: 0, z: -30}
+    HandScale: 1
+    ForwardDistance: 0
     ForwardDistanceUseIdle: 0
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
+  _Unsheathe:
+    Duration: 0.5
+    StayUpTime: 0
+    Style: 1
+    Parameters: 0
+    ArmRotation: {x: 0, y: 0, z: 0}
+    ArmLength: 0.25
+    HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 0
+    ForwardDistance: 0
+    ForwardDistanceUseIdle: 0
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
+  _Sheathe:
+    Duration: 0.5
+    StayUpTime: 0
+    Style: 1
+    Parameters: 0
+    ArmRotation: {x: 0, y: 0, z: 0}
+    ArmLength: 0.25
+    HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 0
+    ForwardDistance: 0
+    ForwardDistanceUseIdle: 0
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
 --- !u!212 &7207409327477670922
 SpriteRenderer:
   m_ObjectHideFlags: 0
