@@ -5,6 +5,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.General;
+    using Tools.Extensions.UnityObjects;
 
     abstract public class ABaseComponent :
 #if UNITY_EDITOR
@@ -37,13 +38,13 @@ namespace Vheos.Games.ActionPoints
 
         // Warnings
         private void WarningEventHandlerNotFound<T>()
-        => Debug.LogWarning($"{nameof(ABaseComponent)} / EventHandlerNotFound   -   gameobject {name}, component {GetType().Name}, type {typeof(T)}");
+        => Debug.LogWarning($"{nameof(ABaseComponent)} / EventHandlerNotFound   -   gameobject {name}, component {GetType().Name}, type {typeof(T).Name}");
 
         // Play
         public override void PlayAwake()
         {
             base.PlayAwake();
-            _componentCache = gameObject.AddComponent<ComponentCache>();
+            _componentCache = gameObject.GetOrAddComponent<ComponentCache>();
             AddToComponentCache();
             SubscribeToPlayEvents();
         }
