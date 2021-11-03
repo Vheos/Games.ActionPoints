@@ -17,49 +17,57 @@ MonoBehaviour:
     StayUpTime: 0
     Style: 1
     Parameters: 13
-    ForwardDistance: -0.1
-    ArmLength: 0.25
     ArmRotation: {x: 45, y: 0, z: 90}
+    ArmLength: 0.25
     HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 1
+    ForwardDistance: -0.1
     ForwardDistanceUseIdle: 0
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
   _Cancel:
   - Duration: 0.8
     StayUpTime: 0
     Style: 1
     Parameters: 2147483647
-    ForwardDistance: 0
-    ArmLength: 0
     ArmRotation: {x: 0, y: 0, z: 0}
+    ArmLength: 0
     HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 1
+    ForwardDistance: 0
     ForwardDistanceUseIdle: 1
     ArmLengthUseIdle: 1
     ArmRotationUseIdle: 1
     HandRotationUseIdle: 1
+    HandScaleUseIdle: 1
   _Release:
   - Duration: 0.2
     StayUpTime: 0.2
     Style: 1
     Parameters: 13
-    ForwardDistance: 0.1
-    ArmLength: 0.25
     ArmRotation: {x: 75, y: 0, z: -150}
+    ArmLength: 0.25
     HandRotation: {x: 0, y: 0, z: -60}
+    HandScale: 1
+    ForwardDistance: 0.1
     ForwardDistanceUseIdle: 0
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
   - Duration: 0.8
     StayUpTime: 0
     Style: 1
     Parameters: 2147483647
-    ForwardDistance: 0
-    ArmLength: 0
     ArmRotation: {x: 0, y: 0, z: 0}
+    ArmLength: 0
     HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 1
+    ForwardDistance: 0
     ForwardDistanceUseIdle: 1
     ArmLengthUseIdle: 1
     ArmRotationUseIdle: 1
     HandRotationUseIdle: 1
+    HandScaleUseIdle: 1
