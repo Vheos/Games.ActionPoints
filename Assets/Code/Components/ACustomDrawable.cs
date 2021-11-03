@@ -44,8 +44,10 @@ namespace Vheos.Games.ActionPoints
         // Privates
         virtual protected void AssignInspectorMProps()
         { }
-        virtual protected Renderer TargetRenderer
-        => Get<Renderer>();
+        virtual protected void InitializeRenderer(out Renderer renderer)
+        => renderer = Get<Renderer>();
+
+        private Renderer _renderer;
         private MaterialPropertyBlock _mprops;
         private bool _hasDirtyMProps;
         private void InitializeMProps()
@@ -53,7 +55,7 @@ namespace Vheos.Games.ActionPoints
         private void UpdateDirtyMProps()
         {
             if (_hasDirtyMProps.Consume())
-                TargetRenderer.SetPropertyBlock(_mprops);
+                _renderer.SetPropertyBlock(_mprops);
         }
 
         // Play
@@ -62,34 +64,37 @@ namespace Vheos.Games.ActionPoints
             base.AddToComponentCache();
             AddToCache<Renderer>();
         }
-        override public void PlayAwake()
-        {
-            base.PlayAwake();
-            InitializeMProps();
-            AssignInspectorMProps();
-            UpdateDirtyMProps();
-        }
         protected override void SubscribeToPlayEvents()
         {
             base.SubscribeToPlayEvents();
             Updatable.OnPlayUpdateLate += UpdateDirtyMProps;
         }
-
-        // Editor
-#if UNITY_EDITOR
-        override public void EditAwake()
+        override public void PlayAwake()
         {
-            base.EditAwake();
+            base.PlayAwake();
+            InitializeRenderer(out _renderer);
             InitializeMProps();
             AssignInspectorMProps();
             UpdateDirtyMProps();
         }
-        override public void EditInspect()
-        {
-            base.EditInspect();
-            AssignInspectorMProps();
-            UpdateDirtyMProps();
-        }
-#endif
     }
 }
+
+/*
+// Editor
+#if UNITY_EDITOR
+override public void EditAwake()
+{
+    base.EditAwake();
+    InitializeMProps();
+    AssignInspectorMProps();
+    UpdateDirtyMProps();
+}
+override public void EditInspect()
+{
+    base.EditInspect();
+    AssignInspectorMProps();
+    UpdateDirtyMProps();
+}
+#endif
+*/
