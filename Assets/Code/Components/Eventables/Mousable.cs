@@ -3,6 +3,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using System;
+    using Tools.Extensions.General;
 
     [DisallowMultipleComponent]
     public class Mousable : APlayable
@@ -34,18 +35,24 @@ namespace Vheos.Games.ActionPoints
                         return false;
             return true;
         }
-        public Collider Trigger
-        { get; private set; }
 
         // Privates
+        private Collider _trigger;
         private void AssignLayer()
         => gameObject.layer = LayerMask.NameToLayer(nameof(Mousable));
+        protected void TryFitBoxColliderToMesh()
+        {
+            if (_trigger.TryAs<BoxCollider>(out var boxCollider)
+            && TryGetComponent<MeshFilter>(out var meshFilter))
+                boxCollider.size = meshFilter.mesh.bounds.size;
+        }
 
         // Play
         public override void PlayAwake()
         {
             base.PlayAwake();
-            Trigger = GetComponent<Collider>();
+            _trigger = GetComponent<Collider>();
+            TryFitBoxColliderToMesh();
             AssignLayer();
         }
     }
