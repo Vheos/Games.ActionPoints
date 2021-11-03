@@ -2,8 +2,8 @@ Shader "Custom/UISpriteOutline"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white"
-        [PerRendererData] Thickness ("Thickness", Float) = 0.1
+       _MainTex ("Texture", 2D) = "white"
+       [PerRendererData] Thickness ("Thickness", Float) = 0.5
     }
 
     SubShader
@@ -48,12 +48,12 @@ Shader "Custom/UISpriteOutline"
             fixed4 FragmentFunction(VertexData data) : SV_Target
             {
                 fixed2 offset = fixed2(Thickness, 0);
-                fixed2 ratio = _MainTex_TexelSize.zw / max(_MainTex_TexelSize.z, _MainTex_TexelSize.w);
+                fixed2 pixelSize = _MainTex_TexelSize.xy;
                 fixed alphaMain =  tex2D(_MainTex, data.texcoord).a;
-                fixed alphaLeft = tex2D(_MainTex, data.texcoord + offset.xy / ratio).a;
-                fixed alphaRight = tex2D(_MainTex, data.texcoord - offset.xy / ratio).a;
-                fixed alphaDown = tex2D(_MainTex, data.texcoord + offset.yx / ratio).a;
-                fixed alphaUp = tex2D(_MainTex, data.texcoord - offset.yx / ratio).a;
+                fixed alphaLeft = tex2D(_MainTex, data.texcoord + offset.xy * pixelSize).a;
+                fixed alphaRight = tex2D(_MainTex, data.texcoord - offset.xy * pixelSize).a;
+                fixed alphaDown = tex2D(_MainTex, data.texcoord + offset.yx * pixelSize).a;
+                fixed alphaUp = tex2D(_MainTex, data.texcoord - offset.yx * pixelSize).a;
                 fixed alpha = min(1 - alphaMain, max(alphaLeft, max(alphaRight, max(alphaDown, alphaUp)))); 
                 return PremultipliedAlpha(data.color) * alpha;
             }
