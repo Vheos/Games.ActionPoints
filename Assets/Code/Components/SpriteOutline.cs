@@ -11,11 +11,11 @@ namespace Vheos.Games.ActionPoints
     public class SpriteOutline : ACustomDrawable
     {
         // Constants
-        private const string THICKNESS_MPROP_NAME = "Thickness";
+        private const string TEXTURE_MPROP_NAME = "_MainTex";
 
         // Inspector
         [SerializeField] protected Material _Material = null;
-        [SerializeField] [Range(0f, 0.1f)] protected float _Thickness = 0.02f;
+        [SerializeField] [Range(0f, 1f)] protected float _Thickness = 0.5f;
         [SerializeField] protected Color _Color = Color.white;
         [SerializeField] [Range(0f, 1f)] protected float _FadeInDuration = 0.5f;
         [SerializeField] [Range(0f, 1f)] protected float _FadeOutDuration = 0.5f;
@@ -33,16 +33,16 @@ namespace Vheos.Games.ActionPoints
         }
         public void Show()
         {
-            enabled = true;
+            _outlineRenderer.GOActivate();
             using (QAnimator.Group(this, null, _FadeInDuration))
             {
                 QAnimator.GroupAnimate(v => Thickness = v, Thickness, _Thickness);
                 _outlineRenderer.GroupAnimateColor(_Color);
             }
         }
-        public void Hide()
+        public void Hide(bool instantly = false)
         {
-            using (QAnimator.Group(this, null, _FadeOutDuration, () => enabled = false))
+            using (QAnimator.Group(this, null, instantly ? 0f : _FadeOutDuration, _outlineRenderer.GODeactivate))
             {
                 QAnimator.GroupAnimate(v => Thickness = v, Thickness, 0f);
                 _outlineRenderer.GroupAnimateAlpha(0f);
@@ -50,10 +50,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Private
-        private MaterialPropertyBlock _mprops;
         private SpriteRenderer _outlineRenderer;
-        protected override Renderer TargetRenderer
-        => _outlineRenderer;
 
         // Play
         protected override void AddToComponentCache()
@@ -62,38 +59,32 @@ namespace Vheos.Games.ActionPoints
             AddToCache<SpriteChangable>();
             AddToCache<SpriteRenderer>();
         }
-        public override void PlayAwake()
-        {
-            base.PlayAwake();            
-            _mprops = new MaterialPropertyBlock();
-            _outlineRenderer = this.CreateChildComponent<SpriteRenderer>( nameof(SpriteOutline));
-            _outlineRenderer.sharedMaterial = _Material;
-            _outlineRenderer.sprite = Get<SpriteRenderer>().sprite;
-            _outlineRenderer.GODeactivate();
-        }
-        public override void PlayEnable()
-        {
-            base.PlayEnable();
-            _outlineRenderer.GOActivate();
-        }
-        public override void PlayDisable()
-        {
-            base.PlayDisable();
-            _outlineRenderer.GODeactivate();
-        }
         protected override void SubscribeToPlayEvents()
         {
             base.SubscribeToPlayEvents();
             Get<SpriteChangable>().OnSpriteChange += (from, to) =>
             {
                 _outlineRenderer.sprite = to;
+                SetTexture(TEXTURE_MPROP_NAME, to.texture);
             };
 
             if (TryGetComponent<Mousable>(out var mousable))
             {
                 mousable.OnGainHighlight += Show;
-                mousable.OnLoseHighlight += Hide;
+                mousable.OnLoseHighlight += () => Hide(false);
             }
+        }
+        protected override void InitializeRenderer(out Renderer renderer)
+        {
+            _outlineRenderer = this.CreateChildComponent<SpriteRenderer>(nameof(SpriteOutline));
+            renderer = _outlineRenderer;
+        }
+        public override void PlayAwake()
+        {
+            base.PlayAwake();
+            _outlineRenderer.sharedMaterial = _Material;
+            _outlineRenderer.sprite = Get<SpriteRenderer>().sprite;
+            Hide(true);
         }
     }
 }
