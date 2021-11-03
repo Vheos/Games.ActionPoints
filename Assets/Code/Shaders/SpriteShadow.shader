@@ -2,11 +2,10 @@ Shader "Custom/SpriteShadow"
 {
     Properties
     {
-        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+        _MainTex ("Texture", 2D) = "white" {}
         ShadowAlphaCutoff("Shadow alpha cutoff", Range(0, 1)) = 0.5
         IncidenceMin("Incidence minimum", Range(0, 1)) = 0.5
         IncidenceSharpness("Incidence sharpness", Range(1, 10)) = 2
-        [MaterialToggle] FlipTexcoord("Flip texcoord", int) = 0
     }
 
     SubShader
@@ -29,7 +28,6 @@ Shader "Custom/SpriteShadow"
         sampler2D _MainTex;
         fixed IncidenceMin;
         fixed IncidenceSharpness;
-        int FlipTexcoord;
 
         // Structs
         struct VertexData
