@@ -2,10 +2,9 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.Extensions.UnityObjects;
-    using Tools.UnityCore;
     using Tools.Extensions.General;
     using Tools.Extensions.Collections;
-    using System;
+    using Tools.Extensions.Math;
 
     [RequireComponent(typeof(Character))]
     public class ActionAnimator : ABaseComponent
@@ -33,6 +32,8 @@ namespace Vheos.Games.ActionPoints
                     QAnimator.GroupAnimate(AssignArmAngles, _armAngles, clip.GetArmRotation(idle));
                 if (clip.HandRotationEnabled)
                     QAnimator.GroupAnimate(AssignHandAngles, _handAngles, clip.GetHandRotation(idle));
+                if (clip.HandScaleEnabled)
+                    HandTransform.GroupAnimateLocalScale(clip.GetHandScale(idle).ToVector3());
             }
         }
         public void Animate(ActionAnimation.Clip[] clips, int clipIndex = 0)

@@ -15,10 +15,11 @@ namespace Vheos.Games.ActionPoints.Editor
         private const string PROPERTY_USE_IDLE_POSTFIX = "UseIdle";
         static private readonly string[] TOGGLABLE_PROPERTIES = new[]
         {
-            nameof(ActionAnimation.Clip.ForwardDistance),
-            nameof(ActionAnimation.Clip.ArmLength),
             nameof(ActionAnimation.Clip.ArmRotation),
+            nameof(ActionAnimation.Clip.ArmLength),
             nameof(ActionAnimation.Clip.HandRotation),
+            nameof(ActionAnimation.Clip.HandScale),
+            nameof(ActionAnimation.Clip.ForwardDistance),
         };
 
         // Edit
