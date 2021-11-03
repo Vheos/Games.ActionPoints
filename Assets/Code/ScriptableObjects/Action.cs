@@ -8,10 +8,10 @@ namespace Vheos.Games.ActionPoints
     {
         // Inspector
         [SerializeField] protected Sprite _Sprite = null;
-        [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 1;
-        [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 1;
-        [SerializeField] protected bool _IsTargeted = false;
         [SerializeField] protected ActionAnimation _Animation = null;
+        [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 0;
+        [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 0;
+        [SerializeField] protected bool _IsInstant = false;       
         [SerializeField] protected AActionEffect.Data[] _EffectDataArray = new AActionEffect.Data[1];
 
         // Publics
@@ -21,8 +21,8 @@ namespace Vheos.Games.ActionPoints
         => _ActionPointsCost;
         public int FocusPointsCost
         => _FocusPointsCost;
-        public bool IsTargeted
-        => _IsTargeted;
+        public bool IsInstant
+        => _IsInstant;
         public ActionAnimation Animation
         => _Animation;
         public bool CanBeUsed(Character character)

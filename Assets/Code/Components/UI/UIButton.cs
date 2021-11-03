@@ -2,6 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.Extensions.UnityObjects;
+    using Vheos.Tools.Extensions.General;
 
     public class UIButton : ABaseComponent, IUIHierarchy
     {
@@ -71,10 +72,11 @@ namespace Vheos.Games.ActionPoints
                     return;
                 }
 
-                if (Action.IsTargeted)
+                if (!Action.IsInstant)
                 {
                     UI.TargetingLine.ShowAndFollowCursor(transform);
-                    UI.Character.ActionAnimator.Animate(Action.Animation.Charge);
+                    if (Action.Animation.TryNonNull(out var animation))
+                        UI.Character.ActionAnimator.Animate(animation.Charge);
                     _isTargeting = true;
                 }
 
@@ -92,18 +94,20 @@ namespace Vheos.Games.ActionPoints
                 if (!Action.CanBeUsed(UI.Character))
                     return;
 
-                if (!Action.IsTargeted)
+                if (Action.IsInstant)
                     Action.Use(UI.Character, null);
                 else if (_isTargeting)
                 {
                     UI.TargetingLine.Hide();
                     if (UI.TargetingLine.TryGetCursorCharacter(out var target))
                     {
-                        UI.Character.ActionAnimator.Animate(Action.Animation.Release);
+                        if (Action.Animation.TryNonNull(out var animation))
+                            UI.Character.ActionAnimator.Animate(animation.Release);
                         Action.Use(UI.Character, target);
                     }
                     else
-                        UI.Character.ActionAnimator.Animate(Action.Animation.Cancel);
+                         if (Action.Animation.TryNonNull(out var animation))
+                        UI.Character.ActionAnimator.Animate(animation.Cancel);
                     _isTargeting = false;
                 }
 

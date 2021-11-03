@@ -29,7 +29,7 @@
 
         // Warnings
         private void WarningComponentNotFound(Type type)
-        => Debug.LogWarning($"{nameof(ComponentCache)} / ComponentNotFound   -   gameobject {name}, component {GetType().Name}, type {type}");
+        => Debug.LogWarning($"{nameof(ComponentCache)} / ComponentNotFound   -   gameobject {name}, component {GetType().Name}, type {type.Name}");
 
         // Play
         public override void PlayAwake()
