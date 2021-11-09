@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1860824612872176151}
-  - component: {fileID: 5692080533926883087}
   - component: {fileID: 1860824612872176150}
   - component: {fileID: 6300216047889983146}
   - component: {fileID: 4740446974637155973}
+  - component: {fileID: 6189902722232785191}
   m_Layer: 0
   m_Name: Wheel
   m_TagString: Untagged
@@ -34,18 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5692080533926883087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1860824612872176148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1860824612872176150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,7 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140265e8217b3f7469cc1141b1147089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _AnimDuration: 0.5
 --- !u!114 &6300216047889983146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,3 +78,15 @@ MonoBehaviour:
   _Offset: {x: 0, y: 0, z: 0}
   _LockedAxes: 0
   _HalfTime: 0
+--- !u!114 &6189902722232785191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860824612872176148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6491f3dc9344fc64398c83fa6a2e85d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

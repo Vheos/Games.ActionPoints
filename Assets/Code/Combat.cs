@@ -1,8 +1,5 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System.Collections.Generic;
-    using UnityEngine;
-
     sealed public class Combat : AComponentGroup<Combatable>
     {
         // Publics

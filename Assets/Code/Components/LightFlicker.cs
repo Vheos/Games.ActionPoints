@@ -2,8 +2,9 @@
 {
     using UnityEngine;
     using Tools.Extensions.Math;
+    using Tools.UnityCore;
 
-    public class LightFlicker : ABaseComponent
+    public class LightFlicker : AEventSubscriber
     {
         // Inspector
         [SerializeField] protected Vector2 _IntervalRandRange = new Vector2(0.1f, 0.4f);
@@ -17,35 +18,28 @@
         private float _nextFlickerTime;
         private float CurrentIntensity
         {
-            get => Get<Light>().intensity;
-            set => Get<Light>().intensity = value;
+            get => GetComponent<Light>().intensity;
+            set => GetComponent<Light>().intensity = value;
+        }
+        private void UpdateLightIntensity()
+        {
+            float lerpAlpha = NewUtility.LerpHalfTimeToAlpha(_FadeHalfTime);
+            _targetIntensity.SetLerp(_originalIntensity * _MinMultiplier, lerpAlpha);
+            if (Time.time >= _nextFlickerTime)
+            {
+                _targetIntensity = Random.Range(CurrentIntensity, _originalIntensity * _MaxMultiplier);
+                _nextFlickerTime = Time.time + _IntervalRandRange.RandomMinMax();
+            }
+            CurrentIntensity = CurrentIntensity.Lerp(_targetIntensity, lerpAlpha);
         }
 
         // Play
-        protected override void AddToComponentCache()
-        {
-            base.AddToComponentCache();
-            AddToCache<Light>();
-        }
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             _originalIntensity = CurrentIntensity;
         }
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                float lerpAlpha = NewUtility.LerpHalfTimeToAlpha(_FadeHalfTime);
-                _targetIntensity.SetLerp(_originalIntensity * _MinMultiplier, lerpAlpha);
-                if (Time.time >= _nextFlickerTime)
-                {
-                    _targetIntensity = Random.Range(CurrentIntensity, _originalIntensity * _MaxMultiplier);
-                    _nextFlickerTime = Time.time + _IntervalRandRange.RandomMinMax();
-                }
-                CurrentIntensity = CurrentIntensity.Lerp(_targetIntensity, lerpAlpha);
-            };
-        }
+        protected override void SubscribeToEvents()
+        => SubscribeTo(GetComponent<Updatable>().OnUpdated, UpdateLightIntensity);
     }
 }

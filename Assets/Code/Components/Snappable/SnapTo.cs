@@ -4,12 +4,12 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
 
-    public class SnapTo : ABaseComponent
+    public class SnapTo : AEventSubscriber
     {
         // Inspector
-       [SerializeField]  protected bool _RunInEditor = true;
-       [SerializeField]  protected ASnappable _Snappable = null;
-       [SerializeField]  protected Vector3 _Offset = Vector3.zero;
+        [SerializeField] protected bool _RunInEditor = true;
+        [SerializeField] protected ASnappable _Snappable = null;
+        [SerializeField] protected Vector3 _Offset = Vector3.zero;
         [SerializeField] [Range(0f, 1f)] protected float _HalfTime = 0.1f;
 
         // Public
@@ -19,17 +19,19 @@ namespace Vheos.Games.ActionPoints
         => _Snappable.GetClosestSurfacePoint(transform.position - _Offset) + _Offset;
         public void Snap(float lerpAlpha)
         => transform.position = transform.position.Lerp(TargetPosition, lerpAlpha);
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                if (_Snappable == null)
-                    return;
 
-                Snap(NewUtility.LerpHalfTimeToAlpha(_HalfTime));
-            };
+        // Private
+        public void TrySnapToTarget()
+        {
+            if (_Snappable == null)
+                return;
+
+            Snap(NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         }
+
+        // Play
+        protected override void SubscribeToEvents()
+        => SubscribeTo(GetComponent<Updatable>().OnUpdated, TrySnapToTarget);
 
 #if UNITY_EDITOR
         public override void EditUpdate()

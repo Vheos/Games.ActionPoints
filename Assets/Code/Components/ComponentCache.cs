@@ -1,4 +1,5 @@
-﻿namespace Vheos.Games.ActionPoints
+﻿/*
+namespace Vheos.Games.ActionPoints
 {
     using System;
     using System.Collections.Generic;
@@ -32,7 +33,7 @@
         => Debug.LogWarning($"{nameof(ComponentCache)} / ComponentNotFound   -   gameobject {name}, component {GetType().Name}, type {type.Name}");
 
         // Play
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             _cachedComponentsByType = new Dictionary<Type, Component>();
@@ -53,3 +54,4 @@
 #endif
     }
 }
+*/

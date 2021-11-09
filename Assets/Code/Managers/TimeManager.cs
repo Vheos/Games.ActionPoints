@@ -22,7 +22,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             AssignInspectorValues();

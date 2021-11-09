@@ -1,13 +1,12 @@
 namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.UnityObjects;
 
-    public class UIBase : ABaseComponent, IUIHierarchy
+    public class UIBase : AUIComponent
     {
         // Publics
-        public UIBase UI
-        { get; private set; }
         public Character Character
         { get; set; }
         public UIWheel Wheel
@@ -20,12 +19,9 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
 
         // Play
-        public override void PlayStart()
+        protected override void PlayStart()
         {
             base.PlayStart();
-            name = GetType().Name;
-            UI = this;
-
             transform.position = Character.transform.position;
             Wheel = this.CreateChildComponent<UIWheel>(UIManager.Settings.Prefab.Wheel);
             PointsBar = this.CreateChildComponent<UIActionPointsBar>(UIManager.Settings.Prefab.ActionPointsBar);

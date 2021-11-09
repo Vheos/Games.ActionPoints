@@ -1,19 +1,26 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
     using Tools.UnityCore;
-    using System;
     using Tools.Extensions.General;
+    using Event = Tools.UnityCore.Event;
 
     [DisallowMultipleComponent]
     public class Mousable : APlayable
     {
         // Events
-        public event System.Action OnGainHighlight;
-        public event System.Action OnLoseHighlight;
-        public event System.Action<CursorManager.Button, Vector3> OnPress;
-        public event System.Action<CursorManager.Button, Vector3> OnHold;
-        public event System.Action<CursorManager.Button, Vector3> OnRelease;
+        public Event OnGainHighlight
+        { get; } = new Event();
+        public Event OnLoseHighlight
+        { get; } = new Event();
+        public Event<CursorManager.Button, Vector3> OnPress
+        { get; } = new Event<CursorManager.Button, Vector3>();
+        public Event<CursorManager.Button, Vector3> OnHold
+        { get; } = new Event<CursorManager.Button, Vector3>();
+        public Event<CursorManager.Button, Vector3> OnRelease
+        { get; } = new Event<CursorManager.Button, Vector3>();
+
         internal void GainHighlight()
         => OnGainHighlight?.Invoke();
         internal void LoseHighlight()
@@ -48,7 +55,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             _trigger = GetComponent<Collider>();

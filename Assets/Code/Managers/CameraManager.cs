@@ -24,7 +24,7 @@ namespace Vheos.Games.ActionPoints
                 return _cursorCamera;
             }
         }
-        static public void SetDirtyCursorCamera()
+        static public void SetDirtyCursorCamera(Vector2 from, Vector2 to)
         => _cursorCameraDirty = true;
         static public void LockCursorCamera(Behaviour owner)
         => _cursorCameraLocks.TryAddUnique(owner);
@@ -47,12 +47,13 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        public override void PlayAwake()
+        protected override void SubscribeToEvents()
+        => SubscribeTo(CursorManager.OnCursorMoved, SetDirtyCursorCamera);
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             _cursorCamera = FirstActive;
             _cursorCameraLocks = new List<Behaviour>();
-            CursorManager.OnCursorMoved += (from, to) => SetDirtyCursorCamera();
         }
     }
 }

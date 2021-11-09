@@ -51,7 +51,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        public override void PlayStart()
+        protected override void SubscribeToEvents()
+        { }
+        protected override void PlayStart()
         {
             base.PlayStart();
             transform.localPosition = Button.transform.localScale.Mul(+0.5f, -1f, 0f);

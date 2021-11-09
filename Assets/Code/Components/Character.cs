@@ -4,11 +4,12 @@ namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
 
-    public class Character : ABaseComponent
+    public class Character : AEventSubscriber
     {
         // Inspector
         [SerializeField] protected List<Action> _Actions = new List<Action>();
@@ -20,6 +21,16 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] [Range(0f, 100f)] protected float _SharpArmor = 0f;
         [SerializeField] protected Tool _StartingTool;
         [SerializeField] protected ActionAnimation.Clip _Idle;
+
+        // Events
+        public Event<int, int> OnActionPointsCountChanged
+        { get; } = new Event<int, int>();
+        public Event<int, int> OnFocusPointsCountChanged
+        { get; } = new Event<int, int>();
+        public Event<bool> OnExhaustStateChanged
+        { get; } = new Event<bool>();
+        public Event<int, int> OnWoundsCountChanged
+        { get; } = new Event<int, int>();
 
         // Publics (action)
         public float ActionProgress
@@ -80,17 +91,17 @@ namespace Vheos.Games.ActionPoints
                 transform.rotation.SetLookRotation(transform.DirectionTowards(targetTransform));
         }
         public Team Team
-        => Get<Teamable>().Team;
+        => GetComponent<Teamable>().Team;
         public Combat Combat
-        => Get<Combatable>().Combat;
+        => GetComponent<Combatable>().Combat;
         public Color Color
         => Team != null ? Team.Color : Color.white;
         public Vector3 CombatPosition
         { get; private set; }
         public ActionAnimator ActionAnimator
-        => Get<ActionAnimator>();
+        => GetComponent<ActionAnimator>();
         public Transform HandTransform
-        => Get<ActionAnimator>().HandTransform;
+        => GetComponent<ActionAnimator>().HandTransform;
         public Tool Tool
         { get; private set; }
         public void Equip(Tool tool)
@@ -130,8 +141,6 @@ namespace Vheos.Games.ActionPoints
                 FocusProgress = FocusProgress.ClampMax(ActionProgress);
             }
         }
-
-        // Events
         private void InvokeEvents()
         {
             int previousActionsPointsCount = _previousActionProgress.RoundTowardsZero();
@@ -152,108 +161,84 @@ namespace Vheos.Games.ActionPoints
             if (_previousWoundsCount != WoundsCount)
                 OnWoundsCountChanged?.Invoke(_previousWoundsCount, WoundsCount);
         }
-        public event System.Action<int, int> OnActionPointsCountChanged;
-        public event System.Action<int, int> OnFocusPointsCountChanged;
-        public event System.Action<bool> OnExhaustStateChanged;
-        public event System.Action<int, int> OnWoundsCountChanged;
+        private void OnUpdate()
+        {
+            if (!GetComponent<Combatable>().IsInCombat)
+                return;
+
+            UpdateProgresses();
+            InvokeEvents();
+
+            _previousActionProgress = ActionProgress;
+            _previousFocusProgress = FocusProgress;
+            _previousWoundsCount = WoundsCount;
+        }
+        private void ShowTargetingLine(CursorManager.Button button, Vector3 position)
+        => _ui.TargetingLine.ShowAndFollowCursor(transform);
+        private void TryToggleCobatWithTarget(CursorManager.Button button, Vector3 position)
+        {
+            _ui.TargetingLine.Hide();
+            if (_ui.TargetingLine.Target.TryNonNull(out var targetMousable)
+            && targetMousable.TryGetComponent<Combatable>(out var targetCombatable))
+                if (targetCombatable.IsInCombat)
+                    targetCombatable.LeaveCombat();
+                else
+                    GetComponent<Combatable>().StartCombatWith(targetCombatable);
+        }
+        private void UpdateAnimatorSpeed(Vector3 from, Vector3 to)
+        => GetComponent<Animator>().SetFloat("Speed", from.DistanceTo(to) / Time.deltaTime);
+        private void ResetAnimatorSpeed(Vector3 position)
+        => GetComponent<Animator>().SetFloat("Speed", 0f);
+        private void UpdateColors(Team from, Team to)
+        {
+            GetComponent<SpriteRenderer>().color = to.Color;
+            GetComponent<SpriteOutline>().Color = to.Color;
+        }
+        private void OnCombatStateChanged(bool state)
+        {
+            if (state)
+            {
+                _ui.PointsBar.Show();
+                _ui.Wheel.Show();
+            }
+            else
+            {
+                _ui.PointsBar.Hide();
+                _ui.Wheel.Hide();
+            }
+            ActionProgress = 0f;
+            FocusProgress = 0f;
+            GetComponent<Animator>().SetBool("IsInCombat", state);
+        }
 
         // Playable
-        protected override void AddToComponentCache()
+        protected override void SubscribeToEvents()
         {
-            base.AddToComponentCache();
-            AddToCache<Mousable>();
-            AddToCache<Movable>();
-            AddToCache<Teamable>();
-            AddToCache<Combatable>();
-            AddToCache<SpriteRenderer>();
-            AddToCache<SpriteOutline>();
-            AddToCache<Animator>();
-            AddToCache<ActionAnimator>();
+            SubscribeTo(GetComponent<Updatable>().OnUpdated, OnUpdate);
+            SubscribeTo(GetComponent<Mousable>().OnPress, ShowTargetingLine);
+            SubscribeTo(GetComponent<Mousable>().OnRelease, TryToggleCobatWithTarget);
+            SubscribeTo(GetComponent<Movable>().OnMoved, UpdateAnimatorSpeed);
+            SubscribeTo(GetComponent<Movable>().OnStopped, ResetAnimatorSpeed);
+            SubscribeTo(GetComponent<Teamable>().OnTeamChanged, UpdateColors);
+            SubscribeTo(GetComponent<Combatable>().OnCombatStateChanged, OnCombatStateChanged);
         }
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             _ui = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Settings.Prefab.Base);
             _ui.Character = this;
         }
-        public override void PlayStart()
+        protected override void PlayStart()
         {
             base.PlayStart();
             Equip(_StartingTool);
             CombatPosition = TryGetComponent<SnapTo>(out var snapTo) && snapTo.IsActive ? snapTo.TargetPosition : transform.position;
         }
-        public override void PlayDestroy()
+        protected override void PlayDestroy()
         {
             base.PlayDestroy();
             if (_ui != null)
                 _ui.DestroyObject();
-        }
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                if (!Get<Combatable>().IsInCombat)
-                    return;
-
-                UpdateProgresses();
-                InvokeEvents();
-
-                _previousActionProgress = ActionProgress;
-                _previousFocusProgress = FocusProgress;
-                _previousWoundsCount = WoundsCount;
-            };
-            Get<Mousable>().OnPress += (button, position) =>
-            {
-                switch (button)
-                {
-                    case CursorManager.Button.Left:
-                        _ui.TargetingLine.ShowAndFollowCursor(transform);
-                        break;
-                    case CursorManager.Button.Middle:
-                        _ui.Wheel.Toggle();
-                        break;
-                }                
-            };
-            Get<Mousable>().OnRelease += (button, position) =>
-            {
-                _ui.TargetingLine.Hide();
-                if (_ui.TargetingLine.Target.TryNonNull(out var targetMousable)
-                && targetMousable.TryGetComponent<Combatable>(out var targetCombatable))
-                    if (targetCombatable.IsInCombat)
-                        targetCombatable.LeaveCombat();
-                    else
-                        Get<Combatable>().StartCombatWith(targetCombatable);
-            };
-            Get<Movable>().OnMoved += (from, to) =>
-            {
-                Get<Animator>().SetFloat("Speed", from.DistanceTo(to) / Time.deltaTime);
-            };
-            Get<Movable>().OnStopped += (position) =>
-            {
-                Get<Animator>().SetFloat("Speed", 0f);
-            };
-            Get<Teamable>().OnTeamChanged += (from, to) =>
-            {
-                Get<SpriteRenderer>().color = to.Color;
-                Get<SpriteOutline>().Color = to.Color;
-            };
-            Get<Combatable>().OnCombatStateChanged += (state) =>
-            {
-                if (state)
-                {
-                    _ui.PointsBar.Show();
-                    _ui.Wheel.Show();
-                }
-                else
-                {
-                    _ui.PointsBar.Hide();
-                    _ui.Wheel.Hide();
-                }
-                ActionProgress = 0f;
-                FocusProgress = 0f;
-                Get<Animator>().SetBool("IsInCombat", state);
-            };
         }
 
 #if UNITY_EDITOR

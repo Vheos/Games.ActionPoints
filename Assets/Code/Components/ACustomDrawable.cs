@@ -1,13 +1,11 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System;
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.General;
-    using System.Collections.Generic;
-    using System.Linq;
 
-    abstract public class ACustomDrawable : ABaseComponent
+    [DisallowMultipleComponent]
+    abstract public class ACustomDrawable : AEventSubscriber
     {
         // MProps
         protected float GetFloat(string name)
@@ -45,7 +43,7 @@ namespace Vheos.Games.ActionPoints
         virtual protected void AssignInspectorMProps()
         { }
         virtual protected void InitializeRenderer(out Renderer renderer)
-        => renderer = Get<Renderer>();
+        => renderer = GetComponent<Renderer>();
 
         private Renderer _renderer;
         private MaterialPropertyBlock _mprops;
@@ -59,17 +57,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void AddToComponentCache()
-        {
-            base.AddToComponentCache();
-            AddToCache<Renderer>();
-        }
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdateLate += UpdateDirtyMProps;
-        }
-        override public void PlayAwake()
+        protected override void SubscribeToEvents()
+        => SubscribeTo(GetComponent<Updatable>().OnUpdatedLate, UpdateDirtyMProps);
+        override protected void PlayAwake()
         {
             base.PlayAwake();
             InitializeRenderer(out _renderer);

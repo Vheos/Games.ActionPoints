@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4327944702053610838}
   - component: {fileID: -4665421157293162453}
-  - component: {fileID: 2894398281220137631}
+  - component: {fileID: 8684503544574514023}
   - component: {fileID: -2558410197517170183}
   - component: {fileID: 8503796928737577143}
+  - component: {fileID: 884464385960086736}
   m_Layer: 0
   m_Name: CostPoint
   m_TagString: Untagged
@@ -46,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909a857ee62ff3b4aa9fe6a88715d8ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2894398281220137631
+--- !u!114 &8684503544574514023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -55,7 +56,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3698136610871772143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Script: {fileID: 11500000, guid: ded971d57951822429e31d37240126bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!33 &-2558410197517170183
@@ -108,3 +109,15 @@ MeshRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 21
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &884464385960086736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3698136610871772143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6491f3dc9344fc64398c83fa6a2e85d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

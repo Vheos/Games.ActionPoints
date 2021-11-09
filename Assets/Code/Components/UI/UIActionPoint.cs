@@ -8,9 +8,9 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public void UpdateLocalProgresses(float visualActionProgress, float visualFocusProgress)
         {
-            ActionProgress = visualActionProgress.Abs().Sub(Index).Clamp01();
-            ActionColor = visualActionProgress >= 0 ? Settings.ActionColor : Settings.ExhaustColor;
-            FocusProgress = visualFocusProgress.Sub(Index).Clamp01();
+            _drawable.ActionProgress = visualActionProgress.Abs().Sub(Index).Clamp01();
+            _drawable.ActionColor = visualActionProgress >= 0 ? Settings.ActionColor : Settings.ExhaustColor;
+            _drawable.FocusProgress = visualFocusProgress.Sub(Index).Clamp01();
         }
 
         // Privates
@@ -20,30 +20,32 @@ namespace Vheos.Games.ActionPoints
             previousCount = previousCount.Abs();
             currentCount = currentCount.Abs();
             if (Index >= previousCount && Index < currentCount)
-                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, 1f, Settings.AnimDuration);
-            if (Index >= currentCount && Index < previousCount)
-                this.Animate(nameof(Opacity), v => Opacity = v, Opacity, Settings.PartialProgressOpacity, Settings.AnimDuration);
+                _drawable.AnimateOpacity(1f, Settings.AnimDuration);
+            else if (Index >= currentCount && Index < previousCount)
+                _drawable.AnimateOpacity(Settings.PartialProgressOpacity, Settings.AnimDuration);
         }
         private void UpdateWoundVisibility(int previousCount, int currentCount)
         {
-            int indexFromLast = UI.Character.RawMaxActionPoints - Index - 1;
+            int indexFromLast = Base.Character.RawMaxActionPoints - Index - 1;
             if (indexFromLast >= previousCount && indexFromLast < currentCount)
                 _uiWound.Show(Index);
-            if (indexFromLast >= currentCount && indexFromLast < previousCount)
+            else if (indexFromLast >= currentCount && indexFromLast < previousCount)
                 _uiWound.Hide();
         }
 
         // Play
-        public override void PlayAwake()
+        protected override void SubscribeToEvents()
         {
-            base.PlayAwake();
+            SubscribeTo(Base.Character.OnActionPointsCountChanged, UpdateOpacityOnPointsCountChange);
+            SubscribeTo(Base.Character.OnWoundsCountChanged, UpdateWoundVisibility);
+        }
+        protected override void PlayStart()
+        {
+            base.PlayStart();
             name = GetType().Name;
 
-            Opacity = Settings.PartialProgressOpacity;
-            UI.Character.OnActionPointsCountChanged += UpdateOpacityOnPointsCountChange;
-
+            _drawable.Opacity = Settings.PartialProgressOpacity;
             _uiWound = this.CreateChildComponent<UIWound>(UIManager.Settings.Prefab.Wound);
-            UI.Character.OnWoundsCountChanged += UpdateWoundVisibility;
         }
     }
 }

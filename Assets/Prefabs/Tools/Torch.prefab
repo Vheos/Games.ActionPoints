@@ -4852,19 +4852,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9cd0e32888e2f1459a8b47dc01bcd87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _LocalPositionOffset: {x: 0, y: 0, z: 0}
+  _LocalRotationOffset: {x: 0, y: 0, z: 0}
   _Idle:
     Duration: 0
     StayUpTime: 0
     Style: 1
     Parameters: 14
-    ForwardDistance: 0
-    ArmLength: 0.25
     ArmRotation: {x: 0, y: 0, z: 0}
+    ArmLength: 0.25
     HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 1
+    ForwardDistance: 0
     ForwardDistanceUseIdle: 0
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
+  _Unsheathe:
+    Duration: 0.5
+    StayUpTime: 0
+    Style: 1
+    Parameters: 0
+    ArmRotation: {x: 0, y: 0, z: 0}
+    ArmLength: 0
+    HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 1
+    ForwardDistance: 0
+    ForwardDistanceUseIdle: 0
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
+  _Sheathe:
+    Duration: 0.5
+    StayUpTime: 0
+    Style: 1
+    Parameters: 0
+    ArmRotation: {x: 0, y: 0, z: 0}
+    ArmLength: 0
+    HandRotation: {x: 0, y: 0, z: 0}
+    HandScale: 1
+    ForwardDistance: 0
+    ForwardDistanceUseIdle: 0
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
 --- !u!212 &6382050970733388439
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4927,7 +4961,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6382050971265627701}
   - component: {fileID: 6382050971265627700}
-  - component: {fileID: 6382050971265627703}
+  - component: {fileID: 3258999276732176457}
   - component: {fileID: 6382050971265627702}
   m_Layer: 0
   m_Name: Point Light
@@ -5012,7 +5046,7 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &6382050971265627703
+--- !u!114 &3258999276732176457
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5021,7 +5055,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6382050971265627699}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6491f3dc9344fc64398c83fa6a2e85d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6382050971265627702

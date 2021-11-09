@@ -7,14 +7,21 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
     using Tools.Extensions.General;
+    using System;
 
     [DefaultExecutionOrder(-1)]
     [DisallowMultipleComponent]
-    public class CursorManager : ABaseComponent
+    public class CursorManager : AEventSubscriber
     {
         // Inspector
         [SerializeField] protected Button[] _Buttons;
         [SerializeField] protected GameObject _CursorPrefab;
+
+        // Events
+        static public Event<Vector2, Vector2> OnCursorMoved
+        { get; private set; }
+        static public Event<Mousable, Mousable> OnCursorMousableChanged
+        { get; private set; }
 
         // Publics
         static public Transform CursorTransform
@@ -31,6 +38,7 @@ namespace Vheos.Games.ActionPoints
         => _cursorDistance = CameraManager.FirstActive.DistanceTo(transform);
 
         // Privates
+        static private CursorManager _instance;
         static private Dictionary<Button, Mousable> _lockedMousablesByButton;
         static private Mousable _previousCursorMousable;
         static private Vector3 _previousMousePosition;
@@ -109,9 +117,20 @@ namespace Vheos.Games.ActionPoints
                 }
             }
         }
+        static private void OnUpdate()
+        {
 
-        // Events
-        static public void InvokeEvents()
+            UpdateCursorMousable();
+            UpdateHighlights();
+            UpdateButtonEvents(_instance._Buttons);
+            CursorTransform.position = CameraManager.FirstActive.CursorToWorldPoint(_cursorDistance);
+            TryInvokeEvents();
+
+            _previousMousePosition = Input.mousePosition;
+            _previousCursorMousable = CursorMousable;
+
+        }
+        static private void TryInvokeEvents()
         {
             if (Input.mousePosition != _previousMousePosition)
                 OnCursorMoved?.Invoke(_previousMousePosition, Input.mousePosition);
@@ -119,35 +138,22 @@ namespace Vheos.Games.ActionPoints
             if (CursorMousable != _previousCursorMousable)
                 OnCursorMousableChanged?.Invoke(_previousCursorMousable, CursorMousable);
         }
-        static public event System.Action<Vector2, Vector2> OnCursorMoved;
-        static public event System.Action<Mousable, Mousable> OnCursorMousableChanged;
 
         // Play
-        override public void PlayAwake()
+        override protected void PlayAwake()
         {
             base.PlayAwake();
+            _instance = this;
             _previousMousePosition = Input.mousePosition;
             _previousCursorMousable = CursorMousable;
             CreateCursorTransform(_CursorPrefab, this);
-            OnCursorMoved = null;
 
             _lockedMousablesByButton = new Dictionary<Button, Mousable>();
+            OnCursorMoved = new Event<Vector2, Vector2>();
+            OnCursorMousableChanged = new Event<Mousable, Mousable>();
         }
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                UpdateCursorMousable();
-                UpdateHighlights();
-                UpdateButtonEvents(_Buttons);
-                CursorTransform.position = CameraManager.FirstActive.CursorToWorldPoint(_cursorDistance);
-                InvokeEvents();
-
-                _previousMousePosition = Input.mousePosition;
-                _previousCursorMousable = CursorMousable;
-            };
-        }
+        protected override void SubscribeToEvents()
+        => SubscribeTo(GetComponent<Updatable>().OnUpdated, OnUpdate);
 
         // Defines
         public enum Button

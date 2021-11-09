@@ -51,27 +51,24 @@ namespace Vheos.Games.ActionPoints
 
         // Private
         private SpriteRenderer _outlineRenderer;
+        private void UpdateOutlineSprite(Sprite from, Sprite to)
+        {
+            _outlineRenderer.sprite = to;
+            SetTexture(TEXTURE_MPROP_NAME, to.texture);
+        }
+        private void HideAnimated()
+        => Hide(false);
 
         // Play
-        protected override void AddToComponentCache()
+        protected override void SubscribeToEvents()
         {
-            base.AddToComponentCache();
-            AddToCache<SpriteChangable>();
-            AddToCache<SpriteRenderer>();
-        }
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Get<SpriteChangable>().OnSpriteChange += (from, to) =>
-            {
-                _outlineRenderer.sprite = to;
-                SetTexture(TEXTURE_MPROP_NAME, to.texture);
-            };
+            base.SubscribeToEvents();
+            SubscribeTo(GetComponent<SpriteChangable>().OnSpriteChanged, UpdateOutlineSprite);
 
             if (TryGetComponent<Mousable>(out var mousable))
             {
-                mousable.OnGainHighlight += Show;
-                mousable.OnLoseHighlight += () => Hide(false);
+                SubscribeTo(mousable.OnGainHighlight, Show);
+                SubscribeTo(mousable.OnLoseHighlight, HideAnimated);
             }
         }
         protected override void InitializeRenderer(out Renderer renderer)
@@ -79,11 +76,11 @@ namespace Vheos.Games.ActionPoints
             _outlineRenderer = this.CreateChildComponent<SpriteRenderer>(nameof(SpriteOutline));
             renderer = _outlineRenderer;
         }
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             _outlineRenderer.sharedMaterial = _Material;
-            _outlineRenderer.sprite = Get<SpriteRenderer>().sprite;
+            _outlineRenderer.sprite = GetComponent<SpriteRenderer>().sprite;
             Hide(true);
         }
     }

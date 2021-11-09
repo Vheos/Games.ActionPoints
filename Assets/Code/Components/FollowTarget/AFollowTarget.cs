@@ -2,7 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using Tools.UnityCore;
     using UnityEngine;
-    abstract public class AFollowTarget : ABaseComponent
+    abstract public class AFollowTarget : AEventSubscriber
     {
         // Inspector
         [SerializeField] protected Transform _Target = null;
@@ -18,18 +18,18 @@ namespace Vheos.Games.ActionPoints
             set => _Target = value;
         }
 
-        // Play
-        protected override void SubscribeToPlayEvents()
+        // Private
+        private void TryFollowTarget()
         {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                if (_Target == null)
-                    return;
+            if (_Target == null)
+                return;
 
-                Follow(_Target, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
-            };
+            Follow(_Target, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         }
+
+        // Play
+        protected override void SubscribeToEvents()
+        => SubscribeTo(GetComponent<Updatable>().OnUpdated, TryFollowTarget);
 
         // Defines
         [System.Flags]

@@ -8,6 +8,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
 
     static public class NewExtensions
     {
@@ -51,6 +52,33 @@ namespace Vheos.Games.ActionPoints
         }
         static public GameObject CreateChildGameObject(this Component t, string name = null)
         => t.gameObject.CreateChildGameObject(name);
+        /// <summary> If this dictionary doesn't contain key a, adds it and sets it value to b. Returns whether the collection was modified or not. </summary>
+        static public bool TryAddUnique<T1, T2>(this IDictionary<T1, T2> t, T1 a, T2 b)
+        {
+            if (t.ContainsKey(a))
+                return false;
+
+            t.Add(a, b);
+            return true;
+        }
+        /// <summary> If this dictionary doesn't contain key a, adds it and sets it to default value. Returns whether the collection was modified or not. </summary>
+        static public bool TryAddDefault<T1, T2>(this IDictionary<T1, T2> t, T1 a)
+        {
+            if (t.ContainsKey(a))
+                return false;
+
+            t.Add(a, default);
+            return true;
+        }
+        /// <summary> If this dictionary doesn't contain key a, adds it and sets it value to b. Returns b. </summary>
+        static public T2 GetOrAdd<T1, T2>(this IDictionary<T1, T2> t, T1 a, T2 b) where T2 : class
+        {
+            if (t.ContainsKey(a))
+                t.Add(a, b);
+            return b;
+        }
+        static public bool IsCompilerGenerated(this Type t)
+        => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) != null;
 
         // Float
         static public Vector2 Append(this float t, float y = 0f)

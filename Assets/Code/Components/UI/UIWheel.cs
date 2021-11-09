@@ -2,15 +2,14 @@ namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
 
-    public class UIWheel : ABaseComponent, IUIHierarchy
+    public class UIWheel : AUIComponent
     {
         // Publics
-        public UIBase UI
-        { get; private set; }
         public bool IsExpanded
         { get; private set; }
         public void AlignButtons(Vector2 wheelDirection, float radius, float maxAngle)
@@ -27,7 +26,7 @@ namespace Vheos.Games.ActionPoints
             this.GOActivate();
             transform.AnimateLocalScale(this, Vector3.one, Settings.AnimDuration);
             foreach (var button in _buttons)
-                button.Get<Mousable>().enabled = true;
+                button.GetComponent<Mousable>().enabled = true;
 
             AlignButtons(GetWheelDirection(), Settings.Radius, Settings.MaxAngle);
             IsExpanded = true;
@@ -36,7 +35,7 @@ namespace Vheos.Games.ActionPoints
         {
             transform.AnimateLocalScale(this, Vector3.zero, instantly ? 0f : Settings.AnimDuration, this.GODeactivate);
             foreach (var button in _buttons)
-                button.Get<Mousable>().enabled = false;
+                button.GetComponent<Mousable>().enabled = false;
             IsExpanded = false;
         }
         public void Toggle()
@@ -53,32 +52,30 @@ namespace Vheos.Games.ActionPoints
         private Vector2 GetWheelDirection()
         {
             Vector3 midpoint;
-            if (UI.Character.Team.TryNonNull(out var team)
+            if (Base.Character.Team.TryNonNull(out var team)
             && team.Count > 1)
                 midpoint = team.Midpoint;
-            else if (UI.Character.Combat.TryNonNull(out var combat))
+            else if (Base.Character.Combat.TryNonNull(out var combat))
                 midpoint = combat.Midpoint;
             else
                 return Vector3.up;
 
-            return midpoint.ScreenOffsetTo(UI.Character.transform.position, CameraManager.FirstActive).normalized;
+            return midpoint.ScreenOffsetTo(Base.Character.transform.position, CameraManager.FirstActive).normalized;
         }
         private List<UIButton> _buttons;
 
         // Play
-        public override void PlayStart()
+        protected override void PlayStart()
         {
             base.PlayStart();
-            name = GetType().Name;
-            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
 
             if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards.Target = UI.Character.transform;
+                moveTowards.Target = Base.Character.transform;
             if (TryGetComponent<RotateAs>(out var rotateAs))
                 rotateAs.Target = CameraManager.FirstActive.transform;
 
             _buttons = new List<UIButton>();
-            foreach (var action in UI.Character.Actions)
+            foreach (var action in Base.Character.Actions)
             {
                 UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Settings.Prefab.Button);
                 newButton.Action = action;

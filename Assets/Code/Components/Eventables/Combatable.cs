@@ -2,11 +2,13 @@ namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
     using UnityEngine;
+    using Tools.UnityCore;
 
     public class Combatable : ABaseComponent
     {
         // Events
-        public event System.Action<bool> OnCombatStateChanged;
+        public Event<bool> OnCombatStateChanged
+        { get; } = new Event<bool>();
 
         // Publics
         public Combat Combat

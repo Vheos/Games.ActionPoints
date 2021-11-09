@@ -1,6 +1,7 @@
 namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
+    using Tools.UnityCore;
 
     public class Teamable : ABaseComponent
     {
@@ -8,7 +9,8 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected Predefined _StartingTeam;
 
         // Events
-        public event System.Action<Team, Team> OnTeamChanged;
+        public Event<Team, Team> OnTeamChanged
+        { get; } = new Event<Team, Team>();
 
         // Publics
         public Team StartingTeam
@@ -42,7 +44,7 @@ namespace Vheos.Games.ActionPoints
         => ChangeTeam(null);
 
         // Play
-        public override void PlayStart()
+        protected override void PlayStart()
         {
             base.PlayStart();
             ChangeTeam(StartingTeam);

@@ -2,15 +2,12 @@ namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
 
-    abstract public class AUIPointsBar<T> : ABaseComponent, IUIHierarchy where T : AUIPoint
+    abstract public class AUIPointsBar<T> : AUIComponent where T : AUIPoint
     {
-        // Publics
-        public UIBase UI
-        { get; private set; }
-
         // Privates
         protected List<T> _points;
         protected UISettings.ActionPointSettings Settings
@@ -43,12 +40,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        public override void PlayStart()
+        protected override void PlayAwake()
         {
-            base.PlayStart();
-            name = GetType().Name;
-            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
-
+            base.PlayAwake();
             _points = new List<T>();
         }
     }

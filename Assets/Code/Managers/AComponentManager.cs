@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
 
     [DefaultExecutionOrder(-1)]
     [DisallowMultipleComponent]
-    abstract public class AComponentManager<T> : ABaseComponent where T : Behaviour
+    abstract public class AComponentManager<T> : AEventSubscriber where T : Behaviour
     {
         // Publics
         static public T FirstActive
@@ -26,7 +26,7 @@ namespace Vheos.Games.ActionPoints
         static protected List<T> _components;
 
         // Play
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             _instance = this;

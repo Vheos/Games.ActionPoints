@@ -23,7 +23,7 @@ namespace Vheos.Games.ActionPoints
         static private UIManager _instance;
 
         // Play
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             _instance = this;

@@ -7,15 +7,18 @@ namespace Vheos.Games.ActionPoints
         { get; set; }
 
         // Play
-        public override void PlayStart()
+        protected override void PlayStart()
         {
             base.PlayStart();
-            Opacity = Settings.CostOpacity;
-            ActionProgress = 1f;
+            _drawable.Opacity = Settings.CostOpacity;
+            _drawable.ActionProgress = 1f;
 
             bool isActionPoint = Index < CostPointsBar.Button.Action.ActionPointsCost;
-            FocusProgress = isActionPoint ? 0f : 1f;
-            Shape = isActionPoint ? Settings.ActionShape : Settings.FocusShape;
+            _drawable.FocusProgress = isActionPoint ? 0f : 1f;
+            _drawable.Shape = isActionPoint ? Settings.ActionShape : Settings.FocusShape;
         }
+
+        protected override void SubscribeToEvents()
+        { }
     }
 }

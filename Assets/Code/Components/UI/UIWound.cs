@@ -2,14 +2,13 @@ namespace Vheos.Games.ActionPoints
 {
     using System;
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.Math;
 
     [RequireComponent(typeof(SpriteRenderer))]
-    public class UIWound : ABaseComponent, IUIHierarchy
+    public class UIWound : AUIComponent
     {
         // Publics
-        public UIBase UI
-        { get; private set; }
         public void Show(int index)
         {
             this.GOActivate();
@@ -21,7 +20,7 @@ namespace Vheos.Games.ActionPoints
             using (QAnimator.Group(this, null, Settings.WoundAnimDuration))
             {
                 transform.GroupAnimateLocalPosition(fadeInPosition, Vector2.zero);
-                Get<SpriteRenderer>().GroupAnimateAlpha(1f);
+                GetComponent<SpriteRenderer>().GroupAnimateAlpha(1f);
             }
         }
         public void Hide(bool instantly = false)
@@ -30,7 +29,7 @@ namespace Vheos.Games.ActionPoints
             using (QAnimator.Group(this, null, instantly ? 0f : Settings.WoundAnimDuration, this.GODeactivate))
             {
                 transform.GroupAnimateLocalPosition(fadeOutPosition);
-                Get<SpriteRenderer>().GroupAnimateAlpha(0f);
+                GetComponent<SpriteRenderer>().GroupAnimateAlpha(0f);
             }
         }
 
@@ -39,18 +38,10 @@ namespace Vheos.Games.ActionPoints
         => UIManager.Settings.Wound;
 
         // Play
-        protected override void AddToComponentCache()
+        protected override void PlayAwake()
         {
-            base.AddToComponentCache();
-            AddToCache<SpriteRenderer>();
-        }
-        public override void PlayStart()
-        {
-            base.PlayStart();
-            name = GetType().Name;
-            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
-
-            Get<SpriteRenderer>().color = UIManager.Settings.ActionPoint.ExhaustColor;
+            base.PlayAwake();
+            GetComponent<SpriteRenderer>().color = UIManager.Settings.ActionPoint.ExhaustColor;
             Hide(true);
         }
     }

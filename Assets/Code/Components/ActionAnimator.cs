@@ -1,6 +1,7 @@
 namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
     using Tools.Extensions.Collections;
@@ -21,11 +22,11 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
         public void Animate(ActionAnimation.Clip clip)
         {
-            ActionAnimation.Clip idle = Get<Character>().Idle;
+            ActionAnimation.Clip idle = GetComponent<Character>().Idle;
             using (QAnimator.Group(this, null, clip.Duration, null, clip.Style))
             {
                 if (clip.ForwardDistanceEnabled)
-                    transform.GroupAnimatePosition(Get<Character>().CombatPosition + transform.right * clip.GetForwardDistance(idle));
+                    transform.GroupAnimatePosition(GetComponent<Character>().CombatPosition + transform.right * clip.GetForwardDistance(idle));
                 if (clip.ArmLengthEnabled)
                     QAnimator.GroupAnimate(v => _arm.Length = v, _arm.Length, clip.GetArmLength(idle));
                 if (clip.ArmRotationEnabled)
@@ -72,12 +73,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void AddToComponentCache()
-        {
-            base.AddToComponentCache();
-            AddToCache<Character>();
-        }
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
             FindOrCreateArm();

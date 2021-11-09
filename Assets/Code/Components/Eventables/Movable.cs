@@ -2,33 +2,30 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.UnityCore;
-    using Tools.Extensions.General;
-    using Tools.Extensions.UnityObjects;
-    using System;
 
     [DisallowMultipleComponent]
-    sealed public class Movable : ABaseComponent
+    sealed public class Movable : AEventSubscriber
     {
         // Events
-        public event System.Action<Vector3, Vector3> OnMoved;
-        public event System.Action<Vector3> OnStopped;
+        public Event<Vector3, Vector3> OnMoved
+        { get; } = new Event<Vector3, Vector3>();
+        public Event<Vector3> OnStopped
+        { get; } = new Event<Vector3>();
 
         // Privates
         private Vector3 _previousPosition;
+        private void TryInvokeEvents()
+        {
+            Vector3 currentPosition = transform.position;
+            if (_previousPosition != currentPosition)
+                OnMoved?.Invoke(_previousPosition, currentPosition);
+            else
+                OnStopped?.Invoke(currentPosition);
+            _previousPosition = currentPosition;
+        }
 
         // Play
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                Vector3 currentPosition = transform.position;
-                if (_previousPosition != currentPosition)
-                    OnMoved?.Invoke(_previousPosition, currentPosition);
-                else
-                    OnStopped?.Invoke(currentPosition);
-                _previousPosition = currentPosition;
-            };
-        }
+        protected override void SubscribeToEvents()
+        => SubscribeTo(GetComponent<Updatable>().OnUpdated, TryInvokeEvents);
     }
 }

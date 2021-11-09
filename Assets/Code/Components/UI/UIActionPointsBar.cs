@@ -15,7 +15,7 @@ namespace Vheos.Games.ActionPoints
         => transform.AnimateLocalScale(this, Vector3.zero, instantly ? 0f : Settings.AnimDuration, this.GODeactivate);
         public void NotifyExhausted()
         {
-            for (int i = 0; i <= UI.Character.ActionPointsCount.Abs(); i++)
+            for (int i = 0; i <= Base.Character.ActionPointsCount.Abs(); i++)
                 _points[i].PlayCantUseAnim();
         }
 
@@ -26,37 +26,27 @@ namespace Vheos.Games.ActionPoints
         private void UpdateVisualProgresses()
         {
             float lerpAlpha = NewUtility.LerpHalfTimeToAlpha(Settings.VisualProgressHalfTime);
-            _visualActionProgress = _visualActionProgress.Lerp(UI.Character.ActionProgress, lerpAlpha);
-            _visualFocusProgress = _visualFocusProgress.Lerp(UI.Character.FocusProgress, lerpAlpha);
-        }
-        private void UpdatePoints()
-        {
+            _visualActionProgress = _visualActionProgress.Lerp(Base.Character.ActionProgress, lerpAlpha);
+            _visualFocusProgress = _visualFocusProgress.Lerp(Base.Character.FocusProgress, lerpAlpha);
+
             for (int i = 0; i < _points.Count; i++)
                 _points[i].UpdateLocalProgresses(_visualActionProgress, _visualFocusProgress);
         }
-
         // Play
-        public override void PlayStart()
+        protected override void PlayStart()
         {
             base.PlayStart();
             if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards.Target = UI.Character.transform;
+                moveTowards.Target = Base.Character.transform;
             if (TryGetComponent<RotateAs>(out var rotateAs))
                 rotateAs.Target = CameraManager.FirstActive.transform;
 
             _originalScale = transform.localScale;
-            CreatePoints(UI.Character.RawMaxActionPoints, UIManager.Settings.Prefab.ActionPoint);
+            CreatePoints(Base.Character.RawMaxActionPoints, UIManager.Settings.Prefab.ActionPoint);
             AlignPoints();
             Hide(true);
         }
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                UpdateVisualProgresses();
-                UpdatePoints();
-            };
-        }
+        protected override void SubscribeToEvents()
+        => SubscribeTo(GetComponent<Updatable>().OnUpdated, UpdateVisualProgresses);
     }
 }

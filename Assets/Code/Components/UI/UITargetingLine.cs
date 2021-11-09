@@ -7,47 +7,39 @@ namespace Vheos.Games.ActionPoints
     using System;
 
     [RequireComponent(typeof(LineRenderer))]
-    public class UITargetingLine : ACustomDrawable, IUIHierarchy
+    public class UITargetingLine : AUIComponent
     {
         // Events
         public event Action<Mousable, Mousable> OnTargetChanged;
 
         // Publics
-        public UIBase UI
-        { get; private set; }
-        public float TilingX
-        {
-            get => GetFloat(nameof(TilingX));
-            set => SetFloat(nameof(TilingX), value);
-        }
         public Mousable Target
         => CursorManager.CursorMousable;
         public void Show(Transform from, Transform to)
         {
+            enabled = true;
+            this.GOActivate();
+            this.Animate(null, SetWidth, GetComponent<LineRenderer>().startWidth, Settings.StartWidth, Settings.WidthAnimDuration);
+
             _from = from;
             _to = to;
-            _isDeactivating = false;
             UpdatePositionsAndTiling();
-            CursorManager.OnCursorMousableChanged += InvokeOnTargetChanged;
-            this.GOActivate();
-            this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, Settings.StartWidth, Settings.WidthAnimDuration);
         }
         public void ShowAndFollowCursor(Transform from)
         {
             CursorManager.SetCursorDistance(from);
             Show(from, CursorManager.CursorTransform);
         }
-        public void Hide()
+        public void Hide(bool instantly = false)
         {
-            _isDeactivating = true;
-            CursorManager.OnCursorMousableChanged -= InvokeOnTargetChanged;
-            this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, 0f, Settings.WidthAnimDuration, this.GODeactivate);
+            enabled = false;
+            this.Animate(null, SetWidth, GetComponent<LineRenderer>().startWidth, 0f, instantly ? 0f : Settings.WidthAnimDuration, this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
         {
-            Get<LineRenderer>().SetPosition(0, _from.position);
-            Get<LineRenderer>().SetPosition(1, _to.position);
-            TilingX = _from.DistanceTo(_to) * Settings.Tiling;
+            GetComponent<LineRenderer>().SetPosition(0, _from.position);
+            GetComponent<LineRenderer>().SetPosition(1, _to.position);
+            _drawable.TilingX = _from.DistanceTo(_to) * Settings.Tiling;
         }
         public bool TryGetCursorCharacter(out Character target)
         {
@@ -64,41 +56,31 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private Transform _from;
         private Transform _to;
-        private bool _isDeactivating;
+        protected TargetingLineDrawable _drawable;
         private UISettings.TargetingLineSettings Settings
         => UIManager.Settings.TargetingLine;
         private void SetWidth(float width)
         {
-            Get<LineRenderer>().startWidth = width;
-            Get<LineRenderer>().endWidth = width * Settings.EndWidthRatio;
+            GetComponent<LineRenderer>().startWidth = width;
+            GetComponent<LineRenderer>().endWidth = width * Settings.EndWidthRatio;
         }
         private void InvokeOnTargetChanged(Mousable from, Mousable to)
         => OnTargetChanged?.Invoke(from, to);
 
         // Play
-        protected override void AddToComponentCache()
+        protected override void SubscribeToEvents()
         {
-            base.AddToComponentCache();
-            AddToCache<LineRenderer>();
+            base.SubscribeToEvents();
+            SubscribeTo(GetComponent<Updatable>().OnUpdated, UpdatePositionsAndTiling);
+            SubscribeTo(CursorManager.OnCursorMousableChanged, InvokeOnTargetChanged);
         }
-        public override void PlayAwake()
+        protected override void PlayAwake()
         {
             base.PlayAwake();
-            name = GetType().Name;
-            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
-
-            Get<LineRenderer>().positionCount = 2;
-            Get<LineRenderer>().startColor = UI.Character.Color.NewA(Settings.StartOpacity);
-            this.GODeactivate();
-        }
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                if (!_isDeactivating)
-                    UpdatePositionsAndTiling();
-            };
+            _drawable = GetComponent<TargetingLineDrawable>();
+            GetComponent<LineRenderer>().positionCount = 2;
+            GetComponent<LineRenderer>().startColor = Base.Character.Color.NewA(Settings.StartOpacity);
+            Hide(true);
         }
     }
 }

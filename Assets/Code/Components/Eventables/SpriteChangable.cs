@@ -2,35 +2,26 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.UnityCore;
-    using Tools.Extensions.General;
-    using Tools.Extensions.UnityObjects;
-    using System;
 
     [DisallowMultipleComponent]
-    sealed public class SpriteChangable : ABaseComponent
+    sealed public class SpriteChangable : AEventSubscriber
     {
         // Events
-        public event System.Action<Sprite, Sprite> OnSpriteChange;
+        public Event<Sprite, Sprite> OnSpriteChanged
+        { get; } = new Event<Sprite, Sprite>();
 
         // Privates
         private Sprite _previousSprite;
+        private void TryInvokeEvents()
+        {
+            Sprite currentSprite = GetComponent<SpriteRenderer>().sprite;
+            if (_previousSprite != currentSprite)
+                OnSpriteChanged?.Invoke(_previousSprite, currentSprite);
+            _previousSprite = currentSprite;
+        }
 
         // Play
-        protected override void AddToComponentCache()
-        {
-            base.AddToComponentCache();
-            AddToCache<SpriteRenderer>();
-        }
-        protected override void SubscribeToPlayEvents()
-        {
-            base.SubscribeToPlayEvents();
-            Updatable.OnPlayUpdate += () =>
-            {
-                Sprite currentSprite = Get<SpriteRenderer>().sprite;
-                if (_previousSprite != currentSprite)
-                    OnSpriteChange?.Invoke(_previousSprite, currentSprite);
-                _previousSprite = currentSprite;
-            };
-        }
+        protected override void SubscribeToEvents()
+        => SubscribeTo(GetComponent<Updatable>().OnUpdated, TryInvokeEvents);
     }
 }
