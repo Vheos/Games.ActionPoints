@@ -30,5 +30,13 @@ namespace Vheos.Games.ActionPoints
                 Color = new Color(1f, 0.75f, 0.5f, 1f),
             };
         }
+
+        // Defines
+        public enum Predefined
+        {
+            None,
+            Players,
+            Enemies,
+        }
     }
 }
