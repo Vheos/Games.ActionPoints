@@ -33,7 +33,7 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         static private Camera _cursorCamera;
-        private static readonly List<Behaviour> _cursorCameraLocks = new List<Behaviour>();
+        static private List<Behaviour> _cursorCameraLocks;
         static private bool _cursorCameraDirty;
         static private Camera FindCursorCamera()
         {
@@ -56,6 +56,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             _cursorCamera = FirstActive;
+            _cursorCameraLocks = new List<Behaviour>();
         }
     }
 }
