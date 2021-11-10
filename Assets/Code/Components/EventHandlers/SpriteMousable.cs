@@ -24,7 +24,7 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            Renderer = GetComponent<SpriteRenderer>();
+            Renderer = Get<SpriteRenderer>();
             RaycastTests += CursorRaycastTest;
         }
     }

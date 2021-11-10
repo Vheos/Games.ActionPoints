@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Event = Tools.UnityCore.Event;
 
     [DisallowMultipleComponent]
-    public class Mousable : APlayable
+    public class Mousable : ABaseComponent
     {
         // Events
         public Event OnGainHighlight
@@ -58,7 +58,7 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            _trigger = GetComponent<Collider>();
+            _trigger = Get<Collider>();
             TryFitBoxColliderToMesh();
             AssignLayer();
         }

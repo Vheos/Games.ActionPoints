@@ -6,20 +6,13 @@ namespace Vheos.Games.ActionPoints
     public class Teamable : ABaseComponent
     {
         // Inspector
-        [SerializeField] protected Predefined _StartingTeam;
+        [SerializeField] protected Team.Predefined _StartingTeam;
 
         // Events
         public Event<Team, Team> OnTeamChanged
         { get; } = new Event<Team, Team>();
 
         // Publics
-        public Team StartingTeam
-        => _StartingTeam switch
-        {
-            Predefined.Players => Team.Players,
-            Predefined.Enemies => Team.Enemies,
-            _ => default,
-        };
         public Team Team
         { get; private set; }
         public void ChangeTeam(Team newTeam)
@@ -43,19 +36,20 @@ namespace Vheos.Games.ActionPoints
         public void LeaveTeam()
         => ChangeTeam(null);
 
+        // Privates
+        private Team StartingTeam
+        => _StartingTeam switch
+        {
+            Team.Predefined.Players => Team.Players,
+            Team.Predefined.Enemies => Team.Enemies,
+            _ => null,
+        };
+
         // Play
         protected override void PlayStart()
         {
             base.PlayStart();
             ChangeTeam(StartingTeam);
-        }
-
-        // Defines
-        public enum Predefined
-        {
-            None,
-            Players,
-            Enemies,
         }
     }
 }

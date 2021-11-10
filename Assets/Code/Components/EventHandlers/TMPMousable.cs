@@ -19,7 +19,7 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            _tmp = GetComponent<TextMeshPro>();
+            _tmp = Get<TextMeshPro>();
             TMPro_EventManager.TEXT_CHANGED_EVENT.Add(TryFitBoxColliderOnTextChanged);
         }
         protected override void PlayDestroy()

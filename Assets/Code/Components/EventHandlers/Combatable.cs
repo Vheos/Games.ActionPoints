@@ -3,12 +3,13 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
+    using Tools.Extensions.Math;
 
     public class Combatable : ABaseComponent
     {
         // Events
-        public Event<bool> OnCombatStateChanged
-        { get; } = new Event<bool>();
+        public Event<Combat> OnCombatChanged
+        { get; } = new Event<Combat>();
 
         // Publics
         public Combat Combat
@@ -38,7 +39,7 @@ namespace Vheos.Games.ActionPoints
         {
             Combat.RemoveMember(this);
             Combat = null;
-            OnCombatStateChanged?.Invoke(false);
+            OnCombatChanged?.Invoke(null);
         }
 
         // Privates
@@ -46,7 +47,8 @@ namespace Vheos.Games.ActionPoints
         {
             Combat = combat;
             combat.AddMember(this);
-            OnCombatStateChanged?.Invoke(true);
+            AnchorPosition = transform.position;
+            OnCombatChanged?.Invoke(combat);
         }
     }
 }

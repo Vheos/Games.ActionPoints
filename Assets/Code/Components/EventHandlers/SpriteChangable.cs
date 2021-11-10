@@ -14,7 +14,7 @@ namespace Vheos.Games.ActionPoints
         private Sprite _previousSprite;
         private void TryInvokeEvents()
         {
-            Sprite currentSprite = GetComponent<SpriteRenderer>().sprite;
+            Sprite currentSprite = Get<SpriteRenderer>().sprite;
             if (_previousSprite != currentSprite)
                 OnSpriteChanged?.Invoke(_previousSprite, currentSprite);
             _previousSprite = currentSprite;
@@ -22,6 +22,9 @@ namespace Vheos.Games.ActionPoints
 
         // Play
         protected override void SubscribeToEvents()
-        => SubscribeTo(GetComponent<Updatable>().OnUpdated, TryInvokeEvents);
+        {
+            base.SubscribeToEvents();
+            SubscribeTo(GetHandler<Updatable>().OnUpdated, TryInvokeEvents);
+        }
     }
 }
