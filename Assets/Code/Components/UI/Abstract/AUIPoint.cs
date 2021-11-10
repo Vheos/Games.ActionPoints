@@ -22,7 +22,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             _originalScale = transform.localScale;
-            _drawable = GetComponent<ActionPointDrawable>();
+            _drawable = Get<ActionPointDrawable>();
         }
         protected override void PlayStart()
         {

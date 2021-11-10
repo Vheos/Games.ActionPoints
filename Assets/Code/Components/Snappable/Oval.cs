@@ -14,7 +14,10 @@ namespace Vheos.Games.ActionPoints
 
         // Overrides
         public override void DrawGizmo()
-        => Editor.EditorUtility.DrawCircle(Vector3.zero, 0.5f, transform, _Color, _Vertices);
+        {
+            base.DrawGizmo();
+            Editor.EditorUtility.DrawCircle(Vector3.zero, 0.5f, transform, _Color, _Vertices);
+        }
 #endif
     }
 }

@@ -21,24 +21,24 @@ namespace Vheos.Games.ActionPoints
         => UIManager.Settings.Button;
         private void UpdateUsability(int from, int to)
         {
-            Color targetColor = Action.CanBeUsed(Base.Character) ? Base.Character.Color : Settings.UnusableColor;
-            GetComponent<SpriteRenderer>().AnimateColor(this, targetColor, Settings.UnusableDuration);
+            Color targetColor = Action.CanBeUsed(Character.Get<Actionable>()) ? Character.Color : Settings.UnusableColor;
+            Get<SpriteRenderer>().AnimateColor(this, targetColor, Settings.UnusableDuration);
         }
         private void OnGainHighlight()
         {
-            if (!Action.CanBeUsed(Base.Character))
+            if (!Action.CanBeUsed(Character.Get<Actionable>()))
                 return;
 
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.HighlightDuration);
         }
         private void OnPress(CursorManager.Button button, Vector3 location)
         {
-            if (!Action.CanBeUsed(Base.Character))
+            if (!Action.CanBeUsed(Character.Get<Actionable>()))
             {
-                if (Base.Character.IsExhausted)
+                if (Character.Get<Actionable>().IsExhausted)
                     Base.PointsBar.NotifyExhausted();
 
-                if (Base.Character.FocusPointsCount < Action.FocusPointsCost)
+                if (Character.Get<Actionable>().FocusPointsCount < Action.FocusPointsCost)
                     _costPointsBar.NotifyUnfocused();
                 return;
             }
@@ -47,43 +47,43 @@ namespace Vheos.Games.ActionPoints
             {
                 Base.TargetingLine.ShowAndFollowCursor(transform);
                 if (Action.Animation.TryNonNull(out var animation))
-                    Base.Character.ActionAnimator.Animate(animation.Charge);
+                    Character.ActionAnimator.Animate(animation.Charge);
                 _isTargeting = true;
             }
 
             transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
-            GetComponent<SpriteRenderer>().AnimateColor(this, GetComponent<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
+            Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
         }
         private void OnHold(CursorManager.Button button, Vector3 location)
         {
             if (_isTargeting
             && Base.TargetingLine.TryGetCursorCharacter(out var target))
-                Base.Character.LookAt(target.transform);
+                Character.LookAt(target.transform);
         }
         private void OnRelease(CursorManager.Button button, Vector3 location)
         {
-            if (!Action.CanBeUsed(Base.Character))
+            if (!Action.CanBeUsed(Character.Get<Actionable>()))
                 return;
 
             if (Action.IsInstant)
-                Action.Use(Base.Character, null);
+                Action.Use(Character.Get<Actionable>(), null);
             else if (_isTargeting)
             {
                 Base.TargetingLine.Hide();
                 if (Base.TargetingLine.TryGetCursorCharacter(out var target))
                 {
                     if (Action.Animation.TryNonNull(out var animation))
-                        Base.Character.ActionAnimator.Animate(animation.Release);
-                    Action.Use(Base.Character, target);
+                        Character.ActionAnimator.Animate(animation.Release);
+                    Action.Use(Character.Get<Actionable>(), target);
                 }
                 else
                      if (Action.Animation.TryNonNull(out var animation))
-                    Base.Character.ActionAnimator.Animate(animation.Cancel);
+                    Character.ActionAnimator.Animate(animation.Cancel);
                 _isTargeting = false;
             }
 
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.ClickDuration);
-            GetComponent<SpriteRenderer>().AnimateColor(this, Base.Character.Color, Settings.ClickDuration);
+            Get<SpriteRenderer>().AnimateColor(this, Character.Color, Settings.ClickDuration);
         }
         private void OnLoseHighlight()
         {
@@ -93,21 +93,21 @@ namespace Vheos.Games.ActionPoints
         // Play
         protected override void SubscribeToEvents()
         {
-            Mousable mousable = GetComponent<Mousable>();
+            Mousable mousable = Get<Mousable>();
             SubscribeTo(mousable.OnGainHighlight, OnGainHighlight);
             SubscribeTo(mousable.OnPress, OnPress);
             SubscribeTo(mousable.OnHold, OnHold);
             SubscribeTo(mousable.OnRelease, OnRelease);
             SubscribeTo(mousable.OnLoseHighlight, OnLoseHighlight);
-            SubscribeTo(Base.Character.OnActionPointsCountChanged, UpdateUsability);
-            SubscribeTo(Base.Character.OnWoundsCountChanged, UpdateUsability);
+            SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, UpdateUsability);
+            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, UpdateUsability);
         }
         protected override void PlayStart()
         {
             base.PlayStart();
 
-            GetComponent<SpriteRenderer>().sprite = Action.Sprite;
-            GetComponent<SpriteRenderer>().color = Base.Character.Color;
+            Get<SpriteRenderer>().sprite = Action.Sprite;
+            Get<SpriteRenderer>().color = Character.Color;
             _originalScale = transform.localScale;
 
             UpdateUsability(0, 0);

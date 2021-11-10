@@ -22,11 +22,11 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
         public void Animate(ActionAnimation.Clip clip)
         {
-            ActionAnimation.Clip idle = GetComponent<Character>().Idle;
+            ActionAnimation.Clip idle = Get<Character>().Idle;
             using (QAnimator.Group(this, null, clip.Duration, null, clip.Style))
             {
                 if (clip.ForwardDistanceEnabled)
-                    transform.GroupAnimatePosition(GetComponent<Character>().CombatPosition + transform.right * clip.GetForwardDistance(idle));
+                    transform.GroupAnimatePosition(Get<Character>().CombatPosition + transform.right * clip.GetForwardDistance(idle));
                 if (clip.ArmLengthEnabled)
                     QAnimator.GroupAnimate(v => _arm.Length = v, _arm.Length, clip.GetArmLength(idle));
                 if (clip.ArmRotationEnabled)

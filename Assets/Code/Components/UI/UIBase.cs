@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     public class UIBase : AUIComponent
     {
         // Publics
-        public Character Character
+        public new Character Character
         { get; set; }
         public UIWheel Wheel
         { get; private set; }

@@ -14,11 +14,12 @@ namespace Vheos.Games.ActionPoints
 
 #if UNITY_EDITOR
         // Inspector
-       [SerializeField]  protected Color _Color = Color.green;
-        abstract public void DrawGizmo();
+        [SerializeField] protected Color _Color = Color.green;
+        virtual public void DrawGizmo()
+        { }
 
         // Play
-private void OnDrawGizmos()
+        private void OnDrawGizmos()
         => DrawGizmo();
 #endif
     }

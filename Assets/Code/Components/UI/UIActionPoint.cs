@@ -26,7 +26,7 @@ namespace Vheos.Games.ActionPoints
         }
         private void UpdateWoundVisibility(int previousCount, int currentCount)
         {
-            int indexFromLast = Base.Character.RawMaxActionPoints - Index - 1;
+            int indexFromLast = Character.Get<Actionable>().MaxActionPoints - Index - 1;
             if (indexFromLast >= previousCount && indexFromLast < currentCount)
                 _uiWound.Show(Index);
             else if (indexFromLast >= currentCount && indexFromLast < previousCount)
@@ -36,8 +36,8 @@ namespace Vheos.Games.ActionPoints
         // Play
         protected override void SubscribeToEvents()
         {
-            SubscribeTo(Base.Character.OnActionPointsCountChanged, UpdateOpacityOnPointsCountChange);
-            SubscribeTo(Base.Character.OnWoundsCountChanged, UpdateWoundVisibility);
+            SubscribeTo(Character.GetHandler<Actionable>().OnActionPointsCountChanged, UpdateOpacityOnPointsCountChange);
+            SubscribeTo(Character.GetHandler<Woundable>().OnWoundsCountChanged, UpdateWoundVisibility);
         }
         protected override void PlayStart()
         {

@@ -153,7 +153,10 @@ namespace Vheos.Games.ActionPoints
             OnCursorMousableChanged = new Event<Mousable, Mousable>();
         }
         protected override void SubscribeToEvents()
-        => SubscribeTo(GetComponent<Updatable>().OnUpdated, OnUpdate);
+        {
+            base.SubscribeToEvents();
+            SubscribeTo(GetHandler<Updatable>().OnUpdated, OnUpdate);
+        }
 
         // Defines
         public enum Button

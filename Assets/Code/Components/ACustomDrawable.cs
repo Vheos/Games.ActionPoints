@@ -43,7 +43,7 @@ namespace Vheos.Games.ActionPoints
         virtual protected void AssignInspectorMProps()
         { }
         virtual protected void InitializeRenderer(out Renderer renderer)
-        => renderer = GetComponent<Renderer>();
+        => renderer = Get<Renderer>();
 
         private Renderer _renderer;
         private MaterialPropertyBlock _mprops;
@@ -58,7 +58,10 @@ namespace Vheos.Games.ActionPoints
 
         // Play
         protected override void SubscribeToEvents()
-        => SubscribeTo(GetComponent<Updatable>().OnUpdatedLate, UpdateDirtyMProps);
+        {
+            base.SubscribeToEvents();
+            SubscribeTo(GetHandler<Updatable>().OnUpdatedLate, UpdateDirtyMProps);
+        }
         override protected void PlayAwake()
         {
             base.PlayAwake();

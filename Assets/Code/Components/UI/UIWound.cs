@@ -20,7 +20,7 @@ namespace Vheos.Games.ActionPoints
             using (QAnimator.Group(this, null, Settings.WoundAnimDuration))
             {
                 transform.GroupAnimateLocalPosition(fadeInPosition, Vector2.zero);
-                GetComponent<SpriteRenderer>().GroupAnimateAlpha(1f);
+                Get<SpriteRenderer>().GroupAnimateAlpha(1f);
             }
         }
         public void Hide(bool instantly = false)
@@ -29,7 +29,7 @@ namespace Vheos.Games.ActionPoints
             using (QAnimator.Group(this, null, instantly ? 0f : Settings.WoundAnimDuration, this.GODeactivate))
             {
                 transform.GroupAnimateLocalPosition(fadeOutPosition);
-                GetComponent<SpriteRenderer>().GroupAnimateAlpha(0f);
+                Get<SpriteRenderer>().GroupAnimateAlpha(0f);
             }
         }
 
@@ -38,10 +38,10 @@ namespace Vheos.Games.ActionPoints
         => UIManager.Settings.Wound;
 
         // Play
-        protected override void PlayAwake()
+        protected override void PlayStart()
         {
-            base.PlayAwake();
-            GetComponent<SpriteRenderer>().color = UIManager.Settings.ActionPoint.ExhaustColor;
+            base.PlayStart();
+            Get<SpriteRenderer>().color = UIManager.Settings.ActionPoint.ExhaustColor;
             Hide(true);
         }
     }

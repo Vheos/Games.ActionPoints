@@ -26,7 +26,7 @@ namespace Vheos.Games.ActionPoints
             this.GOActivate();
             transform.AnimateLocalScale(this, Vector3.one, Settings.AnimDuration);
             foreach (var button in _buttons)
-                button.GetComponent<Mousable>().enabled = true;
+                button.Get<Mousable>().enabled = true;
 
             AlignButtons(GetWheelDirection(), Settings.Radius, Settings.MaxAngle);
             IsExpanded = true;
@@ -35,7 +35,7 @@ namespace Vheos.Games.ActionPoints
         {
             transform.AnimateLocalScale(this, Vector3.zero, instantly ? 0f : Settings.AnimDuration, this.GODeactivate);
             foreach (var button in _buttons)
-                button.GetComponent<Mousable>().enabled = false;
+                button.Get<Mousable>().enabled = false;
             IsExpanded = false;
         }
         public void Toggle()
@@ -52,36 +52,36 @@ namespace Vheos.Games.ActionPoints
         private Vector2 GetWheelDirection()
         {
             Vector3 midpoint;
-            if (Base.Character.Team.TryNonNull(out var team)
+            if (Character.Team.TryNonNull(out var team)
             && team.Count > 1)
                 midpoint = team.Midpoint;
-            else if (Base.Character.Combat.TryNonNull(out var combat))
+            else if (Character.Combat.TryNonNull(out var combat))
                 midpoint = combat.Midpoint;
             else
                 return Vector3.up;
 
-            return midpoint.ScreenOffsetTo(Base.Character.transform.position, CameraManager.FirstActive).normalized;
+            return midpoint.ScreenOffsetTo(Character.transform.position, CameraManager.FirstActive).normalized;
         }
-        private List<UIButton> _buttons;
+        private readonly List<UIButton> _buttons = new List<UIButton>();
 
         // Play
-        protected override void PlayStart()
+        protected override void PlayAwake()
         {
-            base.PlayStart();
-
-            if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards.Target = Base.Character.transform;
-            if (TryGetComponent<RotateAs>(out var rotateAs))
-                rotateAs.Target = CameraManager.FirstActive.transform;
-
-            _buttons = new List<UIButton>();
-            foreach (var action in Base.Character.Actions)
+            base.PlayAwake();
+            foreach (var action in Character.Actions)
             {
                 UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Settings.Prefab.Button);
                 newButton.Action = action;
                 _buttons.Add(newButton);
             }
-
+        }
+        protected override void PlayStart()
+        {
+            base.PlayStart();
+            if (TryGetComponent<MoveTowards>(out var moveTowards))
+                moveTowards.Target = Character.transform;
+            if (TryGetComponent<RotateAs>(out var rotateAs))
+                rotateAs.Target = CameraManager.FirstActive.transform;          
             Hide(true);
         }
     }

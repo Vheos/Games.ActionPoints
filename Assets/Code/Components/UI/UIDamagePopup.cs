@@ -13,14 +13,14 @@ namespace Vheos.Games.ActionPoints
         {
             bool isWound = wounds > 0;
             float lerpAlpha = isWound ? 1f : damage / 100f;
-            GetComponent<TextMeshPro>().color = Settings.ColorCurve.Evaluate(lerpAlpha);
+            Get<TextMeshPro>().color = Settings.ColorCurve.Evaluate(lerpAlpha);
             transform.localScale = transform.localScale.Mul(Settings.SizeCurve.Evaluate(lerpAlpha));
             transform.position = position;
             transform.rotation = CameraManager.FirstActive.transform.rotation;
 
-            GetComponent<TextMeshPro>().text = damage.RoundDown().ToString();
+            Get<TextMeshPro>().text = damage.RoundDown().ToString();
             if (Settings.PercentSignSize > 0f)
-                GetComponent<TextMeshPro>().text += $"<size={Settings.PercentSignSize.ToInvariant("F2")}>%</size>";
+                Get<TextMeshPro>().text += $"<size={Settings.PercentSignSize.ToInvariant("F2")}>%</size>";
 
             FadeIn();
             if (isWound)
@@ -40,7 +40,7 @@ namespace Vheos.Games.ActionPoints
             using (QAnimator.Group(this, null, Settings.FadeInDuration, StayUp))
             {
                 transform.GroupAnimateLocalPosition(direction * Settings.Distance);
-                GetComponent<TextMeshPro>().GroupAnimateAlpha(0f, 1f);
+                Get<TextMeshPro>().GroupAnimateAlpha(0f, 1f);
             }
         }
         private void StayUp()
@@ -49,7 +49,7 @@ namespace Vheos.Games.ActionPoints
             QAnimator.Delay(this, componentProperty, Settings.StayUpDuration, FadeOut);
         }
         private void FadeOut()
-        => GetComponent<TextMeshPro>().AnimateAlpha(this, 0f, Settings.FadeOutDuration, () => this.DestroyObject());
+        => Get<TextMeshPro>().AnimateAlpha(this, 0f, Settings.FadeOutDuration, () => this.DestroyObject());
         private void Pulse()
         => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration, Pulse, QAnimator.Curve.Boomerang);
     }

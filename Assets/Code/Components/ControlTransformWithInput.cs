@@ -47,6 +47,9 @@ namespace Vheos.Games.ActionPoints.Test
 
         // Play
         protected override void SubscribeToEvents()
-        => SubscribeTo(GetComponent<Updatable>().OnUpdated, ApplyInput);
+        {
+            base.SubscribeToEvents();
+            SubscribeTo(GetHandler<Updatable>().OnUpdated, ApplyInput);
+        }
     }
 }

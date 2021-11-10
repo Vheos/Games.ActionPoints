@@ -63,7 +63,7 @@ namespace Vheos.Games.ActionPoints
         protected override void SubscribeToEvents()
         {
             base.SubscribeToEvents();
-            SubscribeTo(GetComponent<SpriteChangable>().OnSpriteChanged, UpdateOutlineSprite);
+            SubscribeTo(GetHandler<SpriteChangable>().OnSpriteChanged, UpdateOutlineSprite);
 
             if (TryGetComponent<Mousable>(out var mousable))
             {
@@ -80,7 +80,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             _outlineRenderer.sharedMaterial = _Material;
-            _outlineRenderer.sprite = GetComponent<SpriteRenderer>().sprite;
+            _outlineRenderer.sprite = Get<SpriteRenderer>().sprite;
             Hide(true);
         }
     }

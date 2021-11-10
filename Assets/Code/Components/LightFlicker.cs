@@ -18,8 +18,8 @@
         private float _nextFlickerTime;
         private float CurrentIntensity
         {
-            get => GetComponent<Light>().intensity;
-            set => GetComponent<Light>().intensity = value;
+            get => Get<Light>().intensity;
+            set => Get<Light>().intensity = value;
         }
         private void UpdateLightIntensity()
         {
@@ -40,6 +40,9 @@
             _originalIntensity = CurrentIntensity;
         }
         protected override void SubscribeToEvents()
-        => SubscribeTo(GetComponent<Updatable>().OnUpdated, UpdateLightIntensity);
+        {
+            base.SubscribeToEvents();
+            SubscribeTo(GetHandler<Updatable>().OnUpdated, UpdateLightIntensity);
+        }
     }
 }

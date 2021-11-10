@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     abstract public class AUIPointsBar<T> : AUIComponent where T : AUIPoint
     {
         // Privates
-        protected List<T> _points;
+        protected List<T> _points = new List<T>();
         protected UISettings.ActionPointSettings Settings
         => UIManager.Settings.ActionPoint;
         protected void CreatePoints(int count, GameObject prefab)
@@ -37,13 +37,6 @@ namespace Vheos.Games.ActionPoints
                 float localX = (i - _points.Count.Sub(1) / 2f) * (1 + Settings.Spacing);
                 yield return new Vector2(localX, 0);
             }
-        }
-
-        // Play
-        protected override void PlayAwake()
-        {
-            base.PlayAwake();
-            _points = new List<T>();
         }
     }
 }
