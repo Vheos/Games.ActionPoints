@@ -846,7 +846,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 423476240}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6491f3dc9344fc64398c83fa6a2e85d9, type: 3}
+  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &563479086 stripped
@@ -1349,18 +1349,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 702542446}
     m_Modifications:
-    - target: {fileID: -428951047976933685, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
-      propertyPath: _Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -428951047976933685, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
-      propertyPath: _Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -428951047976933685, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
-      propertyPath: _Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2381005829110229899, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
       propertyPath: _StartingTeam
       value: 1
@@ -1452,13 +1440,17 @@ PrefabInstance:
     - target: {fileID: 2577891044044771582, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
       propertyPath: _StartingTool
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1671733559}
     - target: {fileID: 2577891045116021959, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3522306608810605067, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+    - {fileID: 1750374682091059079, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+    - {fileID: -2823762776715072285, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+    - {fileID: 2247797681748669453, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+    - {fileID: 4367107444744334912, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
 --- !u!4 &1414129763 stripped
 Transform:
@@ -1701,6 +1693,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1.5, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1671733559 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7207409327477670923, guid: cf26554aff877f44dbdcbd0e0bee92ca, type: 3}
+  m_PrefabInstance: {fileID: 1705339085}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1671733552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9cd0e32888e2f1459a8b47dc01bcd87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1678008513 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6382050970733388425, guid: 2f3897690fa4d7a47bf1af40be412a5e, type: 3}
@@ -1793,7 +1796,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1900911238}
   - component: {fileID: 1900911237}
-  - component: {fileID: 1900911236}
   m_Layer: 0
   m_Name: SpotLight
   m_TagString: Untagged
@@ -1801,18 +1803,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1900911236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1900911234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!108 &1900911237
 Light:
   m_ObjectHideFlags: 0
@@ -2183,7 +2173,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Torch
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6382050971265627703, guid: 2f3897690fa4d7a47bf1af40be412a5e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2f3897690fa4d7a47bf1af40be412a5e, type: 3}
 --- !u!1001 &2003443783
 PrefabInstance:

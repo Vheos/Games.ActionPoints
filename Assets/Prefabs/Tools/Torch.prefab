@@ -4961,8 +4961,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6382050971265627701}
   - component: {fileID: 6382050971265627700}
-  - component: {fileID: 3258999276732176457}
   - component: {fileID: 6382050971265627702}
+  - component: {fileID: 7972752984967015603}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -5046,18 +5046,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &3258999276732176457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6382050971265627699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6491f3dc9344fc64398c83fa6a2e85d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6382050971265627702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5074,3 +5062,15 @@ MonoBehaviour:
   _MinMultiplier: 0.9
   _MaxMultiplier: 1.1
   _FadeHalfTime: 0.1
+--- !u!114 &7972752984967015603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6382050971265627699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

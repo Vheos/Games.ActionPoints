@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8814995318805333585}
   - component: {fileID: 8814995318805333587}
   - component: {fileID: 6336682340486193707}
-  - component: {fileID: 3457080132818822046}
+  - component: {fileID: 4185556280814193265}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -89,7 +89,7 @@ MonoBehaviour:
   _TimeScale: 1
   _UpdatesPerSecond: 60
   _FixedUpdatesPerSecond: 50
---- !u!114 &3457080132818822046
+--- !u!114 &4185556280814193265
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,6 +98,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8814995318805333588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6491f3dc9344fc64398c83fa6a2e85d9, type: 3}
+  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

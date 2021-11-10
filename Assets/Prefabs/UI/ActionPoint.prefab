@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -5259922748472183253}
   - component: {fileID: 3268621003688216140}
   - component: {fileID: 3268621003688216141}
-  - component: {fileID: 7602770696116581764}
+  - component: {fileID: 2373869825922134131}
   m_Layer: 0
   m_Name: ActionPoint
   m_TagString: Untagged
@@ -109,7 +109,7 @@ MeshRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 10
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7602770696116581764
+--- !u!114 &2373869825922134131
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,6 +118,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 3268621003688216130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6491f3dc9344fc64398c83fa6a2e85d9, type: 3}
+  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
