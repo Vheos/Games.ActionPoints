@@ -9,6 +9,8 @@ namespace Vheos.Games.ActionPoints
         // Privates
         protected UIBase Base
         { get; private set; }
+        protected Character Character
+        => Base.Character;
         private void TryFindUIBase()
         {
             if (this.TryAs<UIBase>(out var thisAsBase))
@@ -16,9 +18,9 @@ namespace Vheos.Games.ActionPoints
             else if (transform.parent.TryNonNull(out var parent)
             && parent.TryGetComponent<AUIComponent>(out var parentUIComponent))
                 Base = parentUIComponent.Base;
-            
+
             if (Base == null)
-                WarningUIBaseNotFound(this);                
+                WarningUIBaseNotFound(this);
         }
         private void WarningUIBaseNotFound(Component component)
         => Debug.LogWarning($"{GetType().Name} / UIBaseNotFound   -   gameObject {component.gameObject.name}, component {component.GetType().Name}");
