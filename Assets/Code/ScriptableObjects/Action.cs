@@ -2,6 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.Extensions.General;
+    using Tools.UnityCore;
 
     [CreateAssetMenu(fileName = nameof(Action), menuName = nameof(Action), order = 1)]
     public class Action : ScriptableObject
@@ -25,13 +26,13 @@ namespace Vheos.Games.ActionPoints
         => _IsInstant;
         public ActionAnimation Animation
         => _Animation;
-        public bool CanBeUsed(Character character)
+        public bool CanBeUsed(Actionable actionable)
         {
-            return !character.IsExhausted
-                && character.ActionPointsCount + character.MaxActionPoints >= _ActionPointsCost
-                && character.FocusPointsCount >= _FocusPointsCost;
+            return !actionable.IsExhausted
+                && actionable.ActionPointsCount + actionable.MaxActionPoints >= _ActionPointsCost
+                && actionable.FocusPointsCount >= _FocusPointsCost;
         }
-        public void Use(Character user, Character target)
+        public void Use(Actionable user, ABaseComponent target)
         {
             user.ChangeActionPoints(-_ActionPointsCost);
             user.ChangeFocusPoints(-_FocusPointsCost);

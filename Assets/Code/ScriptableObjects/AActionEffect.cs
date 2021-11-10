@@ -1,6 +1,7 @@
 namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
+    using Tools.UnityCore;
 
     abstract public class AActionEffect : ScriptableObject
     {
@@ -8,7 +9,7 @@ namespace Vheos.Games.ActionPoints
         protected const string CONTEXT_MENU_PATH = "ActionEffects/";
 
         // Public
-        abstract public void Invoke(Character user, Character target, params float[] values);
+        abstract public void Invoke(ABaseComponent user, ABaseComponent target, params float[] values);
 
         // Private
         abstract protected int RequiredValuesCount
@@ -29,7 +30,7 @@ namespace Vheos.Games.ActionPoints
             && _Values.Length >= _Effect.RequiredValuesCount;
 
             // Publics
-            public void Invoke(Character user, Character target)
+            public void Invoke(Actionable user, ABaseComponent target)
             {
                 if (!IsValid)
                     return;

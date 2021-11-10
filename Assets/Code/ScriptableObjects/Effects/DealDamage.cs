@@ -1,7 +1,7 @@
 namespace Vheos.Games.ActionPoints.ActionScripts
 {
     using UnityEngine;
-    using Tools.Extensions.Math;
+    using Tools.UnityCore;
 
     [CreateAssetMenu(fileName = nameof(DealDamage), menuName = CONTEXT_MENU_PATH + nameof(DealDamage), order = 2)]
     public class DealDamage : AActionEffect
@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
         // Overrides
         protected override int RequiredValuesCount
         => 3;
-        override public void Invoke(Character user, Character target, params float[] values)
+        override public void Invoke(ABaseComponent user, ABaseComponent target, params float[] values)
         {
             // Params
             float blunt = values[0];
@@ -17,7 +17,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
             float raw = values[2];
 
             // Execute
-            target.TakeTotalDamage(target.CalculateTotalDamage(blunt, sharp, raw));
+            target.Get<Woundable>().ReceiveDamage(blunt, sharp, raw);
         }
     }
 }
