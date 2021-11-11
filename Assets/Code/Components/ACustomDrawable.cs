@@ -40,14 +40,13 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
+        private Renderer _renderer;
+        private MaterialPropertyBlock _mprops;
+        private bool _hasDirtyMProps;
         virtual protected void AssignInspectorMProps()
         { }
         virtual protected void InitializeRenderer(out Renderer renderer)
         => renderer = Get<Renderer>();
-
-        private Renderer _renderer;
-        private MaterialPropertyBlock _mprops;
-        private bool _hasDirtyMProps;
         private void InitializeMProps()
         => _mprops = new MaterialPropertyBlock();
         private void UpdateDirtyMProps()
