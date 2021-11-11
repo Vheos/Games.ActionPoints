@@ -142,7 +142,7 @@ namespace Vheos.Games.ActionPoints
         static public int To01(this bool t)
         => t ? 1 : 0;
         static public int ToSign(this bool t)
-        => t ? -1 : +1;
+        => t ? +1 : -1;
         static public int Map(this bool t, int a, int b)
         => t ? a : b;
         static public float Map(this bool t, float a, float b)
