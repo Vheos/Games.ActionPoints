@@ -1,5 +1,3 @@
-// change AMousable to component (from abstract class)
-
 namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
@@ -12,12 +10,18 @@ namespace Vheos.Games.ActionPoints
     public class Character : AEventSubscriber
     {
         // Inspector
+        [SerializeField] protected List<Action> _Actions = new List<Action>();
+        [SerializeField] [Range(1, 10)] protected int _MaxPoints = 5;
+        [SerializeField] [Range(0f, 1f)] protected float _ActionSpeed = 1f;
+        //[SerializeField] [Range(0f, 1f)] protected float _FocusRate = 0.5f;
+        //[SerializeField] [Range(0f, 1f)] protected float _ExhaustRate = 0.5f;
+        [SerializeField] [Range(0f, 100f)] protected float _BluntArmor = 0f;
+        [SerializeField] [Range(0f, 100f)] protected float _SharpArmor = 0f;
+        [SerializeField] protected Team.Predefined _StartingTeam;
         [SerializeField] protected Tool _StartingTool;
         [SerializeField] protected ActionAnimation.Clip _Idle;
 
         // Other
-        public IEnumerable<Action> Actions
-        => Get<Actionable>().Actions;
         public void LookAt(Transform targetTransform)
         {
             if (targetTransform == transform)
@@ -66,7 +70,7 @@ namespace Vheos.Games.ActionPoints
         private UIBase _ui;
         private void ShowTargetingLine(CursorManager.Button button, Vector3 position)
         => _ui.TargetingLine.ShowAndFollowCursor(transform);
-        private void TryToggleCobatWithTarget(CursorManager.Button button, Vector3 position)
+        private void TryToggleCombatWithTarget(CursorManager.Button button, Vector3 position)
         {
             _ui.TargetingLine.Hide();
             if (_ui.TargetingLine.Target.TryNonNull(out var targetMousable)
@@ -100,22 +104,43 @@ namespace Vheos.Games.ActionPoints
             }
             Get<Animator>().SetBool("IsInCombat", isInCombat);
         }
+        private void OnDamageReceived(float damage, int wounds)
+        => _ui.PopupHandler.PopDamage(transform.position, damage, wounds);
 
         // Playable
         protected override void SubscribeToEvents()
         {
+            base.SubscribeToEvents();
             SubscribeTo(GetHandler<Mousable>().OnPress, ShowTargetingLine);
-            SubscribeTo(GetHandler<Mousable>().OnRelease, TryToggleCobatWithTarget);
+            SubscribeTo(GetHandler<Mousable>().OnRelease, TryToggleCombatWithTarget);
             SubscribeTo(GetHandler<Movable>().OnMoved, UpdateAnimatorSpeed);
             SubscribeTo(GetHandler<Movable>().OnStopped, ResetAnimatorSpeed);
             SubscribeTo(GetHandler<Teamable>().OnTeamChanged, UpdateColors);
             SubscribeTo(GetHandler<Combatable>().OnCombatChanged, OnCombatChanged);
+            SubscribeTo(GetHandler<Woundable>().OnDamageReceived, OnDamageReceived);
+        }
+        protected void DefineComponentInputs()
+        {
+            Get<Actionable>().MaxActionPoints.Set(() => _MaxPoints);
+            Get<Actionable>().ActionSpeed.Set(() => _ActionSpeed);
+            Get<Actionable>().LockedMaxActionPoints.Set(() => Get<Woundable>().WoundsCount);
+            Get<Actionable>().Actions.Set(() => _Actions);
+            Get<Woundable>().MaxWounds.Set(() => Get<Actionable>().MaxActionPoints);
+            Get<Woundable>().BluntArmor.Set(() => _BluntArmor);
+            Get<Woundable>().SharpArmor.Set(() => _SharpArmor);
+            Get<Teamable>().StartingTeam.Set(() => _StartingTeam switch
+            {
+                Team.Predefined.Players => Team.Players,
+                Team.Predefined.Enemies => Team.Enemies,
+                _ => null,
+            });
         }
         protected override void PlayAwake()
         {
             base.PlayAwake();
+            DefineComponentInputs();
             _ui = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Settings.Prefab.Base);
-            _ui.Character = this;
+            _ui.Initialize(this);
         }
         protected override void PlayStart()
         {
