@@ -3,9 +3,15 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.Extensions.Collections;
+    using Event = Tools.UnityCore.Event;
 
     abstract public class AComponentGroup<T> where T : Component
     {
+        // Events
+        public Event OnMembersChanged
+        { get; } = new Event();
+
+        // Publics
         public IEnumerable<T> Members
         => _members;
         public int Count
@@ -22,9 +28,15 @@ namespace Vheos.Games.ActionPoints
             }
         }
         virtual public void AddMember(T member)
-        => _members.TryAddUnique(member);
+        {
+            if (_members.TryAddUnique(member))
+                OnMembersChanged?.Invoke();
+        }
         virtual public void RemoveMember(T member)
-        => _members.Remove(member);
+        {
+            if (_members.Remove(member))
+                OnMembersChanged?.Invoke();
+        }
 
         // Privates
         protected List<T> _members;
