@@ -7,13 +7,6 @@ namespace Vheos.Games.ActionPoints
 
     public class Actionable : AEventSubscriber
     {
-        // Inspector
-        [SerializeField] protected List<Action> _Actions = new List<Action>();
-        [SerializeField] [Range(1, 10)] protected int _MaxPoints = 5;
-        [SerializeField] [Range(0f, 1f)] protected float _ActionSpeed = 1f;
-        [SerializeField] [Range(0f, 1f)] protected float _FocusRate = 0.5f;
-        [SerializeField] [Range(0f, 1f)] protected float _ExhaustRate = 0.5f;
-
         // Events
         public Event<int, int> OnActionPointsCountChanged
         { get; } = new Event<int, int>();
@@ -24,39 +17,37 @@ namespace Vheos.Games.ActionPoints
         public Event<float> OnActionProgressOverflow
         { get; } = new Event<float>();
 
+        // Input
+        public ComponentInput<float> ActionSpeed
+        { get; } = new ComponentInput<float>();
+        //public ComponentInput<float> FocusRate
+        //{ get; } = new ComponentInput<float>();
+        //public ComponentInput<float> ExhaustRate
+        //{ get; } = new ComponentInput<float>();
+        public ComponentInput<int> MaxActionPoints
+        { get; } = new ComponentInput<int>();
+        public ComponentInput<int> LockedMaxActionPoints
+        { get; } = new ComponentInput<int>();
+        public ComponentInput<List<Action>> Actions
+        { get; } = new ComponentInput<List<Action>>();
+
         // Publics
-        public IEnumerable<Action> Actions
-        => _Actions;
-        // Action
-        public float ActionSpeed
-        => _ActionSpeed;
         public float ActionProgress
+        { get; private set; }
+        public float FocusProgress
         { get; private set; }
         public int ActionPointsCount
         => ActionProgress.RoundTowardsZero();
-        public void ChangeActionPoints(int diff)
-        => ActionProgress = ActionProgress.Add(diff).Clamp(-UsableMaxActionPoints, +UsableMaxActionPoints);
-        // Focus
-        public float FocusRate
-        => _FocusRate;
-        public float FocusProgress
-        { get; private set; }
         public int FocusPointsCount
         => FocusProgress.RoundTowardsZero();
+        public void ChangeActionPoints(int diff)
+        => ActionProgress = ActionProgress.Add(diff).Clamp(-UsableMaxActionPoints, +UsableMaxActionPoints);
         public void ChangeFocusPoints(int diff)
         => FocusProgress = FocusProgress.Add(diff).ClampMax(ActionProgress).ClampMin(0f);
-        // Exhaust
-        public float ExhaustRate
-        => _ExhaustRate;
-        public bool IsExhausted
-        => ActionProgress < 0;
-        // MaxAction
-        public int MaxActionPoints
-        => _MaxPoints;
-        public int LockedMaxActionPoints
-        { get; private set; }
         public int UsableMaxActionPoints
         => MaxActionPoints - LockedMaxActionPoints;
+        public bool IsExhausted
+         => ActionProgress < 0;
 
         // Privates
         private float _previousActionProgress;
@@ -85,7 +76,7 @@ namespace Vheos.Games.ActionPoints
         }
         private void UpdateProgresses()
         {
-            ActionProgress += Time.deltaTime * _ActionSpeed;
+            ActionProgress += Time.deltaTime * ActionSpeed;
             if (ActionProgress > UsableMaxActionPoints)
             {
                 float overflow = ActionProgress - UsableMaxActionPoints;
@@ -98,6 +89,13 @@ namespace Vheos.Games.ActionPoints
         protected override void SubscribeToEvents()
         {
             SubscribeTo(GetHandler<Updatable>().OnUpdated, UpdateProgresses, TryInvokeEvents);
+        }
+
+        // Defines
+        public class Inputs
+        {
+            static public ComponentInput<float> ActionSpeed
+            { get; } = new ComponentInput<float>();
         }
     }
 }
