@@ -9,6 +9,17 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public UIButton Button
         { get; set; }
+        public void Initialize(UIButton button)
+        {
+            Button = button;
+            int pointsCount = Button.Action.ActionPointsCost + Button.Action.FocusPointsCost;
+            CreatePoints(pointsCount, UIManager.Settings.Prefab.CostPoint);
+            foreach (var point in _points)
+                point.Initialize(this);
+
+            transform.localPosition = Button.transform.localScale.Mul(+0.5f, -1f, 0f);
+            AlignPoints();
+        }
         public void NotifyUnfocused()
         {
             for (int i = 0; i < Button.Action.FocusPointsCost; i++)
@@ -48,21 +59,6 @@ namespace Vheos.Games.ActionPoints
                     yield return NewUtility.PointOnCircle(-18, pentaSide);
                     break;
             }
-        }
-
-        // Play
-        protected override void SubscribeToEvents()
-        { }
-        protected override void PlayStart()
-        {
-            base.PlayStart();
-            transform.localPosition = Button.transform.localScale.Mul(+0.5f, -1f, 0f);
-            int pointsCount = Button.Action.ActionPointsCost + Button.Action.FocusPointsCost;
-            CreatePoints(pointsCount, UIManager.Settings.Prefab.CostPoint);
-            AlignPoints();
-
-            foreach (var point in _points)
-                point.CostPointsBar = this;
         }
     }
 }

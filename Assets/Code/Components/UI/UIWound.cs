@@ -9,6 +9,11 @@ namespace Vheos.Games.ActionPoints
     public class UIWound : AUIComponent
     {
         // Publics
+        public void Initialize()
+        {
+            Get<SpriteRenderer>().color = UIManager.Settings.ActionPoint.ExhaustColor;
+            Hide(true);
+        }
         public void Show(int index)
         {
             this.GOActivate();
@@ -36,13 +41,5 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private UISettings.WoundSettings Settings
         => UIManager.Settings.Wound;
-
-        // Play
-        protected override void PlayStart()
-        {
-            base.PlayStart();
-            Get<SpriteRenderer>().color = UIManager.Settings.ActionPoint.ExhaustColor;
-            Hide(true);
-        }
     }
 }

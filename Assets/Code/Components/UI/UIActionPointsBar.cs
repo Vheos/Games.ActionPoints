@@ -7,9 +7,28 @@ namespace Vheos.Games.ActionPoints
     public class UIActionPointsBar : AUIPointsBar<UIActionPoint>
     {
         // Publics  
+        public void Initialize()
+        {
+            CreatePoints(Character.Get<Actionable>().MaxActionPoints, UIManager.Settings.Prefab.ActionPoint);
+            foreach (var point in _points)
+                point.Initialize();
+
+            if (TryGetComponent<MoveTowards>(out var moveTowards))
+                moveTowards.Target = Character.transform;
+            if (TryGetComponent<RotateAs>(out var rotateAs))
+                rotateAs.Target = CameraManager.FirstActive.transform;
+
+            _originalScale = transform.localScale;
+            AlignPoints();
+            Hide(true);
+        }
         public void Show()
         {
             this.GOActivate();
+            _visualActionProgress = 0;
+            _visualFocusProgress = 0;
+            foreach (var point in _points)
+                point.ResetVisuals();
             transform.AnimateLocalScale(this, _originalScale, Settings.AnimDuration);
         }
         public void Hide(bool instantly = false)
@@ -35,19 +54,6 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void PlayStart()
-        {
-            base.PlayStart();
-            if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards.Target = Character.transform;
-            if (TryGetComponent<RotateAs>(out var rotateAs))
-                rotateAs.Target = CameraManager.FirstActive.transform;
-
-            _originalScale = transform.localScale;
-            CreatePoints(Character.Get<Actionable>().MaxActionPoints, UIManager.Settings.Prefab.ActionPoint);
-            AlignPoints();
-            Hide(true);
-        }
         protected override void SubscribeToEvents()
         {
             base.SubscribeToEvents();

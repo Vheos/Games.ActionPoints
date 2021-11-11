@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
-    using Tools.Extensions.General;    
+    using Tools.Extensions.General;
 
     [RequireComponent(typeof(LineRenderer))]
     public class UITargetingLine : AUIComponent
@@ -16,6 +16,13 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public Mousable Target
         => CursorManager.CursorMousable;
+        public void Initialize()
+        {
+            _drawable = Get<TargetingLineDrawable>();
+            Get<LineRenderer>().positionCount = 2;
+            Get<LineRenderer>().startColor = Character.Color.NewA(Settings.StartOpacity);
+            Hide(true);
+        }
         public void Show(Transform from, Transform to)
         {
             enabled = true;
@@ -68,24 +75,12 @@ namespace Vheos.Games.ActionPoints
         private void InvokeOnTargetChanged(Mousable from, Mousable to)
         => OnTargetChanged?.Invoke(from, to);
 
-        // Play
+        // Play        
         protected override void SubscribeToEvents()
         {
             base.SubscribeToEvents();
             SubscribeTo(GetHandler<Updatable>().OnUpdated, UpdatePositionsAndTiling);
             SubscribeTo(CursorManager.OnCursorMousableChanged, InvokeOnTargetChanged);
-        }
-        protected override void PlayAwake()
-        {
-            base.PlayAwake();
-            _drawable = Get<TargetingLineDrawable>();
-        }
-        protected override void PlayStart()
-        {
-            base.PlayStart();
-            Get<LineRenderer>().positionCount = 2;
-            Get<LineRenderer>().startColor = Character.Color.NewA(Settings.StartOpacity);
-            Hide(true);
         }
     }
 }

@@ -7,6 +7,8 @@ namespace Vheos.Games.ActionPoints
     public class UIPopupHandler : AUIComponent
     {
         // Publics
+        public void Initialize()
+        { }
         public void PopDamage(Vector3 position, float damage, int wounds)
         {
             UIDamagePopup newPopup = this.CreateChildComponent<UIDamagePopup>(UIManager.Settings.Prefab.DamagePopup);

@@ -5,11 +5,10 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public UICostPointsBar CostPointsBar
         { get; set; }
-
-        // Play
-        protected override void PlayStart()
+        public void Initialize(UICostPointsBar costPointsBar)
         {
-            base.PlayStart();
+            CostPointsBar = costPointsBar;
+
             _drawable.Opacity = Settings.CostOpacity;
             _drawable.ActionProgress = 1f;
 
@@ -17,8 +16,5 @@ namespace Vheos.Games.ActionPoints
             _drawable.FocusProgress = isActionPoint ? 0f : 1f;
             _drawable.Shape = isActionPoint ? Settings.ActionShape : Settings.FocusShape;
         }
-
-        protected override void SubscribeToEvents()
-        { }
     }
 }

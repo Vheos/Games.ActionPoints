@@ -12,14 +12,20 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public bool IsExpanded
         { get; private set; }
-        public void AlignButtons(Vector2 wheelDirection, float radius, float maxAngle)
+        public void Initialize()
         {
-            for (int i = 0; i < _buttons.Count; i++)
+            foreach (var action in Character.Get<Actionable>().Actions.Value)
             {
-                float angle = maxAngle * (i - _buttons.Count.Sub(1).Div(2)) / _buttons.Count.Add(1);
-                Vector2 targetLocalPosition = radius * wheelDirection.Rotate(Vector3.back, angle);
-                _buttons[i].MoveTo(targetLocalPosition);
+                UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Settings.Prefab.Button);
+                newButton.Initialize(action);
+                _buttons.Add(newButton);
             }
+
+            if (TryGetComponent<MoveTowards>(out var moveTowards))
+                moveTowards.Target = Character.transform;
+            if (TryGetComponent<RotateAs>(out var rotateAs))
+                rotateAs.Target = CameraManager.FirstActive.transform;
+            Hide(true);
         }
         public void Show()
         {
@@ -45,8 +51,18 @@ namespace Vheos.Games.ActionPoints
             else
                 Show();
         }
+        public void AlignButtons(Vector2 wheelDirection, float radius, float maxAngle)
+        {
+            for (int i = 0; i < _buttons.Count; i++)
+            {
+                float angle = maxAngle * (i - _buttons.Count.Sub(1).Div(2)) / _buttons.Count.Add(1);
+                Vector2 targetLocalPosition = radius * wheelDirection.Rotate(Vector3.back, angle);
+                _buttons[i].MoveTo(targetLocalPosition);
+            }
+        }
 
         // Privates
+        private readonly List<UIButton> _buttons = new List<UIButton>();
         private UISettings.WheelSettings Settings
         => UIManager.Settings.Wheel;
         private Vector2 GetWheelDirection()
@@ -61,28 +77,6 @@ namespace Vheos.Games.ActionPoints
                 return Vector3.up;
 
             return midpoint.ScreenOffsetTo(Character.transform.position, CameraManager.FirstActive).normalized;
-        }
-        private readonly List<UIButton> _buttons = new List<UIButton>();
-
-        // Play
-        protected override void PlayAwake()
-        {
-            base.PlayAwake();
-            foreach (var action in Character.Actions)
-            {
-                UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Settings.Prefab.Button);
-                newButton.Action = action;
-                _buttons.Add(newButton);
-            }
-        }
-        protected override void PlayStart()
-        {
-            base.PlayStart();
-            if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards.Target = Character.transform;
-            if (TryGetComponent<RotateAs>(out var rotateAs))
-                rotateAs.Target = CameraManager.FirstActive.transform;          
-            Hide(true);
         }
     }
 }

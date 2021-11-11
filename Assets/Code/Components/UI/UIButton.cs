@@ -10,6 +10,18 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public Action Action
         { get; set; }
+        public void Initialize(Action action)
+        {
+            Action = action;
+            _costPointsBar = this.CreateChildComponent<UICostPointsBar>(UIManager.Settings.Prefab.CostPointsBar);
+            _costPointsBar.Initialize(this);
+
+            Get<SpriteRenderer>().sprite = Action.Sprite;
+            Get<SpriteRenderer>().color = Character.Color;
+            _originalScale = transform.localScale;
+
+            UpdateUsability(0, 0);
+        }
         public void MoveTo(Vector2 targetLocalPosition)
         => transform.AnimateLocalPosition(this, targetLocalPosition, Settings.AnimDuration);
 
@@ -102,19 +114,5 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, UpdateUsability);
             SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, UpdateUsability);
         }
-        protected override void PlayStart()
-        {
-            base.PlayStart();
-
-            Get<SpriteRenderer>().sprite = Action.Sprite;
-            Get<SpriteRenderer>().color = Character.Color;
-            _originalScale = transform.localScale;
-
-            UpdateUsability(0, 0);
-
-            _costPointsBar = this.CreateChildComponent<UICostPointsBar>(UIManager.Settings.Prefab.CostPointsBar);
-            _costPointsBar.Button = this;
-        }
-
     }
 }
