@@ -15,8 +15,12 @@ namespace Vheos.Games.ActionPoints
         static public void Animate<T>(MonoBehaviour owner, string uid, Action<T> assignFunction, T from, T to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve) where T : struct
         {
-            if (TestForWarnings(owner, uid))
+            // NullOwner warning
+            if (owner == null)
+            {
+                WarningNullOwner(uid);
                 return;
+            }
 
             // Pick curve function
             Func<float, float> curveValue;
@@ -57,6 +61,13 @@ namespace Vheos.Games.ActionPoints
                 return;
             }
 
+            // InactiveGameObject warning
+            if (!owner.gameObject.activeInHierarchy)
+            {
+                WarningInactiveGameObject(owner, uid);
+                return;
+            }
+
             // // Pick type
             float startTime = Time.time - Time.deltaTime;
             float progress() => (Time.time - startTime) / duration;
@@ -92,8 +103,26 @@ namespace Vheos.Games.ActionPoints
         => Animate(_groupOwner, _groupUID, assignFunction, from, to, _groupDuration, null, _groupStyle);
         static public void Delay(MonoBehaviour owner, string uid, float duration, System.Action action)
         {
-            if (TestForWarnings(owner, uid))
+            // Instant action
+            if (duration == 0f)
+            {
+                action();
                 return;
+            }
+
+            // NullOwner warning
+            if (owner == null)
+            {
+                WarningNullOwner(uid);
+                return;
+            }
+
+            // InactiveGameObject warning
+            if (!owner.gameObject.activeInHierarchy)
+            {
+                WarningInactiveGameObject(owner, uid);
+                return;
+            }
 
             Coroutine newCoroutine = owner.StartCoroutine(Coroutines.AfterSeconds(duration, action));
             AnimationGUID guid = (owner, uid);
@@ -157,20 +186,6 @@ namespace Vheos.Games.ActionPoints
         => Debug.LogWarning($"{nameof(QAnimator)} / NullOwner   -   uid {uid ?? "null"}");
         static private void WarningInactiveGameObject(MonoBehaviour owner, string uid)
         => Debug.LogWarning($"{nameof(QAnimator)} / InactiveGameObject   -   owner {owner.GetType().Name}, uid {uid ?? "null"}");
-        static private bool TestForWarnings(MonoBehaviour owner, string uid)
-        {
-            if (owner == null)
-            {
-                WarningNullOwner(uid);
-                return true;
-            }
-            if (!owner.gameObject.activeInHierarchy)
-            {
-                WarningInactiveGameObject(owner, uid);
-                return true;
-            }
-            return false;
-        }
 
         // Privates (group animation)
         static private MonoBehaviour _groupOwner;
