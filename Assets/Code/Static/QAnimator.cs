@@ -150,7 +150,7 @@ namespace Vheos.Games.ActionPoints
                         coroutineListByGUID.Key.Item1.StopCoroutine(coroutine);
             _coroutineListsByGUID.Clear();
         }
-        static public void StopAllAnimations(MonoBehaviour owner)
+        static public void Stop(MonoBehaviour owner)
         {
             foreach (var coroutineListByGUID in _coroutineListsByGUID)
             {
@@ -163,6 +163,12 @@ namespace Vheos.Games.ActionPoints
                     coroutineListByGUID.Value.Clear();
                 }
             }
+        }
+        static public void Stop(MonoBehaviour owner, string uid)
+        {
+            AnimationGUID guid = (owner, uid);
+            if (_coroutineListsByGUID.ContainsKey(guid))
+                StopAndRemoveCoroutines(guid);
         }
 
         // Private (common)
