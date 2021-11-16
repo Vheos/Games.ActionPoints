@@ -20,6 +20,7 @@ namespace Vheos.Games.ActionPoints.Editor
             nameof(ActionAnimation.Clip.HandRotation),
             nameof(ActionAnimation.Clip.HandScale),
             nameof(ActionAnimation.Clip.ForwardDistance),
+            nameof(ActionAnimation.Clip.LookAt),
         };
 
         // Edit
