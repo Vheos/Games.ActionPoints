@@ -1,8 +1,10 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
-    using Tools.Extensions.General;
     using Tools.UnityCore;
+    using Tools.Extensions.General;
+    using System.Collections.Generic;
 
     [CreateAssetMenu(fileName = nameof(Action), menuName = nameof(Action), order = 1)]
     public class Action : ScriptableObject
@@ -12,7 +14,8 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected ActionAnimation _Animation = null;
         [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 0;
         [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 0;
-        [SerializeField] protected bool _IsInstant = false;       
+        [SerializeField] protected bool _IsInstant = false;
+        [SerializeField] protected Targetables _Targets;
         [SerializeField] protected AActionEffect.Data[] _EffectDataArray = new AActionEffect.Data[1];
 
         // Publics
@@ -26,11 +29,16 @@ namespace Vheos.Games.ActionPoints
         => _IsInstant;
         public ActionAnimation Animation
         => _Animation;
-        public bool CanBeUsed(Actionable actionable)
+        public bool CanBeUsedBy(Actionable actionable)
+        => !actionable.IsExhausted
+        && actionable.ActionPointsCount + actionable.MaxActionPoints >= _ActionPointsCost
+        && actionable.FocusPointsCount >= _FocusPointsCost;
+        public bool CanTarget(ActionTargetable target)
         {
-            return !actionable.IsExhausted
-                && actionable.ActionPointsCount + actionable.MaxActionPoints >= _ActionPointsCost
-                && actionable.FocusPointsCount >= _FocusPointsCost;
+            foreach (Type type in TargetableTypes)
+                if (!target.Has(type))
+                    return false;
+            return true;
         }
         public void Use(Actionable user, ABaseComponent target)
         {
@@ -38,6 +46,37 @@ namespace Vheos.Games.ActionPoints
             user.ChangeFocusPoints(-_FocusPointsCost);
             foreach (var effectData in _EffectDataArray)
                 effectData.Invoke(user, target);
+        }
+
+        // Privates
+        private Type[] _targetableTypes;
+        private Type[] TargetableTypes
+        {
+            get
+            {
+                if (_targetableTypes == null)
+                {
+                    List<Type> r = new List<Type>();
+                    _Targets.ForEachSetFlag(t => r.Add(GetTargetableType(t)));
+                    _targetableTypes = r.ToArray();
+                }
+                return _targetableTypes;
+            }
+        }
+        private Type GetTargetableType(Targetables targetable)
+        => targetable switch
+        {
+            Targetables.Actionable => typeof(Actionable),
+            Targetables.Woundable => typeof(Woundable),
+            _ => null,
+        };
+
+        // Defines
+        [Flags]
+        protected enum Targetables
+        {
+            Actionable = 1 << 0,
+            Woundable = 1 << 1,
         }
     }
 }
