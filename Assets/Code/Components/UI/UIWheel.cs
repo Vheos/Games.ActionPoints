@@ -34,7 +34,7 @@ namespace Vheos.Games.ActionPoints
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = true;
 
-            AlignButtons(GetWheelDirection(), Settings.Radius, Settings.MaxAngle);
+            AlignButtons();
             IsExpanded = true;
         }
         public void Hide(bool instantly = false)
@@ -51,12 +51,12 @@ namespace Vheos.Games.ActionPoints
             else
                 Show();
         }
-        public void AlignButtons(Vector2 wheelDirection, float radius, float maxAngle)
+        public void AlignButtons()
         {
             for (int i = 0; i < _buttons.Count; i++)
             {
-                float angle = maxAngle * (i - _buttons.Count.Sub(1).Div(2)) / _buttons.Count.Add(1);
-                Vector2 targetLocalPosition = radius * wheelDirection.Rotate(Vector3.back, angle);
+                float angle = Settings.MaxAngle * (i - _buttons.Count.Sub(1).Div(2)) / _buttons.Count.Add(1);
+                Vector2 targetLocalPosition = Settings.Radius * GetWheelDirection().Rotate(Vector3.back, angle);
                 _buttons[i].MoveTo(targetLocalPosition);
             }
         }
