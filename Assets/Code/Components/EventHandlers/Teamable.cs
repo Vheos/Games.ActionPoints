@@ -16,32 +16,37 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public Team Team
         { get; private set; }
-        public void ChangeTeam(Team newTeam)
+        public bool HasAllies
+        => Team != null && Team.Count > 1;
+        public bool IsAlliedWith(Teamable other)
+        => this != other && Team == other.Team;
+        public void TryChangeTeam(Team newTeam)
         {
-            if (newTeam == Team)
+            if (!enabled
+            || newTeam == Team)
                 return;
 
             Team previousTeam = Team;
             if (Team != null)
             {
-                Team.RemoveMember(this);
+                Team.TryRemoveMember(this);
                 Team = null;
             }
             if (newTeam != null)
             {
-                newTeam.AddMember(this);
+                newTeam.TryAddMember(this);
                 Team = newTeam;
             }
             OnTeamChanged?.Invoke(previousTeam, Team);
         }
-        public void LeaveTeam()
-        => ChangeTeam(null);
+        public void TryLeaveTeam()
+        => TryChangeTeam(null);
 
         // Play
         protected override void PlayStart()
         {
             base.PlayStart();
-            ChangeTeam(StartingTeam);
+            TryChangeTeam(StartingTeam);
         }
     }
 }
