@@ -152,10 +152,10 @@ namespace Vheos.Games.ActionPoints
             OnCursorMoved = new Event<Vector2, Vector2>();
             OnCursorMousableChanged = new Event<Mousable, Mousable>();
         }
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
-            base.SubscribeToEvents();
-            SubscribeTo(GetHandler<Updatable>().OnUpdated, OnUpdate);
+            base.AutoSubscribeToEvents();
+            SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
         }
 
         // Defines

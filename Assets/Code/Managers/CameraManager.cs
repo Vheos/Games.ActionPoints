@@ -47,9 +47,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
-            base.SubscribeToEvents();
+            base.AutoSubscribeToEvents();
             SubscribeTo(CursorManager.OnCursorMoved, SetDirtyCursorCamera);
         }
         protected override void PlayAwake()

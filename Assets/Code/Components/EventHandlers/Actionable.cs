@@ -86,16 +86,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Playable
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
-            SubscribeTo(GetHandler<Updatable>().OnUpdated, UpdateProgresses, TryInvokeEvents);
-        }
-
-        // Defines
-        public class Inputs
-        {
-            static public ComponentInput<float> ActionSpeed
-            { get; } = new ComponentInput<float>();
+            SubscribeTo(Get<Updatable>().OnUpdated, UpdateProgresses, TryInvokeEvents);
         }
     }
 }

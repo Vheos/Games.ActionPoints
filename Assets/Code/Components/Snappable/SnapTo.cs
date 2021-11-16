@@ -30,10 +30,10 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
-            base.SubscribeToEvents();
-            SubscribeTo(GetHandler<Updatable>().OnUpdated, TrySnapToTarget);
+            base.AutoSubscribeToEvents();
+            SubscribeTo(Get<Updatable>().OnUpdated, TrySnapToTarget);
         }
 
 #if UNITY_EDITOR

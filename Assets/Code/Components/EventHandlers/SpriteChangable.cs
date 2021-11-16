@@ -21,10 +21,10 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
-            base.SubscribeToEvents();
-            SubscribeTo(GetHandler<Updatable>().OnUpdated, TryInvokeEvents);
+            base.AutoSubscribeToEvents();
+            SubscribeTo(Get<Updatable>().OnUpdated, TryInvokeEvents);
         }
     }
 }

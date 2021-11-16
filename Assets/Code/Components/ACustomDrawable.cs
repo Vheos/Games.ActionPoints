@@ -56,10 +56,10 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
-            base.SubscribeToEvents();
-            SubscribeTo(GetHandler<Updatable>().OnUpdatedLate, UpdateDirtyMProps);
+            base.AutoSubscribeToEvents();
+            SubscribeTo(Get<Updatable>().OnUpdatedLate, UpdateDirtyMProps);
         }
         override protected void PlayAwake()
         {

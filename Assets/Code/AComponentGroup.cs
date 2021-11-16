@@ -23,16 +23,15 @@ namespace Vheos.Games.ActionPoints
                 Vector3 r = Vector3.zero;
                 foreach (var member in _members)
                     r += member.transform.position;
-                r /= _members.Count;
-                return r;
+                return r / _members.Count;
             }
         }
-        virtual public void AddMember(T member)
+        virtual public void TryAddMember(T member)
         {
             if (_members.TryAddUnique(member))
                 OnMembersChanged?.Invoke();
         }
-        virtual public void RemoveMember(T member)
+        virtual public void TryRemoveMember(T member)
         {
             if (_members.Remove(member))
                 OnMembersChanged?.Invoke();
