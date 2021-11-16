@@ -35,12 +35,14 @@ namespace Vheos.Games.ActionPoints
             public Vector3 HandRotation = Vector3.zero;
             [Range(0f, 2f)] public float HandScale = 1f;
             [Range(-0.5f, +0.5f)] public float ForwardDistance = 0f;
+            public LookAtTarget LookAt = LookAtTarget.EnemyMidpoint;
 
-            public bool ForwardDistanceUseIdle = false;
             public bool ArmLengthUseIdle = false;
             public bool ArmRotationUseIdle = false;
             public bool HandRotationUseIdle = false;
             public bool HandScaleUseIdle = false;
+            public bool ForwardDistanceUseIdle = false;
+            public bool LookAtUseIdle = false;
 
             // Publics
             public float TotalTime
@@ -55,17 +57,21 @@ namespace Vheos.Games.ActionPoints
             => Parameters.HasFlag(VisibleParameters.HandRotation);
             public bool HandScaleEnabled
             => Parameters.HasFlag(VisibleParameters.HandScale);
+            public bool LookAtEnabled
+            => Parameters.HasFlag(VisibleParameters.LookAt);
 
-            public Vector3 GetArmRotation(Clip idle)
+            public Vector3 ChooseArmRotation(Clip idle)
             => ArmRotationUseIdle ? idle.ArmRotation : ArmRotation;
-            public float GetArmLength(Clip idle)
+            public float ChooseArmLength(Clip idle)
             => ArmLengthUseIdle ? idle.ArmLength : ArmLength;
-            public float GetHandScale(Clip idle)
+            public float ChooseHandScale(Clip idle)
             => HandScaleUseIdle ? idle.HandScale : HandScale;
-            public Vector3 GetHandRotation(Clip idle)
+            public Vector3 ChooseHandRotation(Clip idle)
             => HandRotationUseIdle ? idle.HandRotation : HandRotation;
-            public float GetForwardDistance(Clip idle)
+            public float ChooseForwardDistance(Clip idle)
             => ForwardDistanceUseIdle ? idle.ForwardDistance : ForwardDistance;
+            public LookAtTarget ChooseLookAt(Clip idle)
+            => LookAtUseIdle ? idle.LookAt : LookAt;
 
             // Defines
             [System.Flags]
@@ -76,6 +82,13 @@ namespace Vheos.Games.ActionPoints
                 HandRotation = 1 << 3,
                 HandScale = 1 << 4,
                 ForwardDistance = 1 << 0,
+                LookAt = 1 << 5,
+            }
+            public enum LookAtTarget
+            {
+                AllyMidpoint,
+                EnemyMidpoint,
+                CombatMidpoint,
             }
         }
     }
