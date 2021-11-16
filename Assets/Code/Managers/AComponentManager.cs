@@ -12,14 +12,12 @@ namespace Vheos.Games.ActionPoints
         // Publics
         static public T FirstActive
         => _components.FirstOrDefault(c => c != null && c.isActiveAndEnabled);
-        static public T AddComponentTo(GameObject t)
+        static public T AddComponentTo(ABaseComponent t)
         {
-            T newComponent = t.AddComponent<T>();
+            T newComponent = t.Add<T>();
             _components.Add(newComponent);
             return newComponent;
         }
-        static public T AddComponentTo(Component t)
-        => AddComponentTo(t.gameObject);
 
         // Privates
         static protected AComponentManager<T> _instance;
