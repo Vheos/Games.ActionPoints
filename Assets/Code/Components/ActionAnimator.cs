@@ -25,16 +25,33 @@ namespace Vheos.Games.ActionPoints
             ActionAnimation.Clip idle = Get<Character>().Idle;
             using (QAnimator.Group(this, null, clip.Duration, null, clip.Style))
             {
-                if (clip.ForwardDistanceEnabled)
-                    transform.GroupAnimatePosition(Get<Character>().CombatPosition + transform.right * clip.GetForwardDistance(idle));
-                if (clip.ArmLengthEnabled)
-                    QAnimator.GroupAnimate(v => _arm.Length = v, _arm.Length, clip.GetArmLength(idle));
                 if (clip.ArmRotationEnabled)
-                    QAnimator.GroupAnimate(AssignArmAngles, _armAngles, clip.GetArmRotation(idle));
+                    QAnimator.GroupAnimate(AssignArmAngles, _armAngles, clip.ChooseArmRotation(idle));
+                if (clip.ArmLengthEnabled)
+                    QAnimator.GroupAnimate(v => _arm.Length = v, _arm.Length, clip.ChooseArmLength(idle));
                 if (clip.HandRotationEnabled)
-                    QAnimator.GroupAnimate(AssignHandAngles, _handAngles, clip.GetHandRotation(idle));
+                    QAnimator.GroupAnimate(AssignHandAngles, _handAngles, clip.ChooseHandRotation(idle));
                 if (clip.HandScaleEnabled)
-                    HandTransform.GroupAnimateLocalScale(clip.GetHandScale(idle).ToVector3());
+                    HandTransform.GroupAnimateLocalScale(clip.ChooseHandScale(idle).ToVector3());
+                if (clip.ForwardDistanceEnabled)
+                    transform.GroupAnimatePosition(Get<Character>().CombatPosition + transform.right * clip.ChooseForwardDistance(idle));
+                if (clip.LookAtEnabled)
+                {
+                    if (!TryGetComponent<Combatable>(out var combatable)
+                    || !combatable.IsInCombat)
+                        return;
+
+                    Vector3 targetPosition = clip.ChooseLookAt(idle) switch
+                    {
+                        ActionAnimation.Clip.LookAtTarget.AllyMidpoint => combatable.AllyMidpoint,
+                        ActionAnimation.Clip.LookAtTarget.EnemyMidpoint => combatable.EnemyMidpoint,
+                        ActionAnimation.Clip.LookAtTarget.CombatMidpoint => combatable.Combat.Midpoint,
+                        _ => float.NaN.ToVector3(),
+                    };
+
+                    transform.GroupAnimateRotation(GetComponent<Character>().LookAtRotation(targetPosition));
+                    QAnimator.Stop(GetComponent<Character>(), QAnimator.GetUID(QAnimator.ComponentProperty.TransformRotation));
+                }
             }
         }
         public void Animate(ActionAnimation.Clip[] clips, int clipIndex = 0)
@@ -45,6 +62,8 @@ namespace Vheos.Games.ActionPoints
             Animate(clips[clipIndex]);
             QAnimator.Delay(this, null, clips[clipIndex].TotalTime, () => Animate(clips, ++clipIndex));
         }
+        public void Stop()
+        => QAnimator.Stop(this, null);
 
         // Privates
         private TransformArm _arm;
