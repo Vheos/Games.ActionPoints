@@ -17,6 +17,7 @@ MonoBehaviour:
   _ActionPointsCost: 0
   _FocusPointsCost: 0
   _IsInstant: 0
+  _Targets: 2
   _EffectDataArray:
   - _Effect: {fileID: 11400000, guid: f18ee305bcc86a94e9cb42c01f8703cd, type: 2}
     _Direction: 0
