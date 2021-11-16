@@ -11,11 +11,12 @@ namespace Vheos.Games.ActionPoints
     public class UITargetingLine : AUIComponent
     {
         // Events
-        public event Action<Mousable, Mousable> OnTargetChanged;
+        public Event<ActionTargetable, ActionTargetable> OnTargetChanged
+        { get; } = new Event<ActionTargetable, ActionTargetable>();
 
         // Publics
-        public Mousable Target
-        => CursorManager.CursorMousable;
+        public ActionTargetable Target
+        { get; private set; }
         public void Initialize()
         {
             _drawable = Get<TargetingLineDrawable>();
@@ -49,17 +50,6 @@ namespace Vheos.Games.ActionPoints
             Get<LineRenderer>().SetPosition(1, _to.position);
             _drawable.TilingX = _from.DistanceTo(_to) * Settings.Tiling;
         }
-        public bool TryGetCursorCharacter(out Character target)
-        {
-            if (CursorManager.CursorMousable.TryNonNull(out var mousable)
-            && mousable.TryGetComponent<Character>(out var character))
-            {
-                target = character;
-                return true;
-            }
-            target = null;
-            return false;
-        }
 
         // Privates
         private Transform _from;
@@ -72,15 +62,19 @@ namespace Vheos.Games.ActionPoints
             Get<LineRenderer>().startWidth = width;
             Get<LineRenderer>().endWidth = width * Settings.EndWidthRatio;
         }
-        private void InvokeOnTargetChanged(Mousable from, Mousable to)
-        => OnTargetChanged?.Invoke(from, to);
-
-        // Play        
-        protected override void SubscribeToEvents()
+        private void TryInvokeEvents(Mousable from, Mousable to)
         {
-            base.SubscribeToEvents();
-            SubscribeTo(GetHandler<Updatable>().OnUpdated, UpdatePositionsAndTiling);
-            SubscribeTo(CursorManager.OnCursorMousableChanged, InvokeOnTargetChanged);
+            ActionTargetable actionFrom = from == null ? null : from.Get<ActionTargetable>();
+            Target = to == null ? null : to.Get<ActionTargetable>();
+            if (actionFrom != Target)
+                OnTargetChanged?.Invoke(actionFrom, Target);
+        }
+        // Play        
+        protected override void AutoSubscribeToEvents()
+        {
+            base.AutoSubscribeToEvents();
+            SubscribeTo(Get<Updatable>().OnUpdated, UpdatePositionsAndTiling);
+            SubscribeTo(CursorManager.OnCursorMousableChanged, TryInvokeEvents);
         }
     }
 }
