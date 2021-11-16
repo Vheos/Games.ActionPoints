@@ -60,16 +60,10 @@ namespace Vheos.Games.ActionPoints
         => Hide(false);
 
         // Play
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
-            base.SubscribeToEvents();
-            SubscribeTo(GetHandler<SpriteChangable>().OnSpriteChanged, UpdateOutlineSprite);
-
-            if (TryGetComponent<Mousable>(out var mousable))
-            {
-                SubscribeTo(mousable.OnGainHighlight, Show);
-                SubscribeTo(mousable.OnLoseHighlight, HideAnimated);
-            }
+            base.AutoSubscribeToEvents();
+            SubscribeTo(Get<SpriteChangable>().OnSpriteChanged, UpdateOutlineSprite);
         }
         protected override void InitializeRenderer(out Renderer renderer)
         {
