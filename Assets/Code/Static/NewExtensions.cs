@@ -92,6 +92,14 @@ namespace Vheos.Games.ActionPoints
         static public Vector3 Append(this float t, Vector3 a)
         => new Vector4(t, a.x, a.y, a.z);
 
+        // Vector components
+        static public Vector3 NewX(this Vector3 t, float a)
+        => new Vector3(a, t.y, t.z);
+        static public Vector3 NewY(this Vector3 t, float a)
+        => new Vector3(t.x, a, t.z);
+        static public Vector3 NewZ(this Vector3 t, float a)
+        => new Vector3(t.x, t.y, a);
+
         // Legacy
         /// <summary> Returns this array of hits sorted by distance from point a. </summary>
         static public RaycastHit[] SortedByDistanceFrom(this RaycastHit[] t, Vector3 a)
