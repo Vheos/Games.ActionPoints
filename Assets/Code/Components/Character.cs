@@ -22,16 +22,10 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected ActionAnimation.Clip _Idle;
 
         // Other
+        public Quaternion LookAtRotation(Vector3 targetPosition)
+        => Quaternion.LookRotation(transform.position.DirectionTowards(targetPosition)).Add(Quaternion.Euler(0, -90f, 0));
         public void LookAt(Transform targetTransform)
-        {
-            if (targetTransform == transform)
-                return;
-
-            if (TryGetComponent<RotateTowards>(out var rotateTowards))
-                rotateTowards.Target = targetTransform;
-            else
-                transform.rotation.SetLookRotation(transform.DirectionTowards(targetTransform));
-        }
+        => transform.AnimateRotation(this, LookAtRotation(targetTransform.position), 1f);
         public Team Team
         => Get<Teamable>().Team;
         public Combat Combat
@@ -73,21 +67,22 @@ namespace Vheos.Games.ActionPoints
         private void TryToggleCombatWithTarget(CursorManager.Button button, Vector3 position)
         {
             _ui.TargetingLine.Hide();
-            if (_ui.TargetingLine.Target.TryNonNull(out var targetMousable)
-            && targetMousable.TryGetComponent<Combatable>(out var targetCombatable))
+            if (_ui.TargetingLine.Target.TryNonNull(out var target)
+            && target.TryGetComponent<Combatable>(out var targetCombatable))
                 if (targetCombatable.IsInCombat)
-                    targetCombatable.LeaveCombat();
+                    targetCombatable.TryLeaveCombat();
                 else
-                    Get<Combatable>().StartCombatWith(targetCombatable);
+                    Get<Combatable>().TryStartCombatWith(targetCombatable);
         }
         private void UpdateAnimatorSpeed(Vector3 from, Vector3 to)
         => Get<Animator>().SetFloat("Speed", from.DistanceTo(to) / Time.deltaTime);
-        private void ResetAnimatorSpeed(Vector3 position)
+        private void ResetAnimatorSpeed()
         => Get<Animator>().SetFloat("Speed", 0f);
         private void UpdateColors(Team from, Team to)
         {
-            Get<SpriteRenderer>().color = to.Color;
-            Get<SpriteOutline>().Color = to.Color;
+            Color color = to != null ? to.Color : Color.white;
+            Get<SpriteRenderer>().color = color;
+            Get<SpriteOutline>().Color = color;
         }
         private void OnCombatChanged(Combat current)
         {
@@ -104,20 +99,41 @@ namespace Vheos.Games.ActionPoints
             }
             Get<Animator>().SetBool("IsInCombat", isInCombat);
         }
-        private void OnDamageReceived(float damage, int wounds)
-        => _ui.PopupHandler.PopDamage(transform.position, damage, wounds);
+        private void OnDamageReceived(float damage, bool isWound)
+        => _ui.PopupHandler.PopDamage(transform.position, damage, isWound);
+        private void OnHasDied()
+        {
+            Get<ActionAnimator>().Stop();
+            Get<ActionTargetable>().LoseTargeting();
+
+            Get<Combatable>().TryLeaveCombat();
+            Get<Combatable>().enabled = false;
+            Get<Teamable>().TryLeaveTeam();
+            Get<Teamable>().enabled = false;
+
+            transform.AnimateLocalRotation(this, transform.localRotation.eulerAngles.NewZ(180f), 1f, null, QAnimator.Curve.QurveInverted);
+        }
+        private void OnTargeterChange(ABaseComponent from, ABaseComponent to)
+        {
+            if (to == null)
+                Get<SpriteOutline>().Hide();
+            else
+                Get<SpriteOutline>().Show();
+        }
 
         // Playable
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
-            base.SubscribeToEvents();
-            SubscribeTo(GetHandler<Mousable>().OnPress, ShowTargetingLine);
-            SubscribeTo(GetHandler<Mousable>().OnRelease, TryToggleCombatWithTarget);
-            SubscribeTo(GetHandler<Movable>().OnMoved, UpdateAnimatorSpeed);
-            SubscribeTo(GetHandler<Movable>().OnStopped, ResetAnimatorSpeed);
-            SubscribeTo(GetHandler<Teamable>().OnTeamChanged, UpdateColors);
-            SubscribeTo(GetHandler<Combatable>().OnCombatChanged, OnCombatChanged);
-            SubscribeTo(GetHandler<Woundable>().OnDamageReceived, OnDamageReceived);
+            base.AutoSubscribeToEvents();
+            SubscribeTo(Get<Mousable>().OnPress, ShowTargetingLine);
+            SubscribeTo(Get<Mousable>().OnRelease, TryToggleCombatWithTarget);
+            SubscribeTo(Get<Movable>().OnMoved, UpdateAnimatorSpeed);
+            SubscribeTo(Get<Movable>().OnStoppedMoving, ResetAnimatorSpeed);
+            SubscribeTo(Get<Teamable>().OnTeamChanged, UpdateColors);
+            SubscribeTo(Get<Combatable>().OnCombatChanged, OnCombatChanged);
+            SubscribeTo(Get<Woundable>().OnDamageReceived, OnDamageReceived);
+            SubscribeTo(Get<Woundable>().OnHasDied, OnHasDied);
+            SubscribeTo(Get<ActionTargetable>().OnTargeterChange, OnTargeterChange);
         }
         protected void DefineComponentInputs()
         {
