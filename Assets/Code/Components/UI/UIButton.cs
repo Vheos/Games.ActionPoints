@@ -29,27 +29,27 @@ namespace Vheos.Games.ActionPoints
         private UICostPointsBar _costPointsBar;
         private Vector2 _originalScale;
         private bool _isTargeting;
+        private ActionTargetable _validTarget;
         private UISettings.ButtonSettings Settings
         => UIManager.Settings.Button;
         private void UpdateUsability(int from, int to)
         {
-            Color targetColor = Action.CanBeUsed(Character.Get<Actionable>()) ? Character.Color : Settings.UnusableColor;
+            Color targetColor = Action.CanBeUsedBy(Character.Get<Actionable>()) ? Character.Color : Settings.UnusableColor;
             Get<SpriteRenderer>().AnimateColor(this, targetColor, Settings.UnusableDuration);
         }
         private void OnGainHighlight()
         {
-            if (!Action.CanBeUsed(Character.Get<Actionable>()))
+            if (!Action.CanBeUsedBy(Character.Get<Actionable>()))
                 return;
 
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.HighlightDuration);
         }
         private void OnPress(CursorManager.Button button, Vector3 location)
         {
-            if (!Action.CanBeUsed(Character.Get<Actionable>()))
+            if (!Action.CanBeUsedBy(Character.Get<Actionable>()))
             {
                 if (Character.Get<Actionable>().IsExhausted)
                     Base.PointsBar.NotifyExhausted();
-
                 if (Character.Get<Actionable>().FocusPointsCount < Action.FocusPointsCost)
                     _costPointsBar.NotifyUnfocused();
                 return;
@@ -58,40 +58,37 @@ namespace Vheos.Games.ActionPoints
             if (!Action.IsInstant)
             {
                 Base.TargetingLine.ShowAndFollowCursor(transform);
+                SubscribeTo(Base.TargetingLine.OnTargetChanged, OnTargetChanged);
+                _isTargeting = true;
+
                 if (Action.Animation.TryNonNull(out var animation))
                     Character.ActionAnimator.Animate(animation.Charge);
-                _isTargeting = true;
             }
 
             transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
         }
-        private void OnHold(CursorManager.Button button, Vector3 location)
-        {
-            if (_isTargeting
-            && Base.TargetingLine.TryGetCursorCharacter(out var target))
-                Character.LookAt(target.transform);
-        }
         private void OnRelease(CursorManager.Button button, Vector3 location)
         {
-            if (!Action.CanBeUsed(Character.Get<Actionable>()))
-                return;
-
             if (Action.IsInstant)
                 Action.Use(Character.Get<Actionable>(), null);
             else if (_isTargeting)
             {
                 Base.TargetingLine.Hide();
-                if (Base.TargetingLine.TryGetCursorCharacter(out var target))
+                UnsubscribeFrom(Base.TargetingLine.OnTargetChanged);
+
+                if (_validTarget != null)
                 {
                     if (Action.Animation.TryNonNull(out var animation))
                         Character.ActionAnimator.Animate(animation.Release);
-                    Action.Use(Character.Get<Actionable>(), target);
+                    Action.Use(Character.Get<Actionable>(), _validTarget);
+                    _validTarget.LoseTargeting();
                 }
-                else
-                     if (Action.Animation.TryNonNull(out var animation))
+                else if (Action.Animation.TryNonNull(out var animation))
                     Character.ActionAnimator.Animate(animation.Cancel);
+
                 _isTargeting = false;
+                _validTarget = null;
             }
 
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.ClickDuration);
@@ -101,14 +98,31 @@ namespace Vheos.Games.ActionPoints
         {
             transform.AnimateLocalScale(this, _originalScale, Settings.HighlightDuration);
         }
+        private void OnTargetChanged(ActionTargetable from, ActionTargetable to)
+        {
+            if (from != null)
+                from.LoseTargeting();
+            _validTarget = null;
+
+            if (to == null
+            || !Action.CanTarget(to))
+                return;
+
+            if (!Character.TryGetComponent<Combatable>(out var combatable) || !combatable.IsInCombat
+            || !to.TryGetComponent<Combatable>(out var combatableOther) || !combatable.IsInCombatWith(combatableOther))
+                return;
+
+            to.GainTargeting(Character);
+            Character.LookAt(to.transform);
+            _validTarget = to;
+        }
 
         // Play
-        protected override void SubscribeToEvents()
+        protected override void AutoSubscribeToEvents()
         {
             Mousable mousable = Get<Mousable>();
             SubscribeTo(mousable.OnGainHighlight, OnGainHighlight);
             SubscribeTo(mousable.OnPress, OnPress);
-            SubscribeTo(mousable.OnHold, OnHold);
             SubscribeTo(mousable.OnRelease, OnRelease);
             SubscribeTo(mousable.OnLoseHighlight, OnLoseHighlight);
             SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, UpdateUsability);
