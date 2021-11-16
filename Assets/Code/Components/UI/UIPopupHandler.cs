@@ -9,10 +9,10 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public void Initialize()
         { }
-        public void PopDamage(Vector3 position, float damage, int wounds)
+        public void PopDamage(Vector3 position, float damage, bool isWound)
         {
             UIDamagePopup newPopup = this.CreateChildComponent<UIDamagePopup>(UIManager.Settings.Prefab.DamagePopup);
-            newPopup.Initialize(position, damage, wounds);
+            newPopup.Initialize(position, damage, isWound);
         }
     }
 }

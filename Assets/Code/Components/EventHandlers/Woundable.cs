@@ -3,16 +3,19 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.Math;
+    using Event = Tools.UnityCore.Event;
 
     public class Woundable : ABaseComponent
     {
         // Events   
-        public Event<float, int> OnDamageReceived
-        { get; } = new Event<float, int>();
-        public Event<float, int> OnHealingReceived
-        { get; } = new Event<float, int>();
+        public Event<float, bool> OnDamageReceived
+        { get; } = new Event<float, bool>();
+        public Event<float, bool> OnHealingReceived
+        { get; } = new Event<float, bool>();
         public Event<int, int> OnWoundsCountChanged
         { get; } = new Event<int, int>();
+        public Event OnHasDied
+        { get; } = new Event();
 
         // Inputs
         public ComponentInput<int> MaxWounds
@@ -24,6 +27,8 @@ namespace Vheos.Games.ActionPoints
 
         // Publics
         public int WoundsCount
+        { get; private set; }
+        public bool IsDead
         { get; private set; }
         public float CalculateBluntDamage(float bluntDamage)
         => bluntDamage.Add(0 - BluntArmor).ClampMin(0);
@@ -56,11 +61,21 @@ namespace Vheos.Games.ActionPoints
 
             int unclampedWoundsDiff = GetRollHitsCount(chance) * isDamage.ToSign();
             WoundsCount = WoundsCount.Add(unclampedWoundsDiff).Clamp(0, MaxWounds);
-            int woundsDiff = previousWoundsCount.DistanceTo(WoundsCount);
+            bool hasWoundsCountChanged = WoundsCount != previousWoundsCount;
 
-            (isDamage ? OnDamageReceived : OnHealingReceived)?.Invoke(chance, woundsDiff);
-            if (woundsDiff != 0)
+            (isDamage ? OnDamageReceived : OnHealingReceived)?.Invoke(chance, hasWoundsCountChanged);
+
+            if (hasWoundsCountChanged)
+            {
                 OnWoundsCountChanged?.Invoke(previousWoundsCount, WoundsCount);
+                if (isDamage && WoundsCount >= MaxWounds)
+                {
+                    IsDead = true;
+                    OnHasDied?.Invoke();
+                }
+            }
+
+
         }
     }
 }

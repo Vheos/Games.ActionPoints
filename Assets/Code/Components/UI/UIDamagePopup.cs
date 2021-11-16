@@ -9,9 +9,8 @@ namespace Vheos.Games.ActionPoints
     public class UIDamagePopup : AUIComponent
     {
         // Publics
-        public void Initialize(Vector3 position, float damage, int wounds)
+        public void Initialize(Vector3 position, float damage, bool isWound)
         {
-            bool isWound = wounds > 0;
             float lerpAlpha = isWound ? 1f : damage / 100f;
             Get<TextMeshPro>().color = Settings.ColorCurve.Evaluate(lerpAlpha);
             transform.localScale = transform.localScale.Mul(Settings.SizeCurve.Evaluate(lerpAlpha));
