@@ -1,12 +1,15 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
-    using Tools.Extensions.Collections;
+    using Tools.UnityCore;
     using Tools.UtilityN;
+    using Tools.Extensions.Collections;
     using Tools.Extensions.General;
 
-    public class CameraManager : AComponentManager<Camera>
+    [DisallowMultipleComponent]
+    sealed public class CameraManager : AComponentManager<CameraManager, Camera>
     {
         // Publics
         static public Camera CursorCamera
@@ -57,6 +60,7 @@ namespace Vheos.Games.ActionPoints
             base.PlayAwake();
             _cursorCamera = FirstActive;
             _cursorCameraLocks = new List<Behaviour>();
+            _cursorCameraDirty = true;
         }
     }
 }

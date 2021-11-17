@@ -1,17 +1,17 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
     using Tools.UnityCore;
 
     [DisallowMultipleComponent]
-    [DefaultExecutionOrder(-1)]
-    public class UIManager : ABaseComponent
+    sealed public class UIManager : AManager<UIManager>
     {
         // Constants
         private const string UI_ROOT_NAME = "UI";
 
         // Inspector
-        [SerializeField] protected UISettings _Settings = null;
+        [SerializeField] private UISettings _Settings = null;
 
         // Publics
         static public UISettings Settings
@@ -19,14 +19,10 @@ namespace Vheos.Games.ActionPoints
         static public Transform HierarchyRoot
         { get; private set; }
 
-        // Privates
-        static private UIManager _instance;
-
         // Play
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            _instance = this;
             HierarchyRoot = new GameObject(UI_ROOT_NAME).transform;
         }
     }

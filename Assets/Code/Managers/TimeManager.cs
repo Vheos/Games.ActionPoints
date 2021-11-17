@@ -1,17 +1,17 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.Math;
 
     [DisallowMultipleComponent]
-    [DefaultExecutionOrder(-1)]
-    public class TimeManager : ABaseComponent
+    sealed public class TimeManager : AManager<TimeManager>
     {
         // Inspector
-        [SerializeField] [Range(0f, 2f)] protected float _TimeScale = 1f;
-        [SerializeField] [Range(10, 1000)] protected int _UpdatesPerSecond = 60;
-        [SerializeField] [Range(10, 100)] protected int _FixedUpdatesPerSecond = 50;
+        [SerializeField] [Range(0f, 2f)] private float _TimeScale = 1f;
+        [SerializeField] [Range(10, 1000)] private int _UpdatesPerSecond = 60;
+        [SerializeField] [Range(10, 100)] private int _FixedUpdatesPerSecond = 50;
 
         // Private
         private void AssignInspectorValues()
