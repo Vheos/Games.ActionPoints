@@ -1,21 +1,19 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
-    using Tools.Extensions.Collections;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
     using Tools.Extensions.General;
-    using System;
 
-    [DefaultExecutionOrder(-1)]
     [DisallowMultipleComponent]
-    public class CursorManager : AEventSubscriber
+    sealed public class CursorManager : AManager<CursorManager>
     {
         // Inspector
-        [SerializeField] protected Button[] _Buttons;
-        [SerializeField] protected GameObject _CursorPrefab;
+        [SerializeField] private Button[] _Buttons;
+        [SerializeField] private GameObject _CursorPrefab;
 
         // Events
         static public Event<Vector2, Vector2> OnCursorMoved
@@ -38,11 +36,10 @@ namespace Vheos.Games.ActionPoints
         => _cursorDistance = CameraManager.FirstActive.DistanceTo(transform);
 
         // Privates
-        static private CursorManager _instance;
-        static private Dictionary<Button, Mousable> _lockedMousablesByButton;
-        static private Mousable _previousCursorMousable;
-        static private Vector3 _previousMousePosition;
         static private float _cursorDistance;
+        static private Vector3 _previousMousePosition;
+        static private Mousable _previousCursorMousable;
+        static private Dictionary<Button, Mousable> _lockedMousablesByButton;
         static private void CreateCursorTransform(GameObject prefab, Component parent)
         {
             if (prefab != null)
@@ -110,7 +107,8 @@ namespace Vheos.Games.ActionPoints
                 // Release
                 if (Input.GetMouseButtonUp((int)button))
                 {
-                    lockedMousable.Release(button, CursorMousableHitInfo.point);
+                    bool isClick = lockedMousable.Trigger.IsUnderCursor(CameraManager.FirstActive);
+                    lockedMousable.Release(button, isClick);
                     if (lockedMousable != CursorMousable)
                         lockedMousable.LoseHighlight();
                     _lockedMousablesByButton.Remove(button);
@@ -139,23 +137,28 @@ namespace Vheos.Games.ActionPoints
                 OnCursorMousableChanged?.Invoke(_previousCursorMousable, CursorMousable);
         }
 
-        // Play
-        override protected void PlayAwake()
+        // Initializers
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static private void StaticInitialize()
         {
-            base.PlayAwake();
-            _instance = this;
-            _previousMousePosition = Input.mousePosition;
-            _previousCursorMousable = CursorMousable;
-            CreateCursorTransform(_CursorPrefab, this);
-
-            _lockedMousablesByButton = new Dictionary<Button, Mousable>();
             OnCursorMoved = new Event<Vector2, Vector2>();
             OnCursorMousableChanged = new Event<Mousable, Mousable>();
         }
+
+        // Play
         protected override void AutoSubscribeToEvents()
         {
             base.AutoSubscribeToEvents();
             SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
+        }
+        override protected void PlayAwake()
+        {
+            base.PlayAwake();
+            _cursorDistance = 0f;
+            _previousMousePosition = Input.mousePosition;
+            _previousCursorMousable = CursorMousable;
+            _lockedMousablesByButton = new Dictionary<Button, Mousable>();
+            CreateCursorTransform(_CursorPrefab, this);
         }
 
         // Defines
