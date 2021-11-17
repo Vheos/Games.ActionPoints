@@ -1,6 +1,6 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System.Collections.Generic;
+    using System;
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.Math;
@@ -8,78 +8,73 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
 
     [RequireComponent(typeof(LineRenderer))]
-    public class UITargetingLine : AUpdatable, IUIHierarchy
+    public class UITargetingLine : AUIComponent
     {
-        // Inspector
-        [Range(0f, 10f)] public float _Tiling = 5f;
-        [Range(0f, 1f)] public float _StartOpacity = 0.25f;
-        [Range(0f, 1f)] public float _StartWidth = 0.1f;
-        [Range(0f, 1f)] public float _EndWidthRatio = 0.25f;
-        [Range(0f, 1f)] public float _WidthAnimDuration = 0.5f;
+        // Events
+        public Event<ActionTargetable, ActionTargetable> OnTargetChanged
+        { get; } = new Event<ActionTargetable, ActionTargetable>();
 
         // Publics
-        public UIBase UI
+        public ActionTargetable Target
         { get; private set; }
-        public void Activate(Transform from, Transform to)
+        public void Initialize()
         {
+            _drawable = Get<TargetingLineDrawable>();
+            Get<LineRenderer>().positionCount = 2;
+            Get<LineRenderer>().startColor = Character.Color.NewA(Settings.StartOpacity);
+            Hide(true);
+        }
+        public void Show(Transform from, Transform to)
+        {
+            enabled = true;
+            this.GOActivate();
+            this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, Settings.StartWidth, Settings.WidthAnimDuration);
+
             _from = from;
             _to = to;
-            _isDeactivating = false;
             UpdatePositionsAndTiling();
-            this.GOActivate();
-            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, _StartWidth, _WidthAnimDuration);
         }
-        public void Deactivate()
+        public void ShowAndFollowCursor(Transform from)
         {
-            _isDeactivating = true;
-            this.Animate(nameof(_lineRenderer.startWidth), SetWidth, _lineRenderer.startWidth, 0f, _WidthAnimDuration, false, this.GODeactivate);
+            CursorManager.SetCursorDistance(from);
+            Show(from, CursorManager.CursorTransform);
+        }
+        public void Hide(bool instantly = false)
+        {
+            enabled = false;
+            this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, 0f, instantly ? 0f : Settings.WidthAnimDuration, this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
         {
-            _lineRenderer.SetPosition(0, _from.position);
-            _lineRenderer.SetPosition(1, _to.position);
-            _lineRenderer.sharedMaterial.mainTextureScale = new Vector2(_from.DistanceTo(_to) * _Tiling, 1);
-        }
-        public bool TryGetCursorCharacter(out Character target)
-        {
-            if (CursorManager.CursorMousable.TryNonNull(out var mousable)
-            && mousable.TryGetComponent<Character>(out var character))
-            {
-                target = character;
-                return true;
-            }
-            target = null;
-            return false;
+            Get<LineRenderer>().SetPosition(0, _from.position);
+            Get<LineRenderer>().SetPosition(1, _to.position);
+            _drawable.TilingX = _from.DistanceTo(_to) * Settings.Tiling;
         }
 
         // Privates
-        private LineRenderer _lineRenderer;
         private Transform _from;
         private Transform _to;
-        private bool _isDeactivating;
+        protected TargetingLineDrawable _drawable;
+        private UISettings.TargetingLineSettings Settings
+        => UIManager.Settings.TargetingLine;
         private void SetWidth(float width)
         {
-            _lineRenderer.startWidth = width;
-            _lineRenderer.endWidth = width * _EndWidthRatio;
+            Get<LineRenderer>().startWidth = width;
+            Get<LineRenderer>().endWidth = width * Settings.EndWidthRatio;
         }
-
-        // Mono
-        public override void PlayAwake()
+        private void TryInvokeEvents(Mousable from, Mousable to)
         {
-            base.PlayStart();
-            name = GetType().Name;
-            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
-
-            _lineRenderer = GetComponent<LineRenderer>();
-            _lineRenderer.positionCount = 2;
-            _lineRenderer.startColor = UI.Character.Color.NewA(_StartOpacity);
-            this.GODeactivate();
+            ActionTargetable actionFrom = from == null ? null : from.Get<ActionTargetable>();
+            Target = to == null ? null : to.Get<ActionTargetable>();
+            if (actionFrom != Target)
+                OnTargetChanged?.Invoke(actionFrom, Target);
         }
-        public override void PlayUpdate()
+        // Play        
+        protected override void DefineAutoSubscriptions()
         {
-            base.PlayUpdate();
-            if (!_isDeactivating)
-                UpdatePositionsAndTiling();
+            base.DefineAutoSubscriptions();
+            SubscribeTo(Get<Updatable>().OnUpdated, UpdatePositionsAndTiling);
+            SubscribeTo(CursorManager.OnCursorMousableChanged, TryInvokeEvents);
         }
     }
 }

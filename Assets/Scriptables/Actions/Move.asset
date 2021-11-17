@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
+  m_Name: Move
+  m_EditorClassIdentifier: 
+  _Sprite: {fileID: 100665763937561807, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+  _Animation: {fileID: 0}
+  _ActionPointsCost: 3
+  _FocusPointsCost: 0
+  _IsTargeted: 0
+  _Targets: 0
+  _EffectDataArray:
+  - _Effect: {fileID: 0}
+    _Direction: 1
+    _Values:
+    - 0

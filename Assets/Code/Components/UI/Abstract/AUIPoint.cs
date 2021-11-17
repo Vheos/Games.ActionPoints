@@ -1,63 +1,39 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System;
     using UnityEngine;
-    using Tools.Extensions.UnityObjects;
-    using Tools.Extensions.Math;
+    using Tools.UnityCore;
 
-    abstract public class AUIPoint : ACustomDrawable, IUIHierarchy
+    abstract public class AUIPoint : AUIComponent
     {
-        // Inspector 
-        public float _CantUseScale = 2.0f;
-        [Range(0f, 1f)] public float _CantUseAnimDuration;
-
         // Publics
-        public UIBase UI
-        { get; private set; }
         public int Index
         { get; set; }
         public void PlayCantUseAnim()
-        => transform.AnimateLocalScale(this, _originalScale, _originalScale * _CantUseScale, _CantUseAnimDuration, true);
+        => transform.AnimateLocalScale(this, _originalScale, _originalScale * Settings.CantUseScale, Settings.CantUseAnimDuration, null, QAnimator.Curve.Boomerang);
 
         // Private
+        protected ActionPointDrawable _drawable;
         private Vector2 _originalScale;
+        protected UISettings.ActionPointSettings Settings
+        => UIManager.Settings.ActionPoint;
 
-        // MProps
-        public Texture Shape
+        // Play
+        protected override void PlayAwake()
         {
-            get => GetTexture(nameof(MProp.Shape));
-            set => SetTexture(nameof(MProp.Shape), value);
+            base.PlayAwake();
+            _originalScale = transform.localScale;
+            _drawable = Get<ActionPointDrawable>();
         }
-        public Color BackgroundColor
+        protected override void PlayStart()
         {
-            get => GetColor(nameof(MProp.ColorC));
-            set => SetColor(nameof(MProp.ColorC), value);
+            base.PlayStart();
+            _drawable.Shape = Settings.ActionShape;
+            _drawable.BackgroundColor = Settings.BackgroundColor;
+            _drawable.ActionColor = Settings.ActionColor;
+            _drawable.FocusColor = Settings.FocusColor;
         }
-        public Color ActionColor
-        {
-            get => GetColor(nameof(MProp.ColorB));
-            set => SetColor(nameof(MProp.ColorB), value);
-        }
-        public Color FocusColor
-        {
-            get => GetColor(nameof(MProp.ColorA));
-            set => SetColor(nameof(MProp.ColorA), value);
-        }
-        public float Opacity
-        {
-            get => GetFloat(nameof(MProp.Opacity));
-            set => SetFloat(nameof(MProp.Opacity), value);
-        }
-        public float ActionProgress
-        {
-            get => GetFloat(nameof(MProp.ThresholdB));
-            set => SetFloat(nameof(MProp.ThresholdB), value);
-        }
-        public float FocusProgress
-        {
-            get => GetFloat(nameof(MProp.ThresholdA));
-            set => SetFloat(nameof(MProp.ThresholdA), value);
-        }
+
+        // Defines
         private enum MProp
         {
             Shape,
@@ -67,20 +43,6 @@ namespace Vheos.Games.ActionPoints
             ThresholdA,
             ThresholdB,
             Opacity,
-        }
-
-        // Mono
-        public override void PlayStart()
-        {
-            base.PlayStart();
-            name = GetType().Name;
-            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
-
-            _originalScale = transform.localScale;
-            Shape = UI._PointActionShape;
-            BackgroundColor = UI._PointBackgroundColor;
-            ActionColor = UI._PointActionColor;
-            FocusColor = UI._PointFocusColor;
         }
     }
 }

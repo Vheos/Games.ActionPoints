@@ -6,14 +6,12 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
 
-    abstract public class AUIPointsBar<T> : AUpdatable, IUIHierarchy where T : AUIPoint
+    abstract public class AUIPointsBar<T> : AUIComponent where T : AUIPoint
     {
-        // Publics
-        public UIBase UI
-        { get; private set; }
-
         // Privates
-        protected List<T> _points;
+        protected List<T> _points = new List<T>();
+        protected UISettings.ActionPointSettings Settings
+        => UIManager.Settings.ActionPoint;
         protected void CreatePoints(int count, GameObject prefab)
         {
             for (int i = 0; i < count; i++)
@@ -36,19 +34,9 @@ namespace Vheos.Games.ActionPoints
         {
             for (int i = 0; i < _points.Count; i++)
             {
-                float localX = (i - _points.Count.Sub(1) / 2f) * (1 + UI._PointsSpacing);
+                float localX = (i - _points.Count.Sub(1) / 2f) * (1 + Settings.Spacing);
                 yield return new Vector2(localX, 0);
             }
-        }
-
-        // Mono
-        public override void PlayStart()
-        {
-            base.PlayStart();
-            name = GetType().Name;
-            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
-
-            _points = new List<T>();
         }
     }
 }

@@ -26,8 +26,7 @@ namespace Vheos.Games.ActionPoints
                 return progress;
 
             float a = _paramsByHalfTime.Evaluate(halfTime);
-            return (1 - a.Pow(progress))
-                 / (1 - a);
+            return (1 - a.Pow(progress)) / (1 - a);
         }
 
         // Privates

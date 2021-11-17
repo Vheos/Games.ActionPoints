@@ -1,39 +1,27 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
     using TMPro;
     using Tools.UnityCore;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
+    using Tools.Extensions.General;
 
-    public class UIDamagePopup : APlayable
+    public class UIDamagePopup : AUIComponent
     {
-        // Inspector
-        public Vector2 _AngleRandomRange = new Vector2(-15, +15);
-        public bool _AlignTextRotationToDirection = false;
-        [Range(0f, 1f)] public float _Distance = 0.5f;
-        [Range(0f, 1f)] public float _FadeInDuration = 0.5f;
-        [Range(0f, 1f)] public float _StayUpDuration = 0.5f;
-        [Range(0f, 1f)] public float _FadeOutDuration = 0.5f;
-        public AnimationCurve _SizeCurve;
-        public Gradient _ColorCurve;
-        [Range(1f, 3f)] public float _WoundPulseScale = 2f;
-        [Range(0f, 1f)] public float _WoundPulseDuration = 0.5f;
-        [Range(0f, 1f)] public float _PercentSignSize = 0.5f;
-
         // Publics
-        public void Initialize(Vector3 position, float damage, int wounds)
+        public void Initialize(Vector3 position, float damage, bool isWound)
         {
-            bool isWound = wounds > 0;
             float lerpAlpha = isWound ? 1f : damage / 100f;
-            _textMesh.color = _ColorCurve.Evaluate(lerpAlpha);
-            transform.localScale = transform.localScale.Mul(_SizeCurve.Evaluate(lerpAlpha));
+            Get<TextMeshPro>().color = Settings.ColorCurve.Evaluate(lerpAlpha);
+            transform.localScale = transform.localScale.Mul(Settings.SizeCurve.Evaluate(lerpAlpha));
             transform.position = position;
             transform.rotation = CameraManager.FirstActive.transform.rotation;
 
-            _textMesh.text = damage.RoundDown().ToString();
-            if (_PercentSignSize > 0f)
-                _textMesh.text += $"<size={_PercentSignSize.ToInvariant("F2")}>%</size>";
+            Get<TextMeshPro>().text = damage.RoundDown().ToString();
+            if (Settings.PercentSignSize > 0f)
+                Get<TextMeshPro>().text += $"<size={Settings.PercentSignSize.ToInvariant("F2")}>%</size>";
 
             FadeIn();
             if (isWound)
@@ -41,36 +29,29 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
-        private TextMeshPro _textMesh;
+        private UISettings.DamagePopupSettings Settings
+        => UIManager.Settings.DamagePopup;
         private void FadeIn()
         {
-            Vector2 localDirection = NewUtility.PointOnCircle(_AngleRandomRange.RandomMinMax() - 90f, 1f, true);
+            Vector2 localDirection = NewUtility.PointOnCircle(Settings.AngleRandomRange.RandomMinMax() - 90f, 1f, true);
             Vector3 direction = localDirection.Rotate(CameraManager.FirstActive.transform.rotation);
-            if (_AlignTextRotationToDirection)
+            if (Settings.AlignTextRotationToDirection)
                 transform.localRotation = Quaternion.LookRotation(transform.forward, localDirection);
 
-            using (AnimationManager.Group(this, null, _FadeInDuration, StayUp))
+            using (QAnimator.Group(this, null, Settings.FadeInDuration, StayUp))
             {
-                transform.GroupAnimateLocalPosition(direction * _Distance);
-                _textMesh.GroupAnimateAlpha(1f);
+                transform.GroupAnimateLocalPosition(direction * Settings.Distance);
+                Get<TextMeshPro>().GroupAnimateAlpha(0f, 1f);
             }
         }
         private void StayUp()
         {
-            var componentProperty = AnimationManager.GetUID(AnimationManager.ComponentProperty.TextMeshProAlpha);
-            AnimationManager.Wait(this, componentProperty, _StayUpDuration, FadeOut);
+            var componentProperty = QAnimator.GetUID(QAnimator.ComponentProperty.TextMeshProColor);
+            QAnimator.Delay(this, componentProperty, Settings.StayUpDuration, FadeOut);
         }
         private void FadeOut()
-        => _textMesh.AnimateAlpha(this, 0f, _FadeOutDuration, false, () => this.DestroyObject());
+        => Get<TextMeshPro>().AnimateAlpha(this, 0f, Settings.FadeOutDuration, () => this.DestroyObject());
         private void Pulse()
-        => transform.AnimateLocalScale(this, transform.localScale * _WoundPulseScale, _WoundPulseDuration, true, Pulse);
-
-        // Mono
-        public override void PlayAwake()
-        {
-            base.PlayAwake();
-            _textMesh = GetComponent<TextMeshPro>();
-            _textMesh.alpha = 0f;
-        }
+        => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration, Pulse, QAnimator.Curve.Boomerang);
     }
 }

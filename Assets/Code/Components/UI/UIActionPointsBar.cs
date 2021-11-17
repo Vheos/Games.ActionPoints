@@ -1,53 +1,63 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System.Collections.Generic;
     using UnityEngine;
-    using Tools.UnityCore;
-    using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
+    using Tools.UnityCore;
 
     public class UIActionPointsBar : AUIPointsBar<UIActionPoint>
     {
+        // Publics  
+        public void Initialize()
+        {
+            CreatePoints(Character.Get<Actionable>().MaxActionPoints, UIManager.Settings.Prefab.ActionPoint);
+            foreach (var point in _points)
+                point.Initialize();
+
+            if (TryGetComponent<MoveTowards>(out var moveTowards))
+                moveTowards.Target = Character.transform;
+            if (TryGetComponent<RotateAs>(out var rotateAs))
+                rotateAs.Target = CameraManager.FirstActive.transform;
+
+            _originalScale = transform.localScale;
+            AlignPoints();
+            Hide(true);
+        }
+        public void Show()
+        {
+            this.GOActivate();
+            _visualActionProgress = 0;
+            _visualFocusProgress = 0;
+            foreach (var point in _points)
+                point.ResetVisuals();
+            transform.AnimateLocalScale(this, _originalScale, Settings.AnimDuration);
+        }
+        public void Hide(bool instantly = false)
+        => transform.AnimateLocalScale(this, Vector3.zero, instantly ? 0f : Settings.AnimDuration, this.GODeactivate);
+        public void NotifyExhausted()
+        {
+            for (int i = 0; i <= Character.Get<Actionable>().ActionPointsCount.Abs(); i++)
+                _points[i].PlayCantUseAnim();
+        }
+
         // Privates
+        private Vector3 _originalScale;
         private float _visualActionProgress;
         private float _visualFocusProgress;
         private void UpdateVisualProgresses()
         {
-            float lerpAlpha = NewUtility.LerpHalfTimeToAlpha(UI._PointVisualProgressHalfTime);
-            _visualActionProgress = _visualActionProgress.Lerp(UI.Character.ActionProgress, lerpAlpha);
-            _visualFocusProgress = _visualFocusProgress.Lerp(UI.Character.FocusProgress, lerpAlpha);
-        }
-        private void UpdatePoints()
-        {
+            float lerpAlpha = NewUtility.LerpHalfTimeToAlpha(Settings.VisualProgressHalfTime);
+            _visualActionProgress = _visualActionProgress.Lerp(Character.Get<Actionable>().ActionProgress, lerpAlpha);
+            _visualFocusProgress = _visualFocusProgress.Lerp(Character.Get<Actionable>().FocusProgress, lerpAlpha);
+
             for (int i = 0; i < _points.Count; i++)
-                _points[i].UpdateLocalProgresses(i, _visualActionProgress, _visualFocusProgress);
+                _points[i].UpdateLocalProgresses(_visualActionProgress, _visualFocusProgress);
         }
 
-        // Publics
-        public void NotifyExhausted()
+        // Play
+        protected override void DefineAutoSubscriptions()
         {
-            for (int i = 0; i <= UI.Character.ActionPointsCount.Abs(); i++)
-                _points[i].PlayCantUseAnim();
-        }
-
-        // Mono
-        public override void PlayStart()
-        {
-            base.PlayStart();
-
-            if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards._Target = UI.Character.transform;
-            if (TryGetComponent<RotateAs>(out var rotateAs))
-                rotateAs._Target = CameraManager.FirstActive.transform;
-
-            CreatePoints(UI.Character._RawMaxPoints, UI._PrefabActionPoint);
-            AlignPoints();
-        }
-        override public void PlayUpdate()
-        {
-            base.PlayUpdate();
-            UpdateVisualProgresses();
-            UpdatePoints();
+            base.DefineAutoSubscriptions();
+            SubscribeTo(Get<Updatable>().OnUpdated, UpdateVisualProgresses);
         }
     }
 }

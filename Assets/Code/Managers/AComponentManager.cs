@@ -1,36 +1,33 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
-    using System.Linq;
 
-    [DefaultExecutionOrder(-1)]
-    [DisallowMultipleComponent]
-    abstract public class AComponentManager<T> : APlayable where T : Behaviour
+    abstract public class AComponentManager<TManager, TComponent> : AManager<TManager>
+        where TManager : AManager<TManager>
+        where TComponent : Behaviour
     {
         // Publics
-        static public T FirstActive
+        static public TComponent FirstActive
         => _components.FirstOrDefault(c => c != null && c.isActiveAndEnabled);
-        static public T AddComponentTo(GameObject t)
+        static public TComponent AddComponentTo(ABaseComponent t)
         {
-            T newComponent = t.AddComponent<T>();
+            TComponent newComponent = t.Add<TComponent>();
             _components.Add(newComponent);
             return newComponent;
         }
-        static public T AddComponentTo(Component t)
-        => AddComponentTo(t.gameObject);
 
         // Privates
-        static protected AComponentManager<T> _instance;
-        static protected List<T> _components;
+        static protected List<TComponent> _components;
 
-        // Mono
-        public override void PlayAwake()
+        // Play
+        protected override void PlayAwake()
         {
             base.PlayAwake();
-            _instance = this;
-            _components = new List<T>(FindObjectsOfType<T>(true));
+            _components = new List<TComponent>(FindObjectsOfType<TComponent>(true));
         }
     }
 }

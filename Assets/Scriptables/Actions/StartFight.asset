@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
+  m_Name: StartFight
+  m_EditorClassIdentifier: 
+  _Sprite: {fileID: 0}
+  _Animation: {fileID: 0}
+  _ActionPointsCost: 0
+  _FocusPointsCost: 0
+  _IsInstant: 0
+  _EffectDataArray:
+  - _Effect: {fileID: 0}
+    _Direction: 1
+    _Values:
+    - 0

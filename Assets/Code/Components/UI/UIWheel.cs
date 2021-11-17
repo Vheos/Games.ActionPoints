@@ -7,80 +7,76 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
 
-    public class UIWheel : APlayable, IUIHierarchy
+    public class UIWheel : AUIComponent
     {
-        // Inspector
-        [Range(0f, 1f)] public float _AnimDuration;
-
         // Publics
-        public UIBase UI
-        { get; private set; }
         public bool IsExpanded
         { get; private set; }
-        public void AlignButtons(Vector2 wheelDirection, float radius, float maxAngle)
+        public void Initialize()
         {
-            for (int i = 0; i < _buttons.Count; i++)
+            foreach (var action in Character.Get<Actionable>().Actions.Value)
             {
-                float angle = maxAngle * (i - _buttons.Count.Sub(1).Div(2)) / _buttons.Count.Add(1);
-                Vector2 targetLocalPosition = radius * wheelDirection.Rotate(Vector3.back, angle);
-                _buttons[i].MoveTo(targetLocalPosition);
+                UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Settings.Prefab.Button);
+                newButton.Initialize(action);
+                _buttons.Add(newButton);
             }
-        }
-        public void ExpandButtons()
-        {
-            transform.AnimateLocalScale(this, Vector3.one, _AnimDuration);
-            foreach (var button in _buttons)
-                button.RecieveMouseEvents = true;
 
-            AlignButtons(GetWheelDirection(), UI._WheelRadius, UI._WheelMaxAngle);
+            if (TryGetComponent<MoveTowards>(out var moveTowards))
+                moveTowards.Target = Character.transform;
+            if (TryGetComponent<RotateAs>(out var rotateAs))
+                rotateAs.Target = CameraManager.FirstActive.transform;
+            Hide(true);
+        }
+        public void Show()
+        {
+            this.GOActivate();
+            transform.AnimateLocalScale(this, Vector3.one, Settings.AnimDuration);
+            foreach (var button in _buttons)
+                button.Get<Mousable>().enabled = true;
+
+            AlignButtons();
             IsExpanded = true;
         }
-        public void CollapseButtons()
+        public void Hide(bool instantly = false)
         {
-            transform.AnimateLocalScale(this, Vector3.zero, _AnimDuration);
+            transform.AnimateLocalScale(this, Vector3.zero, instantly ? 0f : Settings.AnimDuration, this.GODeactivate);
             foreach (var button in _buttons)
-                button.RecieveMouseEvents = false;
+                button.Get<Mousable>().enabled = false;
             IsExpanded = false;
         }
         public void Toggle()
         {
             if (IsExpanded)
-                CollapseButtons();
+                Hide();
             else
-                ExpandButtons();
+                Show();
+        }
+        public void AlignButtons()
+        {
+            for (int i = 0; i < _buttons.Count; i++)
+            {
+                float angle = Settings.MaxAngle * (i - _buttons.Count.Sub(1).Div(2)) / _buttons.Count.Add(1);
+                Vector2 targetLocalPosition = Settings.Radius * GetWheelDirection().Rotate(Vector3.back, angle);
+                _buttons[i].MoveTo(targetLocalPosition);
+            }
         }
 
         // Privates
+        private readonly List<UIButton> _buttons = new List<UIButton>();
+        private UISettings.WheelSettings Settings
+        => UIManager.Settings.Wheel;
         private Vector2 GetWheelDirection()
         {
-            if (!UI.Character.Team.TryNonNull(out var team)
-            || team.Count <= 1)
+            Vector3 midpoint;
+            if (Character.Team.TryNonNull(out var team)
+            && team.Count > 1)
+                midpoint = team.Midpoint;
+            else if (Character.Combat.TryNonNull(out var combat))
+                midpoint = combat.Midpoint;
+            else
                 return Vector3.up;
 
-            return team.Midpoint.ScreenOffsetTo(UI.Character.transform.position, CameraManager.FirstActive).normalized;            
-        }
-        private List<UIButton> _buttons;
-
-        // Mono
-        public override void PlayStart()
-        {
-            base.PlayStart();
-            name = GetType().Name;
-            UI = transform.parent.GetComponent<IUIHierarchy>().UI;
-
-            if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards._Target = UI.Character.transform;
-            if (TryGetComponent<RotateAs>(out var rotateAs))
-                rotateAs._Target = CameraManager.FirstActive.transform;
-
-            _buttons = new List<UIButton>();
-            foreach (var action in UI.Character._Actions)
-            {
-                UIButton newButton = this.CreateChildComponent<UIButton>(UI._PrefabButton);
-                newButton.Action = action;
-                _buttons.Add(newButton);
-            }
-            CollapseButtons();
+            return midpoint.ScreenOffsetTo(Character.transform.position, CameraManager.FirstActive).normalized;
         }
     }
 }

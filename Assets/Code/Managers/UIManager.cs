@@ -1,34 +1,28 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
     using Tools.UnityCore;
 
     [DisallowMultipleComponent]
-    [DefaultExecutionOrder(-1)]
-    public class UIManager : APlayable
+    sealed public class UIManager : AManager<UIManager>
     {
         // Constants
         private const string UI_ROOT_NAME = "UI";
 
         // Inspector
-        public GameObject _PrefabUIBase = null;
+        [SerializeField] private UISettings _Settings = null;
 
         // Publics
-        static public GameObject PrefabUIBase
-        => _instance._PrefabUIBase;
+        static public UISettings Settings
+        => _instance._Settings;
         static public Transform HierarchyRoot
         { get; private set; }
-        static public Camera Camera
-        { get; private set; }
 
-        // Privates
-        static private UIManager _instance;
-
-        // Mono
-        public override void PlayAwake()
+        // Play
+        protected override void PlayAwake()
         {
             base.PlayAwake();
-            _instance = this;
             HierarchyRoot = new GameObject(UI_ROOT_NAME).transform;
         }
     }

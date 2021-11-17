@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
 
     [DisallowMultipleComponent]
-    abstract public class ASnappable : APlayable
+    abstract public class ASnappable : ABaseComponent
     {
         // Public
         abstract public Vector3 GetClosestSurfacePointLocal(Vector3 point);
@@ -14,10 +14,11 @@ namespace Vheos.Games.ActionPoints
 
 #if UNITY_EDITOR
         // Inspector
-        public Color _Color = Color.green;
-        abstract public void DrawGizmo();
+        [SerializeField] protected Color _Color = Color.green;
+        virtual public void DrawGizmo()
+        { }
 
-        // Mono
+        // Play
         private void OnDrawGizmos()
         => DrawGizmo();
 #endif

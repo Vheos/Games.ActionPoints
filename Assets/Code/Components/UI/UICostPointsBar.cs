@@ -2,8 +2,6 @@ namespace Vheos.Games.ActionPoints
 {
     using System.Collections.Generic;
     using UnityEngine;
-    using Tools.UnityCore;
-    using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
 
     public class UICostPointsBar : AUIPointsBar<UICostPoint>
@@ -11,9 +9,20 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public UIButton Button
         { get; set; }
+        public void Initialize(UIButton button)
+        {
+            Button = button;
+            int pointsCount = Button.Action.ActionPointsCost + Button.Action.FocusPointsCost;
+            CreatePoints(pointsCount, UIManager.Settings.Prefab.CostPoint);
+            foreach (var point in _points)
+                point.Initialize(this);
+
+            transform.localPosition = Button.transform.localScale.Mul(+0.5f, -1f, 0f);
+            AlignPoints();
+        }
         public void NotifyUnfocused()
         {
-            for (int i = 0; i < Button.Action._FocusPointsCost; i++)
+            for (int i = 0; i < Button.Action.FocusPointsCost; i++)
                 _points[_points.Count - 1 - i].PlayCantUseAnim();
         }
 
@@ -50,19 +59,6 @@ namespace Vheos.Games.ActionPoints
                     yield return NewUtility.PointOnCircle(-18, pentaSide);
                     break;
             }
-        }
-
-        // Mono
-        public override void PlayStart()
-        {
-            base.PlayStart();
-            transform.localPosition = Button.transform.localScale.Mul(+0.5f, -1f, 0f);
-            int pointsCount = Button.Action._ActionPointsCost + Button.Action._FocusPointsCost;
-            CreatePoints(pointsCount, UI._PrefabCostPoint);
-            AlignPoints();
-
-            foreach (var point in _points)
-                point.CostPointsBar = this;
         }
     }
 }

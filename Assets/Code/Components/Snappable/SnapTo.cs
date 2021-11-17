@@ -4,13 +4,13 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
 
-    public class SnapTo : AUpdatable
+    public class SnapTo : AEventSubscriber
     {
         // Inspector
-        public bool _RunInEditor = true;
-        public ASnappable _Snappable = null;
-        public Vector3 _Offset = Vector3.zero;
-        [Range(0f, 1f)] public float _HalfTime = 0.1f;
+        [SerializeField] protected bool _RunInEditor = true;
+        [SerializeField] protected ASnappable _Snappable = null;
+        [SerializeField] protected Vector3 _Offset = Vector3.zero;
+        [SerializeField] [Range(0f, 1f)] protected float _HalfTime = 0.1f;
 
         // Public
         public bool IsActive
@@ -20,14 +20,20 @@ namespace Vheos.Games.ActionPoints
         public void Snap(float lerpAlpha)
         => transform.position = transform.position.Lerp(TargetPosition, lerpAlpha);
 
-        // Mono
-        public override void PlayUpdate()
+        // Private
+        public void TrySnapToTarget()
         {
-            base.PlayUpdate();
             if (_Snappable == null)
                 return;
 
             Snap(NewUtility.LerpHalfTimeToAlpha(_HalfTime));
+        }
+
+        // Play
+        protected override void DefineAutoSubscriptions()
+        {
+            base.DefineAutoSubscriptions();
+            SubscribeTo(Get<Updatable>().OnUpdated, TrySnapToTarget);
         }
 
 #if UNITY_EDITOR

@@ -10,11 +10,14 @@ namespace Vheos.Games.ActionPoints
 
 #if UNITY_EDITOR
         // Inspector
-        [Range(3, 60)] public int _Vertices = 12;
+        [SerializeField] [Range(3, 60)] protected int _Vertices = 12;
 
         // Overrides
         public override void DrawGizmo()
-        => Editor.EditorUtility.DrawCircle(Vector3.zero, 0.5f, transform, _Color, _Vertices);
+        {
+            base.DrawGizmo();
+            Editor.EditorUtility.DrawCircle(Vector3.zero, 0.5f, transform, _Color, _Vertices);
+        }
 #endif
     }
 }

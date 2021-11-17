@@ -1,35 +1,20 @@
 namespace Vheos.Games.ActionPoints
 {
-    using UnityEngine;
-
     public class UICostPoint : AUIPoint
     {
-        // Inspector
-        [Range(0f, 1f)] public float _Opacity = 0.5f;
-
         // Publics
         public UICostPointsBar CostPointsBar
         { get; set; }
-
-        // Mono
-        public override void PlayStart()
+        public void Initialize(UICostPointsBar costPointsBar)
         {
-            base.PlayStart();
-            Opacity = _Opacity;
-            ActionProgress = 1f;
+            CostPointsBar = costPointsBar;
 
-            bool isActionPoint = Index < CostPointsBar.Button.Action._ActionPointsCost;
-            FocusProgress = isActionPoint ? 0f : 1f;
-            Shape = isActionPoint ? UI._PointActionShape : UI._PointFocusShape;
+            _drawable.Opacity = Settings.CostOpacity;
+            _drawable.ActionProgress = 1f;
+
+            bool isActionPoint = Index < CostPointsBar.Button.Action.ActionPointsCost;
+            _drawable.FocusProgress = isActionPoint ? 0f : 1f;
+            _drawable.Shape = isActionPoint ? Settings.ActionShape : Settings.FocusShape;
         }
     }
 }
-
-/*
-// Privates
-public void UpdateColor(int _, int actionPointsCount)
-=> ActionColor = Index < actionPointsCount ? UI._PointActionColor : UI._PointExhaustColor;
-
-UpdateColor(0, UI.Character.ActionPointsCount);
-UI.Character.OnActionPointsCountChanged += UpdateColor;
-*/

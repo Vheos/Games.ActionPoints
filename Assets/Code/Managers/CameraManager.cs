@@ -1,12 +1,15 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
-    using Tools.Extensions.Collections;
+    using Tools.UnityCore;
     using Tools.UtilityN;
+    using Tools.Extensions.Collections;
     using Tools.Extensions.General;
 
-    public class CameraManager : AComponentManager<Camera>
+    [DisallowMultipleComponent]
+    sealed public class CameraManager : AComponentManager<CameraManager, Camera>
     {
         // Publics
         static public Camera CursorCamera
@@ -24,8 +27,6 @@ namespace Vheos.Games.ActionPoints
                 return _cursorCamera;
             }
         }
-        static public void SetDirtyCursorCamera()
-        => _cursorCameraDirty = true;
         static public void LockCursorCamera(Behaviour owner)
         => _cursorCameraLocks.TryAddUnique(owner);
         static public void UnlockCursorCamera(Behaviour owner)
@@ -46,12 +47,18 @@ namespace Vheos.Games.ActionPoints
             return null;
         }
 
-        // Mono
-        public override void PlayAwake()
+        // Play
+        protected override void DefineAutoSubscriptions()
+        {
+            base.DefineAutoSubscriptions();
+            SubscribeTo(CursorManager.OnCursorMoved, (from, to) => _cursorCameraDirty = true);
+        }
+        protected override void PlayAwake()
         {
             base.PlayAwake();
+            _cursorCamera = FirstActive;
             _cursorCameraLocks = new List<Behaviour>();
-            CursorManager.OnCameraMoved += (from, to) => SetDirtyCursorCamera();
+            _cursorCameraDirty = true;
         }
     }
 }
