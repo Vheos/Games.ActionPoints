@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d22340c22be4e94a8d16ca7eeb32c9d, type: 3}
-  m_Name: Settings
+  m_Name: UI
   m_EditorClassIdentifier: 
   _Prefab:
     Base: {fileID: 26440852318934822, guid: a8e94a12ea3b6094290911fc6c6cb467, type: 3}

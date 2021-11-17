@@ -38,7 +38,4 @@ sysinfo.txt
 
 # My
 Logs/
-Assets/Test/
-Assets/Test.meta
-Assets/Trash/
-Assets/Trash.meta
+Assets/Ignored/
