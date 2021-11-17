@@ -62,7 +62,7 @@ namespace Vheos.Games.ActionPoints
 
         // Private
         private UIBase _ui;
-        private void ShowTargetingLine(CursorManager.Button button, Vector3 position)
+        private void OnPress(CursorManager.Button button, Vector3 position)
         => _ui.TargetingLine.ShowAndFollowCursor(transform);
         private void OnRelease(CursorManager.Button button, bool isClick)
         {
@@ -73,7 +73,7 @@ namespace Vheos.Games.ActionPoints
                 _ui.Wheel.Toggle();
                 return;
             }
-            
+
             if (_ui.TargetingLine.Target.TryNonNull(out var target)
             && target.TryGetComponent<Combatable>(out var targetCombatable))
                 if (targetCombatable.IsInCombat)
@@ -81,10 +81,8 @@ namespace Vheos.Games.ActionPoints
                 else
                     Get<Combatable>().TryStartCombatWith(targetCombatable);
         }
-        private void UpdateAnimatorSpeed(Vector3 from, Vector3 to)
-        => Get<Animator>().SetFloat("Speed", from.DistanceTo(to) / Time.deltaTime);
-        private void ResetAnimatorSpeed()
-        => Get<Animator>().SetFloat("Speed", 0f);
+        private void SetAnimatorMoveSpeed(float speed)
+        => Get<Animator>().SetFloat("Speed", speed);
         private void UpdateColors(Team from, Team to)
         {
             Color color = to != null ? to.Color : Color.white;
@@ -97,7 +95,9 @@ namespace Vheos.Games.ActionPoints
             if (isInCombat)
             {
                 _ui.PointsBar.Show();
-                _ui.Wheel.Show();
+
+                if (Has<PlayerController>())
+                    _ui.Wheel.Show();
 
                 foreach (var ally in Get<Teamable>().Allies)
                     if (ally.TryGetComponent<Combatable>(out var allyCombatable))
@@ -133,19 +133,6 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Playable
-        protected override void AutoSubscribeToEvents()
-        {
-            base.AutoSubscribeToEvents();
-            SubscribeTo(Get<Mousable>().OnPress, ShowTargetingLine);
-            SubscribeTo(Get<Mousable>().OnRelease, OnRelease);
-            SubscribeTo(Get<Movable>().OnMoved, UpdateAnimatorSpeed);
-            SubscribeTo(Get<Movable>().OnStoppedMoving, ResetAnimatorSpeed);
-            SubscribeTo(Get<Teamable>().OnTeamChanged, UpdateColors);
-            SubscribeTo(Get<Combatable>().OnCombatChanged, OnCombatChanged);
-            SubscribeTo(Get<Woundable>().OnDamageReceived, OnDamageReceived);
-            SubscribeTo(Get<Woundable>().OnHasDied, OnHasDied);
-            SubscribeTo(Get<ActionTargetable>().OnTargeterChange, OnTargeterChange);
-        }
         protected void DefineComponentInputs()
         {
             Get<Actionable>().MaxActionPoints.Set(() => _MaxPoints);
@@ -158,9 +145,22 @@ namespace Vheos.Games.ActionPoints
             Get<Teamable>().StartingTeam.Set(() => _StartingTeam switch
             {
                 Team.Predefined.Players => Team.Players,
-                Team.Predefined.Enemies => Team.Enemies,
+                Team.Predefined.Enemies => Team.AI,
                 _ => null,
             });
+        }
+        protected override void DefineAutoSubscriptions()
+        {
+            base.DefineAutoSubscriptions();
+            SubscribeTo(Get<Mousable>().OnPress, OnPress);
+            SubscribeTo(Get<Mousable>().OnRelease, OnRelease);
+            SubscribeTo(Get<Movable>().OnMoved, (from, to) => SetAnimatorMoveSpeed(from.DistanceTo(to) / Time.deltaTime));
+            SubscribeTo(Get<Movable>().OnStoppedMoving, () => SetAnimatorMoveSpeed(0f));
+            SubscribeTo(Get<Teamable>().OnTeamChanged, UpdateColors);
+            SubscribeTo(Get<Combatable>().OnCombatChanged, OnCombatChanged);
+            SubscribeTo(Get<Woundable>().OnDamageReceived, OnDamageReceived);
+            SubscribeTo(Get<Woundable>().OnHasDied, OnHasDied);
+            SubscribeTo(Get<ActionTargetable>().OnTargeterChange, OnTargeterChange);
         }
         protected override void PlayAwake()
         {

@@ -20,7 +20,7 @@ namespace Vheos.Games.ActionPoints
             Get<SpriteRenderer>().color = Character.Color;
             _originalScale = transform.localScale;
 
-            UpdateUsability(0, 0);
+            UpdateUsability();
         }
         public void MoveTo(Vector2 targetLocalPosition)
         => transform.AnimateLocalPosition(this, targetLocalPosition, Settings.AnimDuration);
@@ -32,13 +32,11 @@ namespace Vheos.Games.ActionPoints
         private ActionTargetable _validTarget;
         private UISettings.ButtonSettings Settings
         => UIManager.Settings.Button;
-        private void UpdateUsability(int from, int to)
+        private void UpdateUsability()
         {
             Color targetColor = Action.CanBeUsedBy(Character.Get<Actionable>()) ? Character.Color : Settings.UnusableColor;
             Get<SpriteRenderer>().AnimateColor(this, targetColor, Settings.UnusableDuration);
         }
-        private void UpdateUsability(bool state)
-        => UpdateUsability(0, 0);
         private void OnGainHighlight()
         {
             if (!Action.CanBeUsedBy(Character.Get<Actionable>()))
@@ -121,16 +119,16 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void AutoSubscribeToEvents()
+        protected override void DefineAutoSubscriptions()
         {
             Mousable mousable = Get<Mousable>();
             SubscribeTo(mousable.OnGainHighlight, OnGainHighlight);
             SubscribeTo(mousable.OnPress, OnPress);
             SubscribeTo(mousable.OnRelease, OnRelease);
             SubscribeTo(mousable.OnLoseHighlight, OnLoseHighlight);            
-            SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, UpdateUsability);
-            SubscribeTo(Character.Get<Actionable>().OnExhaustStateChanged, UpdateUsability);
-            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, UpdateUsability);            
+            SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, (from, to) => UpdateUsability());
+            SubscribeTo(Character.Get<Actionable>().OnExhaustStateChanged, (state) => UpdateUsability());
+            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, (from, to) => UpdateUsability());            
         }
     }
 }
