@@ -1,6 +1,8 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System.Collections.Generic;
+    using System;
+    using UnityEngine;
+    using Tools.UnityCore;  
 
     sealed public class Combat : AComponentGroup<Combatable>
     {
@@ -8,17 +10,25 @@ namespace Vheos.Games.ActionPoints
         public override void TryRemoveMember(Combatable member)
         {
             base.TryRemoveMember(member);
-            if (_members.Count == 1)
-                _members[0].TryLeaveCombat();
+
+            if (!_isEnding
+            && _members.TryGet(0, out var firstMember)
+            && !firstMember.HasAnyEnemies)
+                End();       
         }
 
         // Privates
-        private Dictionary<Team, Combatable> _combatablesByTeam;
+        private bool _isEnding;
+        private void End()
+        {
+            _isEnding = true;
+            foreach (var member in _members.MakeCopy())
+                member.TryLeaveCombat();
+            _isEnding = false;
+        }
 
         // Initializers
-        public Combat() : base()
-        => _combatablesByTeam = new Dictionary<Team, Combatable>();
-        public Combat(params Combatable[] combatables) : this()
+        public Combat(params Combatable[] combatables) : base()
         => _members.AddRange(combatables);
     }
 }
