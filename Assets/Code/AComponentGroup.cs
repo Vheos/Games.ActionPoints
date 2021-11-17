@@ -17,15 +17,7 @@ namespace Vheos.Games.ActionPoints
         public int Count
         => _members.Count;
         public Vector3 Midpoint
-        {
-            get
-            {
-                Vector3 r = Vector3.zero;
-                foreach (var member in _members)
-                    r += member.transform.position;
-                return r / _members.Count;
-            }
-        }
+        => _members.Midpoint();
         virtual public void TryAddMember(T member)
         {
             if (_members.TryAddUnique(member))
