@@ -679,6 +679,23 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 5856196702644929917, guid: a31ea5a96b25aa14b95c9343d896e018, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a31ea5a96b25aa14b95c9343d896e018, type: 3}
+--- !u!1 &382416277 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2577891044044771577, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+  m_PrefabInstance: {fileID: 1477745305}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &382416295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382416277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3bd75281fe5434eb922cc2dfe28f81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &563479086 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6382050970733388425, guid: 2f3897690fa4d7a47bf1af40be412a5e, type: 3}
@@ -772,7 +789,7 @@ GameObject:
   m_Component:
   - component: {fileID: 702542446}
   m_Layer: 0
-  m_Name: TeamA
+  m_Name: Players
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -932,11 +949,62 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f3897690fa4d7a47bf1af40be412a5e, type: 3}
+--- !u!1 &1212936114 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2577891044044771577, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+  m_PrefabInstance: {fileID: 1413291433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1212936132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212936114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12ba0a159e4096d41805880690a505cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1217738696 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2577891044044771581, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
   m_PrefabInstance: {fileID: 228291841}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254265918 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2577891044044771577, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+  m_PrefabInstance: {fileID: 228291841}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1254265936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254265918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12ba0a159e4096d41805880690a505cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1306955111 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2577891044044771577, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
+  m_PrefabInstance: {fileID: 1916841631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1306955129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306955111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3bd75281fe5434eb922cc2dfe28f81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1389335480 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2577891044044771581, guid: df2ef0660e8bb284bb696a35e3e24aaf, type: 3}
@@ -1588,7 +1656,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1956501575}
   m_Layer: 0
-  m_Name: TeamB
+  m_Name: AI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
