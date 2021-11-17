@@ -18,8 +18,8 @@ namespace Vheos.Games.ActionPoints
         { get; } = new Event<CursorManager.Button, Vector3>();
         public Event<CursorManager.Button, Vector3> OnHold
         { get; } = new Event<CursorManager.Button, Vector3>();
-        public Event<CursorManager.Button, Vector3> OnRelease
-        { get; } = new Event<CursorManager.Button, Vector3>();
+        public Event<CursorManager.Button, bool> OnRelease
+        { get; } = new Event<CursorManager.Button, bool>();
 
         internal void GainHighlight()
         => OnGainHighlight?.Invoke();
@@ -29,10 +29,12 @@ namespace Vheos.Games.ActionPoints
         => OnPress?.Invoke(button, position);
         internal void Hold(CursorManager.Button button, Vector3 position)
         => OnHold?.Invoke(button, position);
-        internal void Release(CursorManager.Button button, Vector3 position)
-        => OnRelease?.Invoke(button, position);
+        internal void Release(CursorManager.Button button, bool isClick)
+        => OnRelease?.Invoke(button, isClick);
 
         // Publics
+        public Collider Trigger
+        { get; private set; }
         public event Func<Vector3, bool> RaycastTests;
         public bool PerformRaycastTests(Vector3 position)
         {
@@ -44,12 +46,11 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
-        private Collider _trigger;
         private void AssignLayer()
         => gameObject.layer = LayerMask.NameToLayer(nameof(Mousable));
         protected void TryFitBoxColliderToMesh()
         {
-            if (_trigger.TryAs<BoxCollider>(out var boxCollider)
+            if (Trigger.TryAs<BoxCollider>(out var boxCollider)
             && TryGetComponent<MeshFilter>(out var meshFilter))
                 boxCollider.size = meshFilter.mesh.bounds.size;
         }
@@ -58,7 +59,7 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            _trigger = Get<Collider>();
+            Trigger = Get<Collider>();
             TryFitBoxColliderToMesh();
             AssignLayer();
         }
