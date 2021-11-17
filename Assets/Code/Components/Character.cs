@@ -64,9 +64,16 @@ namespace Vheos.Games.ActionPoints
         private UIBase _ui;
         private void ShowTargetingLine(CursorManager.Button button, Vector3 position)
         => _ui.TargetingLine.ShowAndFollowCursor(transform);
-        private void TryToggleCombatWithTarget(CursorManager.Button button, Vector3 position)
+        private void OnRelease(CursorManager.Button button, bool isClick)
         {
             _ui.TargetingLine.Hide();
+
+            if (isClick)
+            {
+                _ui.Wheel.Toggle();
+                return;
+            }
+            
             if (_ui.TargetingLine.Target.TryNonNull(out var target)
             && target.TryGetComponent<Combatable>(out var targetCombatable))
                 if (targetCombatable.IsInCombat)
@@ -91,6 +98,10 @@ namespace Vheos.Games.ActionPoints
             {
                 _ui.PointsBar.Show();
                 _ui.Wheel.Show();
+
+                foreach (var ally in Get<Teamable>().Allies)
+                    if (ally.TryGetComponent<Combatable>(out var allyCombatable))
+                        allyCombatable.TryJoinCombat(current);
             }
             else
             {
@@ -111,7 +122,7 @@ namespace Vheos.Games.ActionPoints
             Get<Teamable>().TryLeaveTeam();
             Get<Teamable>().enabled = false;
 
-            transform.AnimateLocalRotation(this, transform.localRotation.eulerAngles.NewZ(180f), 1f, null, QAnimator.Curve.QurveInverted);
+            transform.AnimateLocalRotation(this, transform.localRotation.eulerAngles.NewZ(180f), 1f, null, QAnimator.Curve.Qurve);
         }
         private void OnTargeterChange(ABaseComponent from, ABaseComponent to)
         {
@@ -126,7 +137,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.AutoSubscribeToEvents();
             SubscribeTo(Get<Mousable>().OnPress, ShowTargetingLine);
-            SubscribeTo(Get<Mousable>().OnRelease, TryToggleCombatWithTarget);
+            SubscribeTo(Get<Mousable>().OnRelease, OnRelease);
             SubscribeTo(Get<Movable>().OnMoved, UpdateAnimatorSpeed);
             SubscribeTo(Get<Movable>().OnStoppedMoving, ResetAnimatorSpeed);
             SubscribeTo(Get<Teamable>().OnTeamChanged, UpdateColors);

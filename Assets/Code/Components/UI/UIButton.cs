@@ -28,7 +28,7 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private UICostPointsBar _costPointsBar;
         private Vector2 _originalScale;
-        private bool _isTargeting;
+        private bool _isPressed;
         private ActionTargetable _validTarget;
         private UISettings.ButtonSettings Settings
         => UIManager.Settings.Button;
@@ -37,6 +37,8 @@ namespace Vheos.Games.ActionPoints
             Color targetColor = Action.CanBeUsedBy(Character.Get<Actionable>()) ? Character.Color : Settings.UnusableColor;
             Get<SpriteRenderer>().AnimateColor(this, targetColor, Settings.UnusableDuration);
         }
+        private void UpdateUsability(bool state)
+        => UpdateUsability(0, 0);
         private void OnGainHighlight()
         {
             if (!Action.CanBeUsedBy(Character.Get<Actionable>()))
@@ -55,28 +57,25 @@ namespace Vheos.Games.ActionPoints
                 return;
             }
 
-            if (!Action.IsInstant)
+            if (Action.IsTargeted)
             {
                 Base.TargetingLine.ShowAndFollowCursor(transform);
                 SubscribeTo(Base.TargetingLine.OnTargetChanged, OnTargetChanged);
-                _isTargeting = true;
-
-                if (Action.Animation.TryNonNull(out var animation))
-                    Character.ActionAnimator.Animate(animation.Charge);
             }
 
+            _isPressed = true;
+            if (Action.Animation.TryNonNull(out var animation))
+                Character.ActionAnimator.Animate(animation.Charge);
             transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
         }
-        private void OnRelease(CursorManager.Button button, Vector3 location)
+        private void OnRelease(CursorManager.Button button, bool isClick)
         {
-            if (Action.IsInstant)
-                Action.Use(Character.Get<Actionable>(), null);
-            else if (_isTargeting)
-            {
-                Base.TargetingLine.Hide();
-                UnsubscribeFrom(Base.TargetingLine.OnTargetChanged);
+            if (!_isPressed)
+                return;
 
+            if (Action.IsTargeted)
+            {
                 if (_validTarget != null)
                 {
                     if (Action.Animation.TryNonNull(out var animation))
@@ -87,10 +86,14 @@ namespace Vheos.Games.ActionPoints
                 else if (Action.Animation.TryNonNull(out var animation))
                     Character.ActionAnimator.Animate(animation.Cancel);
 
-                _isTargeting = false;
                 _validTarget = null;
+                Base.TargetingLine.Hide();
+                UnsubscribeFrom(Base.TargetingLine.OnTargetChanged);
             }
+            else if(isClick)
+                    Action.Use(Character.Get<Actionable>(), null);
 
+            _isPressed = false;
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColor(this, Character.Color, Settings.ClickDuration);
         }
@@ -124,9 +127,10 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(mousable.OnGainHighlight, OnGainHighlight);
             SubscribeTo(mousable.OnPress, OnPress);
             SubscribeTo(mousable.OnRelease, OnRelease);
-            SubscribeTo(mousable.OnLoseHighlight, OnLoseHighlight);
+            SubscribeTo(mousable.OnLoseHighlight, OnLoseHighlight);            
             SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, UpdateUsability);
-            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, UpdateUsability);
+            SubscribeTo(Character.Get<Actionable>().OnExhaustStateChanged, UpdateUsability);
+            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, UpdateUsability);            
         }
     }
 }
