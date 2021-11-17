@@ -1,7 +1,11 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
+
 
     public class Teamable : ABaseComponent
     {
@@ -16,14 +20,27 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public Team Team
         { get; private set; }
-        public bool HasAllies
-        => Team != null && Team.Count > 1;
-        public bool IsAlliedWith(Teamable other)
-        => this != other && Team == other.Team;
+        public IEnumerable<Teamable> Allies
+        {
+            get
+            {
+                if (Team == null)
+                    yield break;
+
+                foreach (var other in Team.Members)
+                    if (other != this)
+                        yield return other;
+            }
+        }
+        public bool HasAnyAllies
+        => Allies.Any();
+        public bool IsAlliesWith(Teamable other)
+        => other != this && Team != null && Team == other.Team;
+        public bool IsEnemiesWith(Teamable other)
+        => other != this && (Team == null || Team != other.Team);
         public void TryChangeTeam(Team newTeam)
         {
-            if (!enabled
-            || newTeam == Team)
+            if (!enabled || newTeam == Team)
                 return;
 
             Team previousTeam = Team;
