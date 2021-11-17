@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
-    using Tools.Extensions.General;
+    using Tools.Extensions.Collections;
 
     [DisallowMultipleComponent]
     sealed public class CursorManager : AManager<CursorManager>
@@ -146,9 +146,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void AutoSubscribeToEvents()
+        protected override void DefineAutoSubscriptions()
         {
-            base.AutoSubscribeToEvents();
+            base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
         }
         override protected void PlayAwake()

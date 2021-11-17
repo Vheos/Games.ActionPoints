@@ -8,7 +8,7 @@ namespace Vheos.Games.ActionPoints
         // Public
         static public Team Players
         { get; private set; }
-        static public Team Enemies
+        static public Team AI
         { get; private set; }
         public string Name
         { get; private set; }
@@ -24,9 +24,9 @@ namespace Vheos.Games.ActionPoints
                 Name = nameof(Players),
                 Color = new Color(0.5f, 0.75f, 1f, 1f),
             };
-            Enemies = new Team()
+            AI = new Team()
             {
-                Name = nameof(Enemies),
+                Name = nameof(AI),
                 Color = new Color(1f, 0.75f, 0.5f, 1f),
             };
         }

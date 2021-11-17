@@ -39,9 +39,9 @@
             base.PlayAwake();
             _originalIntensity = CurrentIntensity;
         }
-        protected override void AutoSubscribeToEvents()
+        protected override void DefineAutoSubscriptions()
         {
-            base.AutoSubscribeToEvents();
+            base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdated, UpdateLightIntensity);
         }
     }

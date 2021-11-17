@@ -70,9 +70,9 @@ namespace Vheos.Games.ActionPoints
                 OnTargetChanged?.Invoke(actionFrom, Target);
         }
         // Play        
-        protected override void AutoSubscribeToEvents()
+        protected override void DefineAutoSubscriptions()
         {
-            base.AutoSubscribeToEvents();
+            base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdated, UpdatePositionsAndTiling);
             SubscribeTo(CursorManager.OnCursorMousableChanged, TryInvokeEvents);
         }

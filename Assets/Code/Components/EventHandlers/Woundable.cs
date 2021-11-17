@@ -3,6 +3,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.Math;
+    using Tools.Extensions.General;
     using Event = Tools.UnityCore.Event;
 
     public class Woundable : ABaseComponent

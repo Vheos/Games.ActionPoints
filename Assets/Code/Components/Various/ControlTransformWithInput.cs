@@ -46,9 +46,9 @@ namespace Vheos.Games.ActionPoints.Test
         }
 
         // Play
-        protected override void AutoSubscribeToEvents()
+        protected override void DefineAutoSubscriptions()
         {
-            base.AutoSubscribeToEvents();
+            base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdated, ApplyInput);
         }
     }

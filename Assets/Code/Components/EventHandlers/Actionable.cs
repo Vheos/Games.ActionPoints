@@ -86,9 +86,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Playable
-        protected override void AutoSubscribeToEvents()
+        protected override void DefineAutoSubscriptions()
         {
-            base.AutoSubscribeToEvents();
+            base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdated, UpdateProgresses, TryInvokeEvents);
         }
     }

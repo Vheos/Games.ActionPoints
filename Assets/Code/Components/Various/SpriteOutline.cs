@@ -56,13 +56,11 @@ namespace Vheos.Games.ActionPoints
             _outlineRenderer.sprite = to;
             SetTexture(TEXTURE_MPROP_NAME, to.texture);
         }
-        private void HideAnimated()
-        => Hide(false);
 
         // Play
-        protected override void AutoSubscribeToEvents()
+        protected override void DefineAutoSubscriptions()
         {
-            base.AutoSubscribeToEvents();
+            base.DefineAutoSubscriptions();
             SubscribeTo(Get<SpriteChangable>().OnSpriteChanged, UpdateOutlineSprite);
         }
         protected override void InitializeRenderer(out Renderer renderer)

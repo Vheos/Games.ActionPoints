@@ -3,6 +3,7 @@ namespace Vheos.Games.ActionPoints
     using System;
     using UnityEngine;
     using Tools.UnityCore;
+    using Tools.Extensions.General;
 
     sealed public class ActionManager : AManager<ActionManager>
     {
@@ -34,9 +35,9 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        protected override void AutoSubscribeToEvents()
+        protected override void DefineAutoSubscriptions()
         {
-            base.AutoSubscribeToEvents();
+            base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
         }
         protected override void PlayAwake()
