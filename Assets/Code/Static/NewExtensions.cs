@@ -39,74 +39,10 @@ namespace Vheos.Games.ActionPoints
         => UnityEngine.Random.value < t;
         static public bool RollPercent(this float t)
         => t.Div(100f).Roll();
-        static public string ToInvariant(this float t)
-        => t.ToString(CultureInfo.InvariantCulture);
-        static public string ToInvariant(this float t, string format)
-        => t.ToString(format, CultureInfo.InvariantCulture);
-        static public GameObject CreateChildGameObject(this GameObject t, string name = null)
-        {
-            GameObject r = new GameObject();
-            if (name != null)
-                r.name = name;
-            r.BecomeChildOf(t);
-            return r;
-        }
-        static public GameObject CreateChildGameObject(this Component t, string name = null)
-        => t.gameObject.CreateChildGameObject(name);
-        /// <summary> If this dictionary doesn't contain key a, adds it and sets it value to b. Returns whether the collection was modified or not. </summary>
-        static public bool TryAddUnique<T1, T2>(this IDictionary<T1, T2> t, T1 a, T2 b)
-        {
-            if (t.ContainsKey(a))
-                return false;
-
-            t.Add(a, b);
-            return true;
-        }
-        /// <summary> If this dictionary doesn't contain key a, adds it and sets it to default value. Returns whether the collection was modified or not. </summary>
-        static public bool TryAddDefault<T1, T2>(this IDictionary<T1, T2> t, T1 a)
-        {
-            if (t.ContainsKey(a))
-                return false;
-
-            t.Add(a, default);
-            return true;
-        }
-        /// <summary> If this dictionary doesn't contain key a, adds it and sets it value to b. Returns b. </summary>
-        static public T2 GetOrAdd<T1, T2>(this IDictionary<T1, T2> t, T1 a, T2 b) where T2 : class
-        {
-            if (t.ContainsKey(a))
-                t.Add(a, b);
-            return b;
-        }
         static public bool IsCompilerGenerated(this Type t)
         => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) != null;
         static public bool IsUnderCursor(this Collider t, Camera camera)
         => t.Raycast(camera.CursorRay(), out var _, float.PositiveInfinity);
-
-        // IList
-        static public bool TryGet<T>(this IList<T> t, int index, out T r)
-        {
-            if (index < t.Count)
-            {
-                r = t[index];
-                return true;
-            }
-
-            r = default;
-            return false;
-        }
-        static public bool TryGetNonNull<T>(this IList<T> t, int index, out T r) where T : class
-        {
-            if (index < t.Count
-            && t[index] != null)
-            {
-                r = t[index];
-                return true;
-            }
-
-            r = null;
-            return false;
-        }
 
         // Midpoint
         static public Vector3 Midpoint<T>(this IEnumerable<T> t, Func<T, Vector3> positionFunc)
@@ -131,26 +67,6 @@ namespace Vheos.Games.ActionPoints
         => Midpoint(t, (component) => component.transform.position);
         static public Vector3 Midpoint(this ICollection<Component> t)
         => Midpoint(t, (component) => component.transform.position);
-
-        // Float
-        static public Vector2 Append(this float t, float y = 0f)
-    => new Vector2(t, y);
-        static public Vector3 Append(this float t, float y, float z)
-        => new Vector3(t, y, z);
-        static public Vector3 Append(this float t, Vector2 a)
-        => new Vector3(t, a.x, a.y);
-        static public Vector4 Append(this float t, float y, float z, float w)
-        => new Vector4(t, y, z, w);
-        static public Vector3 Append(this float t, Vector3 a)
-        => new Vector4(t, a.x, a.y, a.z);
-
-        // Vector components
-        static public Vector3 NewX(this Vector3 t, float a)
-        => new Vector3(a, t.y, t.z);
-        static public Vector3 NewY(this Vector3 t, float a)
-        => new Vector3(t.x, a, t.z);
-        static public Vector3 NewZ(this Vector3 t, float a)
-        => new Vector3(t.x, t.y, a);
 
         // Legacy
         /// <summary> Returns this array of hits sorted by distance from point a. </summary>
@@ -201,39 +117,6 @@ namespace Vheos.Games.ActionPoints
             a = temp;
         }
 
-        // Bool
-        static public int To01(this bool t)
-        => t ? 1 : 0;
-        static public int ToSign(this bool t)
-        => t ? +1 : -1;
-        static public int Map(this bool t, int a, int b)
-        => t ? a : b;
-        static public float Map(this bool t, float a, float b)
-        => t ? a : b;
-
-        // Color
-        static public Color NewA(this Color t, float a)
-        => new Color(t.r, t.g, t.b, a);
-
-        /// <summary> Lerps from this color to a at alpha b. </summary>
-        static public Color Lerp(this Color t, Color a, float b)
-        => new Color(t.r.Lerp(a.r, b), t.g.Lerp(a.g, b), t.b.Lerp(a.b, b), t.a.Lerp(a.a, b));
-        /// <summary> Lerps from this color to a at alpha b (clamped between 0 and 1). </summary>
-        static public Color LerpClamped(this Color t, Color a, float b)
-        => new Color(t.r.LerpClamped(a.r, b), t.g.LerpClamped(a.g, b), t.b.LerpClamped(a.b, b), t.a.LerpClamped(a.a, b));
-        /// <summary> Maps this color from the range [a, b] to [c, d]. </summary>
-        static public Color Map(this Color t, Color a, Color b, Color c, Color d)
-        => new Color(t.r.Map(a.r, b.r, c.r, d.r), t.g.Map(a.g, b.g, c.g, d.g), t.b.Map(a.b, b.b, c.b, d.b), t.a.Map(a.a, b.a, c.a, d.a));
-        /// <summary> Maps this color from the range [a, b] to [c, d] (with clamped output). </summary>
-        static public Color MapClamped(this Color t, Color a, Color b, Color c, Color d)
-        => new Color(t.r.MapClamped(a.r, b.r, c.r, d.r), t.g.MapClamped(a.g, b.g, c.g, d.g), t.b.MapClamped(a.b, b.b, c.b, d.b), t.a.MapClamped(a.a, b.a, c.a, d.a));
-        /// <summary> Maps this color from the range [a, b] to [0, 1]. </summary>
-        static public Color MapTo01(this Color t, Color a, Color b)
-        => new Color(t.r.MapTo01(a.r, b.r), t.g.MapTo01(a.g, b.g), t.b.MapTo01(a.b, b.b), t.a.MapTo01(a.a, b.a));
-        /// <summary> Maps this color from the range [0, 1] to [a, b]. </summary>
-        static public Color MapFrom01(this Color t, Color a, Color b)
-        => new Color(t.r.MapFrom01(a.r, b.r), t.g.MapFrom01(a.g, b.g), t.b.MapFrom01(a.b, b.b), t.a.MapFrom01(a.a, b.a));
-
         // Input
         /// <summary> Checks if this key has just been pressed. </summary>
         static public bool Pressed(this KeyCode t)
@@ -266,33 +149,5 @@ namespace Vheos.Games.ActionPoints
             temp.x = a;
             t.localPosition = temp;
         }
-
-        // Edge points
-        /// <summary> Returns a point on this rectangle's edge given direction a. </summary>
-        static public Vector2 EdgePoint(this Rect t, Vector2 a)
-        => t.center + t.size.Div(2f).Mul(a.NormalizeComps());
-        /// <summary> Returns a point on this cuboid's surface given direction a. </summary>
-        static public Vector3 SurfacePoint(this Bounds t, Vector3 a)
-        => t.center + t.extents.Mul(a.NormalizeComps());
-
-        // Bounds
-        static public Bounds LocalBounds(this Collider t)
-        {
-            return t switch
-            {
-                BoxCollider r => new Bounds(r.center, r.size),
-                SphereCollider r => new Bounds(r.center, (2 * r.radius).ToVector3()),
-                CapsuleCollider r => new Bounds(r.center, new Vector3(r.height, 2 * r.radius, 2 * r.radius).Rotate(r.transform.rotation)),
-                MeshCollider r => r.sharedMesh.bounds,
-                _ => default,
-            };
-        }
-        /// <summary> Returns a rectangle equivalent to this cuboid with depth removed. </summary>
-        static public Rect ToRect(this Bounds t)
-        => new Rect
-        {
-            size = t.size,
-            center = t.center,
-        };
     }
 }
