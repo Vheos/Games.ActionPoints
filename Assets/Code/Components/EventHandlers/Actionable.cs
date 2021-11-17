@@ -76,7 +76,7 @@ namespace Vheos.Games.ActionPoints
         }
         private void UpdateProgresses()
         {
-            ActionProgress += Time.deltaTime * ActionSpeed;
+            ActionProgress += Time.deltaTime * ActionSpeed * ActionManager.GlobalSpeedScale;
             if (ActionProgress > UsableMaxActionPoints)
             {
                 float overflow = ActionProgress - UsableMaxActionPoints;
@@ -88,6 +88,7 @@ namespace Vheos.Games.ActionPoints
         // Playable
         protected override void AutoSubscribeToEvents()
         {
+            base.AutoSubscribeToEvents();
             SubscribeTo(Get<Updatable>().OnUpdated, UpdateProgresses, TryInvokeEvents);
         }
     }
