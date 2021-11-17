@@ -9,6 +9,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using Vheos.Tools.Extensions.General;
 
     static public class NewExtensions
     {
@@ -79,10 +80,61 @@ namespace Vheos.Games.ActionPoints
         }
         static public bool IsCompilerGenerated(this Type t)
         => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) != null;
+        static public bool IsUnderCursor(this Collider t, Camera camera)
+        => t.Raycast(camera.CursorRay(), out var _, float.PositiveInfinity);
+
+        // IList
+        static public bool TryGet<T>(this IList<T> t, int index, out T r)
+        {
+            if (index < t.Count)
+            {
+                r = t[index];
+                return true;
+            }
+
+            r = default;
+            return false;
+        }
+        static public bool TryGetNonNull<T>(this IList<T> t, int index, out T r) where T : class
+        {
+            if (index < t.Count
+            && t[index] != null)
+            {
+                r = t[index];
+                return true;
+            }
+
+            r = null;
+            return false;
+        }
+
+        // Midpoint
+        static public Vector3 Midpoint<T>(this IEnumerable<T> t, Func<T, Vector3> positionFunc)
+        {
+            Vector3 r = Vector3.zero;
+            int count = 0;
+            foreach (var element in t)
+            {
+                r += positionFunc(element);
+                count++;
+            }
+            return r / count;
+        }
+        static public Vector3 Midpoint<T>(this ICollection<T> t, Func<T, Vector3> positionFunc)
+        {
+            Vector3 r = Vector3.zero;
+            foreach (var element in t)
+                r += positionFunc(element);
+            return r / t.Count;
+        }
+        static public Vector3 Midpoint(this IEnumerable<Component> t)
+        => Midpoint(t, (component) => component.transform.position);
+        static public Vector3 Midpoint(this ICollection<Component> t)
+        => Midpoint(t, (component) => component.transform.position);
 
         // Float
         static public Vector2 Append(this float t, float y = 0f)
-        => new Vector2(t, y);
+    => new Vector2(t, y);
         static public Vector3 Append(this float t, float y, float z)
         => new Vector3(t, y, z);
         static public Vector3 Append(this float t, Vector2 a)
@@ -131,6 +183,9 @@ namespace Vheos.Games.ActionPoints
             t.CopyTo(r, 0);
             return r;
         }
+        /// <summary> Returns a shallow copy of this list. </summary>
+        static public List<T> MakeCopy<T>(this List<T> t)
+        => new List<T>(t);
         /// <summary> Swaps the references of this object and a. </summary>
         static public void SwapWith<T>(this T t, T a) where T : class
         {
