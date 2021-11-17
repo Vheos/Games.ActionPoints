@@ -14,7 +14,7 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected ActionAnimation _Animation = null;
         [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 0;
         [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 0;
-        [SerializeField] protected bool _IsInstant = false;
+        [SerializeField] protected bool _IsTargeted = false;
         [SerializeField] protected Targetables _Targets;
         [SerializeField] protected AActionEffect.Data[] _EffectDataArray = new AActionEffect.Data[1];
 
@@ -25,13 +25,13 @@ namespace Vheos.Games.ActionPoints
         => _ActionPointsCost;
         public int FocusPointsCost
         => _FocusPointsCost;
-        public bool IsInstant
-        => _IsInstant;
+        public bool IsTargeted
+        => _IsTargeted;
         public ActionAnimation Animation
         => _Animation;
         public bool CanBeUsedBy(Actionable actionable)
         => !actionable.IsExhausted
-        && actionable.ActionPointsCount + actionable.MaxActionPoints >= _ActionPointsCost
+        && actionable.ActionPointsCount + actionable.UsableMaxActionPoints >= _ActionPointsCost
         && actionable.FocusPointsCount >= _FocusPointsCost;
         public bool CanTarget(ActionTargetable target)
         {
