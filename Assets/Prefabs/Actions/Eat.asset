@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Eat
   m_EditorClassIdentifier: 
   _Sprite: {fileID: 4491553773363795640, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+  _Animation: {fileID: 11400000, guid: 4fcfc9ef43f3e3a4bb92afd2feab597b, type: 2}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
   _IsTargeted: 1
-  _Animation: {fileID: 11400000, guid: 4fcfc9ef43f3e3a4bb92afd2feab597b, type: 2}
+  _Targets: 0
   _EffectDataArray:
   - _Effect: {fileID: 0}
     _Direction: 0

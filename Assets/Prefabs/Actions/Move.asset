@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Sprite: {fileID: 100665763937561807, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
   _Animation: {fileID: 0}
-  _ActionPointsCost: 0
+  _ActionPointsCost: 3
   _FocusPointsCost: 0
-  _IsInstant: 0
+  _IsTargeted: 0
+  _Targets: 0
   _EffectDataArray:
   - _Effect: {fileID: 0}
     _Direction: 1
