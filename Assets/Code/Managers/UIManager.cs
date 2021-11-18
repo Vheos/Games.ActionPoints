@@ -1,8 +1,10 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Linq;
     using UnityEngine;
     using Tools.UnityCore;
+    using static UIManager;
 
     [DisallowMultipleComponent]
     sealed public class UIManager : AManager<UIManager>
@@ -12,12 +14,18 @@ namespace Vheos.Games.ActionPoints
 
         // Inspector
         [SerializeField] private UISettings _Settings = null;
+        [SerializeField] private KeyCode[] _PrimaryButtons = new KeyCode[1];
+        [SerializeField] private KeyCode[] _SecondaryButtons = new KeyCode[1];
 
         // Publics
         static public UISettings Settings
         => _instance._Settings;
         static public Transform HierarchyRoot
         { get; private set; }
+        static public ButtonFunction KeyCodeToFunction(KeyCode button)
+        => _instance._PrimaryButtons.Contains(button) ? ButtonFunction.Primary
+        : _instance._SecondaryButtons.Contains(button) ? ButtonFunction.Secondary
+        : ButtonFunction.None;
 
         // Play
         protected override void PlayAwake()
@@ -25,5 +33,19 @@ namespace Vheos.Games.ActionPoints
             base.PlayAwake();
             HierarchyRoot = new GameObject(UI_ROOT_NAME).transform;
         }
+
+        // Defines
+        public enum ButtonFunction
+        {
+            None,
+            Primary,
+            Secondary,
+        }
+    }
+
+    static public class UIManager_Extensions
+    {
+        static public ButtonFunction ToFunction(this KeyCode keyCode)
+        => KeyCodeToFunction(keyCode);
     }
 }
