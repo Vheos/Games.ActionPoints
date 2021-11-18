@@ -7,12 +7,13 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
     using Tools.Extensions.Collections;
+    using static CursorManager;
 
     [DisallowMultipleComponent]
     sealed public class CursorManager : AManager<CursorManager>
     {
         // Inspector
-        [SerializeField] private Button[] _Buttons;
+        [SerializeField] private MouseButton[] _Buttons;
         [SerializeField] private GameObject _CursorPrefab;
 
         // Events
@@ -34,12 +35,35 @@ namespace Vheos.Games.ActionPoints
         => _cursorDistance = CameraManager.FirstActive.transform.position.DistanceTo(worldPoint);
         static public void SetCursorDistance(Transform transform)
         => _cursorDistance = CameraManager.FirstActive.DistanceTo(transform);
-
+        static public MouseButton KeyCodeToMouseButton(KeyCode keyCode)
+        => keyCode switch
+        {
+            KeyCode.Mouse0 => MouseButton.Left,
+            KeyCode.Mouse1 => MouseButton.Right,
+            KeyCode.Mouse2 => MouseButton.Middle,
+            KeyCode.Mouse3 => MouseButton.Extra1,
+            KeyCode.Mouse4 => MouseButton.Extra2,
+            KeyCode.Mouse5 => MouseButton.Extra3,
+            KeyCode.Mouse6 => MouseButton.Extra4,
+            _ => MouseButton.None,
+        };
+        static public KeyCode MouseButtonToKeyCode(MouseButton mouseButton)
+        => mouseButton switch
+        {
+            MouseButton.Left => KeyCode.Mouse0,
+            MouseButton.Right => KeyCode.Mouse1,
+            MouseButton.Middle => KeyCode.Mouse2,
+            MouseButton.Extra1 => KeyCode.Mouse3,
+            MouseButton.Extra2 => KeyCode.Mouse4,
+            MouseButton.Extra3 => KeyCode.Mouse5,
+            MouseButton.Extra4 => KeyCode.Mouse6,
+            _ => KeyCode.None,
+        };
         // Privates
         static private float _cursorDistance;
         static private Vector3 _previousMousePosition;
         static private Mousable _previousCursorMousable;
-        static private Dictionary<Button, Mousable> _lockedMousablesByButton;
+        static private Dictionary<MouseButton, Mousable> _lockedMousablesByButton;
         static private void CreateCursorTransform(GameObject prefab, Component parent)
         {
             if (prefab != null)
@@ -76,14 +100,14 @@ namespace Vheos.Games.ActionPoints
             if (_previousCursorMousable != null
             && (CursorMousable == null || _previousCursorMousable != CursorMousable)
             && !_lockedMousablesByButton.ContainsValue(_previousCursorMousable))
-                _previousCursorMousable.LoseHighlight();
+                _previousCursorMousable.OnLoseHighlight.Invoke();
 
             if (CursorMousable != null
             && (_previousCursorMousable == null || _previousCursorMousable != CursorMousable)
             && !_lockedMousablesByButton.ContainsValue(CursorMousable))
-                CursorMousable.GainHighlight();
+                CursorMousable.OnGainHighlight.Invoke();
         }
-        static private void UpdateButtonEvents(Button[] buttons)
+        static private void InvokeMousableEvents(MouseButton[] buttons)
         {
             foreach (var button in buttons)
             {
@@ -92,7 +116,7 @@ namespace Vheos.Games.ActionPoints
                 && !_lockedMousablesByButton.ContainsKey(button)
                 && CursorMousable != null)
                 {
-                    CursorMousable.Press(button, CursorMousableHitInfo.point);
+                    CursorMousable.OnPress.Invoke(button, CursorMousableHitInfo.point);
                     _lockedMousablesByButton.Add(button, CursorMousable);
                 }
 
@@ -102,15 +126,14 @@ namespace Vheos.Games.ActionPoints
 
                 // Hold
                 if (Input.GetMouseButton((int)button))
-                    lockedMousable.Hold(button, CursorMousableHitInfo.point);
+                    lockedMousable.OnHold.Invoke(button, CursorMousableHitInfo.point);
 
                 // Release
                 if (Input.GetMouseButtonUp((int)button))
                 {
-                    bool isClick = lockedMousable.Trigger.IsUnderCursor(CameraManager.FirstActive);
-                    lockedMousable.Release(button, isClick);
+                    lockedMousable.OnRelease.Invoke(button, IsMousableUnderCursor(lockedMousable));
                     if (lockedMousable != CursorMousable)
-                        lockedMousable.LoseHighlight();
+                        lockedMousable.OnLoseHighlight.Invoke();
                     _lockedMousablesByButton.Remove(button);
                 }
             }
@@ -120,7 +143,7 @@ namespace Vheos.Games.ActionPoints
 
             UpdateCursorMousable();
             UpdateHighlights();
-            UpdateButtonEvents(_instance._Buttons);
+            InvokeMousableEvents(_instance._Buttons);
             CursorTransform.position = CameraManager.FirstActive.CursorToWorldPoint(_cursorDistance);
             TryInvokeEvents();
 
@@ -136,6 +159,9 @@ namespace Vheos.Games.ActionPoints
             if (CursorMousable != _previousCursorMousable)
                 OnCursorMousableChanged?.Invoke(_previousCursorMousable, CursorMousable);
         }
+        static private bool IsMousableUnderCursor(Mousable mousable)
+        => mousable.Trigger.CursorRaycast(CameraManager.FirstActive, out var hitInfo)
+        && mousable.PerformRaycastTests(hitInfo.point);
 
         // Initializers
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -157,18 +183,29 @@ namespace Vheos.Games.ActionPoints
             _cursorDistance = 0f;
             _previousMousePosition = Input.mousePosition;
             _previousCursorMousable = CursorMousable;
-            _lockedMousablesByButton = new Dictionary<Button, Mousable>();
+            _lockedMousablesByButton = new Dictionary<MouseButton, Mousable>();
             CreateCursorTransform(_CursorPrefab, this);
         }
 
         // Defines
-        public enum Button
+        public enum MouseButton
         {
-            Left = 0,
-            Right = 1,
-            Middle = 2,
-            Extra1 = 3,
-            Extra2 = 4,
+            None,
+            Left,
+            Right,
+            Middle,
+            Extra1,
+            Extra2,
+            Extra3,
+            Extra4,
         }
+    }
+
+    static public class CursorManager_Extensions
+    {
+        static public MouseButton ToMouseButton(this KeyCode keyCode)
+        => KeyCodeToMouseButton(keyCode);
+        static public KeyCode ToKeyCode(this MouseButton mouseButton)
+        => MouseButtonToKeyCode(mouseButton);
     }
 }
