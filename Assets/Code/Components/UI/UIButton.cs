@@ -44,7 +44,7 @@ namespace Vheos.Games.ActionPoints
 
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.HighlightDuration);
         }
-        private void OnPress(CursorManager.Button button, Vector3 location)
+        private void OnPress(UIManager.ButtonFunction function)
         {
             if (!Action.CanBeUsedBy(Character.Get<Actionable>()))
             {
@@ -67,7 +67,7 @@ namespace Vheos.Games.ActionPoints
             transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
         }
-        private void OnRelease(CursorManager.Button button, bool isClick)
+        private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
             if (!_isPressed)
                 return;
@@ -86,10 +86,10 @@ namespace Vheos.Games.ActionPoints
 
                 _validTarget = null;
                 Base.TargetingLine.Hide();
-                UnsubscribeFrom(Base.TargetingLine.OnTargetChanged);
+                UnsubscribeFrom(Base.TargetingLine.OnTargetChanged, OnTargetChanged);
             }
-            else if(isClick)
-                    Action.Use(Character.Get<Actionable>(), null);
+            else if (isClick)
+                Action.Use(Character.Get<Actionable>(), null);
 
             _isPressed = false;
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.ClickDuration);
@@ -121,14 +121,14 @@ namespace Vheos.Games.ActionPoints
         // Play
         protected override void DefineAutoSubscriptions()
         {
-            Mousable mousable = Get<Mousable>();
-            SubscribeTo(mousable.OnGainHighlight, OnGainHighlight);
-            SubscribeTo(mousable.OnPress, OnPress);
-            SubscribeTo(mousable.OnRelease, OnRelease);
-            SubscribeTo(mousable.OnLoseHighlight, OnLoseHighlight);            
+            Selectable selectable = Get<Selectable>();
+            SubscribeTo(selectable.OnGainHighlight, OnGainHighlight);
+            SubscribeTo(selectable.OnPress, OnPress);
+            SubscribeTo(selectable.OnRelease, OnRelease);
+            SubscribeTo(selectable.OnLoseHighlight, OnLoseHighlight);
             SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, (from, to) => UpdateUsability());
             SubscribeTo(Character.Get<Actionable>().OnExhaustStateChanged, (state) => UpdateUsability());
-            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, (from, to) => UpdateUsability());            
+            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, (from, to) => UpdateUsability());
         }
     }
 }
