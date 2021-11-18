@@ -9,7 +9,6 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
-    using Vheos.Tools.Extensions.General;
 
     static public class NewExtensions
     {
@@ -41,8 +40,24 @@ namespace Vheos.Games.ActionPoints
         => t.Div(100f).Roll();
         static public bool IsCompilerGenerated(this Type t)
         => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) != null;
+        static public bool CursorRaycast(this Collider t, Camera camera, out RaycastHit hitInfo)
+        => t.Raycast(camera.CursorRay(), out hitInfo, float.PositiveInfinity);
         static public bool IsUnderCursor(this Collider t, Camera camera)
-        => t.Raycast(camera.CursorRay(), out var _, float.PositiveInfinity);
+        => t.CursorRaycast(camera, out _);
+        static public T Random<T>(this IEnumerable<T> t)
+        {
+            T r = default;
+            int count = 0;
+            foreach (T element in t)
+            {
+                count++;
+                if (UnityEngine.Random.Range(0, count) == 0)
+                    r = element;
+            }
+            if (count == 0)
+                throw new InvalidOperationException("Sequence was empty");
+            return r;
+        }
 
         // Midpoint
         static public Vector3 Midpoint<T>(this IEnumerable<T> t, Func<T, Vector3> positionFunc)
