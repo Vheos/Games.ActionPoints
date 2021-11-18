@@ -62,9 +62,9 @@ namespace Vheos.Games.ActionPoints
 
         // Private
         private UIBase _ui;
-        private void OnPress(CursorManager.Button button, Vector3 position)
+        private void OnPress(UIManager.ButtonFunction function)
         => _ui.TargetingLine.ShowAndFollowCursor(transform);
-        private void OnRelease(CursorManager.Button button, bool isClick)
+        private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
             _ui.TargetingLine.Hide();
 
@@ -92,12 +92,11 @@ namespace Vheos.Games.ActionPoints
         private void OnCombatChanged(Combat current)
         {
             bool isInCombat = current != null;
+            Get<Animator>().SetBool("IsInCombat", isInCombat);
             if (isInCombat)
             {
                 _ui.PointsBar.Show();
-
-                if (Has<PlayerController>())
-                    _ui.Wheel.Show();
+                _ui.Wheel.Show();
 
                 foreach (var ally in Get<Teamable>().Allies)
                     if (ally.TryGetComponent<Combatable>(out var allyCombatable))
@@ -107,8 +106,11 @@ namespace Vheos.Games.ActionPoints
             {
                 _ui.PointsBar.Hide();
                 _ui.Wheel.Hide();
+
+                Get<Actionable>().ActionProgress = 0;
+                Get<Actionable>().FocusProgress = 0;
+                Get<ActionTargetable>().LoseTargeting();
             }
-            Get<Animator>().SetBool("IsInCombat", isInCombat);
         }
         private void OnDamageReceived(float damage, bool isWound)
         => _ui.PopupHandler.PopDamage(transform.position, damage, isWound);
@@ -118,9 +120,7 @@ namespace Vheos.Games.ActionPoints
             Get<ActionTargetable>().LoseTargeting();
 
             Get<Combatable>().TryLeaveCombat();
-            Get<Combatable>().enabled = false;
             Get<Teamable>().TryLeaveTeam();
-            Get<Teamable>().enabled = false;
 
             transform.AnimateLocalRotation(this, transform.localRotation.eulerAngles.NewZ(180f), 1f, null, QAnimator.Curve.Qurve);
         }
@@ -131,12 +131,15 @@ namespace Vheos.Games.ActionPoints
             else
                 Get<SpriteOutline>().Show();
         }
-
+        private void OnUpdate()
+        {
+            if (Get<Combatable>().IsInCombat)
+                Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed * ActionManager.GlobalSpeedScale;
+        }
         // Playable
         protected void DefineComponentInputs()
         {
             Get<Actionable>().MaxActionPoints.Set(() => _MaxPoints);
-            Get<Actionable>().ActionSpeed.Set(() => _ActionSpeed);
             Get<Actionable>().LockedMaxActionPoints.Set(() => Get<Woundable>().WoundsCount);
             Get<Actionable>().Actions.Set(() => _Actions);
             Get<Woundable>().MaxWounds.Set(() => Get<Actionable>().MaxActionPoints);
@@ -152,8 +155,8 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Mousable>().OnPress, OnPress);
-            SubscribeTo(Get<Mousable>().OnRelease, OnRelease);
+            SubscribeTo(Get<Selectable>().OnPress, OnPress);
+            SubscribeTo(Get<Selectable>().OnRelease, OnRelease);
             SubscribeTo(Get<Movable>().OnMoved, (from, to) => SetAnimatorMoveSpeed(from.DistanceTo(to) / Time.deltaTime));
             SubscribeTo(Get<Movable>().OnStoppedMoving, () => SetAnimatorMoveSpeed(0f));
             SubscribeTo(Get<Teamable>().OnTeamChanged, UpdateColors);
@@ -161,6 +164,7 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(Get<Woundable>().OnDamageReceived, OnDamageReceived);
             SubscribeTo(Get<Woundable>().OnHasDied, OnHasDied);
             SubscribeTo(Get<ActionTargetable>().OnTargeterChange, OnTargeterChange);
+            SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
         }
         protected override void PlayAwake()
         {
