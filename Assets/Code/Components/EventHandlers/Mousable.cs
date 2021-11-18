@@ -5,32 +5,23 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.General;
     using Event = Tools.UnityCore.Event;
+    using static CursorManager;
+    using static UIManager;
 
     [DisallowMultipleComponent]
-    public class Mousable : ABaseComponent
+    public class Mousable : AEventSubscriber
     {
         // Events
         public Event OnGainHighlight
         { get; } = new Event();
         public Event OnLoseHighlight
         { get; } = new Event();
-        public Event<CursorManager.Button, Vector3> OnPress
-        { get; } = new Event<CursorManager.Button, Vector3>();
-        public Event<CursorManager.Button, Vector3> OnHold
-        { get; } = new Event<CursorManager.Button, Vector3>();
-        public Event<CursorManager.Button, bool> OnRelease
-        { get; } = new Event<CursorManager.Button, bool>();
-
-        internal void GainHighlight()
-        => OnGainHighlight?.Invoke();
-        internal void LoseHighlight()
-        => OnLoseHighlight?.Invoke();
-        internal void Press(CursorManager.Button button, Vector3 position)
-        => OnPress?.Invoke(button, position);
-        internal void Hold(CursorManager.Button button, Vector3 position)
-        => OnHold?.Invoke(button, position);
-        internal void Release(CursorManager.Button button, bool isClick)
-        => OnRelease?.Invoke(button, isClick);
+        public Event<MouseButton, Vector3> OnPress
+        { get; } = new Event<MouseButton, Vector3>();
+        public Event<MouseButton, Vector3> OnHold
+        { get; } = new Event<MouseButton, Vector3>();
+        public Event<MouseButton, bool> OnRelease
+        { get; } = new Event<MouseButton, bool>();
 
         // Publics
         public Collider Trigger
@@ -54,8 +45,38 @@ namespace Vheos.Games.ActionPoints
             && TryGetComponent<MeshFilter>(out var meshFilter))
                 boxCollider.size = meshFilter.mesh.bounds.size;
         }
+        private void TryInvokeSelectableOnPress(Selectable selectable, MouseButton button)
+        {
+            ButtonFunction function = button.ToKeyCode().ToFunction();
+            if (function != ButtonFunction.None)
+                selectable.OnPress.Invoke(function);
+        }
+        private void TryInvokeSelectableOnHold(Selectable selectable, MouseButton button)
+        {
+            ButtonFunction function = button.ToKeyCode().ToFunction();
+            if (function != ButtonFunction.None)
+                selectable.OnHold.Invoke(function);
+        }
+        private void TryInvokeSelectableOnRelease(Selectable selectable, MouseButton button, bool isClick)
+        {
+            ButtonFunction function = button.ToKeyCode().ToFunction();
+            if (function != ButtonFunction.None)
+                selectable.OnRelease.Invoke(function, isClick);
+        }
 
         // Play
+        protected override void DefineAutoSubscriptions()
+        {
+            base.DefineAutoSubscriptions();
+            if (TryGetComponent<Selectable>(out var selectable))
+            {
+                SubscribeTo(OnGainHighlight, selectable.OnGainHighlight.Invoke);
+                SubscribeTo(OnLoseHighlight, selectable.OnLoseHighlight.Invoke);
+                SubscribeTo(OnPress, (button, position) => TryInvokeSelectableOnPress(selectable, button));
+                SubscribeTo(OnHold, (button, position) => TryInvokeSelectableOnHold(selectable, button));
+                SubscribeTo(OnRelease, (button, isClick) => TryInvokeSelectableOnRelease(selectable, button, isClick));
+            }
+        }
         protected override void PlayAwake()
         {
             base.PlayAwake();
