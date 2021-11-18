@@ -42,9 +42,9 @@ namespace Vheos.Games.ActionPoints
         }
         public void Use(Actionable user, ABaseComponent target)
         {
-            user.ChangeActionPoints(-_ActionPointsCost);
-            user.ChangeFocusPoints(-_FocusPointsCost);
-            foreach (var effectData in _EffectDataArray)
+            user.ActionProgress -= _ActionPointsCost;
+            user.FocusProgress -= _FocusPointsCost;
+            foreach(var effectData in _EffectDataArray)
                 effectData.Invoke(user, target);
         }
 
