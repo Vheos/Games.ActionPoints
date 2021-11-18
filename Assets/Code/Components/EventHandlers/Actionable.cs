@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
 
-    public class Actionable : AEventSubscriber
+    public class Actionable : ABaseComponent
     {
         // Events
         public Event<int, int> OnActionPointsCountChanged
@@ -18,78 +18,63 @@ namespace Vheos.Games.ActionPoints
         { get; } = new Event<float>();
 
         // Input
-        public ComponentInput<float> ActionSpeed
-        { get; } = new ComponentInput<float>();
-        //public ComponentInput<float> FocusRate
-        //{ get; } = new ComponentInput<float>();
-        //public ComponentInput<float> ExhaustRate
-        //{ get; } = new ComponentInput<float>();
+        public ComponentInput<ICollection<Action>> Actions
+        { get; } = new ComponentInput<ICollection<Action>>();
         public ComponentInput<int> MaxActionPoints
         { get; } = new ComponentInput<int>();
         public ComponentInput<int> LockedMaxActionPoints
         { get; } = new ComponentInput<int>();
-        public ComponentInput<List<Action>> Actions
-        { get; } = new ComponentInput<List<Action>>();
 
         // Publics
         public float ActionProgress
-        { get; private set; }
+        {
+            get => _actionProgress;
+            set
+            {
+                int previousCount = ActionPointsCount;
+                bool previousExhausted = IsExhausted;
+                _actionProgress = value;
+
+                if (_actionProgress > UsableMaxActionPoints)
+                {
+                    OnActionProgressOverflow?.Invoke(_actionProgress - UsableMaxActionPoints);
+                    _actionProgress.SetClampMax(+UsableMaxActionPoints);
+                }
+                if (previousCount != ActionPointsCount)
+                    OnActionPointsCountChanged?.Invoke(previousCount, ActionPointsCount);
+                if (previousExhausted && !IsExhausted)
+                    OnExhaustStateChanged?.Invoke(false);
+                else if (!previousExhausted && IsExhausted)
+                    OnExhaustStateChanged?.Invoke(true);
+
+                _actionProgress.SetClampMin(-UsableMaxActionPoints);
+            }
+        }
         public float FocusProgress
-        { get; private set; }
+        {
+            get => _focusProgress;
+            set
+            {
+                int previousCount = FocusPointsCount;
+                _focusProgress = value;
+
+                if (previousCount != FocusPointsCount)
+                    OnFocusPointsCountChanged?.Invoke(previousCount, FocusPointsCount);
+
+                _focusProgress.SetClamp(0f, _actionProgress);
+            }
+        }
         public int ActionPointsCount
-        => ActionProgress.RoundTowardsZero();
+        => _actionProgress.RoundTowardsZero();
         public int FocusPointsCount
-        => FocusProgress.RoundTowardsZero();
-        public void ChangeActionPoints(int diff)
-        => ActionProgress = ActionProgress.Add(diff).Clamp(-UsableMaxActionPoints, +UsableMaxActionPoints);
-        public void ChangeFocusPoints(int diff)
-        => FocusProgress = FocusProgress.Add(diff).ClampMax(ActionProgress).ClampMin(0f);
+        => _focusProgress.RoundTowardsZero();
         public int UsableMaxActionPoints
         => MaxActionPoints - LockedMaxActionPoints;
         public bool IsExhausted
-         => ActionProgress < 0;
+         => _actionProgress < 0;
 
         // Privates
-        private float _previousActionProgress;
-        private int PreviousActionPointsCount
-        => _previousActionProgress.RoundTowardsZero();
-        private float _previousFocusProgress;
-        private int PreviousFocusPointsCount
-        => _previousFocusProgress.RoundTowardsZero();
-        private bool PreviousIsExhausted
-        => _previousActionProgress < 0;
-        private void TryInvokeEvents()
-        {
-            if (PreviousActionPointsCount != ActionPointsCount)
-                OnActionPointsCountChanged?.Invoke(PreviousActionPointsCount, ActionPointsCount);
-
-            if (PreviousFocusPointsCount != FocusPointsCount)
-                OnFocusPointsCountChanged?.Invoke(PreviousFocusPointsCount, FocusPointsCount);
-
-            if (PreviousIsExhausted && !IsExhausted)
-                OnExhaustStateChanged?.Invoke(false);
-            else if (!PreviousIsExhausted && IsExhausted)
-                OnExhaustStateChanged?.Invoke(true);
-
-            _previousActionProgress = ActionProgress;
-            _previousFocusProgress = FocusProgress;
-        }
-        private void UpdateProgresses()
-        {
-            ActionProgress += Time.deltaTime * ActionSpeed * ActionManager.GlobalSpeedScale;
-            if (ActionProgress > UsableMaxActionPoints)
-            {
-                float overflow = ActionProgress - UsableMaxActionPoints;
-                ActionProgress = UsableMaxActionPoints;
-                OnActionProgressOverflow?.Invoke(overflow);
-            }
-        }
-
-        // Playable
-        protected override void DefineAutoSubscriptions()
-        {
-            base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, UpdateProgresses, TryInvokeEvents);
-        }
+        private float _actionProgress;
+        private float _focusProgress;
     }
 }
