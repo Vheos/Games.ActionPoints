@@ -11,19 +11,18 @@ namespace Vheos.Games.ActionPoints.Editor
     [CustomPropertyDrawer(typeof(EnumMaskAttribute))]
     public class EnumMask_PropertyDrawer : PropertyDrawer
     {
-        Dictionary<string, bool> openFoldouts = new Dictionary<string, bool>();
-
-        object theEnum;
-        Array enumValues;
-        Type enumUnderlyingType;
+        private readonly Dictionary<string, bool> _openFoldouts = new Dictionary<string, bool>();
+        private object _enum;
+        private Array _enumValues;
+        private Type _enumUnderlyingType;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             var enumMaskAttribute = ((EnumMaskAttribute)attribute);
             var foldoutOpen = enumMaskAttribute.alwaysFoldOut;
 
-            if (!foldoutOpen && !openFoldouts.TryGetValue(property.propertyPath, out foldoutOpen))
-                openFoldouts[property.propertyPath] = false;
+            if (!foldoutOpen && !_openFoldouts.TryGetValue(property.propertyPath, out foldoutOpen))
+                _openFoldouts[property.propertyPath] = false;
 
             if (foldoutOpen)
             {
@@ -43,21 +42,21 @@ namespace Vheos.Games.ActionPoints.Editor
             try
             {
                 targetObject = property.serializedObject.targetObject;
-                theEnum = fieldInfo.GetValue(targetObject);
+                _enum = fieldInfo.GetValue(targetObject);
             }
             catch (ArgumentException)
             {
                 targetObject = GetTargetObjectOfProperty(GetParentProperty(property));
-                theEnum = fieldInfo.GetValue(targetObject);
+                _enum = fieldInfo.GetValue(targetObject);
             }
 
-            enumValues = Enum.GetValues(theEnum.GetType());
-            enumUnderlyingType = Enum.GetUnderlyingType(theEnum.GetType());
+            _enumValues = Enum.GetValues(_enum.GetType());
+            _enumUnderlyingType = Enum.GetUnderlyingType(_enum.GetType());
 
             //We need to convert the enum to its underlying type, if we don't it will be boxed
             //into an object later and then we would need to unbox it like (UnderlyingType)(EnumType)theEnum.
             //If we do this here we can just do (UnderlyingType)theEnum later (plus we can visualize the value of theEnum in VS when debugging)
-            theEnum = Convert.ChangeType(theEnum, enumUnderlyingType);
+            _enum = Convert.ChangeType(_enum, _enumUnderlyingType);
 
             EditorGUI.BeginProperty(position, label, property);
 
@@ -69,14 +68,14 @@ namespace Vheos.Games.ActionPoints.Editor
                 EditorGUI.LabelField(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), label);
             else
             {
-                if (!openFoldouts.TryGetValue(property.propertyPath, out foldoutOpen))
-                    openFoldouts[property.propertyPath] = false;
+                if (!_openFoldouts.TryGetValue(property.propertyPath, out foldoutOpen))
+                    _openFoldouts[property.propertyPath] = false;
 
                 EditorGUI.BeginChangeCheck();
                 foldoutOpen = EditorGUI.Foldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), foldoutOpen, label);
 
                 if (EditorGUI.EndChangeCheck())
-                    openFoldouts[property.propertyPath] = foldoutOpen;
+                    _openFoldouts[property.propertyPath] = foldoutOpen;
             }
 
             if (foldoutOpen)
@@ -144,14 +143,14 @@ namespace Vheos.Games.ActionPoints.Editor
                 }
             }
 
-            property.intValue = (int)theEnum;
+            property.intValue = (int)_enum;
         }
 
         /// <summary>
         /// Get the value of an enum element at the specified index (i.e. at the index of the name of the element in the names array)
         /// </summary>
         object GetEnumValue(int _index)
-       => Convert.ChangeType(enumValues.GetValue(_index), enumUnderlyingType);
+       => Convert.ChangeType(_enumValues.GetValue(_index), _enumUnderlyingType);
 
         /// <summary>
         /// Sets or unsets a bit in theEnum based on the index of the enum element (i.e. the index of the element in the names array)
@@ -162,10 +161,10 @@ namespace Vheos.Games.ActionPoints.Editor
             if (_set)
             {
                 if (IsNoneElement(_index))
-                    theEnum = Convert.ChangeType(0, enumUnderlyingType);
+                    _enum = Convert.ChangeType(0, _enumUnderlyingType);
 
                 //enum = enum | val
-                theEnum = DoOrOperator(theEnum, GetEnumValue(_index), enumUnderlyingType);
+                _enum = DoOrOperator(_enum, GetEnumValue(_index), _enumUnderlyingType);
             }
             else
             {
@@ -173,10 +172,10 @@ namespace Vheos.Games.ActionPoints.Editor
                     return;
 
                 object val = GetEnumValue(_index);
-                object notVal = DoNotOperator(val, enumUnderlyingType);
+                object notVal = DoNotOperator(val, _enumUnderlyingType);
 
                 //enum = enum & ~val
-                theEnum = DoAndOperator(theEnum, notVal, enumUnderlyingType);
+                _enum = DoAndOperator(_enum, notVal, _enumUnderlyingType);
             }
 
         }
@@ -186,7 +185,7 @@ namespace Vheos.Games.ActionPoints.Editor
         /// </summary>
         bool IsSet(int _index)
         {
-            object val = DoAndOperator(theEnum, GetEnumValue(_index), enumUnderlyingType);
+            object val = DoAndOperator(_enum, GetEnumValue(_index), _enumUnderlyingType);
 
             //We handle All and None elements differently, since they're "special"
             if (IsAllElement(_index))
@@ -206,16 +205,16 @@ namespace Vheos.Games.ActionPoints.Editor
 
                 //Make sure all bits are set if all "visible bits" are set
                 if (allSet)
-                    theEnum = DoNotOperator(Convert.ChangeType(0, enumUnderlyingType), enumUnderlyingType);
+                    _enum = DoNotOperator(Convert.ChangeType(0, _enumUnderlyingType), _enumUnderlyingType);
 
                 return allSet;
             }
             else if (IsNoneElement(_index))
                 //Just check the "None" element checkbox our enum's value is 0
-                return Convert.ChangeType(theEnum, enumUnderlyingType).Equals(Convert.ChangeType(0, enumUnderlyingType));
+                return Convert.ChangeType(_enum, _enumUnderlyingType).Equals(Convert.ChangeType(0, _enumUnderlyingType));
 
 
-            return !val.Equals(Convert.ChangeType(0, enumUnderlyingType));
+            return !val.Equals(Convert.ChangeType(0, _enumUnderlyingType));
         }
 
         /// <summary>
@@ -324,7 +323,7 @@ namespace Vheos.Games.ActionPoints.Editor
         /// <param name="_index">Index of the element.</param>
         /// <returns>If the element has all bits unset or not.</returns>
         bool IsNoneElement(int _index)
-        => GetEnumValue(_index).Equals(Convert.ChangeType(0, enumUnderlyingType));
+        => GetEnumValue(_index).Equals(Convert.ChangeType(0, _enumUnderlyingType));
 
         /// <summary>
         /// Check if the element of specified index is an "All" element (all bits set, value = ~0).
@@ -334,7 +333,7 @@ namespace Vheos.Games.ActionPoints.Editor
         bool IsAllElement(int _index)
         {
             object elemVal = GetEnumValue(_index);
-            return elemVal.Equals(DoNotOperator(Convert.ChangeType(0, enumUnderlyingType), enumUnderlyingType));
+            return elemVal.Equals(DoNotOperator(Convert.ChangeType(0, _enumUnderlyingType), _enumUnderlyingType));
         }
 
         private static object GetTargetObjectOfProperty(SerializedProperty prop)
@@ -381,9 +380,9 @@ namespace Vheos.Games.ActionPoints.Editor
 
         private static object GetValue_Imp(object source, string name, int index)
         {
-            var enumerable = GetValue_Imp(source, name) as IEnumerable;
-            if (enumerable == null)
+            if (!(GetValue_Imp(source, name) is IEnumerable enumerable))
                 return null;
+
             var enm = enumerable.GetEnumerator();
 
             for (int i = 0; i <= index; i++)
