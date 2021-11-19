@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
-
+    using Vheos.Tools.Extensions.General;
 
     public class Teamable : ABaseComponent
     {
@@ -34,9 +34,9 @@ namespace Vheos.Games.ActionPoints
         }
         public bool HasAnyAllies
         => Allies.Any();
-        public bool IsAlliesWith(Teamable other)
+        public bool IsAllyOf(Teamable other)
         => other != this && Team != null && Team == other.Team;
-        public bool IsEnemiesWith(Teamable other)
+        public bool IsEnemyOf(Teamable other)
         => other != this && (Team == null || Team != other.Team);
         public void TryChangeTeam(Team newTeam)
         {
@@ -65,5 +65,29 @@ namespace Vheos.Games.ActionPoints
             base.PlayStart();
             TryChangeTeam(StartingTeam);
         }
+    }
+
+    static public class Teamable_Extensions
+    {
+        static public bool TryGetTeam(this ABaseComponent t, out Team team)
+        {
+            if (t.TryGetComponent<Teamable>(out var tTeamable)
+            && tTeamable.Team.TryNonNull(out team))
+                return true;
+
+            team = null;
+            return false;
+        }
+
+        static public bool IsAllyOf(this ABaseComponent t, ABaseComponent a)
+        => t != a 
+        && t.TryGetTeam(out var tTeam)
+        && a.TryGetTeam(out var aTeam)
+        && tTeam == aTeam;
+
+        static public bool IsEnemyOf(this ABaseComponent t, ABaseComponent a)
+        => t != a && (!t.TryGetTeam(out var tTeam)
+                  || !a.TryGetTeam(out var aTeam)
+                  || tTeam != aTeam);
     }
 }

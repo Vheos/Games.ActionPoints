@@ -5,6 +5,7 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
+    using Tools.Extensions.General;
     using Event = Tools.UnityCore.Event;
 
     public class Combatable : ABaseComponent
@@ -64,12 +65,11 @@ namespace Vheos.Games.ActionPoints
             get
             {
                 if (Combat == null
-                || !TryGetComponent<Teamable>(out var teamable))
+                || !this.TryGetTeam(out _))
                     yield break;
 
                 foreach (var combatable in Combat.Members)
-                    if (combatable.TryGetComponent<Teamable>(out var otherTeamable)
-                    && teamable.IsAlliesWith(otherTeamable))
+                    if (combatable.IsAllyOf(this))
                         yield return combatable;
             }
         }
@@ -80,15 +80,8 @@ namespace Vheos.Games.ActionPoints
                 if (Combat == null)
                     yield break;
 
-                Func<Combatable, bool> enemyTest = TryGetComponent<Teamable>(out var teamable) switch
-                {
-                    true => (other) => other.TryGetComponent<Teamable>(out var otherTeamable)
-                                    && teamable.IsEnemiesWith(otherTeamable),
-                    false => (other) => this != other,
-                };
-
                 foreach (var combatable in Combat.Members)
-                    if (enemyTest(combatable))
+                    if (combatable.IsEnemyOf(this))
                         yield return combatable;
             }
         }
@@ -100,5 +93,24 @@ namespace Vheos.Games.ActionPoints
         => Allies.Any();
         public bool HasAnyEnemies
         => Enemies.Any();
+    }
+
+    static public class Combatable_Extensions
+    {
+        static public bool TryGetCombat(this ABaseComponent t, out Combat combat)
+        {
+            if (t.TryGetComponent<Combatable>(out var tCombatable)
+            && tCombatable.Combat.TryNonNull(out combat))
+                return true;
+
+            combat = null;
+            return false;
+        }
+
+        static public bool IsInCombatWith(this ABaseComponent t, ABaseComponent a)
+        => t != a
+        && t.TryGetCombat(out var tCombat)
+        && a.TryGetCombat(out var aCombat)
+        && tCombat == aCombat;
     }
 }
