@@ -29,7 +29,6 @@ namespace Vheos.Games.ActionPoints
         private UICostPointsBar _costPointsBar;
         private Vector2 _originalScale;
         private bool _isPressed;
-        private ActionTargetable _validTarget;
         private UISettings.ButtonSettings Settings
         => UIManager.Settings.Button;
         private void UpdateUsability()
@@ -62,8 +61,7 @@ namespace Vheos.Games.ActionPoints
             }
 
             _isPressed = true;
-            if (Action.Animation.TryNonNull(out var animation))
-                Character.ActionAnimator.Animate(animation.Charge);
+            Action.TryPlayAnimation(Character.Get<ActionAnimator>(), Action.Animation.Charge);
             transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
         }
@@ -74,17 +72,16 @@ namespace Vheos.Games.ActionPoints
 
             if (Action.IsTargeted)
             {
-                if (_validTarget != null)
+                if (Character.Get<Targeter>().Target != null)
                 {
-                    if (Action.Animation.TryNonNull(out var animation))
-                        Character.ActionAnimator.Animate(animation.Release);
-                    Action.Use(Character.Get<Actionable>(), _validTarget);
-                    _validTarget.LoseTargeting();
+                    Action.TryPlayAnimation(Character.Get<ActionAnimator>(), Action.Animation.Release);
+                    Action.Use(Character.Get<Actionable>(), Character.Get<Targeter>().Target);
+                    Character.Get<Targeter>().Target = null;
                 }
-                else if (Action.Animation.TryNonNull(out var animation))
-                    Character.ActionAnimator.Animate(animation.Cancel);
+                else
+                    Action.TryPlayAnimation(Character.Get<ActionAnimator>(), Action.Animation.Idle);
 
-                _validTarget = null;
+                Character.Get<Targeter>().Target = null;
                 Base.TargetingLine.Hide();
                 UnsubscribeFrom(Base.TargetingLine.OnTargetChanged, OnTargetChanged);
             }
@@ -99,23 +96,17 @@ namespace Vheos.Games.ActionPoints
         {
             transform.AnimateLocalScale(this, _originalScale, Settings.HighlightDuration);
         }
-        private void OnTargetChanged(ActionTargetable from, ActionTargetable to)
+        private void OnTargetChanged(Targetable from, Targetable to)
         {
-            if (from != null)
-                from.LoseTargeting();
-            _validTarget = null;
-
-            if (to == null
-            || !Action.CanTarget(to))
-                return;
-
-            if (!Character.TryGetComponent<Combatable>(out var combatable) || !combatable.IsInCombat
-            || !to.TryGetComponent<Combatable>(out var combatableOther) || !combatable.IsInCombatWith(combatableOther))
-                return;
-
-            to.GainTargeting(Character);
-            Character.LookAt(to.transform);
-            _validTarget = to;
+            if (to != null
+            && Character.IsInCombatWith(to)
+            && Action.CanTarget(Character.Get<Targeter>(), to))
+            {
+                Character.Get<Targeter>().Target = to;
+                Character.Get<Targeter>().TryLookAtTarget();
+            }
+            else
+                Character.Get<Targeter>().Target = null;
         }
 
         // Play
