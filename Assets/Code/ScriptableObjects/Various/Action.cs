@@ -10,12 +10,16 @@ namespace Vheos.Games.ActionPoints
     public class Action : ScriptableObject
     {
         // Inspector
+        [Header("Visual")]
         [SerializeField] protected Sprite _Sprite = null;
         [SerializeField] protected ActionAnimation _Animation = null;
+        [Header("Cost")]
         [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 0;
         [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 0;
-        [SerializeField] protected bool _IsTargeted = false;
-        [SerializeField] protected Targetables _Targets;
+        [Header("Targeting")]
+        [SerializeField] protected TargetableRelations _AllowedRelations;
+        [SerializeField] protected TargetableTypes _RequiredTypes;
+        [Header("Effects")]
         [SerializeField] protected AActionEffect.Data[] _EffectDataArray = new AActionEffect.Data[1];
 
         // Publics
@@ -26,57 +30,103 @@ namespace Vheos.Games.ActionPoints
         public int FocusPointsCost
         => _FocusPointsCost;
         public bool IsTargeted
-        => _IsTargeted;
-        public ActionAnimation Animation
-        => _Animation;
+        => _AllowedRelations != 0;
+        public void CacheTargetingConditions()
+        {
+            _requiredTypes.Clear();
+            _RequiredTypes.ForEachSetFlag(t => _requiredTypes.Add(GetTargetableType(t)));
+            _allowedRelations.Clear();
+            _AllowedRelations.ForEachSetFlag(t => _allowedRelations.Add(t));
+        }
+
+        // Publics (use)
         public bool CanBeUsedBy(Actionable actionable)
         => !actionable.IsExhausted
         && actionable.ActionPointsCount + actionable.UsableMaxActionPoints >= _ActionPointsCost
         && actionable.FocusPointsCount >= _FocusPointsCost;
-        public bool CanTarget(ActionTargetable target)
+        public bool CanTarget(Targeter user, Targetable target)
         {
-            foreach (Type type in TargetableTypes)
+
+            foreach (Type type in _requiredTypes)
                 if (!target.Has(type))
                     return false;
-            return true;
+
+            foreach (TargetableRelations relation in _allowedRelations)
+                switch (relation)
+                {
+                    case TargetableRelations.Self:
+                        if (target.gameObject == user.gameObject)
+                            return true;
+                        break;
+                    case TargetableRelations.Ally:
+                        if (target.IsAllyOf(user))
+                            return true;
+                        break;
+                    case TargetableRelations.Enemy:
+                        if (target.IsEnemyOf(user))
+                            return true;
+                        break;
+                }
+            return false;
+        }
+        public void TryPlayAnimation(ActionAnimator animator, Animation animation)
+        {
+            if (_Animation != null)
+                animator.Animate(AnimationToClips(animation));
+        }
+        public void StartTargeting(Targeter user, Targetable target)
+        {
+            user.Target = target;
+            user.TryLookAtTarget();
         }
         public void Use(Actionable user, ABaseComponent target)
         {
             user.ActionProgress -= _ActionPointsCost;
             user.FocusProgress -= _FocusPointsCost;
-            foreach(var effectData in _EffectDataArray)
+            foreach (var effectData in _EffectDataArray)
                 effectData.Invoke(user, target);
         }
 
         // Privates
-        private Type[] _targetableTypes;
-        private Type[] TargetableTypes
+        private List<Type> _requiredTypes = new List<Type>();
+        private List<TargetableRelations> _allowedRelations;
+        private Type GetTargetableType(TargetableTypes targetableType)
+        => targetableType switch
         {
-            get
-            {
-                if (_targetableTypes == null)
-                {
-                    List<Type> r = new List<Type>();
-                    _Targets.ForEachSetFlag(t => r.Add(GetTargetableType(t)));
-                    _targetableTypes = r.ToArray();
-                }
-                return _targetableTypes;
-            }
-        }
-        private Type GetTargetableType(Targetables targetable)
-        => targetable switch
+            TargetableTypes.Actionable => typeof(Actionable),
+            TargetableTypes.Woundable => typeof(Woundable),
+            _ => null,
+        };
+        private ActionAnimation.Clip[] AnimationToClips(Animation animation)
+        => animation switch
         {
-            Targetables.Actionable => typeof(Actionable),
-            Targetables.Woundable => typeof(Woundable),
+            Animation.Idle => _Animation.Cancel,
+            Animation.Charge => _Animation.Charge,
+            Animation.Release => _Animation.Release,
             _ => null,
         };
 
         // Defines
+        public enum Animation
+        {
+            Idle,
+            Charge,
+            Release,
+        }
+
         [Flags]
-        protected enum Targetables
+        protected enum TargetableTypes
         {
             Actionable = 1 << 0,
             Woundable = 1 << 1,
+        }
+
+        [Flags]
+        protected enum TargetableRelations
+        {
+            Self = 1 << 0,
+            Ally = 1 << 1,
+            Enemy = 1 << 2,
         }
     }
 }
