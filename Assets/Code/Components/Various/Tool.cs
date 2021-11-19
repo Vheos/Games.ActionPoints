@@ -8,11 +8,11 @@ namespace Vheos.Games.ActionPoints
     public class Tool : ABaseComponent
     {
         // Inspector
-        [SerializeField] protected Vector3 _LocalPositionOffset;
-        [SerializeField] protected Vector3 _LocalRotationOffset;
-        [SerializeField] protected ActionAnimation.Clip _Idle;
-        [SerializeField] protected ActionAnimation.Clip _Unsheathe;
-        [SerializeField] protected ActionAnimation.Clip _Sheathe;
+        [SerializeField] protected Vector3 _LocalPositionOffset = Vector3.zero;
+        [SerializeField] protected Vector3 _LocalRotationOffset = Vector3.zero;
+        [SerializeField] protected ActionAnimation.Clip _Idle = new ActionAnimation.Clip();
+        [SerializeField] protected ActionAnimation.Clip[] _Unsheathe = new ActionAnimation.Clip[1];  
+        [SerializeField] protected ActionAnimation.Clip[] _Sheathe = new ActionAnimation.Clip[1];
 
         // Publics
         public ActionAnimation.Clip Idle
