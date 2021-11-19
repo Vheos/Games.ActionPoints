@@ -12,7 +12,7 @@ namespace Vheos.Games.ActionPoints
         { get; } = new Event();
 
         // Publics
-        public IEnumerable<T> Members
+        public IReadOnlyList<T> Members
         => _members;
         public int Count
         => _members.Count;
