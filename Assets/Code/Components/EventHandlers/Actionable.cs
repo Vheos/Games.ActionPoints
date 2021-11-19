@@ -4,6 +4,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.Math;
+    using Vheos.Tools.Extensions.Collections;
 
     public class Actionable : ABaseComponent
     {
@@ -18,14 +19,28 @@ namespace Vheos.Games.ActionPoints
         { get; } = new Event<float>();
 
         // Input
-        public ComponentInput<ICollection<Action>> Actions
-        { get; } = new ComponentInput<ICollection<Action>>();
         public ComponentInput<int> MaxActionPoints
         { get; } = new ComponentInput<int>();
         public ComponentInput<int> LockedMaxActionPoints
         { get; } = new ComponentInput<int>();
 
         // Publics
+        public IReadOnlyList<Action> Actions
+        => _actions;
+        public void TryAddAction(params Action[] actions)
+        {
+
+            foreach (var action in actions)
+                if (_actions.TryAddUnique(action))
+                    action.CacheTargetingConditions();
+        }
+        public void TryRemoveAction(params Action[] actions)
+        {
+            foreach (var action in actions)
+                _actions.TryRemove(action);
+        }
+        public void ClearActions()
+        => _actions.Clear();
         public float ActionProgress
         {
             get => _actionProgress;
@@ -61,7 +76,8 @@ namespace Vheos.Games.ActionPoints
                 if (previousCount != FocusPointsCount)
                     OnFocusPointsCountChanged?.Invoke(previousCount, FocusPointsCount);
 
-                _focusProgress.SetClamp(0f, _actionProgress);
+                _focusProgress.SetClampMax(_actionProgress);
+                _focusProgress.SetClampMin(0f);
             }
         }
         public int ActionPointsCount
@@ -74,6 +90,7 @@ namespace Vheos.Games.ActionPoints
          => _actionProgress < 0;
 
         // Privates
+        private readonly List<Action> _actions = new List<Action>();
         private float _actionProgress;
         private float _focusProgress;
     }
