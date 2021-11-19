@@ -2,23 +2,18 @@ namespace Vheos.Games.ActionPoints
 {
     using System;
     using System.Globalization;
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using UnityEngine;
     using UnityEngine.UI;
     using Tools.UtilityN;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
-    using System.Collections.Generic;
-    using System.Runtime.CompilerServices;
+    using Tools.Extensions.General;
 
     static public class NewExtensions
     {
         // Various
-        static public void ForEachSetFlag<T>(this T t, Action<T> action) where T : Enum
-        {
-            foreach (var flag in Utility.GetEnumValues<T>())
-                if (t.HasFlag(flag))
-                    action(flag);
-        }
         static public int SetFlagsCount(this int v)
         {
             v -= (v >> 1) & 0x55555555;
@@ -34,10 +29,7 @@ namespace Vheos.Games.ActionPoints
         => UnityEngine.Random.Range(t.x, t.y);
         static public Quaternion ToZRotation(this float t)
         => Quaternion.Euler(0, 0, t);
-        static public bool Roll(this float t)
-        => UnityEngine.Random.value < t;
-        static public bool RollPercent(this float t)
-        => t.Div(100f).Roll();
+
         static public bool IsCompilerGenerated(this Type t)
         => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) != null;
         static public bool CursorRaycast(this Collider t, Camera camera, out RaycastHit hitInfo)
@@ -54,8 +46,6 @@ namespace Vheos.Games.ActionPoints
                 if (UnityEngine.Random.Range(0, count) == 0)
                     r = element;
             }
-            if (count == 0)
-                throw new InvalidOperationException("Sequence was empty");
             return r;
         }
 
@@ -107,30 +97,7 @@ namespace Vheos.Games.ActionPoints
         /// <summary> Returns this array of hits sorted by distance from object a. </summary>
         static public RaycastHit[] SortedByDistanceFrom(this RaycastHit[] t, Component a)
         => t.SortedByDistanceFrom(a.gameObject);
-        /// <summary> Returns a shallow copy of this array. </summary>
-        static public T[] MakeCopy<T>(this T[] t)
-        {
-            T[] r = new T[t.Length];
-            t.CopyTo(r, 0);
-            return r;
-        }
-        /// <summary> Returns a shallow copy of this list. </summary>
-        static public List<T> MakeCopy<T>(this List<T> t)
-        => new List<T>(t);
-        /// <summary> Swaps the references of this object and a. </summary>
-        static public void SwapWith<T>(this T t, T a) where T : class
-        {
-            T temp = t;
-            t = a;
-            a = temp;
-        }
-        /// <summary> Swaps the references of this object and a. </summary>
-        static public void SwapWith<T>(ref this T t, ref T a) where T : struct
-        {
-            T temp = t;
-            t = a;
-            a = temp;
-        }
+
 
         // Input
         /// <summary> Checks if this key has just been pressed. </summary>
