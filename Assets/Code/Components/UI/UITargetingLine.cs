@@ -11,11 +11,11 @@ namespace Vheos.Games.ActionPoints
     public class UITargetingLine : AUIComponent
     {
         // Events
-        public Event<ActionTargetable, ActionTargetable> OnTargetChanged
-        { get; } = new Event<ActionTargetable, ActionTargetable>();
+        public Event<Targetable, Targetable> OnTargetChanged
+        { get; } = new Event<Targetable, Targetable>();
 
         // Publics
-        public ActionTargetable Target
+        public Targetable Target
         { get; private set; }
         public void Initialize()
         {
@@ -64,8 +64,8 @@ namespace Vheos.Games.ActionPoints
         }
         private void TryInvokeEvents(Mousable from, Mousable to)
         {
-            ActionTargetable actionFrom = from == null ? null : from.Get<ActionTargetable>();
-            Target = to == null ? null : to.Get<ActionTargetable>();
+            Targetable actionFrom = from == null ? null : from.Get<Targetable>();
+            Target = to == null ? null : to.Get<Targetable>();
             if (actionFrom != Target)
                 OnTargetChanged?.Invoke(actionFrom, Target);
         }

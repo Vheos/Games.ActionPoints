@@ -14,7 +14,7 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
         public void Initialize()
         {
-            foreach (var action in Character.Get<Actionable>().Actions.Value)
+            foreach (var action in Character.Get<Actionable>().Actions)
             {
                 UIButton newButton = this.CreateChildComponent<UIButton>(UIManager.Settings.Prefab.Button);
                 newButton.Initialize(action);
