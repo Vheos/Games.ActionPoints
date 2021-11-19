@@ -16,8 +16,8 @@ MonoBehaviour:
   _Animation: {fileID: 11400000, guid: 4fcfc9ef43f3e3a4bb92afd2feab597b, type: 2}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
-  _IsTargeted: 1
-  _Targets: 0
+  _AllowedRelations: 4
+  _RequiredTypes: 2
   _EffectDataArray:
   - _Effect: {fileID: 0}
     _Direction: 0
