@@ -10,22 +10,20 @@ namespace Vheos.Games.ActionPoints
     public class Character : AEventSubscriber
     {
         // Inspector
-        [SerializeField] protected List<Action> _Actions = new List<Action>();
+        [SerializeField] protected Action[] _Actions = new Action[1];
         [SerializeField] [Range(1, 10)] protected int _MaxPoints = 5;
         [SerializeField] [Range(0f, 1f)] protected float _ActionSpeed = 1f;
         //[SerializeField] [Range(0f, 1f)] protected float _FocusRate = 0.5f;
         //[SerializeField] [Range(0f, 1f)] protected float _ExhaustRate = 0.5f;
         [SerializeField] [Range(0f, 100f)] protected float _BluntArmor = 0f;
         [SerializeField] [Range(0f, 100f)] protected float _SharpArmor = 0f;
-        [SerializeField] protected Team.Predefined _StartingTeam;
-        [SerializeField] protected Tool _StartingTool;
-        [SerializeField] protected ActionAnimation.Clip _Idle;
+        [SerializeField] protected Team.Predefined _StartingTeam = Team.Predefined.None;
+        [SerializeField] protected Tool _StartingTool = null;
+        [SerializeField] protected ActionAnimation.Clip _Idle = new ActionAnimation.Clip();
 
         // Other
         public Quaternion LookAtRotation(Vector3 targetPosition)
         => Quaternion.LookRotation(transform.position.DirectionTowards(targetPosition)).Add(Quaternion.Euler(0, -90f, 0));
-        public void LookAt(Transform targetTransform)
-        => transform.AnimateRotation(this, LookAtRotation(targetTransform.position), 1f);
         public Team Team
         => Get<Teamable>().Team;
         public Combat Combat
@@ -96,7 +94,8 @@ namespace Vheos.Games.ActionPoints
             if (isInCombat)
             {
                 _ui.PointsBar.Show();
-                _ui.Wheel.Show();
+                if (!Has<AIController>())
+                    _ui.Wheel.Show();
 
                 foreach (var ally in Get<Teamable>().Allies)
                     if (ally.TryGetComponent<Combatable>(out var allyCombatable))
@@ -109,7 +108,7 @@ namespace Vheos.Games.ActionPoints
 
                 Get<Actionable>().ActionProgress = 0;
                 Get<Actionable>().FocusProgress = 0;
-                Get<ActionTargetable>().LoseTargeting();
+                Get<Targetable>().ClearAllTargeting();
             }
         }
         private void OnDamageReceived(float damage, bool isWound)
@@ -117,31 +116,33 @@ namespace Vheos.Games.ActionPoints
         private void OnHasDied()
         {
             Get<ActionAnimator>().Stop();
-            Get<ActionTargetable>().LoseTargeting();
-
             Get<Combatable>().TryLeaveCombat();
             Get<Teamable>().TryLeaveTeam();
 
             transform.AnimateLocalRotation(this, transform.localRotation.eulerAngles.NewZ(180f), 1f, null, QAnimator.Curve.Qurve);
         }
-        private void OnTargeterChange(ABaseComponent from, ABaseComponent to)
+        private void OnGainTargeting(Targeter targeter, bool isFirst)
         {
-            if (to == null)
-                Get<SpriteOutline>().Hide();
-            else
+            if (isFirst)
                 Get<SpriteOutline>().Show();
         }
+        private void OnLoseTargeting(Targeter targeter, bool isLast)
+        {
+            if (isLast)
+                Get<SpriteOutline>().Hide();
+        }
+
         private void OnUpdate()
         {
             if (Get<Combatable>().IsInCombat)
                 Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed * ActionManager.GlobalSpeedScale;
         }
+
         // Playable
         protected void DefineComponentInputs()
         {
             Get<Actionable>().MaxActionPoints.Set(() => _MaxPoints);
             Get<Actionable>().LockedMaxActionPoints.Set(() => Get<Woundable>().WoundsCount);
-            Get<Actionable>().Actions.Set(() => _Actions);
             Get<Woundable>().MaxWounds.Set(() => Get<Actionable>().MaxActionPoints);
             Get<Woundable>().BluntArmor.Set(() => _BluntArmor);
             Get<Woundable>().SharpArmor.Set(() => _SharpArmor);
@@ -163,13 +164,15 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(Get<Combatable>().OnCombatChanged, OnCombatChanged);
             SubscribeTo(Get<Woundable>().OnDamageReceived, OnDamageReceived);
             SubscribeTo(Get<Woundable>().OnHasDied, OnHasDied);
-            SubscribeTo(Get<ActionTargetable>().OnTargeterChange, OnTargeterChange);
+            SubscribeTo(Get<Targetable>().OnGainTargeting, OnGainTargeting);
+            SubscribeTo(Get<Targetable>().OnLoseTargeting, OnLoseTargeting);
             SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
         }
         protected override void PlayAwake()
         {
             base.PlayAwake();
             DefineComponentInputs();
+            Get<Actionable>().TryAddAction(_Actions);
             _ui = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Settings.Prefab.Base);
             _ui.Initialize(this);
         }
