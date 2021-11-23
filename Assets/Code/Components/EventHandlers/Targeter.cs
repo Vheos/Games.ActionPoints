@@ -1,10 +1,8 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
-    using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
-    using Tools.Extensions.Collections;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
 
@@ -38,10 +36,10 @@ namespace Vheos.Games.ActionPoints
                 }
             }
         }
-        public void TryLookAtTarget(bool allAxes = false)
+        public Quaternion LookAtTargetRotation(bool allAxes = false)
         {
             if (Target == null)
-                return;
+                return Quaternion.identity;
 
             Vector3 targetAngles = Quaternion.LookRotation(this.DirectionTowards(Target)).eulerAngles;
             targetAngles.y -= 90f;
@@ -49,9 +47,9 @@ namespace Vheos.Games.ActionPoints
             {
                 targetAngles.x = transform.position.x;
                 targetAngles.z = transform.position.z;
-            }           
+            }
 
-            transform.AnimateRotation(this, Quaternion.Euler(targetAngles), _LookAtAnimDuration);
+            return Quaternion.Euler(targetAngles);
         }
     }
 }
