@@ -24,7 +24,7 @@ namespace Vheos.Games.ActionPoints
             Get<LineRenderer>().startColor = Character.Color.NewA(Settings.StartOpacity);
             Hide(true);
         }
-        public void Show(Transform from, Transform to)
+        public void Show(Transform from, Transform to, Action<Targetable, Targetable> onChangeTarget = null)
         {
             enabled = true;
             this.GOActivate();
@@ -33,15 +33,19 @@ namespace Vheos.Games.ActionPoints
             _from = from;
             _to = to;
             UpdatePositionsAndTiling();
+            
+            SubscribeTo(OnChangeTarget, onChangeTarget);
+            _onChangeTarget = onChangeTarget;
         }
-        public void ShowAndFollowCursor(Transform from)
+        public void ShowAndFollowCursor(Transform from, Action<Targetable, Targetable> onChangeTarget = null)
         {
             CursorManager.SetCursorDistance(from);
-            Show(from, CursorManager.CursorTransform);
+            Show(from, CursorManager.CursorTransform, onChangeTarget);
         }
         public void Hide(bool instantly = false)
         {
             enabled = false;
+            UnsubscribeFrom(OnChangeTarget, _onChangeTarget);
             this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, 0f, instantly ? 0f : Settings.WidthAnimDuration, this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
@@ -54,6 +58,7 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private Transform _from;
         private Transform _to;
+        private Action<Targetable, Targetable> _onChangeTarget;
         protected TargetingLineDrawable _drawable;
         private UISettings.TargetingLineSettings Settings
         => UIManager.Settings.TargetingLine;
@@ -64,10 +69,10 @@ namespace Vheos.Games.ActionPoints
         }
         private void TryInvokeEvents(Mousable from, Mousable to)
         {
-            Targetable actionFrom = from == null ? null : from.Get<Targetable>();
-            Target = to == null ? null : to.Get<Targetable>();
-            if (actionFrom != Target)
-                OnChangeTarget?.Invoke(actionFrom, Target);
+            Targetable fromTargetable = from == null ? null : from.GetOrNull<Targetable>();
+            Target = to == null ? null : to.GetOrNull<Targetable>();
+            if (fromTargetable != Target)
+                OnChangeTarget?.Invoke(fromTargetable, Target);
         }
         // Play        
         protected override void DefineAutoSubscriptions()
