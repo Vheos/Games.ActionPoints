@@ -7,15 +7,15 @@ namespace Vheos.Games.ActionPoints
     using static UIManager;
 
     [DisallowMultipleComponent]
-    sealed public class UIManager : AManager<UIManager>
+    public class UIManager : AManager<UIManager>
     {
         // Constants
         private const string UI_ROOT_NAME = "UI";
 
         // Inspector
-        [SerializeField] private UISettings _Settings = null;
-        [SerializeField] private KeyCode[] _PrimaryButtons = new KeyCode[1];
-        [SerializeField] private KeyCode[] _SecondaryButtons = new KeyCode[1];
+        [SerializeField] protected UISettings _Settings = null;
+        [SerializeField] protected KeyCode[] _PrimaryButtons = new KeyCode[1];
+        [SerializeField] protected KeyCode[] _SecondaryButtons = new KeyCode[1];
 
         // Publics
         static public UISettings Settings

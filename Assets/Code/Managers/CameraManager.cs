@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
 
     [DisallowMultipleComponent]
-    sealed public class CameraManager : AComponentManager<CameraManager, Camera>
+    public class CameraManager : AComponentManager<CameraManager, Camera>
     {
         // Publics
         static public Camera CursorCamera

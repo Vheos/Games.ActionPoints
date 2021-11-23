@@ -5,11 +5,11 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.General;
 
-    sealed public class ActionManager : AManager<ActionManager>
+    public class ActionManager : AManager<ActionManager>
     {
         // Inspector
-        [SerializeField] [Range(0f, 2f)] private float _GlobalSpeedScale = 1f;
-        [SerializeField] private KeyCode _CombatPauseButton = KeyCode.Space;
+        [SerializeField] [Range(0f, 2f)] protected float _GlobalSpeedScale = 1f;
+        [SerializeField] protected KeyCode _CombatPauseButton = KeyCode.Space;
 
         // Publics
         static public float GlobalSpeedScale

@@ -10,11 +10,11 @@ namespace Vheos.Games.ActionPoints
     using static CursorManager;
 
     [DisallowMultipleComponent]
-    sealed public class CursorManager : AManager<CursorManager>
+    public class CursorManager : AManager<CursorManager>
     {
         // Inspector
-        [SerializeField] private MouseButton[] _Buttons;
-        [SerializeField] private GameObject _CursorPrefab;
+        [SerializeField] protected MouseButton[] _Buttons;
+        [SerializeField] protected GameObject _CursorPrefab;
 
         // Events
         static public Event<Vector2, Vector2> OnCursorMoved
@@ -59,6 +59,7 @@ namespace Vheos.Games.ActionPoints
             MouseButton.Extra4 => KeyCode.Mouse6,
             _ => KeyCode.None,
         };
+
         // Privates
         static private float _cursorDistance;
         static private Vector3 _previousMousePosition;
