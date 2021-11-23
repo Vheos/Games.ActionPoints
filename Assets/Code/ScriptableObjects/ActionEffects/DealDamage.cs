@@ -4,7 +4,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
     using UnityEngine;
     using Tools.UnityCore;
 
-    [CreateAssetMenu(fileName = nameof(DealDamage), menuName = CONTEXT_MENU_PATH + nameof(DealDamage), order = 2)]
+    [CreateAssetMenu(fileName = nameof(DealDamage), menuName = CONTEXT_MENU_PATH + nameof(DealDamage))]
     public class DealDamage : AActionEffect
     {
         // Overrides
