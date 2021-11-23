@@ -1,13 +1,16 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.Math;
+
     public class MoveTowards : AFollowTarget
     {
-        // Overrides
-        public override void Follow(Transform target, float lerpAlpha)
+        // Publics
+        public Vector3 GetFinalPosition(Transform target)
         {
-            Vector3 targetPosition = target.position + _Offset;
+            Vector3 targetPosition = target.position;
             if (_LockedAxes != 0)
             {
                 Vector3 currentPosition = transform.position;
@@ -18,7 +21,13 @@ namespace Vheos.Games.ActionPoints
                 if (_LockedAxes.HasFlag(Axes.Z))
                     targetPosition.z = currentPosition.z;
             }
-            transform.position = transform.position.Lerp(targetPosition, lerpAlpha);
+            return targetPosition + _Offset;
         }
+
+        // Overrides
+        protected override void UpdateFollow()
+        => transform.position = transform.position.Lerp(GetFinalPosition(_Target), NewUtility.LerpHalfTimeToAlpha(_HalfTime));
+        protected override void FollowOnAnimate(System.Action tryRestoreEnabled)
+        => transform.AnimatePosition(this, GetFinalPosition(_Target), _AnimDuration, tryRestoreEnabled);
     }
 }

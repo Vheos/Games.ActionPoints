@@ -1,7 +1,9 @@
 namespace Vheos.Games.ActionPoints
 {
-    using Tools.UnityCore;
+    using System;
     using UnityEngine;
+    using Tools.UnityCore;
+
     abstract public class AFollowTarget : AEventSubscriber
     {
         // Inspector
@@ -9,29 +11,48 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected Vector3 _Offset = Vector3.zero;
         [SerializeField] protected Axes _LockedAxes = 0;
         [SerializeField] [Range(0f, 1f)] protected float _HalfTime = 0.25f;
+        [SerializeField] [Range(0f, 1f)] protected float _AnimDuration = 0.5f;
 
         // Publics
-        abstract public void Follow(Transform target, float lerpAlpha);
-        public Transform Target
+        public void AnimateFollow()
         {
-            get => _Target;
-            set => _Target = value;
+            if (enabled)
+            {
+                enabled = false;
+                FollowOnAnimate(() => enabled = true);
+            }
+            else
+                FollowOnAnimate(() => { });
+        }
+        public Transform Target
+        => _Target;
+        public void SetTarget(GameObject target, bool animate = false)
+        {
+            _Target = target.transform;
+            if (animate)
+                AnimateFollow();
+        }
+        public void SetTarget(Component target, bool animate = false)
+        {
+            _Target = target.transform;
+            if (animate)
+                AnimateFollow();
         }
 
         // Private
-        private void TryFollowTarget()
+        abstract protected void UpdateFollow();
+        abstract protected void FollowOnAnimate(System.Action tryRestoreEnabled);
+        private void TryFollowTargetOnUpdate()
         {
-            if (_Target == null)
-                return;
-
-            Follow(_Target, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
+            if (_Target != null)
+                UpdateFollow();
         }
 
         // Play
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, TryFollowTarget);
+            SubscribeTo(Get<Updatable>().OnUpdated, TryFollowTargetOnUpdate);
         }
 
         // Defines

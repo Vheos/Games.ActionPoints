@@ -1,25 +1,15 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
-    public class RotateTowards : AFollowTarget
+
+    public class RotateTowards : AFollowTargetRotation
     {
         // Overrides
-        public override void Follow(Transform target, float lerpAlpha)
-        {
-            Vector3 targetAngles = Quaternion.LookRotation(this.DirectionTowards(target)).eulerAngles;
-            if (_LockedAxes != 0)
-            {
-                Vector3 currentAngles = transform.rotation.eulerAngles;
-                if (_LockedAxes.HasFlag(Axes.X))
-                    targetAngles.x = currentAngles.x;
-                if (_LockedAxes.HasFlag(Axes.Y))
-                    targetAngles.y = currentAngles.y;
-                if (_LockedAxes.HasFlag(Axes.Z))
-                    targetAngles.z = currentAngles.z;
-            }
-            transform.rotation = transform.rotation.Lerp(Quaternion.Euler(targetAngles + _Offset), lerpAlpha);
-        }
+        protected override Vector3 TargetAngles(Transform target)
+        => Quaternion.LookRotation(this.DirectionTowards(target)).eulerAngles;
     }
 }
