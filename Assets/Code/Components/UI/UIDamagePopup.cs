@@ -11,7 +11,7 @@ namespace Vheos.Games.ActionPoints
     public class UIDamagePopup : AUIComponent
     {
         // Publics
-        public void Initialize(Vector3 position, float damage, bool isWound)
+        public void Initialize(Vector3 position, float damage, bool isWound, bool isOddPopup)
         {
             float lerpAlpha = isWound ? 1f : damage / 100f;
             Get<TextMeshPro>().color = Settings.ColorCurve.Evaluate(lerpAlpha);
@@ -23,7 +23,7 @@ namespace Vheos.Games.ActionPoints
             if (Settings.PercentSignSize > 0f)
                 Get<TextMeshPro>().text += $"<size={Settings.PercentSignSize.ToInvariant("F2")}>%</size>";
 
-            FadeIn();
+            FadeIn(isOddPopup);
             if (isWound)
                 Pulse();
         }
@@ -31,9 +31,10 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private UISettings.DamagePopupSettings Settings
         => UIManager.Settings.DamagePopup;
-        private void FadeIn()
+        private void FadeIn(bool isOddPopup)
         {
-            Vector2 localDirection = NewUtility.PointOnCircle(Settings.AngleRandomRange.RandomMinMax() - 90f, 1f, true);
+            float angle = isOddPopup.ToSign() * Settings.AngleRandomRange.RandomMinMax() - 90f;
+            Vector2 localDirection = NewUtility.PointOnCircle(angle, 1f, true);
             Vector3 direction = localDirection.Rotate(CameraManager.FirstActive.transform.rotation);
             if (Settings.AlignTextRotationToDirection)
                 transform.localRotation = Quaternion.LookRotation(transform.forward, localDirection);
