@@ -17,14 +17,16 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 0;
         [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 0;
         [Header("Targeting")]
-        [SerializeField] protected TargetableRelations _AllowedRelations;
-        [SerializeField] protected TargetableTypes _RequiredTypes;
+        [SerializeField] protected TargetableTypes _RequiredTypes = 0;        
+        [SerializeField] protected TargetableRelations _AllowedRelations = (TargetableRelations)~0;
         [Header("Effects")]
         [SerializeField] protected AActionEffect.Data[] _EffectDataArray = new AActionEffect.Data[1];
 
         // Publics
         public Sprite Sprite
         => _Sprite;
+        public ActionAnimation Animation
+        => _Animation;
         public int ActionPointsCost
         => _ActionPointsCost;
         public int FocusPointsCost
@@ -37,42 +39,27 @@ namespace Vheos.Games.ActionPoints
         => !actionable.IsExhausted
         && actionable.ActionPointsCount + actionable.UsableMaxActionPoints >= _ActionPointsCost
         && actionable.FocusPointsCount >= _FocusPointsCost;
-        public bool CanTarget(Targeter user, Targetable target)
-        {
-
-            foreach (Type type in _requiredTypes)
-                if (!target.Has(type))
-                    return false;
-
-            foreach (TargetableRelations relation in _allowedRelations)
-                switch (relation)
-                {
-                    case TargetableRelations.Self:
-                        if (target.gameObject == user.gameObject)
-                            return true;
-                        break;
-                    case TargetableRelations.Ally:
-                        if (target.IsAllyOf(user))
-                            return true;
-                        break;
-                    case TargetableRelations.Enemy:
-                        if (target.IsEnemyOf(user))
-                            return true;
-                        break;
-                }
-            return false;
-        }
-        public void TryPlayAnimation(ActionAnimator animator, Animation animation)
-        {
-            if (_Animation != null)
-                animator.Animate(AnimationToClips(animation));
-        }
-        public void Use(Actionable user, ABaseComponent target)
+        public void Use(Actionable user, Targetable target)
         {
             user.ActionProgress -= _ActionPointsCost;
             user.FocusProgress -= _FocusPointsCost;
             foreach (var effectData in _EffectDataArray)
                 effectData.Invoke(user, target);
+        }
+        public void TryPlayAnimation(ActionAnimator animator, ActionAnimation.Type type)
+        {
+            if (_Animation != null)
+                animator.Animate(_Animation.ToClips(type));
+        }
+        public bool CanTarget(Targeter user, Targetable target)
+        {
+            foreach (Type type in _requiredTypes)
+                if (!target.Has(type))
+                    return false;
+
+            return _AllowedRelations.HasFlag(TargetableRelations.Self) && target.gameObject == user.gameObject
+                || _AllowedRelations.HasFlag(TargetableRelations.Ally) && target.IsAllyOf(user)
+                || _AllowedRelations.HasFlag(TargetableRelations.Enemy) && target.IsEnemyOf(user);
         }
 
         // Privates
@@ -85,28 +72,12 @@ namespace Vheos.Games.ActionPoints
             TargetableTypes.Woundable => typeof(Woundable),
             _ => null,
         };
-        private ActionAnimation.Clip[] AnimationToClips(Animation animation)
-        => animation switch
-        {
-            Animation.Idle => _Animation.Cancel,
-            Animation.Charge => _Animation.Charge,
-            Animation.Release => _Animation.Release,
-            _ => null,
-        };
         internal override void TryInitialize()
         {
             _requiredTypes = new List<Type>();
             _RequiredTypes.ForEachSetFlag(t => _requiredTypes.Add(GetTargetableType(t)));
             _allowedRelations = new List<TargetableRelations>();
             _AllowedRelations.ForEachSetFlag(t => _allowedRelations.Add(t));
-        }
-
-        // Defines
-        public enum Animation
-        {
-            Idle,
-            Charge,
-            Release,
         }
 
         [Flags]

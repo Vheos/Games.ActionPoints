@@ -1,8 +1,9 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
-    using Tools.Extensions.General;
+    using Tools.UnityCore;
 
     [CreateAssetMenu(fileName = nameof(ActionAnimation), menuName = nameof(ActionAnimation), order = 3)]
     public class ActionAnimation : ScriptableObject
@@ -13,14 +14,21 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected Clip[] _Release = new Clip[1];
 
         // Public
-        public Clip[] Charge
+        public IReadOnlyList<Clip> Charge
         => _Charge;
-        public Clip[] Cancel
+        public IReadOnlyList<Clip> Cancel
         => _Cancel;
-        public Clip[] Release
+        public IReadOnlyList<Clip> Release
         => _Release;
 
         // Defines
+        public enum Type
+        {
+            Idle,
+            Charge,
+            Release,
+        }
+
         [System.Serializable]
         public class Clip
         {
@@ -91,5 +99,17 @@ namespace Vheos.Games.ActionPoints
                 CombatMidpoint,
             }
         }
+    }
+
+    static public class ActionAnimation_Extensions
+    {
+        static public IReadOnlyList<ActionAnimation.Clip> ToClips(this ActionAnimation animation, ActionAnimation.Type type)
+        => type switch
+        {
+            ActionAnimation.Type.Idle => animation.Cancel,
+            ActionAnimation.Type.Charge => animation.Charge,
+            ActionAnimation.Type.Release => animation.Release,
+            _ => null,
+        };
     }
 }
