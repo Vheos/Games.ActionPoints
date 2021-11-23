@@ -1,6 +1,6 @@
 namespace Vheos.Games.ActionPoints
 {
-    using System.Collections.Generic;
+    using System;
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.Math;
@@ -18,7 +18,7 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] [Range(0f, 100f)] protected float _BluntArmor = 0f;
         [SerializeField] [Range(0f, 100f)] protected float _SharpArmor = 0f;
         [SerializeField] protected Team.Predefined _StartingTeam = Team.Predefined.None;
-        [SerializeField] protected Tool _StartingTool = null;
+        [SerializeField] protected Equipable[] _StartingEquipment = new Equipable[0];
         [SerializeField] protected ActionAnimation.Clip _Idle = new ActionAnimation.Clip();
 
         // Other
@@ -37,24 +37,9 @@ namespace Vheos.Games.ActionPoints
         public Transform HandTransform
         => Get<ActionAnimator>().HandTransform;
         public Tool Tool
-        { get; private set; }
-        public void Equip(Tool tool)
-        {
-            if (tool == null)
-                return;
-
-            Tool = tool;
-            Tool.GetEquippedBy(this);
-            ActionAnimator.Animate(Tool.Idle);
-        }
-        public void Unequip()
-        {
-            if (Tool == null)
-                return;
-
-            Tool.GetUnequipped();
-            Tool = null;
-        }
+        => Get<Equiper>().TryGetEquiped(Equipable.Slot.Hand, out var equipable)
+        && equipable.TryGet<Tool>(out var tool)
+         ? tool : null;
         public ActionAnimation.Clip Idle
         => Tool != null ? Tool.Idle : _Idle;
 
@@ -73,7 +58,7 @@ namespace Vheos.Games.ActionPoints
             }
 
             if (_ui.TargetingLine.Target.TryNonNull(out var target)
-            && target.TryGetComponent<Combatable>(out var targetCombatable))
+            && target.TryGet<Combatable>(out var targetCombatable))
                 if (targetCombatable.IsInCombat)
                     targetCombatable.TryLeaveCombat();
                 else
@@ -98,7 +83,7 @@ namespace Vheos.Games.ActionPoints
                     _ui.Wheel.Show();
 
                 foreach (var ally in Get<Teamable>().Allies)
-                    if (ally.TryGetComponent<Combatable>(out var allyCombatable))
+                    if (ally.TryGet<Combatable>(out var allyCombatable))
                         allyCombatable.TryJoinCombat(current);
             }
             else
@@ -131,7 +116,11 @@ namespace Vheos.Games.ActionPoints
             if (isLast)
                 Get<SpriteOutline>().Hide();
         }
-
+        private void OnChangeTarget(Targetable from, Targetable to)
+        {
+            if (to != null)
+                Get<RotateTowards>().SetTarget(to.transform, true);
+        }
         private void OnUpdate()
         {
             if (Get<Combatable>().IsInCombat)
@@ -166,20 +155,22 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(Get<Woundable>().OnHasDied, OnHasDied);
             SubscribeTo(Get<Targetable>().OnGainTargeting, OnGainTargeting);
             SubscribeTo(Get<Targetable>().OnLoseTargeting, OnLoseTargeting);
+            SubscribeTo(Get<Targeter>().OnChangeTarget, OnChangeTarget);
             SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
         }
         protected override void PlayAwake()
         {
             base.PlayAwake();
             DefineComponentInputs();
-            Get<Actionable>().TryAddAction(_Actions);
+            Get<Actionable>().TryAddActions(_Actions);
             _ui = UIManager.HierarchyRoot.CreateChildComponent<UIBase>(UIManager.Settings.Prefab.Base);
             _ui.Initialize(this);
         }
         protected override void PlayStart()
         {
             base.PlayStart();
-            Equip(_StartingTool);
+            foreach (var equipable in _StartingEquipment)
+                Get<Equiper>().Equip(equipable);
         }
         protected override void PlayDestroy()
         {
