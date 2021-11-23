@@ -33,19 +33,19 @@ namespace Vheos.Games.ActionPoints
         => UIManager.Settings.Button;
         private void UpdateUsability()
         {
-            Color targetColor = Action.CanBeUsedBy(Character.Get<Actionable>()) ? Character.Color : Settings.UnusableColor;
+            Color targetColor = Character.Get<Actionable>().CanUse(Action) ? Character.Color : Settings.UnusableColor;
             Get<SpriteRenderer>().AnimateColor(this, targetColor, Settings.UnusableDuration);
         }
         private void OnGainHighlight()
         {
-            if (!Action.CanBeUsedBy(Character.Get<Actionable>()))
+            if (!Character.Get<Actionable>().CanUse(Action))
                 return;
 
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.HighlightDuration);
         }
         private void OnPress(UIManager.ButtonFunction function)
         {
-            if (!Action.CanBeUsedBy(Character.Get<Actionable>()))
+            if (!Character.Get<Actionable>().CanUse(Action))
             {
                 if (Character.Get<Actionable>().IsExhausted)
                     Base.PointsBar.NotifyExhausted();
@@ -55,13 +55,10 @@ namespace Vheos.Games.ActionPoints
             }
 
             if (Action.IsTargeted)
-            {
-                Base.TargetingLine.ShowAndFollowCursor(transform);
-                SubscribeTo(Base.TargetingLine.OnChangeTarget, OnTargetChanged);
-            }
+                Base.TargetingLine.ShowAndFollowCursor(transform, OnTargetChanged);            
 
             _isPressed = true;
-            Action.TryPlayAnimation(Character.Get<ActionAnimator>(), Action.Animation.Charge);
+            Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Charge);
             transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
         }
@@ -74,19 +71,18 @@ namespace Vheos.Games.ActionPoints
             {
                 if (Character.Get<Targeter>().Target != null)
                 {
-                    Action.TryPlayAnimation(Character.Get<ActionAnimator>(), Action.Animation.Release);
-                    Action.Use(Character.Get<Actionable>(), Character.Get<Targeter>().Target);
+                    Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Release);
+                    Character.Get<Actionable>().Use(Action, Character.Get<Targeter>().Target);
                     Character.Get<Targeter>().Target = null;
                 }
                 else
-                    Action.TryPlayAnimation(Character.Get<ActionAnimator>(), Action.Animation.Idle);
+                    Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Idle);
 
                 Character.Get<Targeter>().Target = null;
                 Base.TargetingLine.Hide();
-                UnsubscribeFrom(Base.TargetingLine.OnChangeTarget, OnTargetChanged);
             }
             else if (isClick)
-                Action.Use(Character.Get<Actionable>(), null);
+                Character.Get<Actionable>().Use(Action, null);
 
             _isPressed = false;
             transform.AnimateLocalScale(this, _originalScale * Settings.HighlightScale, Settings.ClickDuration);

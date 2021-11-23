@@ -28,9 +28,11 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
         public Transform HandTransform
         { get; private set; }
+        public void TryAnimate(Action action, ActionAnimation.Type type)
+        => action.TryPlayAnimation(this, type);
         public void Animate(Clip clip)
         => Animate(new Clip[] { clip });
-        public void Animate(IList<Clip> clips)
+        public void Animate(IReadOnlyList<Clip> clips)
         {
             IsPlaying = true;
             AnimateClipsFrom(clips, 0);
@@ -97,7 +99,7 @@ namespace Vheos.Games.ActionPoints
                 }
             }
         }
-        private void AnimateClipsFrom(IList<Clip> clips, int clipIndex)
+        private void AnimateClipsFrom(IReadOnlyList<Clip> clips, int clipIndex)
         {
             if (clipIndex >= clips.Count)
             {

@@ -28,7 +28,7 @@ namespace Vheos.Games.ActionPoints
         abstract protected Vector3 TargetAngles(Transform target);
 
         // Overrides
-        protected override void UpdateFollow()
+        protected override void FollowOnUpdate()
         => transform.rotation = transform.rotation.Lerp(GetFinalRotation(_Target), NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         protected override void FollowOnAnimate(System.Action tryRestoreEnabled)
         => transform.AnimateRotation(this, GetFinalRotation(_Target), _AnimDuration, tryRestoreEnabled);

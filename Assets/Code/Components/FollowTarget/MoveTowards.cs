@@ -25,7 +25,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Overrides
-        protected override void UpdateFollow()
+        protected override void FollowOnUpdate()
         => transform.position = transform.position.Lerp(GetFinalPosition(_Target), NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         protected override void FollowOnAnimate(System.Action tryRestoreEnabled)
         => transform.AnimatePosition(this, GetFinalPosition(_Target), _AnimDuration, tryRestoreEnabled);

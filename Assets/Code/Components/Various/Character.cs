@@ -32,8 +32,6 @@ namespace Vheos.Games.ActionPoints
         => Get<Combatable>().AnchorPosition;
         public Color Color
         => Team != null ? Team.Color : Color.white;
-        public ActionAnimator ActionAnimator
-        => Get<ActionAnimator>();
         public Transform HandTransform
         => Get<ActionAnimator>().HandTransform;
         public Tool Tool
@@ -45,24 +43,36 @@ namespace Vheos.Games.ActionPoints
 
         // Private
         private UIBase _ui;
+        private Action _contextualAction;
         private void OnPress(UIManager.ButtonFunction function)
-        => _ui.TargetingLine.ShowAndFollowCursor(transform);
+        => _ui.TargetingLine.ShowAndFollowCursor(transform, TargetingLine_OnChangeTarget);
+        private void TargetingLine_OnChangeTarget(Targetable from, Targetable to)
+        {
+            Get<Targeter>().Target = to;
+            _contextualAction = null;
+            if (to == null || to == Get<Targetable>())
+                return;
+
+            if (to.Has<Equipable>())
+                _contextualAction = ActionManager.Common.Equip;
+            else if (to.Has<Combatable>())
+                _contextualAction = ActionManager.Common.StartCombat;
+
+            if (_contextualAction != null)
+                Get<ActionAnimator>().TryAnimate(_contextualAction, ActionAnimation.Type.Charge);
+        }
         private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
-            _ui.TargetingLine.Hide();
-
             if (isClick)
-            {
                 _ui.Wheel.Toggle();
-                return;
+            else if (_contextualAction != null)
+            {
+                Get<Actionable>().Use(_contextualAction, Get<Targeter>().Target);
+                Get<ActionAnimator>().TryAnimate(_contextualAction, ActionAnimation.Type.Release);
             }
 
-            if (_ui.TargetingLine.Target.TryNonNull(out var target)
-            && target.TryGet<Combatable>(out var targetCombatable))
-                if (targetCombatable.IsInCombat)
-                    targetCombatable.TryLeaveCombat();
-                else
-                    Get<Combatable>().TryStartCombatWith(targetCombatable);
+            Get<Targeter>().Target = null;
+            _ui.TargetingLine.Hide();
         }
         private void SetAnimatorMoveSpeed(float speed)
         => Get<Animator>().SetFloat("Speed", speed);
