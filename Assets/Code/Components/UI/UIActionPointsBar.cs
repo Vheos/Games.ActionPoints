@@ -13,10 +13,10 @@ namespace Vheos.Games.ActionPoints
             foreach (var point in _points)
                 point.Initialize();
 
-            if (TryGetComponent<MoveTowards>(out var moveTowards))
-                moveTowards.Target = Character.transform;
-            if (TryGetComponent<RotateAs>(out var rotateAs))
-                rotateAs.Target = CameraManager.FirstActive.transform;
+            if (TryGet<MoveTowards>(out var moveTowards))
+                moveTowards.SetTarget(Character);
+            if (TryGet<RotateAs>(out var rotateAs))
+                rotateAs.SetTarget(CameraManager.FirstActive);
 
             _originalScale = transform.localScale;
             AlignPoints();

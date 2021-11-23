@@ -21,7 +21,6 @@ namespace Vheos.Games.ActionPoints
         => Time.time - _targetingStartTime > _MinTargetingDuration;
         private State _state;
         private Action _action;
-        private Targetable _target;
         private void OnUpdate()
         {
             if (!Get<Combatable>().IsInCombat)
@@ -31,10 +30,10 @@ namespace Vheos.Games.ActionPoints
             {
                 case State.Inactive:
                     if (AvailableActions.Random().TryNonNull(out _action)
-                    && AvailableTargets.Random().TryNonNull(out _target))
+                    && AvailableTargets.Random().TryNonNull(out var target))
                     {
                         _action.TryPlayAnimation(Get<ActionAnimator>(), Action.Animation.Charge);
-                        _action.StartTargeting(Get<Targeter>(), _target);
+                        Get<Targeter>().Target = target;
                         _targetingStartTime = Time.time;
                         _state = State.Charging;
                     }
@@ -44,7 +43,8 @@ namespace Vheos.Games.ActionPoints
                     && HasTargetegForMinDuration)
                     {
                         _action.TryPlayAnimation(Get<ActionAnimator>(), Action.Animation.Release);
-                        _action.Use(Get<Actionable>(), _target);
+                        _action.Use(Get<Actionable>(), Get<Targeter>().Target);
+                        Get<Targeter>().Target = null;
                         _state = State.Releasing;
                     }
                     break;
@@ -62,14 +62,14 @@ namespace Vheos.Games.ActionPoints
                 foreach (var action in actionable.Actions)
                     if (action.CanBeUsedBy(actionable))
                         yield return action;
-           }
+            }
         }
         private IEnumerable<Targetable> AvailableTargets
         {
             get
             {
                 foreach (var combatMember in Get<Combatable>().Combat.Members)
-                    if (combatMember.TryGetComponent<Targetable>(out var target)
+                    if (combatMember.TryGet<Targetable>(out var target)
                     && _action.CanTarget(Get<Targeter>(), target))
                         yield return target;
             }

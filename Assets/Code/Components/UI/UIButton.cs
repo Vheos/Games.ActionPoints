@@ -1,9 +1,9 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.UnityObjects;
-    using Tools.Extensions.General;
 
     public class UIButton : AUIComponent
     {
@@ -101,10 +101,7 @@ namespace Vheos.Games.ActionPoints
             if (to != null
             && Character.IsInCombatWith(to)
             && Action.CanTarget(Character.Get<Targeter>(), to))
-            {
                 Character.Get<Targeter>().Target = to;
-                Character.Get<Targeter>().TryLookAtTarget();
-            }
             else
                 Character.Get<Targeter>().Target = null;
         }
@@ -121,5 +118,12 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(Character.Get<Actionable>().OnExhaustStateChanged, (state) => UpdateUsability());
             SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, (from, to) => UpdateUsability());
         }
+#if CACHED_COMPONENTS
+        protected override void DefineCachedComponents()
+        {
+            base.DefineCachedComponents();
+            TryAddToCache<Mousable>();
+        }    
+#endif
     }
 }

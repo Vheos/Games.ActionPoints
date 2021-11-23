@@ -42,7 +42,7 @@ namespace Vheos.Games.ActionPoints
         protected void TryFitBoxColliderToMesh()
         {
             if (Trigger.TryAs<BoxCollider>(out var boxCollider)
-            && TryGetComponent<MeshFilter>(out var meshFilter))
+            && TryGet<MeshFilter>(out var meshFilter))
                 boxCollider.size = meshFilter.mesh.bounds.size;
         }
         private void TryInvokeSelectableOnPress(Selectable selectable, MouseButton button)
@@ -68,7 +68,7 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            if (TryGetComponent<Selectable>(out var selectable))
+            if (TryGet<Selectable>(out var selectable))
             {
                 SubscribeTo(OnGainHighlight, selectable.OnGainHighlight.Invoke);
                 SubscribeTo(OnLoseHighlight, selectable.OnLoseHighlight.Invoke);
@@ -84,5 +84,12 @@ namespace Vheos.Games.ActionPoints
             TryFitBoxColliderToMesh();
             AssignLayer();
         }
+#if CACHED_COMPONENTS
+        protected override void DefineCachedComponents()
+        {
+            base.DefineCachedComponents();
+            TryAddToCache<Collider>();
+        }
+#endif
     }
 }

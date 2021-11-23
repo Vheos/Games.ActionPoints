@@ -69,6 +69,13 @@ namespace Vheos.Games.ActionPoints
             AssignInspectorMProps();
             UpdateDirtyMProps();
         }
+#if CACHED_COMPONENTS
+        protected override void DefineCachedComponents()
+        {
+            base.DefineCachedComponents();
+            TryAddToCache<Renderer>();
+        }
+#endif
     }
 }
 

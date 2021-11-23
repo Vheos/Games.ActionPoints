@@ -99,14 +99,13 @@ namespace Vheos.Games.ActionPoints
     {
         static public bool TryGetCombat(this ABaseComponent t, out Combat combat)
         {
-            if (t.TryGetComponent<Combatable>(out var tCombatable)
+            if (t.TryGet<Combatable>(out var tCombatable)
             && tCombatable.Combat.TryNonNull(out combat))
                 return true;
 
             combat = null;
             return false;
         }
-
         static public bool IsInCombatWith(this ABaseComponent t, ABaseComponent a)
         => t != a
         && t.TryGetCombat(out var tCombat)

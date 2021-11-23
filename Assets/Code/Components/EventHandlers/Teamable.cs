@@ -71,20 +71,18 @@ namespace Vheos.Games.ActionPoints
     {
         static public bool TryGetTeam(this ABaseComponent t, out Team team)
         {
-            if (t.TryGetComponent<Teamable>(out var tTeamable)
+            if (t.TryGet<Teamable>(out var tTeamable)
             && tTeamable.Team.TryNonNull(out team))
                 return true;
 
             team = null;
             return false;
         }
-
         static public bool IsAllyOf(this ABaseComponent t, ABaseComponent a)
-        => t != a 
+        => t != a
         && t.TryGetTeam(out var tTeam)
         && a.TryGetTeam(out var aTeam)
         && tTeam == aTeam;
-
         static public bool IsEnemyOf(this ABaseComponent t, ABaseComponent a)
         => t != a && (!t.TryGetTeam(out var tTeam)
                   || !a.TryGetTeam(out var aTeam)

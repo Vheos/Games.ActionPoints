@@ -6,11 +6,9 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
-    using Tools.Extensions.Collections;
     using Tools.Extensions.Math;
     using Event = Tools.UnityCore.Event;
     using static ActionAnimation;
-
 
     [RequireComponent(typeof(Character))]
     public class ActionAnimator : ABaseComponent
@@ -82,7 +80,7 @@ namespace Vheos.Games.ActionPoints
                     transform.GroupAnimatePosition(Get<Character>().CombatPosition + transform.right * clip.ChooseForwardDistance(idle));
                 if (clip.LookAtEnabled)
                 {
-                    if (!TryGetComponent<Combatable>(out var combatable)
+                    if (!TryGet<Combatable>(out var combatable)
                     || !combatable.IsInCombat)
                         return;
 
