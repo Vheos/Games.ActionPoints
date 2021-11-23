@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
-  m_Name: StartFight
+  m_Name: StartCombat
   m_EditorClassIdentifier: 
   _Sprite: {fileID: 0}
   _Animation: {fileID: 0}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
-  _IsInstant: 0
+  _RequiredTypes: 0
+  _AllowedRelations: 2147483647
   _EffectDataArray:
-  - _Effect: {fileID: 0}
-    _Direction: 1
-    _Values:
-    - 0
+  - _Effect: {fileID: 11400000, guid: 0a2c0fe5268d2cd4fa9c7f4f82ba620a, type: 2}
+    _Direction: 0
+    _Values: []
