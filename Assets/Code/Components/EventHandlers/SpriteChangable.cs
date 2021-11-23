@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     sealed public class SpriteChangable : AEventSubscriber
     {
         // Events
-        public Event<Sprite, Sprite> OnSpriteChanged
+        public Event<Sprite, Sprite> OnChangeSprite
         { get; } = new Event<Sprite, Sprite>();
 
         // Privates
@@ -16,7 +16,7 @@ namespace Vheos.Games.ActionPoints
         {
             Sprite currentSprite = Get<SpriteRenderer>().sprite;
             if (_previousSprite != currentSprite)
-                OnSpriteChanged?.Invoke(_previousSprite, currentSprite);
+                OnChangeSprite?.Invoke(_previousSprite, currentSprite);
             _previousSprite = currentSprite;
         }
 
@@ -24,7 +24,7 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, TryInvokeEvents);
+            SubscribeTo(Get<Updatable>().OnUpdate, TryInvokeEvents);
         }
     }
 }

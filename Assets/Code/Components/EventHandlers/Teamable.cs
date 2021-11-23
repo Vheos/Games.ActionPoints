@@ -10,7 +10,7 @@ namespace Vheos.Games.ActionPoints
     public class Teamable : ABaseComponent
     {
         // Events
-        public Event<Team, Team> OnTeamChanged
+        public Event<Team, Team> OnChangeTeam
         { get; } = new Event<Team, Team>();
 
         // Input
@@ -54,7 +54,7 @@ namespace Vheos.Games.ActionPoints
                 newTeam.TryAddMember(this);
                 Team = newTeam;
             }
-            OnTeamChanged?.Invoke(previousTeam, Team);
+            OnChangeTeam?.Invoke(previousTeam, Team);
         }
         public void TryLeaveTeam()
         => TryChangeTeam(null);

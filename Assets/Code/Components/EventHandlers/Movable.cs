@@ -8,11 +8,11 @@ namespace Vheos.Games.ActionPoints
     sealed public class Movable : AEventSubscriber
     {
         // Events
-        public Event OnStartedMoving
+        public Event OnStartMoving
         { get; } = new Event();
-        public Event<Vector3, Vector3> OnMoved
+        public Event<Vector3, Vector3> OnMove
         { get; } = new Event<Vector3, Vector3>();
-        public Event OnStoppedMoving
+        public Event OnStop
         { get; } = new Event();
 
         // Privates
@@ -26,11 +26,11 @@ namespace Vheos.Games.ActionPoints
             if (currentHasMoved)
             {
                 if (!_previousHasMoved)
-                    OnStartedMoving?.Invoke();
-                OnMoved?.Invoke(_previousPosition, currentPosition);
+                    OnStartMoving?.Invoke();
+                OnMove?.Invoke(_previousPosition, currentPosition);
             }
             else if (_previousHasMoved)
-                OnStoppedMoving?.Invoke();
+                OnStop?.Invoke();
 
             _previousPosition = currentPosition;
             _previousHasMoved = currentHasMoved;
@@ -40,7 +40,7 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, TryInvokeEvents);
+            SubscribeTo(Get<Updatable>().OnUpdate, TryInvokeEvents);
         }
         protected override void PlayEnable()
         {

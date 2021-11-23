@@ -9,13 +9,13 @@ namespace Vheos.Games.ActionPoints
     public class Woundable : ABaseComponent
     {
         // Events   
-        public Event<float, bool> OnDamageReceived
+        public Event<float, bool> OnReceiveDamage
         { get; } = new Event<float, bool>();
-        public Event<float, bool> OnHealingReceived
+        public Event<float, bool> OnReceiveHealing
         { get; } = new Event<float, bool>();
-        public Event<int, int> OnWoundsCountChanged
+        public Event<int, int> OnChangeWoundsCount
         { get; } = new Event<int, int>();
-        public Event OnHasDied
+        public Event OnDie
         { get; } = new Event();
 
         // Inputs
@@ -64,15 +64,15 @@ namespace Vheos.Games.ActionPoints
             WoundsCount = WoundsCount.Add(unclampedWoundsDiff).Clamp(0, MaxWounds);
             bool hasWoundsCountChanged = WoundsCount != previousWoundsCount;
 
-            (isDamage ? OnDamageReceived : OnHealingReceived)?.Invoke(chance, hasWoundsCountChanged);
+            (isDamage ? OnReceiveDamage : OnReceiveHealing)?.Invoke(chance, hasWoundsCountChanged);
 
             if (hasWoundsCountChanged)
             {
-                OnWoundsCountChanged?.Invoke(previousWoundsCount, WoundsCount);
+                OnChangeWoundsCount?.Invoke(previousWoundsCount, WoundsCount);
                 if (isDamage && WoundsCount >= MaxWounds)
                 {
                     IsDead = true;
-                    OnHasDied?.Invoke();
+                    OnDie?.Invoke();
                 }
             }
 

@@ -52,7 +52,7 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, TryFollowTargetOnUpdate);
+            SubscribeTo(Get<Updatable>().OnUpdate, TryFollowTargetOnUpdate);
         }
 
         // Defines

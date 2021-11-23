@@ -49,7 +49,7 @@ namespace Vheos.Games.ActionPoints.Test
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, ApplyInput);
+            SubscribeTo(Get<Updatable>().OnUpdate, ApplyInput);
         }
     }
 }

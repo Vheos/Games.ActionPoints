@@ -33,7 +33,7 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, TrySnapToTarget);
+            SubscribeTo(Get<Updatable>().OnUpdate, TrySnapToTarget);
         }
 
 #if UNITY_EDITOR

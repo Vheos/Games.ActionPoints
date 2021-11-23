@@ -57,7 +57,7 @@ namespace Vheos.Games.ActionPoints
             if (Action.IsTargeted)
             {
                 Base.TargetingLine.ShowAndFollowCursor(transform);
-                SubscribeTo(Base.TargetingLine.OnTargetChanged, OnTargetChanged);
+                SubscribeTo(Base.TargetingLine.OnChangeTarget, OnTargetChanged);
             }
 
             _isPressed = true;
@@ -83,7 +83,7 @@ namespace Vheos.Games.ActionPoints
 
                 Character.Get<Targeter>().Target = null;
                 Base.TargetingLine.Hide();
-                UnsubscribeFrom(Base.TargetingLine.OnTargetChanged, OnTargetChanged);
+                UnsubscribeFrom(Base.TargetingLine.OnChangeTarget, OnTargetChanged);
             }
             else if (isClick)
                 Action.Use(Character.Get<Actionable>(), null);
@@ -114,9 +114,9 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(selectable.OnPress, OnPress);
             SubscribeTo(selectable.OnRelease, OnRelease);
             SubscribeTo(selectable.OnLoseHighlight, OnLoseHighlight);
-            SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, (from, to) => UpdateUsability());
-            SubscribeTo(Character.Get<Actionable>().OnExhaustStateChanged, (state) => UpdateUsability());
-            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, (from, to) => UpdateUsability());
+            SubscribeTo(Character.Get<Actionable>().OnChangeActionPointsCount, (from, to) => UpdateUsability());
+            SubscribeTo(Character.Get<Actionable>().OnChangeExhausted, (state) => UpdateUsability());
+            SubscribeTo(Character.Get<Woundable>().OnChangeWoundsCount, (from, to) => UpdateUsability());
         }
 #if CACHED_COMPONENTS
         protected override void DefineCachedComponents()

@@ -59,7 +59,7 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdatedLate, UpdateDirtyMProps);
+            SubscribeTo(Get<Updatable>().OnUpdateLate, UpdateDirtyMProps);
         }
         override protected void PlayAwake()
         {

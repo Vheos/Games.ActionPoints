@@ -147,16 +147,16 @@ namespace Vheos.Games.ActionPoints
             base.DefineAutoSubscriptions();
             SubscribeTo(Get<Selectable>().OnPress, OnPress);
             SubscribeTo(Get<Selectable>().OnRelease, OnRelease);
-            SubscribeTo(Get<Movable>().OnMoved, (from, to) => SetAnimatorMoveSpeed(from.DistanceTo(to) / Time.deltaTime));
-            SubscribeTo(Get<Movable>().OnStoppedMoving, () => SetAnimatorMoveSpeed(0f));
-            SubscribeTo(Get<Teamable>().OnTeamChanged, UpdateColors);
-            SubscribeTo(Get<Combatable>().OnCombatChanged, OnCombatChanged);
-            SubscribeTo(Get<Woundable>().OnDamageReceived, OnDamageReceived);
-            SubscribeTo(Get<Woundable>().OnHasDied, OnHasDied);
+            SubscribeTo(Get<Movable>().OnMove, (from, to) => SetAnimatorMoveSpeed(from.DistanceTo(to) / Time.deltaTime));
+            SubscribeTo(Get<Movable>().OnStop, () => SetAnimatorMoveSpeed(0f));
+            SubscribeTo(Get<Teamable>().OnChangeTeam, UpdateColors);
+            SubscribeTo(Get<Combatable>().OnChangeCombat, OnCombatChanged);
+            SubscribeTo(Get<Woundable>().OnReceiveDamage, OnDamageReceived);
+            SubscribeTo(Get<Woundable>().OnDie, OnHasDied);
             SubscribeTo(Get<Targetable>().OnGainTargeting, OnGainTargeting);
             SubscribeTo(Get<Targetable>().OnLoseTargeting, OnLoseTargeting);
             SubscribeTo(Get<Targeter>().OnChangeTarget, OnChangeTarget);
-            SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
+            SubscribeTo(Get<Updatable>().OnUpdate, OnUpdate);
         }
         protected override void PlayAwake()
         {

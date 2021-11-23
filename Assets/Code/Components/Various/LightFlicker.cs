@@ -42,7 +42,7 @@
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, UpdateLightIntensity);
+            SubscribeTo(Get<Updatable>().OnUpdate, UpdateLightIntensity);
         }
     }
 }

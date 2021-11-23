@@ -51,7 +51,7 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(CursorManager.OnCursorMoved, (from, to) => _cursorCameraDirty = true);
+            SubscribeTo(CursorManager.OnMoveCursor, (from, to) => _cursorCameraDirty = true);
         }
         protected override void PlayAwake()
         {

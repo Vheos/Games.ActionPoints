@@ -17,9 +17,9 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected GameObject _CursorPrefab;
 
         // Events
-        static public Event<Vector2, Vector2> OnCursorMoved
+        static public Event<Vector2, Vector2> OnMoveCursor
         { get; private set; }
-        static public Event<Mousable, Mousable> OnCursorMousableChanged
+        static public Event<Mousable, Mousable> OnChangeCursorMousable
         { get; private set; }
 
         // Publics
@@ -155,10 +155,10 @@ namespace Vheos.Games.ActionPoints
         static private void TryInvokeEvents()
         {
             if (Input.mousePosition != _previousMousePosition)
-                OnCursorMoved?.Invoke(_previousMousePosition, Input.mousePosition);
+                OnMoveCursor?.Invoke(_previousMousePosition, Input.mousePosition);
 
             if (CursorMousable != _previousCursorMousable)
-                OnCursorMousableChanged?.Invoke(_previousCursorMousable, CursorMousable);
+                OnChangeCursorMousable?.Invoke(_previousCursorMousable, CursorMousable);
         }
         static private bool IsMousableUnderCursor(Mousable mousable)
         => mousable.Trigger.CursorRaycast(CameraManager.FirstActive, out var hitInfo)
@@ -168,15 +168,15 @@ namespace Vheos.Games.ActionPoints
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static private void StaticInitialize()
         {
-            OnCursorMoved = new Event<Vector2, Vector2>();
-            OnCursorMousableChanged = new Event<Mousable, Mousable>();
+            OnMoveCursor = new Event<Vector2, Vector2>();
+            OnChangeCursorMousable = new Event<Mousable, Mousable>();
         }
 
         // Play
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, OnUpdate);
+            SubscribeTo(Get<Updatable>().OnUpdate, OnUpdate);
         }
         override protected void PlayAwake()
         {

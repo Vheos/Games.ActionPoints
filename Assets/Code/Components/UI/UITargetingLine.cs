@@ -11,7 +11,7 @@ namespace Vheos.Games.ActionPoints
     public class UITargetingLine : AUIComponent
     {
         // Events
-        public Event<Targetable, Targetable> OnTargetChanged
+        public Event<Targetable, Targetable> OnChangeTarget
         { get; } = new Event<Targetable, Targetable>();
 
         // Publics
@@ -67,14 +67,14 @@ namespace Vheos.Games.ActionPoints
             Targetable actionFrom = from == null ? null : from.Get<Targetable>();
             Target = to == null ? null : to.Get<Targetable>();
             if (actionFrom != Target)
-                OnTargetChanged?.Invoke(actionFrom, Target);
+                OnChangeTarget?.Invoke(actionFrom, Target);
         }
         // Play        
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Updatable>().OnUpdated, UpdatePositionsAndTiling);
-            SubscribeTo(CursorManager.OnCursorMousableChanged, TryInvokeEvents);
+            SubscribeTo(Get<Updatable>().OnUpdate, UpdatePositionsAndTiling);
+            SubscribeTo(CursorManager.OnChangeCursorMousable, TryInvokeEvents);
         }
     }
 }

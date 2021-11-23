@@ -61,7 +61,7 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<SpriteChangable>().OnSpriteChanged, UpdateOutlineSprite);
+            SubscribeTo(Get<SpriteChangable>().OnChangeSprite, UpdateOutlineSprite);
         }
         protected override void InitializeRenderer(out Renderer renderer)
         {

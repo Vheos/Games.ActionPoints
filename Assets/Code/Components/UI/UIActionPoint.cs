@@ -50,8 +50,8 @@ namespace Vheos.Games.ActionPoints
         // Play
         protected override void DefineAutoSubscriptions()
         {
-            SubscribeTo(Character.Get<Actionable>().OnActionPointsCountChanged, UpdateOpacity);
-            SubscribeTo(Character.Get<Woundable>().OnWoundsCountChanged, UpdateWoundVisibility);
+            SubscribeTo(Character.Get<Actionable>().OnChangeActionPointsCount, UpdateOpacity);
+            SubscribeTo(Character.Get<Woundable>().OnChangeWoundsCount, UpdateWoundVisibility);
         }
     }
 }

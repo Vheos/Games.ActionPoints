@@ -21,7 +21,7 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected GameObject _Parent;
 
         // Events
-        public Event OnAnimationStopped
+        public Event OnFinishAnimation
         { get; } = new Event();
 
         public bool IsPlaying
@@ -101,7 +101,7 @@ namespace Vheos.Games.ActionPoints
         {
             if (clipIndex >= clips.Count)
             {
-                OnAnimationStopped?.Invoke();
+                OnFinishAnimation?.Invoke();
                 IsPlaying = false;
                 return;
             }

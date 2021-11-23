@@ -11,7 +11,7 @@ namespace Vheos.Games.ActionPoints
     public class Combatable : ABaseComponent
     {
         // Events
-        public Event<Combat> OnCombatChanged
+        public Event<Combat> OnChangeCombat
         { get; } = new Event<Combat>();
 
         // Publics
@@ -47,7 +47,7 @@ namespace Vheos.Games.ActionPoints
             Combat = combat;
             combat.TryAddMember(this);
             AnchorPosition = transform.position;
-            OnCombatChanged?.Invoke(combat);
+            OnChangeCombat?.Invoke(combat);
         }
         public void TryLeaveCombat()
         {
@@ -56,7 +56,7 @@ namespace Vheos.Games.ActionPoints
 
             Combat.TryRemoveMember(this);
             Combat = null;
-            OnCombatChanged?.Invoke(null);
+            OnChangeCombat?.Invoke(null);
         }
 
         // Publics (team-related)
