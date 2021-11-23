@@ -1,13 +1,13 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.General;
-    using System.Collections.Generic;
 
     [CreateAssetMenu(fileName = nameof(Action), menuName = nameof(Action), order = 1)]
-    public class Action : ScriptableObject
+    public class Action : AInitializableSO
     {
         // Inspector
         [Header("Visual")]
@@ -31,13 +31,6 @@ namespace Vheos.Games.ActionPoints
         => _FocusPointsCost;
         public bool IsTargeted
         => _AllowedRelations != 0;
-        public void CacheTargetingConditions()
-        {
-            _requiredTypes.Clear();
-            _RequiredTypes.ForEachSetFlag(t => _requiredTypes.Add(GetTargetableType(t)));
-            _allowedRelations.Clear();
-            _AllowedRelations.ForEachSetFlag(t => _allowedRelations.Add(t));
-        }
 
         // Publics (use)
         public bool CanBeUsedBy(Actionable actionable)
@@ -74,11 +67,6 @@ namespace Vheos.Games.ActionPoints
             if (_Animation != null)
                 animator.Animate(AnimationToClips(animation));
         }
-        public void StartTargeting(Targeter user, Targetable target)
-        {
-            user.Target = target;
-            user.TryLookAtTarget();
-        }
         public void Use(Actionable user, ABaseComponent target)
         {
             user.ActionProgress -= _ActionPointsCost;
@@ -88,7 +76,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
-        private List<Type> _requiredTypes = new List<Type>();
+        private List<Type> _requiredTypes;
         private List<TargetableRelations> _allowedRelations;
         private Type GetTargetableType(TargetableTypes targetableType)
         => targetableType switch
@@ -105,6 +93,13 @@ namespace Vheos.Games.ActionPoints
             Animation.Release => _Animation.Release,
             _ => null,
         };
+        internal override void TryInitialize()
+        {
+            _requiredTypes = new List<Type>();
+            _RequiredTypes.ForEachSetFlag(t => _requiredTypes.Add(GetTargetableType(t)));
+            _allowedRelations = new List<TargetableRelations>();
+            _AllowedRelations.ForEachSetFlag(t => _allowedRelations.Add(t));
+        }
 
         // Defines
         public enum Animation

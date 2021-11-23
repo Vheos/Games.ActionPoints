@@ -27,14 +27,13 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public IReadOnlyList<Action> Actions
         => _actions;
-        public void TryAddAction(params Action[] actions)
+        public void TryAddActions(params Action[] actions)
         {
-
             foreach (var action in actions)
                 if (_actions.TryAddUnique(action))
-                    action.CacheTargetingConditions();
+                    InitializableSOManager.TryInitialize(action);
         }
-        public void TryRemoveAction(params Action[] actions)
+        public void TryRemoveActions(params Action[] actions)
         {
             foreach (var action in actions)
                 _actions.TryRemove(action);
