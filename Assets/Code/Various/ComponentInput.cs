@@ -33,7 +33,7 @@ namespace Vheos.Games.ActionPoints
         private bool _hasBeenSet;
         private void WarningInputAlreadySet(Type type)
         => Debug.LogWarning($"InputAlreadySet:\ttrying to override an already defined component input of type {type.Name}\n" +
-        $"Fallback: return without changing anything");
+        $"Fallback:\treturn without changing anything");
 
         // Initializers
         public ComponentInput()
