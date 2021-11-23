@@ -16,6 +16,9 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public void AnimateFollow()
         {
+            if (_Target == null)
+                return;
+
             if (enabled)
             {
                 enabled = false;
@@ -28,24 +31,21 @@ namespace Vheos.Games.ActionPoints
         => _Target;
         public void SetTarget(GameObject target, bool animate = false)
         {
-            _Target = target.transform;
+            _Target = target.transform != this.transform 
+                    ? target.transform : null;
             if (animate)
                 AnimateFollow();
         }
         public void SetTarget(Component target, bool animate = false)
-        {
-            _Target = target.transform;
-            if (animate)
-                AnimateFollow();
-        }
+        => SetTarget(target.gameObject, animate);
 
         // Private
-        abstract protected void UpdateFollow();
+        abstract protected void FollowOnUpdate();
         abstract protected void FollowOnAnimate(System.Action tryRestoreEnabled);
         private void TryFollowTargetOnUpdate()
         {
             if (_Target != null)
-                UpdateFollow();
+                FollowOnUpdate();
         }
 
         // Play
