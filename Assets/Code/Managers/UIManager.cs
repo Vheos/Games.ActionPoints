@@ -37,7 +37,7 @@ namespace Vheos.Games.ActionPoints
         // Defines
         public enum ButtonFunction
         {
-            None,
+            None = 0,
             Primary,
             Secondary,
         }
