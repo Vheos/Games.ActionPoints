@@ -64,6 +64,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _GlobalSpeedScale: 1
+  _CombatPauseButton: 32
+  _CommonActions:
+    Equip: {fileID: 11400000, guid: 02fc9dcda7e343048ace203499013b7f, type: 2}
+    StartCombat: {fileID: 11400000, guid: 403ba732ffb62e04c9c5830a81f50ade, type: 2}
 --- !u!114 &8814995318805333585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Settings: {fileID: 11400000, guid: f366411b083bf41469797feff83bfc6e, type: 2}
+  _PrimaryButtons: 43010000
+  _SecondaryButtons: 44010000
 --- !u!114 &8814995318805333584
 MonoBehaviour:
   m_ObjectHideFlags: 0

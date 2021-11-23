@@ -11,7 +11,10 @@ GameObject:
   - component: {fileID: 7207409327477670921}
   - component: {fileID: 7207409327477670923}
   - component: {fileID: 7207409327477670922}
+  - component: {fileID: 8295178977881097983}
   - component: {fileID: 3197451323377089870}
+  - component: {fileID: -1931865238914552397}
+  - component: {fileID: 5324747886620007718}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -566,6 +569,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!65 &8295178977881097983
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7207409327477670920}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.7, y: 1.7, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3197451323377089870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -576,5 +592,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ad09b95e7d951d42a7419de49d367c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-1931865238914552397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7207409327477670920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d08ec0b5ca71b2f488ceb9d881e58e34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5324747886620007718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7207409327477670920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35feb72f7c957dd42b2d04ee5fa9c35d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -16,9 +16,10 @@ MonoBehaviour:
   _Animation: {fileID: 0}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
-  _IsInstant: 0
+  _RequiredTypes: 0
+  _AllowedRelations: -1
   _EffectDataArray:
   - _Effect: {fileID: 0}
-    _Direction: 1
+    _Direction: 0
     _Values:
     - 0
