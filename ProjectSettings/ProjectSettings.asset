@@ -520,7 +520,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: 
+    1: CACHED_COMPONENTS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

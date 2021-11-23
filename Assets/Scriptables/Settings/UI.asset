@@ -62,7 +62,7 @@ MonoBehaviour:
     EndWidthRatio: 0.25
     WidthAnimDuration: 0.5
   _DamagePopup:
-    AngleRandomRange: {x: -15, y: 15}
+    AngleRandomRange: {x: 5, y: 20}
     AlignTextRotationToDirection: 0
     Distance: 0.75
     FadeInDuration: 0.25
