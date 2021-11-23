@@ -22,7 +22,7 @@ namespace Vheos.Games.ActionPoints
         {
             // Inspector     
             [SerializeField] protected AActionEffect _Effect = null;
-            [SerializeField] protected Direction _Direction = Direction.FromTargetToUser;
+            [SerializeField] protected Direction _Direction = Direction.FromUserToTarget;
             [SerializeField] protected float[] _Values = new float[1];
 
             // Privates
@@ -39,13 +39,13 @@ namespace Vheos.Games.ActionPoints
             private bool WarningNullEffect()
             {
                 Debug.LogWarning($"NullEffect:\ttrying to invoke a null effect\n" +
-                $"Fallback: return without invoking the effect");
+                $"Fallback:\treturn without invoking the effect");
                 return true;
             }
             private bool WarningTooFewValues(Type type, int valuesCount, int requiredValuesCount)
             {
                 Debug.LogWarning($"TooFewValues:\ttrying to invoke effect {type.Name} with {valuesCount} values, while it requires {requiredValuesCount}\n" +
-                $"Fallback: return without invoking the effect");
+                $"Fallback:\treturn without invoking the effect");
                 return true;
             }
             private bool WarningRedundantValues(Type type, int redundantValuesCount)
@@ -55,7 +55,7 @@ namespace Vheos.Games.ActionPoints
             }
 
             // Publics
-            public void Invoke(Actionable user, ABaseComponent target)
+            public void Invoke(Actionable user, Targetable target)
             {
                 if (TestForWarnings())
                     return;
