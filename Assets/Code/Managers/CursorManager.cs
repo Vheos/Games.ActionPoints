@@ -61,9 +61,8 @@ namespace Vheos.Games.ActionPoints
         };
 
         // Privates
-        static private float _cursorDistance;
         static private Vector3 _previousMousePosition;
-        static private Mousable _previousCursorMousable;
+        static private float _cursorDistance;
         static private Dictionary<MouseButton, Mousable> _lockedMousablesByButton;
         static private void CreateCursorTransform(GameObject prefab, Component parent)
         {
@@ -80,6 +79,12 @@ namespace Vheos.Games.ActionPoints
         }
         static private void UpdateCursorMousable()
         {
+            Mousable previousCursorMousable = CursorMousable;
+            CursorMousable = null;
+            CursorMousableHitInfo = new RaycastHit
+            {
+                point = float.NaN.ToVector3(),
+            };
             foreach (var hitInfo in NewUtility.RaycastFromCamera(CameraManager.FirstActive, LayerMask.GetMask(nameof(Mousable)), true, true))
                 if (hitInfo.collider.TryGetComponent<Mousable>(out var hitMousable)
                 && hitMousable.enabled
@@ -87,26 +92,22 @@ namespace Vheos.Games.ActionPoints
                 {
                     CursorMousable = hitMousable;
                     CursorMousableHitInfo = hitInfo;
-                    return;
+                    break;
                 }
-
-            CursorMousable = null;
-            CursorMousableHitInfo = new RaycastHit
-            {
-                point = float.NaN.ToVector3(),
-            };
+            if (CursorMousable != previousCursorMousable)
+                OnChangeCursorMousable?.Invoke(previousCursorMousable, CursorMousable);
         }
-        static private void UpdateHighlights()
+        static private void UpdateHighlights(Mousable from, Mousable to)
         {
-            if (_previousCursorMousable != null
-            && (CursorMousable == null || _previousCursorMousable != CursorMousable)
-            && !_lockedMousablesByButton.ContainsValue(_previousCursorMousable))
-                _previousCursorMousable.OnLoseHighlight.Invoke();
+            if (from != null
+            && (to == null || from != to)
+            && !_lockedMousablesByButton.ContainsValue(from))
+                from.OnLoseHighlight.Invoke();
 
-            if (CursorMousable != null
-            && (_previousCursorMousable == null || _previousCursorMousable != CursorMousable)
-            && !_lockedMousablesByButton.ContainsValue(CursorMousable))
-                CursorMousable.OnGainHighlight.Invoke();
+            if (to != null
+            && (from == null || from != to)
+            && !_lockedMousablesByButton.ContainsValue(to))
+                to.OnGainHighlight.Invoke();
         }
         static private void InvokeMousableEvents(MouseButton[] buttons)
         {
@@ -141,24 +142,17 @@ namespace Vheos.Games.ActionPoints
         }
         static private void OnUpdate()
         {
-
+            TryInvokeOnMoveCursor();
             UpdateCursorMousable();
-            UpdateHighlights();
             InvokeMousableEvents(_instance._Buttons);
             CursorTransform.position = CameraManager.FirstActive.CursorToWorldPoint(_cursorDistance);
-            TryInvokeEvents();
-
-            _previousMousePosition = Input.mousePosition;
-            _previousCursorMousable = CursorMousable;
-
         }
-        static private void TryInvokeEvents()
+        static private void TryInvokeOnMoveCursor()
         {
             if (Input.mousePosition != _previousMousePosition)
                 OnMoveCursor?.Invoke(_previousMousePosition, Input.mousePosition);
 
-            if (CursorMousable != _previousCursorMousable)
-                OnChangeCursorMousable?.Invoke(_previousCursorMousable, CursorMousable);
+            _previousMousePosition = Input.mousePosition;
         }
         static private bool IsMousableUnderCursor(Mousable mousable)
         => mousable.Trigger.CursorRaycast(CameraManager.FirstActive, out var hitInfo)
@@ -177,13 +171,13 @@ namespace Vheos.Games.ActionPoints
         {
             base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdate, OnUpdate);
+            SubscribeTo(OnChangeCursorMousable, UpdateHighlights);
         }
         override protected void PlayAwake()
         {
             base.PlayAwake();
             _cursorDistance = 0f;
             _previousMousePosition = Input.mousePosition;
-            _previousCursorMousable = CursorMousable;
             _lockedMousablesByButton = new Dictionary<MouseButton, Mousable>();
             CreateCursorTransform(_CursorPrefab, this);
         }
@@ -191,7 +185,7 @@ namespace Vheos.Games.ActionPoints
         // Defines
         public enum MouseButton
         {
-            None,
+            None = -1,
             Left,
             Right,
             Middle,
