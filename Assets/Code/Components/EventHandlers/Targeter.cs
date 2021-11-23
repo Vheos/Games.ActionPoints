@@ -9,9 +9,6 @@ namespace Vheos.Games.ActionPoints
     [DisallowMultipleComponent]
     public class Targeter : AEventSubscriber
     {
-        // Inspector
-        [SerializeField] [Range(0f, 1f)] protected float _LookAtAnimDuration;
-
         // Events
         public Event<Targetable, Targetable> OnChangeTarget
         { get; } = new Event<Targetable, Targetable>();
