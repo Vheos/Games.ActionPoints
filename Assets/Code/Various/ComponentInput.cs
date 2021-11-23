@@ -2,6 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using System;
     using UnityEngine;
+    using Tools.UnityCore;
 
     public class ComponentInput<T>
     {
@@ -10,7 +11,7 @@ namespace Vheos.Games.ActionPoints
         {
             if (_hasBeenSet)
             {
-                WarningInputAlreadySet();
+                WarningInputAlreadySet(typeof(T));
                 return;
             }
 
@@ -30,9 +31,9 @@ namespace Vheos.Games.ActionPoints
         => () => default;
         private Func<T> _getFunction = Default;
         private bool _hasBeenSet;
-        private void WarningInputAlreadySet()
-        => Debug.LogWarning($"InputAlreadySet:\ttrying to override an already defined component input\n" +
-        $"Fallback: return without changing anyting");
+        private void WarningInputAlreadySet(Type type)
+        => Debug.LogWarning($"InputAlreadySet:\ttrying to override an already defined component input of type {type.Name}\n" +
+        $"Fallback: return without changing anything");
 
         // Initializers
         public ComponentInput()
