@@ -9,16 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
+  m_Script: {fileID: 11500000, guid: 067e28fd899d35b4db047082d18120bf, type: 3}
   m_Name: Equip
   m_EditorClassIdentifier: 
   _Sprite: {fileID: 0}
   _Animation: {fileID: 0}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
-  _RequiredTypes: 0
-  _AllowedRelations: 2147483647
-  _EffectDataArray:
+  _TargetingANDTests:
+  - TargetTest: {fileID: 11400000, guid: 570cf72922f949047b52643755e70a16, type: 2}
+    TestForTrue: 1
+  - TargetTest: {fileID: 11400000, guid: ccf02bdccae67b644a5f5dde6b653bd1, type: 2}
+    TestForTrue: 0
+  _TargetingORTests: []
+  _Effects:
   - _Effect: {fileID: 11400000, guid: ab75036a7607e6d47969510befad3930, type: 2}
     _Direction: 0
     _Values: []

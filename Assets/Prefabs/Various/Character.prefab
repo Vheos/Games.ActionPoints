@@ -72,7 +72,7 @@ MonoBehaviour:
   _BluntArmor: 0
   _SharpArmor: 0
   _StartingTeam: 0
-  _StartingTool: {fileID: 0}
+  _StartingEquipment: []
   _Idle:
     Duration: 0
     StayUpTime: 0
@@ -122,6 +122,7 @@ MonoBehaviour:
   _Offset: {x: 0, y: -90, z: 0}
   _LockedAxes: 5
   _HalfTime: 0.1
+  _AnimDuration: 0.5
 --- !u!212 &2577891044044771579
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -222,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e7376e358218494b8780dc18d8d55e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Parent: {fileID: 7462834601545949588}
+  _ArmAttachmentTransform: {fileID: 7462834601545949588}
 --- !u!65 &2577891044044771578
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -320,7 +321,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d45c9dca9139349b339723887b680e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _LookAtAnimDuration: 1
 --- !u!114 &3612603680828287808
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,10 +11,12 @@ GameObject:
   - component: {fileID: 7207409327477670921}
   - component: {fileID: 7207409327477670923}
   - component: {fileID: 7207409327477670922}
+  - component: {fileID: -5864075181470721336}
   - component: {fileID: 8295178977881097983}
   - component: {fileID: 3197451323377089870}
   - component: {fileID: -1931865238914552397}
   - component: {fileID: 5324747886620007718}
+  - component: {fileID: 2688638014160906779}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -30,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7207409327477670920}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0001}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -50,242 +52,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _LocalPositionOffset: {x: 0, y: 0.35355338, z: 0}
   _LocalRotationOffset: {x: 0, y: 0, z: 45}
-  _Idle:
-    Duration: 0
+  _AnimDuration: 0.5
+  _Unsheathe:
+  - Duration: 0.4
     StayUpTime: 0
-    Style: 0
-    Parameters: 14
+    Style: 1
+    Parameters: 30
     ArmRotation: {x: 0, y: 0, z: -30}
     ArmLength: 0.4
     HandRotation: {x: 0, y: 0, z: -30}
     HandScale: 1
     ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  _Unsheathe:
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
+    LookAt: 0
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
@@ -293,224 +71,16 @@ MonoBehaviour:
     ForwardDistanceUseIdle: 0
     LookAtUseIdle: 0
   _Sheathe:
-  - Duration: 0.5
+  - Duration: 0.8
     StayUpTime: 0
     Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
+    Parameters: 30
+    ArmRotation: {x: 0, y: 0, z: 135}
+    ArmLength: 0.2
     HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
+    HandScale: 0
     ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
+    LookAt: 0
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
@@ -569,6 +139,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-5864075181470721336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7207409327477670920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b84f9d64540661d4c90ee35bfd7937f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Material: {fileID: 2100000, guid: bf23bf4a084b65144bebacd18b68a16b, type: 2}
+  _Thickness: 0.5
+  _Color: {r: 1, g: 1, b: 1, a: 1}
+  _FadeInDuration: 0.25
+  _FadeOutDuration: 0.5
 --- !u!65 &8295178977881097983
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -616,5 +203,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35feb72f7c957dd42b2d04ee5fa9c35d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2688638014160906779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7207409327477670920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

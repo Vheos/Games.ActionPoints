@@ -169,3 +169,7 @@ MonoBehaviour:
     WoundPulseScale: 1.25
     WoundPulseDuration: 0.5
     PercentSignSize: 0
+  _SpriteOutline:
+    Material: {fileID: 2100000, guid: bf23bf4a084b65144bebacd18b68a16b, type: 2}
+    FadeInDuration: 0.25
+    FadeOutDuration: 0.5

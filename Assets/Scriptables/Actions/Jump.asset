@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af2ad952173e5624ea5b9808651c873d, type: 3}
+  m_Script: {fileID: 11500000, guid: 067e28fd899d35b4db047082d18120bf, type: 3}
   m_Name: Jump
   m_EditorClassIdentifier: 
   _Sprite: {fileID: 0}
   _Animation: {fileID: 0}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
-  _RequiredTypes: 0
-  _AllowedRelations: -1
-  _EffectDataArray:
+  _TargetingANDTests: []
+  _TargetingORTests: []
+  _Effects:
   - _Effect: {fileID: 0}
     _Direction: 0
     _Values:
