@@ -9,6 +9,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Event = Tools.UnityCore.Event;
     using static ActionAnimation;
+    using System.Linq;
 
     [RequireComponent(typeof(Character))]
     public class ActionAnimator : ABaseComponent
@@ -18,12 +19,13 @@ namespace Vheos.Games.ActionPoints
         private const string HAND_NAME = "Hand";
 
         // Inspector
-        [SerializeField] protected GameObject _Parent;
+        [SerializeField] protected GameObject _ArmAttachmentTransform;
 
         // Events
         public Event OnFinishAnimation
         { get; } = new Event();
 
+        // Publics
         public bool IsPlaying
         { get; private set; }
         public Transform HandTransform
@@ -37,6 +39,11 @@ namespace Vheos.Games.ActionPoints
             IsPlaying = true;
             AnimateClipsFrom(clips, 0);
         }
+        public void SetClip(Clip clip)
+        {
+            IsPlaying = false;
+            AnimateClip(clip, true);
+        }
         public void Stop()
         => QAnimator.Stop(this, null);
 
@@ -46,8 +53,8 @@ namespace Vheos.Games.ActionPoints
         private Vector3 _handAngles;
         private void FindOrCreateArm()
         {
-            if (!_Parent.FindChild<TransformArm>(ARM_NAME).TryNonNull(out _arm))
-                _arm = _Parent.CreateChildComponent<TransformArm>(ARM_NAME);
+            if (!_ArmAttachmentTransform.FindChild<TransformArm>(ARM_NAME).TryNonNull(out _arm))
+                _arm = _ArmAttachmentTransform.CreateChildComponent<TransformArm>(ARM_NAME);
         }
         private void FindOrCreateHand()
         {
@@ -65,10 +72,10 @@ namespace Vheos.Games.ActionPoints
             _handAngles = v;
             HandTransform.localRotation = Quaternion.Euler(_handAngles);
         }
-        private void AnimateClip(Clip clip)
+        private void AnimateClip(Clip clip, bool isInstant = false)
         {
             Clip idle = Get<Character>().Idle;
-            using (QAnimator.Group(this, null, clip.Duration, null, clip.Style))
+            using (QAnimator.Group(this, null, isInstant ? 0f : clip.Duration, null, clip.Style))
             {
                 if (clip.ArmRotationEnabled)
                     QAnimator.GroupAnimate(AssignArmAngles, _armAngles, clip.ChooseArmRotation(idle));
@@ -95,7 +102,6 @@ namespace Vheos.Games.ActionPoints
                     };
 
                     transform.GroupAnimateRotation(GetComponent<Character>().LookAtRotation(targetPosition));
-                    QAnimator.Stop(GetComponent<Character>(), QAnimator.GetUID(QAnimator.ComponentProperty.TransformRotation));
                 }
             }
         }
