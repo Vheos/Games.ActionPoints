@@ -14,6 +14,7 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected WoundSettings _Wound;
         [SerializeField] protected TargetingLineSettings _TargetingLine;
         [SerializeField] protected DamagePopupSettings _DamagePopup;
+        [SerializeField] protected SpriteOutlineSettings _SpriteOutline;
 
         // Publics
         public PrefabSettings Prefab
@@ -30,6 +31,8 @@ namespace Vheos.Games.ActionPoints
         => _TargetingLine;
         public DamagePopupSettings DamagePopup
         => _DamagePopup;
+        public SpriteOutlineSettings SpriteOutline
+        => _SpriteOutline;
 
         // Defines
         [System.Serializable]
@@ -108,11 +111,18 @@ namespace Vheos.Games.ActionPoints
             [Range(0f, 1f)] public float FadeInDuration = 0.5f;
             [Range(0f, 1f)] public float StayUpDuration = 0.5f;
             [Range(0f, 1f)] public float FadeOutDuration = 0.5f;
-            public AnimationCurve SizeCurve;
-            public Gradient ColorCurve;
+            public AnimationCurve SizeCurve = null;
+            public Gradient ColorCurve = null;
             [Range(1f, 3f)] public float WoundPulseScale = 2f;
             [Range(0f, 1f)] public float WoundPulseDuration = 0.5f;
             [Range(0f, 1f)] public float PercentSignSize = 0.5f;
+        }
+        [System.Serializable]
+        sealed public class SpriteOutlineSettings
+        {
+            public Material Material = null;
+            [SerializeField] [Range(0f, 1f)] public float FadeInDuration = 0.25f;
+            [SerializeField] [Range(0f, 1f)] public float FadeOutDuration = 0.5f;
         }
     }
 }
