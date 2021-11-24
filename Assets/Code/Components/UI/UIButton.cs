@@ -55,10 +55,10 @@ namespace Vheos.Games.ActionPoints
             }
 
             if (Action.IsTargeted)
-                Base.TargetingLine.ShowAndFollowCursor(transform, OnTargetChanged);            
+                Base.TargetingLine.ShowAndFollowCursor(transform, OnTargetChanged);
 
             _isPressed = true;
-            Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Charge);
+            Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Target);
             transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
         }
@@ -71,12 +71,12 @@ namespace Vheos.Games.ActionPoints
             {
                 if (Character.Get<Targeter>().Target != null)
                 {
-                    Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Release);
+                    Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Use);
                     Character.Get<Actionable>().Use(Action, Character.Get<Targeter>().Target);
                     Character.Get<Targeter>().Target = null;
                 }
                 else
-                    Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Idle);
+                    Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Cancel);
 
                 Character.Get<Targeter>().Target = null;
                 Base.TargetingLine.Hide();
@@ -94,12 +94,10 @@ namespace Vheos.Games.ActionPoints
         }
         private void OnTargetChanged(Targetable from, Targetable to)
         {
-            if (to != null
-            && Character.IsInCombatWith(to)
-            && Action.CanTarget(Character.Get<Targeter>(), to))
-                Character.Get<Targeter>().Target = to;
-            else
+            if (to == null)
                 Character.Get<Targeter>().Target = null;
+            else if (Action.CanTarget(Character.Get<Targeter>(), to))
+                Character.Get<Targeter>().Target = to;
         }
 
         // Play
@@ -119,7 +117,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.DefineCachedComponents();
             TryAddToCache<Mousable>();
-        }    
+        }
 #endif
     }
 }

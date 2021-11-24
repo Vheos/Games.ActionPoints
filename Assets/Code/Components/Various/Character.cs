@@ -48,27 +48,38 @@ namespace Vheos.Games.ActionPoints
         => _ui.TargetingLine.ShowAndFollowCursor(transform, TargetingLine_OnChangeTarget);
         private void TargetingLine_OnChangeTarget(Targetable from, Targetable to)
         {
-            Get<Targeter>().Target = to;
-            _contextualAction = null;
-            if (to == null || to == Get<Targetable>())
+            if (to == null)
+            {
+                _contextualAction = null;
+                Get<Targeter>().Target = null;
+                return;
+            }
+
+            foreach (var action in ActionManager.Common.AllActions)
+                if (action.CanTarget(Get<Targeter>(), to))
+                    _contextualAction = action;
+
+            if (_contextualAction == null)
                 return;
 
-            if (to.Has<Equipable>())
-                _contextualAction = ActionManager.Common.Equip;
-            else if (to.Has<Combatable>())
-                _contextualAction = ActionManager.Common.StartCombat;
-
-            if (_contextualAction != null)
-                Get<ActionAnimator>().TryAnimate(_contextualAction, ActionAnimation.Type.Charge);
+            Get<Targeter>().Target = to;
+            Get<ActionAnimator>().TryAnimate(_contextualAction, ActionAnimation.Type.Target);
         }
         private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
             if (isClick)
+            {
                 _ui.Wheel.Toggle();
+                if (Tool.TryNonNull(out var tool))
+                    if (_ui.Wheel.IsExpanded)
+                        tool.TryUnsheathe();
+                    else
+                        tool.TrySheathe();
+            }
             else if (_contextualAction != null)
             {
                 Get<Actionable>().Use(_contextualAction, Get<Targeter>().Target);
-                Get<ActionAnimator>().TryAnimate(_contextualAction, ActionAnimation.Type.Release);
+                Get<ActionAnimator>().TryAnimate(_contextualAction, ActionAnimation.Type.Use);
             }
 
             Get<Targeter>().Target = null;
@@ -86,11 +97,16 @@ namespace Vheos.Games.ActionPoints
         {
             bool isInCombat = current != null;
             Get<Animator>().SetBool("IsInCombat", isInCombat);
+
             if (isInCombat)
             {
                 _ui.PointsBar.Show();
+
                 if (!Has<AIController>())
                     _ui.Wheel.Show();
+
+                if (Tool.TryNonNull(out var tool))
+                    tool.TryUnsheathe();
 
                 foreach (var ally in Get<Teamable>().Allies)
                     if (ally.TryGet<Combatable>(out var allyCombatable))
@@ -100,6 +116,9 @@ namespace Vheos.Games.ActionPoints
             {
                 _ui.PointsBar.Hide();
                 _ui.Wheel.Hide();
+
+                if (Tool.TryNonNull(out var tool))
+                    tool.TrySheathe();
 
                 Get<Actionable>().ActionProgress = 0;
                 Get<Actionable>().FocusProgress = 0;
@@ -151,6 +170,11 @@ namespace Vheos.Games.ActionPoints
                 Team.Predefined.Enemies => Team.AI,
                 _ => null,
             });
+            Get<Equiper>().AttachmentTransform.Set((slot) => slot switch
+            {
+                Equipable.Slot.Hand => Get<ActionAnimator>().HandTransform,
+                _ => null
+            }); ;
         }
         protected override void DefineAutoSubscriptions()
         {
