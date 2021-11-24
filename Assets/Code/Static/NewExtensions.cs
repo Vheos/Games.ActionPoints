@@ -29,7 +29,6 @@ namespace Vheos.Games.ActionPoints
         => UnityEngine.Random.Range(t.x, t.y);
         static public Quaternion ToZRotation(this float t)
         => Quaternion.Euler(0, 0, t);
-
         static public bool IsCompilerGenerated(this Type t)
         => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) != null;
         static public bool CursorRaycast(this Collider t, Camera camera, out RaycastHit hitInfo)
@@ -48,6 +47,8 @@ namespace Vheos.Games.ActionPoints
             }
             return r;
         }
+        static public bool SameGOAs(this Component t, Component a)
+        => t.gameObject == a.gameObject;
 
         // Midpoint
         static public Vector3 Midpoint<T>(this IEnumerable<T> t, Func<T, Vector3> positionFunc)
@@ -125,10 +126,22 @@ namespace Vheos.Games.ActionPoints
 
             return Quaternion.AngleAxis(b, a) * t;
         }
-        static public void SetLocalX(this Transform t, float a)
+        static public void SetLocalX(this Transform t, float x)
         {
             Vector3 temp = t.localPosition;
-            temp.x = a;
+            temp.x = x;
+            t.localPosition = temp;
+        }
+        static public void SetLocalY(this Transform t, float y)
+        {
+            Vector3 temp = t.localPosition;
+            temp.y = y;
+            t.localPosition = temp;
+        }
+        static public void SetLocalZ(this Transform t, float z)
+        {
+            Vector3 temp = t.localPosition;
+            temp.z = z;
             t.localPosition = temp;
         }
     }
