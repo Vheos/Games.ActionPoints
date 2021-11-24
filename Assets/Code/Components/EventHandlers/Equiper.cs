@@ -6,6 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Collections;
     using static Equipable;
+    using Tools.Extensions.General;
 
     [DisallowMultipleComponent]
     sealed public class Equiper : AEventSubscriber
@@ -16,9 +17,36 @@ namespace Vheos.Games.ActionPoints
         public Event<Equipable> OnUnequip
         { get; } = new Event<Equipable>();
 
+        // Inputs
+        public ComponentInput<Slot, Transform> AttachmentTransform
+        { get; } = new ComponentInput<Slot, Transform>();
+
         // Publics
         public IReadOnlyDictionary<Slot, Equipable> EquipablesBySlot
         => _equipablesBySlot;
+        public void Equip(Equipable equipable)
+        {
+            Slot slot = equipable.EquipSlot;
+            TryUnequip(slot);
+
+            equipable.Equiper = this;
+            _equipablesBySlot[slot] = equipable;
+            OnEquip?.Invoke(equipable);
+        }
+        public void TryUnequip(Slot slot)
+        {
+            if (!TryGetEquiped(slot, out var equipable))
+                return;
+
+            equipable.Equiper = null;
+            _equipablesBySlot.Remove(slot);
+            OnUnequip?.Invoke(equipable);
+        }
+        public void TryUnequip(Equipable equipable)
+        {
+            if (HasEquiped(equipable))
+                TryUnequip(equipable.EquipSlot);
+        }
         public bool HasEquiped(Slot slot)
         => _equipablesBySlot.ContainsKey(slot);
         public bool HasEquiped(Equipable equipable)
@@ -30,28 +58,5 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         private readonly Dictionary<Slot, Equipable> _equipablesBySlot = new Dictionary<Slot, Equipable>();
-        internal void Equip(Equipable equipable)
-        {
-            Slot slot = equipable.EquipSlot;
-            TryUnequip(slot);
-
-            equipable.Equiper = this;
-            _equipablesBySlot[slot] = equipable;
-            OnEquip?.Invoke(equipable);
-        }
-        internal void TryUnequip(Slot slot)
-        {
-            if (!TryGetEquiped(slot, out var equipable))
-                return;
-
-            equipable.Equiper = null;
-            _equipablesBySlot.Remove(slot);
-            OnUnequip?.Invoke(equipable);
-        }
-        internal void TryUnequip(Equipable equipable)
-        {
-            if (HasEquiped(equipable))
-                TryUnequip(equipable.EquipSlot);
-        }
     }
 }
