@@ -12,7 +12,9 @@ namespace Vheos.Games.ActionPoints.ActionScripts
         => 0;
         override public void Invoke(ABaseComponent user, ABaseComponent target, params float[] values)
         {
-            user.Get<Equiper>().Equip(target.Get<Equipable>());
+            Equipable targetEquipable = target.Get<Equipable>();
+            if (targetEquipable.Equiper == null)
+                user.Get<Equiper>().Equip(targetEquipable);
         }
     }
 }

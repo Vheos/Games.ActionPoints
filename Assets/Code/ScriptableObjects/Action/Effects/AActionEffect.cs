@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     abstract public class AActionEffect : ScriptableObject
     {
         // Constants
-        protected const string CONTEXT_MENU_PATH = "ActionEffects/";
+        protected const string CONTEXT_MENU_PATH = "Action/Effects/";
 
         // Public
         abstract public void Invoke(ABaseComponent user, ABaseComponent target, params float[] values);
@@ -21,9 +21,9 @@ namespace Vheos.Games.ActionPoints
         public class Data
         {
             // Inspector     
-            [SerializeField] protected AActionEffect _Effect = null;
-            [SerializeField] protected Direction _Direction = Direction.FromUserToTarget;
-            [SerializeField] protected float[] _Values = new float[1];
+            public AActionEffect _Effect = null;
+            public Direction _Direction = Direction.FromUserToTarget;
+            public float[] _Values = new float[1];
 
             // Privates
             private bool TestForWarnings()
@@ -68,7 +68,7 @@ namespace Vheos.Games.ActionPoints
             }
 
             // Defines
-            protected enum Direction
+            public enum Direction
             {
                 FromUserToTarget,
                 FromTargetToUser,

@@ -5,28 +5,31 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
 
-    [CreateAssetMenu(fileName = nameof(ActionAnimation), menuName = nameof(ActionAnimation), order = 3)]
+    [CreateAssetMenu(fileName = nameof(ActionAnimation), menuName = CONTEXT_MENU_PATH + nameof(ActionAnimation))]
     public class ActionAnimation : ScriptableObject
     {
+        // Constants
+        protected const string CONTEXT_MENU_PATH = "Action/";
+
         // Inspector
-        [SerializeField] protected Clip[] _Charge = new Clip[1];
+        [SerializeField] protected Clip[] _Target = new Clip[1];
         [SerializeField] protected Clip[] _Cancel = new Clip[1];
-        [SerializeField] protected Clip[] _Release = new Clip[1];
+        [SerializeField] protected Clip[] _Use = new Clip[1];
 
         // Public
-        public IReadOnlyList<Clip> Charge
-        => _Charge;
+        public IReadOnlyList<Clip> Target
+        => _Target;
         public IReadOnlyList<Clip> Cancel
         => _Cancel;
-        public IReadOnlyList<Clip> Release
-        => _Release;
+        public IReadOnlyList<Clip> Use
+        => _Use;
 
         // Defines
         public enum Type
         {
-            Idle,
-            Charge,
-            Release,
+            Target,
+            Use,
+            Cancel,
         }
 
         [System.Serializable]
@@ -105,10 +108,10 @@ namespace Vheos.Games.ActionPoints
     {
         static public IReadOnlyList<ActionAnimation.Clip> ToClips(this ActionAnimation animation, ActionAnimation.Type type)
         => type switch
-        {
-            ActionAnimation.Type.Idle => animation.Cancel,
-            ActionAnimation.Type.Charge => animation.Charge,
-            ActionAnimation.Type.Release => animation.Release,
+        {           
+            ActionAnimation.Type.Target => animation.Target,
+            ActionAnimation.Type.Use => animation.Use,
+            ActionAnimation.Type.Cancel => animation.Cancel,
             _ => null,
         };
     }
