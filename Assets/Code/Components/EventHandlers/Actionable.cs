@@ -30,8 +30,7 @@ namespace Vheos.Games.ActionPoints
         public void TryAddActions(params Action[] actions)
         {
             foreach (var action in actions)
-                if (_actions.TryAddUnique(action))
-                    InitializableSOManager.TryInitialize(action);
+                _actions.TryAddUnique(action);
         }
         public void TryRemoveActions(params Action[] actions)
         {
