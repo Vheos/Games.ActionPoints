@@ -15,9 +15,11 @@ namespace Vheos.Games.ActionPoints
         public Event<Equiper, Equiper> OnChangeEquiper
         { get; } = new Event<Equiper, Equiper>();
 
+        // Inputs
+        public ComponentInput<Slot> EquipSlot
+        { get; } = new ComponentInput<Slot>();
+
         // Publics
-        public Slot EquipSlot
-        { get; private set; }
         public Equiper Equiper
         {
             get => _equiper;
@@ -27,13 +29,7 @@ namespace Vheos.Games.ActionPoints
                 _equiper = value;
 
                 if (previousEquiper != _equiper)
-                {
                     OnChangeEquiper?.Invoke(previousEquiper, _equiper);
-                    if (previousEquiper != null)
-                        previousEquiper.TryUnequip(this);
-                    if (_equiper != null)
-                        _equiper.Equip(this);
-                }
             }
         }
 
