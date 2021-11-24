@@ -50,11 +50,17 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Defines
-        [System.Serializable]
+        [Serializable]
         sealed public class CommonActions
         {
             public Action Equip;
             public Action StartCombat;
+            public Action[] AllActions
+            => new[]
+            {
+                Equip,
+                StartCombat,
+            };
         }
     }
 }
