@@ -12,54 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da849b12135ec94396e63fc0aff8830, type: 3}
   m_Name: SwordSlash
   m_EditorClassIdentifier: 
-  _Charge:
+  _Target:
   - Duration: 0.5
     StayUpTime: 0
     Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
+    Parameters: 74
+    ArmRotation: {x: 45, y: 0, z: 60}
+    ArmLength: 0.3
     HandRotation: {x: 0, y: 0, z: 0}
     HandScale: 1
-    ForwardDistance: 0
     LookAt: 1
+    ForwardDistance: -0.1
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
     HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
     LookAtUseIdle: 0
-  _Cancel:
-  - Duration: 0.5
-    StayUpTime: 0
+    ForwardDistanceUseIdle: 0
+  _Use:
+  - Duration: 0.25
+    StayUpTime: 0.2
     Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
+    Parameters: 74
+    ArmRotation: {x: 75, y: 0, z: -150}
+    ArmLength: 0.3
+    HandRotation: {x: 0, y: 0, z: -75}
     HandScale: 1
-    ForwardDistance: 0
     LookAt: 1
+    ForwardDistance: 0.2
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
     HandRotationUseIdle: 0
     HandScaleUseIdle: 0
-    ForwardDistanceUseIdle: 0
     LookAtUseIdle: 0
-  _Release:
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    ForwardDistance: 0
-    LookAt: 1
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
     ForwardDistanceUseIdle: 0
-    LookAtUseIdle: 0
