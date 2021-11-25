@@ -6,6 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
+    using System.Collections.Generic;
 
     public class Character : AEventSubscriber
     {
@@ -19,7 +20,6 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] [Range(0f, 100f)] protected float _SharpArmor = 0f;
         [SerializeField] protected Team.Predefined _StartingTeam = Team.Predefined.None;
         [SerializeField] protected Equipable[] _StartingEquipment = new Equipable[0];
-        [SerializeField] protected ActionAnimation.Clip _Idle = new ActionAnimation.Clip();
 
         // Other
         public Quaternion LookAtRotation(Vector3 targetPosition)
@@ -34,12 +34,6 @@ namespace Vheos.Games.ActionPoints
         => Team != null ? Team.Color : Color.white;
         public Transform HandTransform
         => Get<ActionAnimator>().HandTransform;
-        public Tool Tool
-        => Get<Equiper>().TryGetEquiped(Equipable.Slot.Hand, out var equipable)
-        && equipable.TryGet<Tool>(out var tool)
-         ? tool : null;
-        public ActionAnimation.Clip Idle
-        => Tool != null ? Tool.Idle : _Idle;
 
         // Private
         private UIBase _ui;
@@ -63,14 +57,14 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             Get<Targeter>().Target = to;
-            Get<ActionAnimator>().TryAnimate(_contextualAction, ActionAnimation.Type.Target);
+            Get<ActionAnimator>().AnimateAction(_contextualAction, ActionAnimation.Type.Target);
         }
         private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
             if (isClick)
             {
                 _ui.Wheel.Toggle();
-                if (Tool.TryNonNull(out var tool))
+                if (this.TryGetTool(out var tool))
                     if (_ui.Wheel.IsExpanded)
                         tool.TryUnsheathe();
                     else
@@ -79,7 +73,7 @@ namespace Vheos.Games.ActionPoints
             else if (_contextualAction != null)
             {
                 Get<Actionable>().Use(_contextualAction, Get<Targeter>().Target);
-                Get<ActionAnimator>().TryAnimate(_contextualAction, ActionAnimation.Type.Use);
+                Get<ActionAnimator>().AnimateAction(_contextualAction, ActionAnimation.Type.UseThenIdle);
             }
 
             Get<Targeter>().Target = null;
@@ -105,7 +99,7 @@ namespace Vheos.Games.ActionPoints
                 if (!Has<AIController>())
                     _ui.Wheel.Show();
 
-                if (Tool.TryNonNull(out var tool))
+                if (this.TryGetTool(out var tool))
                     tool.TryUnsheathe();
 
                 foreach (var ally in Get<Teamable>().Allies)
@@ -117,7 +111,7 @@ namespace Vheos.Games.ActionPoints
                 _ui.PointsBar.Hide();
                 _ui.Wheel.Hide();
 
-                if (Tool.TryNonNull(out var tool))
+                if (this.TryGetTool(out var tool))
                     tool.TrySheathe();
 
                 Get<Actionable>().ActionProgress = 0;
@@ -204,7 +198,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayStart();
             foreach (var equipable in _StartingEquipment)
-                Get<Equiper>().Equip(equipable);
+                Get<Equiper>().TryEquip(equipable);
         }
         protected override void PlayDestroy()
         {
