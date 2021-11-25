@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da849b12135ec94396e63fc0aff8830, type: 3}
+  m_Name: PickaxeHit
+  m_EditorClassIdentifier: 
+  _Target:
+  - Duration: 0.5
+    StayUpTime: 0
+    Style: 0
+    Parameters: 78
+    ArmRotation: {x: 0, y: 0, z: 75}
+    ArmLength: 0.4
+    HandRotation: {x: 0, y: 0, z: 45}
+    HandScale: 1
+    LookAt: 1
+    ForwardDistance: 0.1
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
+    LookAtUseIdle: 0
+    ForwardDistanceUseIdle: 0
+  _Use:
+  - Duration: 0.3
+    StayUpTime: 0.3
+    Style: 2
+    Parameters: 74
+    ArmRotation: {x: 0, y: 0, z: -30}
+    ArmLength: 0.4
+    HandRotation: {x: 0, y: 0, z: -60}
+    HandScale: 1
+    LookAt: 1
+    ForwardDistance: -0.1
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
+    LookAtUseIdle: 0
+    ForwardDistanceUseIdle: 0
