@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     public class RotateAs : AFollowTargetRotation
     {
         // Overrides
-        protected override Vector3 TargetAngles(Transform target)
-        => target.rotation.eulerAngles;
+        protected override Vector3 TargetVector
+        => _useTransform ? _Transform.rotation.eulerAngles : _Vector;
     }
 }

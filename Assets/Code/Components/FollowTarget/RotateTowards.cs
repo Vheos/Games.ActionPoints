@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     public class RotateTowards : AFollowTargetRotation
     {
         // Overrides
-        protected override Vector3 TargetAngles(Transform target)
-        => Quaternion.LookRotation(this.DirectionTowards(target)).eulerAngles;
+        protected override Vector3 TargetVector
+        => Quaternion.LookRotation(_useTransform ? this.DirectionTowards(_Transform) : _Vector).eulerAngles; 
     }
 }

@@ -8,29 +8,29 @@ namespace Vheos.Games.ActionPoints
     abstract public class AFollowTargetRotation : AFollowTarget
     {
         // Publics
-        public Quaternion GetFinalRotation(Transform target)
+        public Quaternion FinalRotation
         {
-            Vector3 targetAngles = TargetAngles(target);
-            if (_LockedAxes != 0)
+            get
             {
-                Vector3 currentAngles = transform.rotation.eulerAngles;
-                if (_LockedAxes.HasFlag(Axes.X))
-                    targetAngles.x = currentAngles.x;
-                if (_LockedAxes.HasFlag(Axes.Y))
-                    targetAngles.y = currentAngles.y;
-                if (_LockedAxes.HasFlag(Axes.Z))
-                    targetAngles.z = currentAngles.z;
+                Vector3 targetAngles = TargetVector;
+                if (_LockedAxes != 0)
+                {
+                    Vector3 currentAngles = transform.rotation.eulerAngles;
+                    if (_LockedAxes.HasFlag(Axes.X))
+                        targetAngles.x = currentAngles.x;
+                    if (_LockedAxes.HasFlag(Axes.Y))
+                        targetAngles.y = currentAngles.y;
+                    if (_LockedAxes.HasFlag(Axes.Z))
+                        targetAngles.z = currentAngles.z;
+                }
+                return Quaternion.Euler(targetAngles + _Offset);
             }
-            return Quaternion.Euler(targetAngles + _Offset);
         }
-
-        // Privates
-        abstract protected Vector3 TargetAngles(Transform target);
 
         // Overrides
         protected override void FollowOnUpdate()
-        => transform.rotation = transform.rotation.Lerp(GetFinalRotation(_Target), NewUtility.LerpHalfTimeToAlpha(_HalfTime));
+        => transform.rotation = transform.rotation.Lerp(FinalRotation, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         protected override void FollowOnAnimate(System.Action tryRestoreEnabled)
-        => transform.AnimateRotation(this, GetFinalRotation(_Target), _AnimDuration, tryRestoreEnabled);
+        => transform.AnimateRotation(this, FinalRotation, _AnimDuration, tryRestoreEnabled);
     }
 }

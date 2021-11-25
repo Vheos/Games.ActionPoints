@@ -3,11 +3,13 @@ namespace Vheos.Games.ActionPoints
     using System;
     using UnityEngine;
     using Tools.UnityCore;
+    using Tools.Extensions.Math;
 
     abstract public class AFollowTarget : AEventSubscriber
     {
         // Inspector
-        [SerializeField] protected Transform _Target = null;
+        [SerializeField] protected Transform _Transform = null;
+        [SerializeField] protected Vector3 _Vector = Vector3.zero;
         [SerializeField] protected Vector3 _Offset = Vector3.zero;
         [SerializeField] protected Axes _LockedAxes = 0;
         [SerializeField] [Range(0f, 1f)] protected float _HalfTime = 0.25f;
@@ -16,7 +18,7 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public void AnimateFollow()
         {
-            if (_Target == null)
+            if (_useTransform && _Transform == null)
                 return;
 
             if (enabled)
@@ -28,25 +30,37 @@ namespace Vheos.Games.ActionPoints
                 FollowOnAnimate(() => { });
         }
         public Transform Target
-        => _Target;
+        => _Transform;
         public void SetTarget(GameObject target, bool animate = false)
         {
-            _Target = target.transform != this.transform 
-                    ? target.transform : null;
+            _Transform = target.transform.ChooseIf(t => t != transform);
+            _useTransform = true;
             if (animate)
                 AnimateFollow();
         }
         public void SetTarget(Component target, bool animate = false)
         => SetTarget(target.gameObject, animate);
+        public void SetTarget(Vector3 position, bool animate = false)
+        {
+            _Vector = position;
+            _useTransform = false;
+            if (animate)
+                AnimateFollow();
+        }
 
         // Private
-        abstract protected void FollowOnUpdate();
-        abstract protected void FollowOnAnimate(System.Action tryRestoreEnabled);
+        protected bool _useTransform;
         private void TryFollowTargetOnUpdate()
         {
-            if (_Target != null)
-                FollowOnUpdate();
+            if (_useTransform && _Transform == null)
+                return;
+
+            FollowOnUpdate();
         }
+        abstract protected void FollowOnUpdate();
+        abstract protected void FollowOnAnimate(System.Action tryRestoreEnabled);
+        abstract protected Vector3 TargetVector
+        { get; }
 
         // Play
         protected override void DefineAutoSubscriptions()
@@ -54,9 +68,14 @@ namespace Vheos.Games.ActionPoints
             base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdate, TryFollowTargetOnUpdate);
         }
+        public override void EditAwake()
+        {
+            base.EditAwake();
+            _useTransform = _Transform != null;
+        }
 
         // Defines
-        [System.Flags]
+        [Flags]
         public enum Axes
         {
             X = 1 << 0,

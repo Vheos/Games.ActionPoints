@@ -8,26 +8,31 @@ namespace Vheos.Games.ActionPoints
     public class MoveTowards : AFollowTarget
     {
         // Publics
-        public Vector3 GetFinalPosition(Transform target)
+        public Vector3 FinalPosition
         {
-            Vector3 targetPosition = target.position;
-            if (_LockedAxes != 0)
+            get
             {
-                Vector3 currentPosition = transform.position;
-                if (_LockedAxes.HasFlag(Axes.X))
-                    targetPosition.x = currentPosition.x;
-                if (_LockedAxes.HasFlag(Axes.Y))
-                    targetPosition.y = currentPosition.y;
-                if (_LockedAxes.HasFlag(Axes.Z))
-                    targetPosition.z = currentPosition.z;
+                Vector3 targetPosition = TargetVector;
+                if (_LockedAxes != 0)
+                {
+                    Vector3 currentPosition = transform.position;
+                    if (_LockedAxes.HasFlag(Axes.X))
+                        targetPosition.x = currentPosition.x;
+                    if (_LockedAxes.HasFlag(Axes.Y))
+                        targetPosition.y = currentPosition.y;
+                    if (_LockedAxes.HasFlag(Axes.Z))
+                        targetPosition.z = currentPosition.z;
+                }
+                return targetPosition + _Offset;
             }
-            return targetPosition + _Offset;
         }
 
         // Overrides
+        protected override Vector3 TargetVector
+        => _useTransform ? _Transform.position : _Vector;
         protected override void FollowOnUpdate()
-        => transform.position = transform.position.Lerp(GetFinalPosition(_Target), NewUtility.LerpHalfTimeToAlpha(_HalfTime));
+        => transform.position = transform.position.Lerp(FinalPosition, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         protected override void FollowOnAnimate(System.Action tryRestoreEnabled)
-        => transform.AnimatePosition(this, GetFinalPosition(_Target), _AnimDuration, tryRestoreEnabled);
+        => transform.AnimatePosition(this, FinalPosition, _AnimDuration, tryRestoreEnabled);
     }
 }
