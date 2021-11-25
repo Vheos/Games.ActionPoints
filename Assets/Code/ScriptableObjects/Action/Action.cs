@@ -49,11 +49,6 @@ namespace Vheos.Games.ActionPoints
             foreach (var effectData in _Effects)
                 effectData.Invoke(user, target);
         }
-        public void TryPlayAnimation(ActionAnimator animator, ActionAnimation.Type type)
-        {
-            if (_Animation != null)
-                animator.Animate(_Animation.ToClips(type));
-        }
         public bool CanTarget(Targeter user, Targetable target)
         {
             foreach (var and in _TargetingANDTests)
