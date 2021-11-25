@@ -4,6 +4,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.UnityObjects;
     using System.Linq;
+    using System.Collections.Generic;
 
     [RequireComponent(typeof(SpriteRenderer))]
     public class Tool : AEventSubscriber
@@ -12,12 +13,11 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected Vector3 _LocalPositionOffset = Vector3.zero;
         [SerializeField] protected Vector3 _LocalRotationOffset = Vector3.zero;
         [SerializeField] [Range(0f, 1f)] protected float _AnimDuration;
-        [SerializeField] protected ActionAnimation.Clip[] _Unsheathe = new ActionAnimation.Clip[1];
-        [SerializeField] protected ActionAnimation.Clip[] _Sheathe = new ActionAnimation.Clip[1];
+        [SerializeField] protected ToolAnimationSet _AnimationSet;
 
         // Publics
-        public ActionAnimation.Clip Idle
-        => _Unsheathe.Last();
+        public IReadOnlyList<ActionAnimation.Clip> Idle
+        => _AnimationSet.Idle;
         public Equipable.Slot EquipSlot
         => Get<Equipable>().EquipSlot;
         public Equiper Equiper
@@ -30,7 +30,7 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             IsUnsheathed = false;
-            Equiper.Get<ActionAnimator>().Animate(_Sheathe);
+            Equiper.Get<ActionAnimator>().AnimateClips(_AnimationSet.Sheathe);
         }
         public void TryUnsheathe()
         {
@@ -38,14 +38,14 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             IsUnsheathed = true;
-            Equiper.Get<ActionAnimator>().SetClip(_Sheathe.Last());
-            Equiper.Get<ActionAnimator>().Animate(_Unsheathe);
+            Equiper.Get<ActionAnimator>().SetClip(_AnimationSet.Sheathe.Last());
+            Equiper.Get<ActionAnimator>().AnimateClips(_AnimationSet.Idle);
         }
 
         // Privates
         private void AttachToEquiper(System.Action nextAction = null)
         {
-            Equiper.Get<ActionAnimator>().SetClip(Idle);
+            Equiper.Get<ActionAnimator>().SetClip(Idle.Last());
             transform.BecomeChildOf(Equiper.AttachmentTransform[EquipSlot], true);
             IsUnsheathed = true;
             using (QAnimator.Group(this, null, _AnimDuration, nextAction))
@@ -84,6 +84,20 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             Get<Equipable>().EquipSlot.Set(() => Equipable.Slot.Hand);
+        }
+    }
+
+    static public class Tool_Extensions
+    {
+        static public bool TryGetTool(this ABaseComponent t, out Tool r)
+        {
+            if (t.TryGet<Equiper>(out var equiper)
+            && equiper.TryGetEquiped(Equipable.Slot.Hand, out var handEquipable)
+            && handEquipable.TryGet(out r))
+                return true;
+
+            r = null;
+            return false;
         }
     }
 }
