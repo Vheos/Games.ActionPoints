@@ -12,10 +12,8 @@ namespace Vheos.Games.ActionPoints
     sealed public class Equiper : AEventSubscriber
     {
         // Events
-        public Event<Equipable> OnEquip
-        { get; } = new Event<Equipable>();
-        public Event<Equipable> OnUnequip
-        { get; } = new Event<Equipable>();
+        public Event<Slot, Equipable, Equipable> OnChangeEquipable
+        { get; } = new Event<Slot, Equipable, Equipable>();
 
         // Inputs
         public ComponentInput<Slot, Transform> AttachmentTransform
@@ -24,33 +22,40 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public IReadOnlyDictionary<Slot, Equipable> EquipablesBySlot
         => _equipablesBySlot;
-        public void Equip(Equipable equipable)
+        public void TryEquip(Equipable equipable)
         {
-            Slot slot = equipable.EquipSlot;
-            TryUnequip(slot);
+            if (equipable == null || HasEquiped(equipable))
+                return;
 
-            equipable.Equiper = this;
-            _equipablesBySlot[slot] = equipable;
-            OnEquip?.Invoke(equipable);
+            Slot slot = equipable.EquipSlot;
+            TryGetEquiped(slot, out var previousEquipable);
+            if (previousEquipable != null)
+                RemoveEquipable(previousEquipable);
+
+            AddEquipable(equipable);
+            OnChangeEquipable?.Invoke(slot, previousEquipable, equipable);
         }
         public void TryUnequip(Slot slot)
         {
-            if (!TryGetEquiped(slot, out var equipable))
+            if (!HasEquiped(slot))
                 return;
 
-            equipable.Equiper = null;
-            _equipablesBySlot.Remove(slot);
-            OnUnequip?.Invoke(equipable);
+            Equipable equipable = _equipablesBySlot[slot];
+            RemoveEquipable(equipable);
+            OnChangeEquipable?.Invoke(slot, equipable, null);
         }
         public void TryUnequip(Equipable equipable)
         {
-            if (HasEquiped(equipable))
-                TryUnequip(equipable.EquipSlot);
+            if (!HasEquiped(equipable))
+                return;
+
+            RemoveEquipable(equipable);
+            OnChangeEquipable?.Invoke(equipable.EquipSlot, equipable, null);
         }
         public bool HasEquiped(Slot slot)
         => _equipablesBySlot.ContainsKey(slot);
         public bool HasEquiped(Equipable equipable)
-        => _equipablesBySlot.ContainsValue(equipable);
+        => TryGetEquiped(equipable.EquipSlot, out var equiped) && equipable == equiped;
         public Equipable GetEquiped(Slot slot)
         => _equipablesBySlot[slot];
         public bool TryGetEquiped(Slot slot, out Equipable equipable)
@@ -58,5 +63,15 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         private readonly Dictionary<Slot, Equipable> _equipablesBySlot = new Dictionary<Slot, Equipable>();
+        private void AddEquipable(Equipable equipable)
+        {
+            _equipablesBySlot.Add(equipable.EquipSlot, equipable);
+            equipable.Equiper = this;
+        }
+        private void RemoveEquipable(Equipable equipable)
+        {
+            _equipablesBySlot.Remove(equipable.EquipSlot);
+            equipable.Equiper = null;
+        }
     }
 }
