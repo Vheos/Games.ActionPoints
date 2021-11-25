@@ -33,7 +33,7 @@ namespace Vheos.Games.ActionPoints
             }
         }
         public bool HasAnyAllies
-        => Allies.Any();
+        => Team != null && Team.Members.Count >= 2;
         public bool IsAllyOf(Teamable other)
         => other != this && Team != null && Team == other.Team;
         public bool IsEnemyOf(Teamable other)
