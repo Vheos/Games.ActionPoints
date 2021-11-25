@@ -14,7 +14,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
         {
             Equipable targetEquipable = target.Get<Equipable>();
             if (targetEquipable.Equiper == null)
-                user.Get<Equiper>().Equip(targetEquipable);
+                user.Get<Equiper>().TryEquip(targetEquipable);
         }
     }
 }

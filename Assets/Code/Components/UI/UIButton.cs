@@ -58,7 +58,7 @@ namespace Vheos.Games.ActionPoints
                 Base.TargetingLine.ShowAndFollowCursor(transform, OnTargetChanged);
 
             _isPressed = true;
-            Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Target);
+            Character.Get<ActionAnimator>().AnimateAction(Action, ActionAnimation.Type.Target);
             transform.AnimateLocalScale(this, transform.localScale * Settings.ClickScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColor(this, Get<SpriteRenderer>().color * Settings.ClickColorScale, Settings.ClickDuration);
         }
@@ -71,12 +71,12 @@ namespace Vheos.Games.ActionPoints
             {
                 if (Character.Get<Targeter>().Target != null)
                 {
-                    Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Use);
+                    Character.Get<ActionAnimator>().AnimateAction(Action, ActionAnimation.Type.UseThenIdle);
                     Character.Get<Actionable>().Use(Action, Character.Get<Targeter>().Target);
                     Character.Get<Targeter>().Target = null;
                 }
                 else
-                    Character.Get<ActionAnimator>().TryAnimate(Action, ActionAnimation.Type.Cancel);
+                    Character.Get<ActionAnimator>().AnimateAction(Action, ActionAnimation.Type.Idle);
 
                 Character.Get<Targeter>().Target = null;
                 Base.TargetingLine.Hide();
