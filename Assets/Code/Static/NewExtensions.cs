@@ -49,6 +49,8 @@ namespace Vheos.Games.ActionPoints
         }
         static public bool SameGOAs(this Component t, Component a)
         => t.gameObject == a.gameObject;
+        static public T ChooseIf<T>(this T t, Func<T, bool> test, T onFalse = default)
+        => test(t) ? t : onFalse;
 
         // Midpoint
         static public Vector3 Midpoint<T>(this IEnumerable<T> t, Func<T, Vector3> positionFunc)
