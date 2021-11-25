@@ -1,6 +1,7 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using UnityEngine;
     using Tools.UnityCore;
@@ -9,7 +10,6 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Event = Tools.UnityCore.Event;
     using static ActionAnimation;
-    using System.Linq;
 
     [RequireComponent(typeof(Character))]
     public class ActionAnimator : ABaseComponent
@@ -20,6 +20,7 @@ namespace Vheos.Games.ActionPoints
 
         // Inspector
         [SerializeField] protected GameObject _ArmAttachmentTransform;
+        [SerializeField] protected Clip[] _Idle = new Clip[1];
 
         // Events
         public Event OnFinishAnimation
@@ -30,14 +31,19 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
         public Transform HandTransform
         { get; private set; }
-        public void TryAnimate(Action action, ActionAnimation.Type type)
-        => action.TryPlayAnimation(this, type);
-        public void Animate(Clip clip)
-        => Animate(new Clip[] { clip });
-        public void Animate(IReadOnlyList<Clip> clips)
+        public IReadOnlyList<Clip> CurrentIdle
+        => this.TryGetTool(out var tool) ? tool.Idle : _Idle;
+        public void AnimateAction(Action action, ActionAnimation.Type type)
+        {
+            if (action.Animation == null)
+                return;
+
+            AnimateClips(AnimationTypeToClips(action, type));
+        }
+        public void AnimateClips(IReadOnlyList<Clip> clips)
         {
             IsPlaying = true;
-            AnimateClipsFrom(clips, 0);
+            AnimateClipsRecursivelyFrom(clips, 0);
         }
         public void SetClip(Clip clip)
         {
@@ -74,7 +80,7 @@ namespace Vheos.Games.ActionPoints
         }
         private void AnimateClip(Clip clip, bool isInstant = false)
         {
-            Clip idle = Get<Character>().Idle;
+            Clip idle = CurrentIdle.Last();
             using (QAnimator.Group(this, null, isInstant ? 0f : clip.Duration, null, clip.Style))
             {
                 if (clip.ArmRotationEnabled)
@@ -85,8 +91,6 @@ namespace Vheos.Games.ActionPoints
                     QAnimator.GroupAnimate(AssignHandAngles, _handAngles, clip.ChooseHandRotation(idle));
                 if (clip.HandScaleEnabled)
                     HandTransform.GroupAnimateLocalScale(clip.ChooseHandScale(idle).ToVector3());
-                if (clip.ForwardDistanceEnabled)
-                    transform.GroupAnimatePosition(Get<Character>().CombatPosition + transform.right * clip.ChooseForwardDistance(idle));
                 if (clip.LookAtEnabled)
                 {
                     if (!TryGet<Combatable>(out var combatable)
@@ -101,11 +105,17 @@ namespace Vheos.Games.ActionPoints
                         _ => float.NaN.ToVector3(),
                     };
 
-                    transform.GroupAnimateRotation(GetComponent<Character>().LookAtRotation(targetPosition));
+                    Get<RotateTowards>().SetTarget(targetPosition, true);
+                }
+                if (clip.ForwardDistanceEnabled)
+                {
+                    Vector3 startingPosition = TryGet<Combatable>(out var combatable) && combatable.IsInCombat
+                                             ? combatable.AnchorPosition : transform.position;
+                    transform.GroupAnimatePosition(startingPosition + transform.right * clip.ChooseForwardDistance(idle));
                 }
             }
         }
-        private void AnimateClipsFrom(IReadOnlyList<Clip> clips, int clipIndex)
+        private void AnimateClipsRecursivelyFrom(IReadOnlyList<Clip> clips, int clipIndex)
         {
             if (clipIndex >= clips.Count)
             {
@@ -115,8 +125,17 @@ namespace Vheos.Games.ActionPoints
             }
 
             AnimateClip(clips[clipIndex]);
-            QAnimator.Delay(this, null, clips[clipIndex].TotalTime, () => AnimateClipsFrom(clips, ++clipIndex));
+            QAnimator.Delay(this, null, clips[clipIndex].TotalTime, () => AnimateClipsRecursivelyFrom(clips, ++clipIndex));
         }
+        private IReadOnlyList<Clip> AnimationTypeToClips(Action action, ActionAnimation.Type type)
+        => type switch
+        {
+            ActionAnimation.Type.Target => action.Animation.Target,
+            ActionAnimation.Type.Use => action.Animation.Use,
+            ActionAnimation.Type.Idle => CurrentIdle,
+            ActionAnimation.Type.UseThenIdle => action.Animation.Use.Concat(CurrentIdle).ToArray(),
+            _ => Array.Empty<Clip>(),
+        };
 
         // Play
         protected override void PlayAwake()
