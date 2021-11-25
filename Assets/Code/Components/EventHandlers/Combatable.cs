@@ -111,5 +111,8 @@ namespace Vheos.Games.ActionPoints
         && t.TryGetCombat(out var tCombat)
         && a.TryGetCombat(out var aCombat)
         && tCombat == aCombat;
+        static public bool IsInCombat(this ABaseComponent t)
+        => t.TryGet<Combatable>(out var combatable)
+        && combatable.IsInCombat;
     }
 }
