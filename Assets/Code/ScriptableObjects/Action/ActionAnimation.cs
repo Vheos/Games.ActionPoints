@@ -13,14 +13,11 @@ namespace Vheos.Games.ActionPoints
 
         // Inspector
         [SerializeField] protected Clip[] _Target = new Clip[1];
-        [SerializeField] protected Clip[] _Cancel = new Clip[1];
         [SerializeField] protected Clip[] _Use = new Clip[1];
 
         // Public
         public IReadOnlyList<Clip> Target
         => _Target;
-        public IReadOnlyList<Clip> Cancel
-        => _Cancel;
         public IReadOnlyList<Clip> Use
         => _Use;
 
@@ -29,7 +26,8 @@ namespace Vheos.Games.ActionPoints
         {
             Target,
             Use,
-            Cancel,
+            Idle,
+            UseThenIdle,
         }
 
         [System.Serializable]
@@ -42,24 +40,22 @@ namespace Vheos.Games.ActionPoints
             public VisibleParameters Parameters;
 
             public Vector3 ArmRotation = Vector3.zero;
-            [Range(0f, 1f)] public float ArmLength = 0f;
+            [Range(-1f, 1f)] public float ArmLength = 0f;
             public Vector3 HandRotation = Vector3.zero;
             [Range(0f, 2f)] public float HandScale = 1f;
-            [Range(-0.5f, +0.5f)] public float ForwardDistance = 0f;
             public LookAtTarget LookAt = LookAtTarget.EnemyMidpoint;
+            [Range(-1f, +1f)] public float ForwardDistance = 0f;
 
             public bool ArmLengthUseIdle = false;
             public bool ArmRotationUseIdle = false;
             public bool HandRotationUseIdle = false;
             public bool HandScaleUseIdle = false;
-            public bool ForwardDistanceUseIdle = false;
             public bool LookAtUseIdle = false;
+            public bool ForwardDistanceUseIdle = false;
 
             // Publics
             public float TotalTime
             => Duration + StayUpTime;
-            public bool ForwardDistanceEnabled
-            => Parameters.HasFlag(VisibleParameters.ForwardDistance);
             public bool ArmLengthEnabled
              => Parameters.HasFlag(VisibleParameters.ArmLength);
             public bool ArmRotationEnabled
@@ -70,6 +66,8 @@ namespace Vheos.Games.ActionPoints
             => Parameters.HasFlag(VisibleParameters.HandScale);
             public bool LookAtEnabled
             => Parameters.HasFlag(VisibleParameters.LookAt);
+            public bool ForwardDistanceEnabled
+            => Parameters.HasFlag(VisibleParameters.ForwardDistance);
 
             public Vector3 ChooseArmRotation(Clip idle)
             => ArmRotationUseIdle ? idle.ArmRotation : ArmRotation;
@@ -79,40 +77,28 @@ namespace Vheos.Games.ActionPoints
             => HandScaleUseIdle ? idle.HandScale : HandScale;
             public Vector3 ChooseHandRotation(Clip idle)
             => HandRotationUseIdle ? idle.HandRotation : HandRotation;
-            public float ChooseForwardDistance(Clip idle)
-            => ForwardDistanceUseIdle ? idle.ForwardDistance : ForwardDistance;
             public LookAtTarget ChooseLookAt(Clip idle)
             => LookAtUseIdle ? idle.LookAt : LookAt;
+            public float ChooseForwardDistance(Clip idle)
+            => ForwardDistanceUseIdle ? idle.ForwardDistance : ForwardDistance;
 
             // Defines
             [System.Flags]
             public enum VisibleParameters
             {
-                ArmRotation = 1 << 2,
-                ArmLength = 1 << 1,
+                ArmRotation = 1 << 1,
+                ArmLength = 1 << 2,
                 HandRotation = 1 << 3,
                 HandScale = 1 << 4,
-                ForwardDistance = 1 << 0,
                 LookAt = 1 << 5,
+                ForwardDistance = 1 << 6,
             }
             public enum LookAtTarget
             {
-                AllyMidpoint,
+                AllyMidpoint = 0,
                 EnemyMidpoint,
                 CombatMidpoint,
             }
         }
-    }
-
-    static public class ActionAnimation_Extensions
-    {
-        static public IReadOnlyList<ActionAnimation.Clip> ToClips(this ActionAnimation animation, ActionAnimation.Type type)
-        => type switch
-        {           
-            ActionAnimation.Type.Target => animation.Target,
-            ActionAnimation.Type.Use => animation.Use,
-            ActionAnimation.Type.Cancel => animation.Cancel,
-            _ => null,
-        };
     }
 }
