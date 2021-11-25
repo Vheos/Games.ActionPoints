@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 067e28fd899d35b4db047082d18120bf, type: 3}
-  m_Name: Attack
+  m_Name: DefaultAttack
   m_EditorClassIdentifier: 
   _Sprite: {fileID: -7814885851622180520, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
-  _Animation: {fileID: 11400000, guid: 5970b38970783da47a012808d1345213, type: 2}
+  _Animation: {fileID: 11400000, guid: b80052bae0d9059429800abbb5c0d3ae, type: 2}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
   _TargetingANDTests:
@@ -26,6 +26,6 @@ MonoBehaviour:
   - _Effect: {fileID: 11400000, guid: f18ee305bcc86a94e9cb42c01f8703cd, type: 2}
     _Direction: 0
     _Values:
-    - 10
+    - 0
     - 0
     - 0
