@@ -53,40 +53,7 @@ MonoBehaviour:
   _LocalPositionOffset: {x: 0, y: 0, z: 0}
   _LocalRotationOffset: {x: 0, y: 0, z: 0}
   _AnimDuration: 0.5
-  _Idle:
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 94
-    ArmRotation: {x: 0, y: 0, z: -30}
-    ArmLength: 0.4
-    HandRotation: {x: 0, y: 0, z: -30}
-    HandScale: 1
-    LookAt: 0
-    ForwardDistance: 0
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    LookAtUseIdle: 0
-    ForwardDistanceUseIdle: 0
-  _Sheathe:
-  - Duration: 1
-    StayUpTime: 0
-    Style: 1
-    Parameters: 30
-    ArmRotation: {x: 0, y: 0, z: 135}
-    ArmLength: 0.2
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 0
-    LookAt: 0
-    ForwardDistance: 0
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    LookAtUseIdle: 0
-    ForwardDistanceUseIdle: 0
+  _AnimationSet: {fileID: 0}
 --- !u!212 &7207409327477670922
 SpriteRenderer:
   m_ObjectHideFlags: 0
