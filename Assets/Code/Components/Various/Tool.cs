@@ -16,51 +16,35 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected ToolAnimationSet _AnimationSet;
 
         // Publics
-        public IReadOnlyList<ActionAnimation.Clip> Idle
-        => _AnimationSet.Idle;
+        public ToolAnimationSet AnimationSet
+        => _AnimationSet;
         public Equipable.Slot EquipSlot
         => Get<Equipable>().EquipSlot;
         public Equiper Equiper
         => Get<Equipable>().Equiper;
-        public bool IsUnsheathed
-        { get; private set; }
-        public void TrySheathe()
+        public void AttachTo(Transform target)
         {
-            if (!IsUnsheathed)
-                return;
-
-            IsUnsheathed = false;
-            Equiper.Get<ActionAnimator>().AnimateClips(_AnimationSet.Sheathe);
+            transform.BecomeChildOf(target, true);
+            using (QAnimator.Group(this, null, _AnimDuration))
+            {
+                transform.GroupAnimateLocalPosition(_LocalPositionOffset);
+                transform.GroupAnimateLocalRotation(Quaternion.Euler(_LocalRotationOffset));
+                transform.GroupAnimateLocalScale(_originalScale);
+            }
         }
-        public void TryUnsheathe()
+        public void DetachTo(Transform target)
         {
-            if (IsUnsheathed)
-                return;
-
-            IsUnsheathed = true;
-            Equiper.Get<ActionAnimator>().SetClip(_AnimationSet.Sheathe.Last());
-            Equiper.Get<ActionAnimator>().AnimateClips(_AnimationSet.Idle);
+            transform.BecomeSiblingOf(target, true);
+            using (QAnimator.Group(this, null, _AnimDuration))
+            {
+                transform.GroupAnimateLocalPosition(target.localPosition);
+                transform.GroupAnimateLocalRotation(target.localRotation);
+                transform.GroupAnimateLocalScale(target.localScale);
+            }
         }
 
         // Privates
-        private void AttachToEquiper(System.Action nextAction = null)
-        {
-            Equiper.Get<ActionAnimator>().SetClip(Idle.Last());
-            transform.BecomeChildOf(Equiper.AttachmentTransform[EquipSlot], true);
-            IsUnsheathed = true;
-            using (QAnimator.Group(this, null, _AnimDuration, nextAction))
-            {
-                transform.GroupAnimateLocalPosition(_LocalPositionOffset);
-                transform.GroupAnimateLocalRotation(_LocalRotationOffset);
-            }
-        }
-        private void OnChangeEquiper(Equiper from, Equiper to)
-        {
-            if (to != null)
-                AttachToEquiper(TrySheathe);
-            else
-                ;
-        }
+        private Vector3 _originalScale;
         private void OnGainTargeting(Targeter targeter, bool isFirst)
         {
             if (isFirst && Equiper == null || Equiper.SameGOAs(targeter))
@@ -76,16 +60,18 @@ namespace Vheos.Games.ActionPoints
         protected override void DefineAutoSubscriptions()
         {
             base.DefineAutoSubscriptions();
-            SubscribeTo(Get<Equipable>().OnChangeEquiper, OnChangeEquiper);
             SubscribeTo(Get<Targetable>().OnGainTargeting, OnGainTargeting);
             SubscribeTo(Get<Targetable>().OnLoseTargeting, OnLoseTargeting);
         }
         protected override void PlayAwake()
         {
             base.PlayAwake();
+            _originalScale = transform.localScale;
             Get<Equipable>().EquipSlot.Set(() => Equipable.Slot.Hand);
         }
     }
+
+
 
     static public class Tool_Extensions
     {
