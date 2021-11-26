@@ -11,7 +11,6 @@ namespace Vheos.Games.ActionPoints
     using Event = Tools.UnityCore.Event;
     using static ActionAnimation;
 
-    [RequireComponent(typeof(Character))]
     public class ActionAnimator : ABaseComponent
     {
         // Const
@@ -32,23 +31,26 @@ namespace Vheos.Games.ActionPoints
         public Transform HandTransform
         { get; private set; }
         public IReadOnlyList<Clip> CurrentIdle
-        => this.TryGetTool(out var tool) ? tool.Idle : _Idle;
-        public void AnimateAction(Action action, ActionAnimation.Type type)
+        => this.TryGetTool(out var tool) && tool.AnimationSet.TryNonNull(out var toolAnimSet)
+         ? toolAnimSet.Idle : _Idle;
+        public void Animate(Action action, ActionAnimation.Type type, bool isInstant = false)
         {
             if (action.Animation == null)
                 return;
 
-            AnimateClips(AnimationTypeToClips(action, type));
+            Animate(AnimationTypeToClips(action, type), isInstant);
         }
-        public void AnimateClips(IReadOnlyList<Clip> clips)
+        public void Animate(IReadOnlyList<Clip> clips, bool isInstant = false)
         {
+            if (isInstant)
+            {
+                IsPlaying = false;
+                AnimateClip(clips.Last(), true);
+                return;
+            }
+
             IsPlaying = true;
             AnimateClipsRecursivelyFrom(clips, 0);
-        }
-        public void SetClip(Clip clip)
-        {
-            IsPlaying = false;
-            AnimateClip(clip, true);
         }
         public void Stop()
         => QAnimator.Stop(this, null);
