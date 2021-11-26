@@ -83,7 +83,7 @@ namespace Vheos.Games.ActionPoints
             => ForwardDistanceUseIdle ? idle.ForwardDistance : ForwardDistance;
 
             // Defines
-            [System.Flags]
+            [Flags]
             public enum VisibleParameters
             {
                 ArmRotation = 1 << 1,

@@ -16,7 +16,7 @@ namespace Vheos.Games.ActionPoints
         { get; } = new Event<Slot, Equipable, Equipable>();
 
         // Inputs
-        public ComponentInput<Slot, Transform> AttachmentTransform
+        public ComponentInput<Slot, Transform> AttachTransformsBySlot
         { get; } = new ComponentInput<Slot, Transform>();
 
         // Publics
