@@ -6,8 +6,8 @@ namespace Vheos.Games.ActionPoints.Editor
     using Tools.Extensions.General;
     using Tools.Extensions.Math;
 
-    [CustomPropertyDrawer(typeof(ActionAnimation.Clip))]
-    public class ActionAnimationClip_PropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(QAnimationClip))]
+    public class QAnimationClip_PropertyDrawer : PropertyDrawer
     {
         // Constants
         private const float PROPERTY_HEIGHT = 20f;
@@ -15,18 +15,18 @@ namespace Vheos.Games.ActionPoints.Editor
         private const string PROPERTY_USE_IDLE_POSTFIX = "UseIdle";
         static private readonly string[] TOGGLABLE_PROPERTIES = new[]
         {
-            nameof(ActionAnimation.Clip.ArmRotation),
-            nameof(ActionAnimation.Clip.ArmLength),
-            nameof(ActionAnimation.Clip.HandRotation),
-            nameof(ActionAnimation.Clip.HandScale),
-            nameof(ActionAnimation.Clip.ForwardDistance),
-            nameof(ActionAnimation.Clip.LookAt),
+            nameof(QAnimationClip.ArmRotation),
+            nameof(QAnimationClip.ArmLength),
+            nameof(QAnimationClip.HandRotation),
+            nameof(QAnimationClip.HandScale),
+            nameof(QAnimationClip.ForwardDistance),
+            nameof(QAnimationClip.LookAt),
         };
 
         // Edit
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            int setFlagCounts = property.FindPropertyRelative(nameof(ActionAnimation.Clip.Parameters)).intValue.SetFlagsCount();
+            int setFlagCounts = property.FindPropertyRelative(nameof(QAnimationClip.Parameters)).intValue.SetFlagsCount();
             return (3 + setFlagCounts.ClampMax(TOGGLABLE_PROPERTIES.Length)) * PROPERTY_HEIGHT;
         }
         public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
@@ -47,35 +47,35 @@ namespace Vheos.Games.ActionPoints.Editor
                 // Duration & WaitTime
                 rect.xMin = labelMinX;
                 EditorGUI.indentLevel++;
-                EditorGUI.LabelField(rect, $"{nameof(ActionAnimation.Clip.Duration)} / StayUp");
+                EditorGUI.LabelField(rect, $"{nameof(QAnimationClip.Duration)} / StayUp");
                 EditorGUI.indentLevel--;
                 rect.xMin = controlMinX;
                 rect.width /= 2f;
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative(nameof(ActionAnimation.Clip.Duration)), GUIContent.none);
+                EditorGUI.PropertyField(rect, property.FindPropertyRelative(nameof(QAnimationClip.Duration)), GUIContent.none);
                 rect.xMin += rect.width + 5f;
                 rect.xMax = controlMaxX;
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative(nameof(ActionAnimation.Clip.StayUpTime)), GUIContent.none);
+                EditorGUI.PropertyField(rect, property.FindPropertyRelative(nameof(QAnimationClip.StayUpTime)), GUIContent.none);
                 rect.y += PROPERTY_HEIGHT;
 
                 // Parameters & Style
                 rect.xMin = labelMinX;
                 EditorGUI.indentLevel++;
-                EditorGUI.LabelField(rect, $"{nameof(ActionAnimation.Clip.Parameters)} / {nameof(ActionAnimation.Clip.Style)}");
+                EditorGUI.LabelField(rect, $"{nameof(QAnimationClip.Parameters)} / {nameof(QAnimationClip.Style)}");
                 EditorGUI.indentLevel--;
                 rect.xMin = controlMinX;
                 rect.width /= 2f;
-                SerializedProperty parametersProp = property.FindPropertyRelative(nameof(ActionAnimation.Clip.Parameters));
+                SerializedProperty parametersProp = property.FindPropertyRelative(nameof(QAnimationClip.Parameters));
                 EditorGUI.PropertyField(rect, parametersProp, GUIContent.none);
                 rect.xMin += rect.width + 5f;
                 rect.xMax = controlMaxX;
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative(nameof(ActionAnimation.Clip.Style)), GUIContent.none);
+                EditorGUI.PropertyField(rect, property.FindPropertyRelative(nameof(QAnimationClip.Style)), GUIContent.none);
                 rect.y += PROPERTY_HEIGHT;
 
                 // Togglable properties                
                 foreach (var name in TOGGLABLE_PROPERTIES)
                 {
-                    if (!System.Enum.TryParse<ActionAnimation.Clip.VisibleParameters>(name, out var enumValue)
-                    || !parametersProp.intValue.As<ActionAnimation.Clip.VisibleParameters>().HasFlag(enumValue))
+                    if (!System.Enum.TryParse<QAnimationClip.VisibleParameters>(name, out var enumValue)
+                    || !parametersProp.intValue.As<QAnimationClip.VisibleParameters>().HasFlag(enumValue))
                         continue;
 
                     GUI.enabled = true;

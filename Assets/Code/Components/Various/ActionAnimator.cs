@@ -9,7 +9,6 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
     using Tools.Extensions.Math;
     using Event = Tools.UnityCore.Event;
-    using static ActionAnimation;
 
     public class ActionAnimator : ABaseComponent
     {
@@ -19,7 +18,7 @@ namespace Vheos.Games.ActionPoints
 
         // Inspector
         [SerializeField] protected GameObject _ArmAttachmentTransform;
-        [SerializeField] protected Clip[] _Idle = new Clip[1];
+        [SerializeField] protected QAnimationClip[] _Idle = new QAnimationClip[1];
 
         // Events
         public Event OnFinishAnimation
@@ -30,17 +29,17 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
         public Transform HandTransform
         { get; private set; }
-        public IReadOnlyList<Clip> CurrentIdle
+        public IReadOnlyList<QAnimationClip> CurrentIdle
         => this.TryGetTool(out var tool) && tool.AnimationSet.TryNonNull(out var toolAnimSet)
          ? toolAnimSet.Idle : _Idle;
-        public void Animate(Action action, ActionAnimation.Type type, bool isInstant = false)
+        public void Animate(Action action, ActionAnimationSet.Type type, bool isInstant = false)
         {
             if (action.Animation == null)
                 return;
 
             Animate(AnimationTypeToClips(action, type), isInstant);
         }
-        public void Animate(IReadOnlyList<Clip> clips, bool isInstant = false)
+        public void Animate(IReadOnlyList<QAnimationClip> clips, bool isInstant = false)
         {
             if (isInstant)
             {
@@ -80,9 +79,9 @@ namespace Vheos.Games.ActionPoints
             _handAngles = v;
             HandTransform.localRotation = Quaternion.Euler(_handAngles);
         }
-        private void AnimateClip(Clip clip, bool isInstant = false)
+        private void AnimateClip(QAnimationClip clip, bool isInstant = false)
         {
-            Clip idle = CurrentIdle.Last();
+            QAnimationClip idle = CurrentIdle.Last();
             using (QAnimator.Group(this, null, isInstant ? 0f : clip.Duration, null, clip.Style))
             {
                 if (clip.ArmRotationEnabled)
@@ -101,9 +100,9 @@ namespace Vheos.Games.ActionPoints
 
                     Vector3 targetPosition = clip.ChooseLookAt(idle) switch
                     {
-                        Clip.LookAtTarget.AllyMidpoint => combatable.AllyMidpoint,
-                        Clip.LookAtTarget.EnemyMidpoint => combatable.EnemyMidpoint,
-                        Clip.LookAtTarget.CombatMidpoint => combatable.Combat.Midpoint,
+                        QAnimationClip.LookAtTarget.AllyMidpoint => combatable.AllyMidpoint,
+                        QAnimationClip.LookAtTarget.EnemyMidpoint => combatable.EnemyMidpoint,
+                        QAnimationClip.LookAtTarget.CombatMidpoint => combatable.Combat.Midpoint,
                         _ => float.NaN.ToVector3(),
                     };
 
@@ -117,7 +116,7 @@ namespace Vheos.Games.ActionPoints
                 }
             }
         }
-        private void AnimateClipsRecursivelyFrom(IReadOnlyList<Clip> clips, int clipIndex)
+        private void AnimateClipsRecursivelyFrom(IReadOnlyList<QAnimationClip> clips, int clipIndex)
         {
             if (clipIndex >= clips.Count)
             {
@@ -129,14 +128,14 @@ namespace Vheos.Games.ActionPoints
             AnimateClip(clips[clipIndex]);
             QAnimator.Delay(this, null, clips[clipIndex].TotalTime, () => AnimateClipsRecursivelyFrom(clips, ++clipIndex));
         }
-        private IReadOnlyList<Clip> AnimationTypeToClips(Action action, ActionAnimation.Type type)
+        private IReadOnlyList<QAnimationClip> AnimationTypeToClips(Action action, ActionAnimationSet.Type type)
         => type switch
         {
-            ActionAnimation.Type.Target => action.Animation.Target,
-            ActionAnimation.Type.Use => action.Animation.Use,
-            ActionAnimation.Type.Idle => CurrentIdle,
-            ActionAnimation.Type.UseThenIdle => action.Animation.Use.Concat(CurrentIdle).ToArray(),
-            _ => Array.Empty<Clip>(),
+            ActionAnimationSet.Type.Target => action.Animation.Target,
+            ActionAnimationSet.Type.Use => action.Animation.Use,
+            ActionAnimationSet.Type.Idle => CurrentIdle,
+            ActionAnimationSet.Type.UseThenIdle => action.Animation.Use.Concat(CurrentIdle).ToArray(),
+            _ => Array.Empty<QAnimationClip>(),
         };
 
         // Play

@@ -32,7 +32,7 @@ namespace Vheos.Games.ActionPoints
                     if (AvailableActions.Random().TryNonNull(out _action)
                     && AvailableTargets.Random().TryNonNull(out var target))
                     {
-                        Get<ActionAnimator>().Animate(_action, ActionAnimation.Type.Target);
+                        Get<ActionAnimator>().Animate(_action, ActionAnimationSet.Type.Target);
                         Get<Targeter>().Target = target;
                         _targetingStartTime = Time.time;
                         _state = State.Charging;
@@ -42,7 +42,7 @@ namespace Vheos.Games.ActionPoints
                     if (!Get<ActionAnimator>().IsPlaying
                     && HasTargetegForMinDuration)
                     {
-                        Get<ActionAnimator>().Animate(_action, ActionAnimation.Type.UseThenIdle);
+                        Get<ActionAnimator>().Animate(_action, ActionAnimationSet.Type.UseThenIdle);
                         Get<Actionable>().Use(_action, Get<Targeter>().Target);
                         Get<Targeter>().Target = null;
                         _state = State.Releasing;

@@ -69,7 +69,7 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             Get<Targeter>().Target = to;
-            Get<ActionAnimator>().Animate(_contextualAction, ActionAnimation.Type.Target);
+            Get<ActionAnimator>().Animate(_contextualAction, ActionAnimationSet.Type.Target);
         }
         private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
@@ -84,7 +84,7 @@ namespace Vheos.Games.ActionPoints
             else if (_contextualAction != null)
             {
                 Get<Actionable>().Use(_contextualAction, Get<Targeter>().Target);
-                Get<ActionAnimator>().Animate(_contextualAction, ActionAnimation.Type.UseThenIdle);
+                Get<ActionAnimator>().Animate(_contextualAction, ActionAnimationSet.Type.UseThenIdle);
             }
 
             Get<Targeter>().Target = null;
