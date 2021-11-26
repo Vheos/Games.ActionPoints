@@ -76,6 +76,19 @@ namespace Vheos.Games.ActionPoints
         static public Vector3 Midpoint(this ICollection<Component> t)
         => Midpoint(t, (component) => component.transform.position);
 
+        // Quaternion
+        static public float AngleTo(this Quaternion from, Quaternion to)
+        => Quaternion.Angle(from, to);
+        static public float AngleToIdentity(this Quaternion from)
+        => Quaternion.Angle(from, Quaternion.identity);
+        static public Quaternion RotateAround(this Quaternion quaternion, Vector3 axis, float angle)
+        => quaternion.Add(Quaternion.AngleAxis(angle, axis)); 
+        static public Quaternion YFlippedIfCloser(this Quaternion from, Quaternion to)
+        {
+            Quaternion flipped = to.RotateAround(Vector3.up, 180f);
+            return from.AngleTo(flipped) < from.AngleTo(to) ? flipped : to;
+        }
+
         // Legacy
         /// <summary> Returns this array of hits sorted by distance from point a. </summary>
         static public RaycastHit[] SortedByDistanceFrom(this RaycastHit[] t, Vector3 a)
