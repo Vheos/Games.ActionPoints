@@ -34,10 +34,22 @@ namespace Vheos.Games.ActionPoints
         => Team != null ? Team.Color : Color.white;
         public Transform HandTransform
         => Get<ActionAnimator>().HandTransform;
+        public Transform GetEquipableAttachTransform(Equipable.Slot slot)
+        => slot switch
+        {
+            Equipable.Slot.Hand => Get<ActionAnimator>().HandTransform,
+            _ => null,
+        };
+        public bool IsUnsheathed;
 
         // Private
         private UIBase _ui;
         private Action _contextualAction;
+        private void OnUpdate()
+        {
+            if (Get<Combatable>().IsInCombat)
+                Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed * ActionManager.GlobalSpeedScale;
+        }
         private void OnPress(UIManager.ButtonFunction function)
         => _ui.TargetingLine.ShowAndFollowCursor(transform, TargetingLine_OnChangeTarget);
         private void TargetingLine_OnChangeTarget(Targetable from, Targetable to)
@@ -57,23 +69,22 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             Get<Targeter>().Target = to;
-            Get<ActionAnimator>().AnimateAction(_contextualAction, ActionAnimation.Type.Target);
+            Get<ActionAnimator>().Animate(_contextualAction, ActionAnimation.Type.Target);
         }
         private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
             if (isClick)
             {
                 _ui.Wheel.Toggle();
-                if (this.TryGetTool(out var tool))
-                    if (_ui.Wheel.IsExpanded)
-                        tool.TryUnsheathe();
-                    else
-                        tool.TrySheathe();
+                if (_ui.Wheel.IsExpanded)
+                    TryUnsheathe();
+                else
+                    TrySheathe();
             }
             else if (_contextualAction != null)
             {
                 Get<Actionable>().Use(_contextualAction, Get<Targeter>().Target);
-                Get<ActionAnimator>().AnimateAction(_contextualAction, ActionAnimation.Type.UseThenIdle);
+                Get<ActionAnimator>().Animate(_contextualAction, ActionAnimation.Type.UseThenIdle);
             }
 
             Get<Targeter>().Target = null;
@@ -95,12 +106,9 @@ namespace Vheos.Games.ActionPoints
             if (isInCombat)
             {
                 _ui.PointsBar.Show();
-
                 if (!Has<AIController>())
                     _ui.Wheel.Show();
-
-                if (this.TryGetTool(out var tool))
-                    tool.TryUnsheathe();
+                TryUnsheathe();
 
                 foreach (var ally in Get<Teamable>().Allies)
                     if (ally.TryGet<Combatable>(out var allyCombatable))
@@ -110,9 +118,7 @@ namespace Vheos.Games.ActionPoints
             {
                 _ui.PointsBar.Hide();
                 _ui.Wheel.Hide();
-
-                if (this.TryGetTool(out var tool))
-                    tool.TrySheathe();
+                TrySheathe();
 
                 Get<Actionable>().ActionProgress = 0;
                 Get<Actionable>().FocusProgress = 0;
@@ -144,10 +150,33 @@ namespace Vheos.Games.ActionPoints
             if (to != null)
                 Get<RotateTowards>().SetTarget(to.transform, true);
         }
-        private void OnUpdate()
+        private void OnChangeEquipable(Equipable.Slot slot, Equipable from, Equipable to)
         {
-            if (Get<Combatable>().IsInCombat)
-                Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed * ActionManager.GlobalSpeedScale;
+            if (from != null && from.TryGet<Tool>(out var fromTool))
+                fromTool.DetachTo(to.transform);
+            if (to != null && to.TryGet<Tool>(out var toTool))
+            {
+                var startAnim = IsUnsheathed ? toTool.AnimationSet.Idle : toTool.AnimationSet.Sheathe;
+                    Get<ActionAnimator>().Animate(startAnim, true);
+                toTool.AttachTo(GetEquipableAttachTransform(slot));
+            }
+        }
+        private void TryUnsheathe()
+        {
+            if (IsUnsheathed || !this.TryGetTool(out var tool))
+                return;
+
+            IsUnsheathed = true;
+            Get<ActionAnimator>().Animate(tool.AnimationSet.Sheathe, true);
+            Get<ActionAnimator>().Animate(tool.AnimationSet.Idle);
+        }
+        private void TrySheathe()
+        {
+            if (!IsUnsheathed || !this.TryGetTool(out var tool))
+                return;
+
+            IsUnsheathed = false;
+            Get<ActionAnimator>().Animate(tool.AnimationSet.Sheathe);
         }
 
         // Playable
@@ -164,7 +193,7 @@ namespace Vheos.Games.ActionPoints
                 Team.Predefined.Enemies => Team.AI,
                 _ => null,
             });
-            Get<Equiper>().AttachmentTransform.Set((slot) => slot switch
+            Get<Equiper>().AttachTransformsBySlot.Set((slot) => slot switch
             {
                 Equipable.Slot.Hand => Get<ActionAnimator>().HandTransform,
                 _ => null
@@ -184,6 +213,7 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(Get<Targetable>().OnGainTargeting, OnGainTargeting);
             SubscribeTo(Get<Targetable>().OnLoseTargeting, OnLoseTargeting);
             SubscribeTo(Get<Targeter>().OnChangeTarget, OnChangeTarget);
+            SubscribeTo(Get<Equiper>().OnChangeEquipable, OnChangeEquipable);
             SubscribeTo(Get<Updatable>().OnUpdate, OnUpdate);
         }
         protected override void PlayAwake()
