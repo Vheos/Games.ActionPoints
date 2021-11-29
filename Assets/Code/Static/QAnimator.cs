@@ -22,41 +22,10 @@ namespace Vheos.Games.ActionPoints
                 return;
             }
 
-            // Pick curve function
-            Func<float, float> curveValue;
-            T finalValue;
-            switch (curve)
-            {
-                case Curve.Linear:
-                    curveValue = t => t;
-                    finalValue = to;
-                    break;
-                case Curve.Qurve:
-                    curveValue = t => Qurve.ValueAt(t);
-                    finalValue = to;
-                    break;
-                case Curve.QurveInverted:
-                    curveValue = t => 1f - Qurve.ValueAt(1f - t);
-                    finalValue = to;
-                    break;
-                case Curve.Boomerang:
-                    curveValue = t => Qurve.ValueAt(t).Sub(0.5f).Abs().Neg().Add(0.5f).Mul(2f);
-                    finalValue = from;
-                    break;
-                case Curve.BoomerangInverted:
-                    curveValue = t => (1f - Qurve.ValueAt(1f - t)).Sub(0.5f).Abs().Neg().Add(0.5f).Mul(2f);
-                    finalValue = from;
-                    break;
-                default:
-                    curveValue = t => 0f;
-                    finalValue = default;
-                    break;
-            }
-
             // Handle instant animations
             if (duration <= 0f)
             {
-                assignFunction(finalValue);
+                assignFunction(GetFinalValue(curve, from, to));
                 finalAction?.Invoke();
                 return;
             }
@@ -68,28 +37,18 @@ namespace Vheos.Games.ActionPoints
                 return;
             }
 
-            // // Pick type
+            // Start and add new coroutine 
             float startTime = Time.time - Time.deltaTime;
             float progress() => (Time.time - startTime) / duration;
-            System.Action typedAssignFunction = new GenericParams<T>(assignFunction, from, to) switch
-            {
-                GenericParams<float> t => () => t.AssignFunction(t.From.Lerp(t.To, curveValue(progress()))),
-                GenericParams<Vector2> t => () => t.AssignFunction(t.From.Lerp(t.To, curveValue(progress()))),
-                GenericParams<Vector3> t => () => t.AssignFunction(t.From.Lerp(t.To, curveValue(progress()))),
-                GenericParams<Vector4> t => () => t.AssignFunction(t.From.Lerp(t.To, curveValue(progress()))),
-                GenericParams<Quaternion> t => () => t.AssignFunction(t.From.Lerp(t.To, curveValue(progress()))),
-                GenericParams<Color> t => () => t.AssignFunction(t.From.Lerp(t.To, curveValue(progress()))),
-                _ => () => assignFunction(default),
-            };
-
-            // Start and add new coroutine           
+            float lerpAlphaFunc() => GetCurveFunction(curve)(progress());
+            System.Action typedAssignFunction = GetTypedAssignFunction(assignFunction, from, to, lerpAlphaFunc);
             Coroutine newCoroutine = owner.StartCoroutine(Coroutines.While
             (
                 () => progress() < 1f,
                 typedAssignFunction,
                 () =>
                 {
-                    assignFunction(finalValue);
+                    assignFunction(GetFinalValue(curve, from, to));
                     finalAction?.Invoke();
                 }
             ));
@@ -174,6 +133,37 @@ namespace Vheos.Games.ActionPoints
         // Private (common)
         static private Dictionary<AnimationGUID, HashSet<Coroutine>> _coroutineListsByGUID;
         static private Dictionary<ComponentProperty, string> _uidsByComponentProperty;
+        static private T GetFinalValue<T>(Curve curve, T from, T to)
+        => curve switch
+        {
+            Curve.Linear => to,
+            Curve.Qurve => to,
+            Curve.QurveInverted => to,
+            Curve.Boomerang => from,
+            Curve.BoomerangInverted => from,
+            _ => default,
+        };
+        static private Func<float, float> GetCurveFunction(Curve curve)
+        => curve switch
+        {
+            Curve.Linear => t => t,
+            Curve.Qurve => t => Qurve.ValueAt(t),
+            Curve.QurveInverted => t => 1f - Qurve.ValueAt(1f - t),
+            Curve.Boomerang => t => Qurve.ValueAt(t).Sub(0.5f).Abs().Neg().Add(0.5f).Mul(2f),
+            Curve.BoomerangInverted => t => (1f - Qurve.ValueAt(1f - t)).Sub(0.5f).Abs().Neg().Add(0.5f).Mul(2f),
+            _ => t => 0f,
+        };
+        static private System.Action GetTypedAssignFunction<T>(Action<T> genericAssignFunc, T from, T to, Func<float> lerpAlphaFunc)
+        => new GenericParams<T>(genericAssignFunc, from, to) switch
+        {
+            GenericParams<float> t => () => t.AssignFunction(t.From.Lerp(t.To, lerpAlphaFunc())),
+            GenericParams<Vector2> t => () => t.AssignFunction(t.From.Lerp(t.To, lerpAlphaFunc())),
+            GenericParams<Vector3> t => () => t.AssignFunction(t.From.Lerp(t.To, lerpAlphaFunc())),
+            GenericParams<Vector4> t => () => t.AssignFunction(t.From.Lerp(t.To, lerpAlphaFunc())),
+            GenericParams<Quaternion> t => () => t.AssignFunction(t.From.Lerp(t.To, lerpAlphaFunc())),
+            GenericParams<Color> t => () => t.AssignFunction(t.From.Lerp(t.To, lerpAlphaFunc())),
+            _ => () => genericAssignFunc(default),
+        };
         static private void InitializeCoroutineList(AnimationGUID guid, bool stopAndRemoveExisting)
         {
             if (!_coroutineListsByGUID.ContainsKey(guid))
