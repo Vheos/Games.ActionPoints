@@ -4,12 +4,13 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using TMPro;
+    using Tools.UnityCore; 
     using Tools.Extensions.Math;
     using Tools.UtilityN;
     using AnimationGUID = System.ValueTuple<UnityEngine.MonoBehaviour, string>;
-    using static QAnimator;
+    using static QAnimatorOLD;   
 
-    static public class QAnimator
+    static public class QAnimatorOLD
     {
         // Publics
         static public void Animate<T>(MonoBehaviour owner, string uid, Action<T> assignFunction, T from, T to,
@@ -179,9 +180,9 @@ namespace Vheos.Games.ActionPoints
             _coroutineListsByGUID[guid].Clear();
         }
         static private void WarningNullOwner(string uid)
-        => Debug.LogWarning($"{nameof(QAnimator)} / NullOwner   -   uid {uid ?? "null"}");
+        => Debug.LogWarning($"{nameof(QAnimatorOLD)} / NullOwner   -   uid {uid ?? "null"}");
         static private void WarningInactiveGameObject(MonoBehaviour owner, string uid)
-        => Debug.LogWarning($"{nameof(QAnimator)} / InactiveGameObject   -   owner {owner.GetType().Name}, uid {uid ?? "null"}");
+        => Debug.LogWarning($"{nameof(QAnimatorOLD)} / InactiveGameObject   -   owner {owner.GetType().Name}, uid {uid ?? "null"}");
 
         // Privates (group animation)
         static private MonoBehaviour _groupOwner;
@@ -211,7 +212,7 @@ namespace Vheos.Games.ActionPoints
         // Definitions
         public enum Curve
         {
-            Linear,
+            Linear = 0,
             Qurve,
             QurveInverted,
             Boomerang,
@@ -219,7 +220,7 @@ namespace Vheos.Games.ActionPoints
         }
         public enum ComponentProperty
         {
-            TransformPosition,
+            TransformPosition = 0,
             TransformRotation,
             TransformScale,
             SpriteRendererColor,
@@ -265,17 +266,17 @@ namespace Vheos.Games.ActionPoints
         // T
         static public void Animate<T>(this MonoBehaviour t, string uid, Action<T> assignFunction, T from, T to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve) where T : struct
-            => QAnimator.Animate(t, uid, assignFunction, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(t, uid, assignFunction, from, to, duration, finalAction, curve);
         static public void Animate<T>(this MonoBehaviour t, ComponentProperty property, Action<T> assignFunction, T from, T to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve) where T : struct
-            => QAnimator.Animate(t, GetUID(property), assignFunction, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(t, GetUID(property), assignFunction, from, to, duration, finalAction, curve);
         #endregion
 
         #region Transform
         // Position
         static public void AnimatePosition(this Transform t, MonoBehaviour owner, string uid, Vector3 from, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.position = v, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.position = v, from, to, duration, finalAction, curve);
         static public void AnimatePosition(this Transform t, MonoBehaviour owner, string uid, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimatePosition(owner, uid, t.position, to, duration, finalAction, curve);
@@ -287,14 +288,14 @@ namespace Vheos.Games.ActionPoints
             => t.AnimatePosition(owner, GetUID(ComponentProperty.TransformPosition), t.position, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimatePosition(this Transform t, Vector3 from, Vector3 to)
-        => QAnimator.GroupAnimate(v => t.position = v, from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.position = v, from, to);
         static public void GroupAnimatePosition(this Transform t, Vector3 to)
         => t.GroupAnimatePosition(t.position, to);
 
         // LocalPosition
         static public void AnimateLocalPosition(this Transform t, MonoBehaviour owner, string uid, Vector3 from, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.localPosition = v, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.localPosition = v, from, to, duration, finalAction, curve);
         static public void AnimateLocalPosition(this Transform t, MonoBehaviour owner, string uid, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateLocalPosition(owner, uid, t.localPosition, to, duration, finalAction, curve);
@@ -306,14 +307,14 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateLocalPosition(owner, GetUID(ComponentProperty.TransformPosition), t.localPosition, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateLocalPosition(this Transform t, Vector3 from, Vector3 to)
-        => QAnimator.GroupAnimate(v => t.localPosition = v, from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.localPosition = v, from, to);
         static public void GroupAnimateLocalPosition(this Transform t, Vector3 to)
         => t.GroupAnimateLocalPosition(t.localPosition, to);
 
         // Rotation (Quaternion)
         static public void AnimateRotation(this Transform t, MonoBehaviour owner, string uid, Quaternion from, Quaternion to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.rotation = v, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.rotation = v, from, to, duration, finalAction, curve);
         static public void AnimateRotation(this Transform t, MonoBehaviour owner, string uid, Quaternion to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateRotation(owner, uid, t.rotation, to, duration, finalAction, curve);
@@ -325,14 +326,14 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateRotation(owner, GetUID(ComponentProperty.TransformRotation), t.rotation, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateRotation(this Transform t, Quaternion from, Quaternion to)
-        => QAnimator.GroupAnimate(v => t.rotation = v, from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.rotation = v, from, to);
         static public void GroupAnimateRotation(this Transform t, Quaternion to)
         => t.GroupAnimateRotation(t.rotation, to);
 
         // Rotation (Vector3)
         static public void AnimateRotation(this Transform t, MonoBehaviour owner, string uid, Vector3 from, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.rotation = Quaternion.Euler(v), from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.rotation = Quaternion.Euler(v), from, to, duration, finalAction, curve);
         static public void AnimateRotation(this Transform t, MonoBehaviour owner, string uid, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateRotation(owner, uid, t.rotation.eulerAngles, to, duration, finalAction, curve);
@@ -344,14 +345,14 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateRotation(owner, GetUID(ComponentProperty.TransformRotation), t.rotation.eulerAngles, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateRotation(this Transform t, Vector3 from, Vector3 to)
-        => QAnimator.GroupAnimate(v => t.rotation = Quaternion.Euler(v), from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.rotation = Quaternion.Euler(v), from, to);
         static public void GroupAnimateRotation(this Transform t, Vector3 to)
         => t.GroupAnimateRotation(t.rotation.eulerAngles, to);
 
         // LocalRotation (Quaternion)
         static public void AnimateLocalRotation(this Transform t, MonoBehaviour owner, string uid, Quaternion from, Quaternion to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.localRotation = v, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.localRotation = v, from, to, duration, finalAction, curve);
         static public void AnimateLocalRotation(this Transform t, MonoBehaviour owner, string uid, Quaternion to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateLocalRotation(owner, uid, t.localRotation, to, duration, finalAction, curve);
@@ -363,14 +364,14 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateLocalRotation(owner, GetUID(ComponentProperty.TransformRotation), t.localRotation, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateLocalRotation(this Transform t, Quaternion from, Quaternion to)
-        => QAnimator.GroupAnimate(v => t.localRotation = v, from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.localRotation = v, from, to);
         static public void GroupAnimateLocalRotation(this Transform t, Quaternion to)
         => t.GroupAnimateLocalRotation(t.localRotation, to);
 
         // LocalRotation (Vector3)
         static public void AnimateLocalRotation(this Transform t, MonoBehaviour owner, string uid, Vector3 from, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.localRotation = Quaternion.Euler(v), from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.localRotation = Quaternion.Euler(v), from, to, duration, finalAction, curve);
         static public void AnimateLocalRotation(this Transform t, MonoBehaviour owner, string uid, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateLocalRotation(owner, uid, t.localRotation.eulerAngles, to, duration, finalAction, curve);
@@ -382,14 +383,14 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateLocalRotation(owner, GetUID(ComponentProperty.TransformRotation), t.localRotation.eulerAngles, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateLocalRotation(this Transform t, Vector3 from, Vector3 to)
-        => QAnimator.GroupAnimate(v => t.localRotation = Quaternion.Euler(v), from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.localRotation = Quaternion.Euler(v), from, to);
         static public void GroupAnimateLocalRotation(this Transform t, Vector3 to)
         => t.GroupAnimateLocalRotation(t.localRotation.eulerAngles, to);
 
         // LocalScale
         static public void AnimateLocalScale(this Transform t, MonoBehaviour owner, string uid, Vector3 from, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.localScale = v, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.localScale = v, from, to, duration, finalAction, curve);
         static public void AnimateLocalScale(this Transform t, MonoBehaviour owner, string uid, Vector3 to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateLocalScale(owner, uid, t.localScale, to, duration, finalAction, curve);
@@ -401,7 +402,7 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateLocalScale(owner, GetUID(ComponentProperty.TransformScale), t.localScale, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateLocalScale(this Transform t, Vector3 from, Vector3 to)
-        => QAnimator.GroupAnimate(v => t.localScale = v, from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.localScale = v, from, to);
         static public void GroupAnimateLocalScale(this Transform t, Vector3 to)
         => t.GroupAnimateLocalScale(t.localScale, to);
         #endregion
@@ -410,7 +411,7 @@ namespace Vheos.Games.ActionPoints
         // Color
         static public void AnimateColor(this SpriteRenderer t, MonoBehaviour owner, string uid, Color from, Color to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.color = v, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.color = v, from, to, duration, finalAction, curve);
         static public void AnimateColor(this SpriteRenderer t, MonoBehaviour owner, string uid, Color to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateColor(owner, uid, t.color, to, duration, finalAction, curve);
@@ -422,14 +423,14 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateColor(owner, GetUID(ComponentProperty.SpriteRendererColor), t.color, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateColor(this SpriteRenderer t, Color from, Color to)
-        => QAnimator.GroupAnimate(v => t.color = v, from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.color = v, from, to);
         static public void GroupAnimateColor(this SpriteRenderer t, Color to)
         => t.GroupAnimateColor(t.color, to);
 
         // Alpha
         static public void AnimateAlpha(this SpriteRenderer t, MonoBehaviour owner, string uid, float from, float to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.color = t.color.NewA(v), from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.color = t.color.NewA(v), from, to, duration, finalAction, curve);
         static public void AnimateAlpha(this SpriteRenderer t, MonoBehaviour owner, string uid, float to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateAlpha(owner, uid, t.color.a, to, duration, finalAction, curve);
@@ -441,7 +442,7 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateAlpha(owner, GetUID(ComponentProperty.SpriteRendererColor), t.color.a, to, duration, finalAction, curve);
         // Alpha
         static public void GroupAnimateAlpha(this SpriteRenderer t, float from, float to)
-        => QAnimator.GroupAnimate(v => t.color = t.color.NewA(v), from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.color = t.color.NewA(v), from, to);
         static public void GroupAnimateAlpha(this SpriteRenderer t, float to)
         => t.GroupAnimateAlpha(t.color.a, to);
         #endregion SpriteRenderer
@@ -450,7 +451,7 @@ namespace Vheos.Games.ActionPoints
         // Color
         static public void AnimateColor(this TextMeshPro t, MonoBehaviour owner, string uid, Color from, Color to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.color = v, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.color = v, from, to, duration, finalAction, curve);
         static public void AnimateColor(this TextMeshPro t, MonoBehaviour owner, string uid, Color to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateColor(owner, uid, t.color, to, duration, finalAction, curve);
@@ -462,14 +463,14 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateColor(owner, GetUID(ComponentProperty.TextMeshProColor), t.color, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateColor(this TextMeshPro t, Color from, Color to)
-        => QAnimator.GroupAnimate(v => t.color = v, from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.color = v, from, to);
         static public void GroupAnimateColor(this TextMeshPro t, Color to)
         => t.GroupAnimateColor(t.color, to);
 
         // Alpha
         static public void AnimateAlpha(this TextMeshPro t, MonoBehaviour owner, string uid, float from, float to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
-            => QAnimator.Animate(owner, uid, v => t.alpha = v, from, to, duration, finalAction, curve);
+            => QAnimatorOLD.Animate(owner, uid, v => t.alpha = v, from, to, duration, finalAction, curve);
         static public void AnimateAlpha(this TextMeshPro t, MonoBehaviour owner, string uid, float to,
             float duration, System.Action finalAction = null, Curve curve = Curve.Qurve)
             => t.AnimateAlpha(owner, uid, t.alpha, to, duration, finalAction, curve);
@@ -481,7 +482,7 @@ namespace Vheos.Games.ActionPoints
             => t.AnimateAlpha(owner, GetUID(ComponentProperty.TextMeshProColor), t.alpha, to, duration, finalAction, curve);
         // Group
         static public void GroupAnimateAlpha(this TextMeshPro t, float from, float to)
-        => QAnimator.GroupAnimate(v => t.alpha = v, from, to);
+        => QAnimatorOLD.GroupAnimate(v => t.alpha = v, from, to);
         static public void GroupAnimateAlpha(this TextMeshPro t, float to)
         => t.GroupAnimateAlpha(t.alpha, to);
         #endregion
