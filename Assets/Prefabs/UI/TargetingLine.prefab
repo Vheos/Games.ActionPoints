@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -6962942125687695647}
   - component: {fileID: -173060742059238633}
   - component: {fileID: 2576022645275345885}
-  - component: {fileID: 3503137063323022084}
+  - component: {fileID: 1080372092899434346}
   m_Layer: 0
   m_Name: TargetingLine
   m_TagString: Untagged
@@ -164,7 +164,7 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &3503137063323022084
+--- !u!114 &1080372092899434346
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -173,6 +173,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 2624133503734992603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Script: {fileID: 11500000, guid: e6bb66e842a653f459cdfccab4a4345d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

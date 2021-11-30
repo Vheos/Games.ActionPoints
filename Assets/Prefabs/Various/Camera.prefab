@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5560417539369938378}
   - component: {fileID: 5560417539369938381}
   - component: {fileID: 8562167666811676286}
-  - component: {fileID: 4604183962005615334}
+  - component: {fileID: 4860371875084880955}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -99,7 +99,7 @@ MonoBehaviour:
   _RotationSpeed: 7.5
   _RotationInvertX: 0
   _RotationInvertY: 1
---- !u!114 &4604183962005615334
+--- !u!114 &4860371875084880955
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,6 +108,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5560417539369938383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Script: {fileID: 11500000, guid: e6bb66e842a653f459cdfccab4a4345d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

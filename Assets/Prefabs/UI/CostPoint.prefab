@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8684503544574514023}
   - component: {fileID: -2558410197517170183}
   - component: {fileID: 8503796928737577143}
-  - component: {fileID: 2495442613344248196}
+  - component: {fileID: 9008691485372913899}
   m_Layer: 0
   m_Name: CostPoint
   m_TagString: Untagged
@@ -109,7 +109,7 @@ MeshRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 21
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2495442613344248196
+--- !u!114 &9008691485372913899
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,6 +118,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 3698136610871772143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Script: {fileID: 11500000, guid: e6bb66e842a653f459cdfccab4a4345d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
