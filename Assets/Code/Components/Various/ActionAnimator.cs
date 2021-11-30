@@ -52,7 +52,7 @@ namespace Vheos.Games.ActionPoints
             AnimateClipsRecursivelyFrom(clips, 0);
         }
         public void Stop()
-        => QAnimator.Stop(this, null);
+        => QAnimatorOLD.Stop(this, null);
 
         // Privates
         private TransformArm _arm;
@@ -82,14 +82,14 @@ namespace Vheos.Games.ActionPoints
         private void AnimateClip(QAnimationClip clip, bool isInstant = false)
         {
             QAnimationClip idle = CurrentIdle.Last();
-            using (QAnimator.Group(this, null, isInstant ? 0f : clip.Duration, null, clip.Style))
+            using (QAnimatorOLD.Group(this, null, isInstant ? 0f : clip.Duration, null, clip.Style))
             {
                 if (clip.ArmRotationEnabled)
-                    QAnimator.GroupAnimate(AssignArmAngles, _armAngles, clip.ChooseArmRotation(idle));
+                    QAnimatorOLD.GroupAnimate(AssignArmAngles, _armAngles, clip.ChooseArmRotation(idle));
                 if (clip.ArmLengthEnabled)
-                    QAnimator.GroupAnimate(v => _arm.Length = v, _arm.Length, clip.ChooseArmLength(idle));
+                    QAnimatorOLD.GroupAnimate(v => _arm.Length = v, _arm.Length, clip.ChooseArmLength(idle));
                 if (clip.HandRotationEnabled)
-                    QAnimator.GroupAnimate(AssignHandAngles, _handAngles, clip.ChooseHandRotation(idle));
+                    QAnimatorOLD.GroupAnimate(AssignHandAngles, _handAngles, clip.ChooseHandRotation(idle));
                 if (clip.HandScaleEnabled)
                     HandTransform.GroupAnimateLocalScale(clip.ChooseHandScale(idle).ToVector3());
                 if (clip.LookAtEnabled)
@@ -126,7 +126,7 @@ namespace Vheos.Games.ActionPoints
             }
 
             AnimateClip(clips[clipIndex]);
-            QAnimator.Delay(this, null, clips[clipIndex].TotalTime, () => AnimateClipsRecursivelyFrom(clips, ++clipIndex));
+            QAnimatorOLD.Delay(this, null, clips[clipIndex].TotalTime, () => AnimateClipsRecursivelyFrom(clips, ++clipIndex));
         }
         private IReadOnlyList<QAnimationClip> AnimationTypeToClips(Action action, ActionAnimationSet.Type type)
         => type switch

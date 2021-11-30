@@ -22,7 +22,7 @@ namespace Vheos.Games.ActionPoints
             transform.localRotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(randFrom, randTo).Neg());
 
             Vector2 fadeInPosition = Vector2.up.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
-            using (QAnimator.Group(this, null, Settings.WoundAnimDuration))
+            using (QAnimatorOLD.Group(this, null, Settings.WoundAnimDuration))
             {
                 transform.GroupAnimateLocalPosition(fadeInPosition, Vector2.zero);
                 Get<SpriteRenderer>().GroupAnimateAlpha(1f);
@@ -31,7 +31,7 @@ namespace Vheos.Games.ActionPoints
         public void Hide(bool instantly = false)
         {
             Vector2 fadeOutPosition = Vector2.right.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
-            using (QAnimator.Group(this, null, instantly ? 0f : Settings.WoundAnimDuration, this.GODeactivate))
+            using (QAnimatorOLD.Group(this, null, instantly ? 0f : Settings.WoundAnimDuration, this.GODeactivate))
             {
                 transform.GroupAnimateLocalPosition(fadeOutPosition);
                 Get<SpriteRenderer>().GroupAnimateAlpha(0f);

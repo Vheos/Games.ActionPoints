@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
         public int Index
         { get; set; }
         public void PlayCantUseAnim()
-        => transform.AnimateLocalScale(this, _originalScale, _originalScale * Settings.CantUseScale, Settings.CantUseAnimDuration, null, QAnimator.Curve.Boomerang);
+        => transform.AnimateLocalScale(this, _originalScale, _originalScale * Settings.CantUseScale, Settings.CantUseAnimDuration, null, QAnimatorOLD.Curve.Boomerang);
 
         // Private
         protected ActionPointDrawable _drawable;

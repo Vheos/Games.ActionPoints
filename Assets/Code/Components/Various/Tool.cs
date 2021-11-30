@@ -25,7 +25,7 @@ namespace Vheos.Games.ActionPoints
         public void AttachTo(Transform target)
         {
             transform.BecomeChildOf(target, true);
-            using (QAnimator.Group(this, null, _AnimDuration))
+            using (QAnimatorOLD.Group(this, null, _AnimDuration))
             {
                 transform.GroupAnimateLocalPosition(_LocalPositionOffset);
                 transform.GroupAnimateLocalRotation(Quaternion.Euler(_LocalRotationOffset));
@@ -35,7 +35,7 @@ namespace Vheos.Games.ActionPoints
         public void DetachTo(Transform target)
         {
             transform.BecomeSiblingOf(target, true);
-            using (QAnimator.Group(this, null, _AnimDuration))
+            using (QAnimatorOLD.Group(this, null, _AnimDuration))
             {
                 transform.GroupAnimateLocalPosition(target.localPosition);
                 transform.GroupAnimateLocalRotation(target.localRotation);

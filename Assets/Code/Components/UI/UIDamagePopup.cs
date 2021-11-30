@@ -39,7 +39,7 @@ namespace Vheos.Games.ActionPoints
             if (Settings.AlignTextRotationToDirection)
                 transform.localRotation = Quaternion.LookRotation(transform.forward, localDirection);
 
-            using (QAnimator.Group(this, null, Settings.FadeInDuration, StayUp))
+            using (QAnimatorOLD.Group(this, null, Settings.FadeInDuration, StayUp))
             {
                 transform.GroupAnimateLocalPosition(direction * Settings.Distance);
                 Get<TextMeshPro>().GroupAnimateAlpha(0f, 1f);
@@ -47,12 +47,12 @@ namespace Vheos.Games.ActionPoints
         }
         private void StayUp()
         {
-            var componentProperty = QAnimator.GetUID(QAnimator.ComponentProperty.TextMeshProColor);
-            QAnimator.Delay(this, componentProperty, Settings.StayUpDuration, FadeOut);
+            var componentProperty = QAnimatorOLD.GetUID(QAnimatorOLD.ComponentProperty.TextMeshProColor);
+            QAnimatorOLD.Delay(this, componentProperty, Settings.StayUpDuration, FadeOut);
         }
         private void FadeOut()
         => Get<TextMeshPro>().AnimateAlpha(this, 0f, Settings.FadeOutDuration, () => this.DestroyObject());
         private void Pulse()
-        => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration, Pulse, QAnimator.Curve.Boomerang);
+        => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration, Pulse, QAnimatorOLD.Curve.Boomerang);
     }
 }

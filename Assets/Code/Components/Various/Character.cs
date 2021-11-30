@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
     using System.Collections.Generic;
+    using Animator = UnityEngine.Animator;
 
     public class Character : AEventSubscriber
     {
@@ -133,7 +134,7 @@ namespace Vheos.Games.ActionPoints
             Get<Combatable>().TryLeaveCombat();
             Get<Teamable>().TryLeaveTeam();
 
-            transform.AnimateLocalRotation(this, transform.localRotation.eulerAngles.NewZ(180f), 1f, null, QAnimator.Curve.Qurve);
+            transform.AnimateLocalRotation(this, transform.localRotation.eulerAngles.NewZ(180f), 1f, null, QAnimatorOLD.Curve.Qurve);
         }
         private void OnGainTargeting(Targeter targeter, bool isFirst)
         {
