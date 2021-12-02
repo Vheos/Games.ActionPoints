@@ -40,7 +40,7 @@ namespace Vheos.Games.ActionPoints
             if (!Character.Get<Actionable>().CanUse(Action))
                 return;
 
-            this.AnimateLocalScaleRatio(Settings.HighlightScale.ToVector3(), Settings.HighlightDuration);
+            this.AnimateLocalScaleRatio(Settings.HighlightScale, Settings.HighlightDuration);
         }
         private void OnPress(UIManager.ButtonFunction function)
         {
@@ -58,7 +58,7 @@ namespace Vheos.Games.ActionPoints
 
             _isPressed = true;
             Character.Get<ActionAnimator>().Animate(Action, ActionAnimationSet.Type.Target);
-            this.AnimateLocalScaleRatio(Settings.ClickScale.ToVector3(), Settings.ClickDuration);
+            this.AnimateLocalScaleRatio(Settings.ClickScale, Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColorRatio(Settings.ClickColorScale.ToVector4(), Settings.ClickDuration);
         }
         private void OnRelease(UIManager.ButtonFunction function, bool isClick)
@@ -84,12 +84,12 @@ namespace Vheos.Games.ActionPoints
                 Character.Get<Actionable>().Use(Action, null);
 
             _isPressed = false;
-            this.AnimateLocalScaleRatio(Settings.ClickScale.Inv().ToVector3(), Settings.ClickDuration);
+            this.AnimateLocalScaleRatio(Settings.ClickScale.Inv(), Settings.ClickDuration);
             Get<SpriteRenderer>().AnimateColorRatio(Settings.ClickColorScale.Inv().ToVector4(), Settings.ClickDuration);
         }
         private void OnLoseHighlight()
         {
-            this.AnimateLocalScaleRatio(Settings.HighlightScale.Inv().ToVector3(), Settings.HighlightDuration);
+            this.AnimateLocalScaleRatio(Settings.HighlightScale.Inv(), Settings.HighlightDuration);
         }
         private void OnTargetChanged(Targetable from, Targetable to)
         {

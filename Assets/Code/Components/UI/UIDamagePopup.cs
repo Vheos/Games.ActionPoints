@@ -53,9 +53,10 @@ namespace Vheos.Games.ActionPoints
             StartCoroutine(Coroutines.AfterSeconds(Settings.StayUpDuration, FadeOut));
         }
         private void FadeOut()
-        => QAnimator.Animate(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg(), Settings.FadeOutDuration, new EventInfo(this.GODeactivate).InArray());
+        => QAnimator.Animate(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg(), Settings.FadeOutDuration, new EventInfo(this.GODeactivate));
 
         private void Pulse()
-        => transform.AnimateLocalScaleRatio(Settings.WoundPulseScale.ToVector3(), Settings.WoundPulseDuration, Settings.WoundPulseCurve, new EventInfo(Pulse).InArray());
+        => transform.AnimateLocalScaleRatio(Settings.WoundPulseScale, Settings.WoundPulseDuration,
+            new OptionalParameters { Curve = Settings.WoundPulseCurve, EventInfo = new EventInfo(Pulse) });
     }
 }

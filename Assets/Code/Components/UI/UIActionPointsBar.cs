@@ -32,7 +32,7 @@ namespace Vheos.Games.ActionPoints
             transform.AnimateLocalScale(_originalScale, Settings.AnimDuration);
         }
         public void Hide(bool instantly = false)
-        => transform.AnimateLocalScale(Vector3.zero, instantly ? 0f : Settings.AnimDuration, new EventInfo(this.GODeactivate).InArray() );
+        => transform.AnimateLocalScale(Vector3.zero, instantly ? 0f : Settings.AnimDuration, OptionalsInterruptAndDeactivateSelf);
         public void NotifyExhausted()
         {
             for (int i = 0; i <= Character.Get<Actionable>().ActionPointsCount.Abs(); i++)
