@@ -48,9 +48,12 @@ namespace Vheos.Games.ActionPoints
         => t.gameObject == a.gameObject;
         static public T ChooseIf<T>(this T t, Func<T, bool> test, T onFalse = default)
         => test(t) ? t : onFalse;
+        static public Color ToColor(this float t)
+        => new Color(t, t, t, t);
+        static public T[] InArray<T>(this T t)
+        => new[] { t };
 
         // Quaternion
-
         static public Quaternion RotateAround(this Quaternion quaternion, Vector3 axis, float angle)
         => quaternion.Add(Quaternion.AngleAxis(angle, axis));
         static public Quaternion YFlippedIfCloser(this Quaternion from, Quaternion to)
@@ -58,8 +61,6 @@ namespace Vheos.Games.ActionPoints
             Quaternion flipped = to.RotateAround(Vector3.up, 180f);
             return from.AngleTo(flipped) < from.AngleTo(to) ? flipped : to;
         }
-
-
 
         // Midpoint
         static public Vector3 Midpoint<T>(this IEnumerable<T> t, Func<T, Vector3> positionFunc)
@@ -109,7 +110,6 @@ namespace Vheos.Games.ActionPoints
         /// <summary> Returns this array of hits sorted by distance from object a. </summary>
         static public RaycastHit[] SortedByDistanceFrom(this RaycastHit[] t, Component a)
         => t.SortedByDistanceFrom(a.gameObject);
-
 
         // Input
         /// <summary> Checks if this key has just been pressed. </summary>
