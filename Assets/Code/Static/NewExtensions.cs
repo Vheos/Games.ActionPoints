@@ -48,8 +48,6 @@ namespace Vheos.Games.ActionPoints
         => t.gameObject == a.gameObject;
         static public T ChooseIf<T>(this T t, Func<T, bool> test, T onFalse = default)
         => test(t) ? t : onFalse;
-        static public Color ToColor(this float t)
-        => new Color(t, t, t, t);
         static public T[] InArray<T>(this T t)
         => new[] { t };
 
