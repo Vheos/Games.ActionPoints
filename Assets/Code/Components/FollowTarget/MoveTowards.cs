@@ -32,7 +32,7 @@ namespace Vheos.Games.ActionPoints
         => _useTransform ? _Transform.position : _Vector;
         protected override void FollowOnUpdate()
         => transform.position = transform.position.Lerp(FinalPosition, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
-        protected override void FollowOnAnimate(System.Action tryRestoreEnabled)
-        => transform.AnimatePosition(this, FinalPosition, _AnimDuration, tryRestoreEnabled);
+        protected override void FollowOnAnimate()
+        => transform.AnimatePosition(FinalPosition, _AnimDuration);
     }
 }

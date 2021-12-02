@@ -1,12 +1,15 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using UnityEngine;
+    using Tools.UnityCore;
+    using Tools.Extensions.Math;
 
     sealed public class ActionPointDrawable : ACustomDrawable
     {
         // Pubilcs
         public void AnimateOpacity(float to, float duration)
-        => this.Animate(nameof(Opacity), v => Opacity = v, Opacity, to, duration);
+        => QAnimator.Animate(v => Opacity = v, to - Opacity, duration);
 
         // MProps
         public Texture Shape

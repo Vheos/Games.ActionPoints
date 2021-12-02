@@ -1,3 +1,20 @@
+
+namespace Vheos.Games.ActionPoints
+{
+
+
+    public enum Curve
+    {
+        Linear = 0,
+        Qurve,
+        QurveInverted,
+        Boomerang,
+        BoomerangInverted,
+    }
+
+}
+
+/*
 namespace Vheos.Games.ActionPoints
 {
     using System;
@@ -488,3 +505,4 @@ namespace Vheos.Games.ActionPoints
         #endregion
     }
 }
+*/

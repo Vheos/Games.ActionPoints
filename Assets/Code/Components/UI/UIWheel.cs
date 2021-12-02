@@ -30,7 +30,7 @@ namespace Vheos.Games.ActionPoints
         public void Show()
         {
             this.GOActivate();
-            transform.AnimateLocalScale(this, Vector3.one, Settings.AnimDuration);
+            transform.AnimateLocalScale(Vector3.one, Settings.AnimDuration);
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = true;
 
@@ -39,7 +39,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void Hide(bool instantly = false)
         {
-            transform.AnimateLocalScale(this, Vector3.zero, instantly ? 0f : Settings.AnimDuration, this.GODeactivate);
+            transform.AnimateLocalScale(Vector3.zero, instantly ? 0f : Settings.AnimDuration, new EventInfo(this.GODeactivate).InArray());
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = false;
             IsExpanded = false;

@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
     using Tools.Extensions.General;
+    using Vheos.Tools.UtilityN;
 
     public class UIDamagePopup : AUIComponent
     {
@@ -39,20 +40,22 @@ namespace Vheos.Games.ActionPoints
             if (Settings.AlignTextRotationToDirection)
                 transform.localRotation = Quaternion.LookRotation(transform.forward, localDirection);
 
-            using (QAnimatorOLD.Group(this, null, Settings.FadeInDuration, StayUp))
+            ;// using (QAnimatorOLD.Group(this, null, Settings.FadeInDuration, StayUp))
             {
-                transform.GroupAnimateLocalPosition(direction * Settings.Distance);
-                Get<TextMeshPro>().GroupAnimateAlpha(0f, 1f);
+                ;// transform.GroupAnimateLocalPosition(direction * Settings.Distance);
+                ;// Get<TextMeshPro>().GroupAnimateAlpha(0f, 1f);
             }
         }
         private void StayUp()
         {
-            var componentProperty = QAnimatorOLD.GetUID(QAnimatorOLD.ComponentProperty.TextMeshProColor);
-            QAnimatorOLD.Delay(this, componentProperty, Settings.StayUpDuration, FadeOut);
+            ;//var componentProperty = QAnimatorOLD.GetUID(QAnimatorOLD.ComponentProperty.TextMeshProColor);
+            ;// QAnimatorOLD.Delay(this, componentProperty, Settings.StayUpDuration, FadeOut);
+            StartCoroutine(Coroutines.AfterSeconds(Settings.StayUpDuration, FadeOut));
         }
         private void FadeOut()
-        => Get<TextMeshPro>().AnimateAlpha(this, 0f, Settings.FadeOutDuration, () => this.DestroyObject());
+        => QAnimator.Animate(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg(), Settings.FadeOutDuration, new EventInfo(this.GODeactivate).InArray());
+
         private void Pulse()
-        => transform.AnimateLocalScale(this, transform.localScale * Settings.WoundPulseScale, Settings.WoundPulseDuration, Pulse, QAnimatorOLD.Curve.Boomerang);
+        => transform.AnimateLocalScaleRatio(Settings.WoundPulseScale.ToVector3(), Settings.WoundPulseDuration, Settings.WoundPulseCurve, new EventInfo(Pulse).InArray());
     }
 }

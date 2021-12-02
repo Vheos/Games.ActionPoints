@@ -21,13 +21,8 @@ namespace Vheos.Games.ActionPoints
             if (_useTransform && _Transform == null)
                 return;
 
-            if (enabled)
-            {
-                enabled = false;
-                FollowOnAnimate(() => enabled = true);
-            }
-            else
-                FollowOnAnimate(() => { });
+            enabled = false;
+            FollowOnAnimate();
         }
         public Transform Target
         => _Transform;
@@ -58,7 +53,7 @@ namespace Vheos.Games.ActionPoints
             FollowOnUpdate();
         }
         abstract protected void FollowOnUpdate();
-        abstract protected void FollowOnAnimate(System.Action tryRestoreEnabled);
+        abstract protected void FollowOnAnimate();
         abstract protected Vector3 TargetVector
         { get; }
 

@@ -28,7 +28,7 @@ namespace Vheos.Games.ActionPoints
         {
             enabled = true;
             this.GOActivate();
-            this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, Settings.StartWidth, Settings.WidthAnimDuration);
+            QAnimator.Animate(SetWidth, Settings.StartWidth, Settings.WidthAnimDuration);
 
             _from = from;
             _to = to;
@@ -46,7 +46,7 @@ namespace Vheos.Games.ActionPoints
         {
             enabled = false;
             UnsubscribeFrom(OnChangeTarget, _onChangeTarget);
-            this.Animate(null, SetWidth, Get<LineRenderer>().startWidth, 0f, instantly ? 0f : Settings.WidthAnimDuration, this.GODeactivate);
+            QAnimator.Animate(SetWidth,0f, instantly ? 0f : Settings.WidthAnimDuration, new EventInfo(this.GODeactivate).InArray());
         }
         public void UpdatePositionsAndTiling()
         {

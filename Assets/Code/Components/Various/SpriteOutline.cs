@@ -33,18 +33,18 @@ namespace Vheos.Games.ActionPoints
         public void Show()
         {
             _outlineRenderer.GOActivate();
-            using (QAnimatorOLD.Group(this, null, Settings.FadeInDuration))
+            ;// using (QAnimatorOLD.Group(this, null, Settings.FadeInDuration))
             {
-                QAnimatorOLD.GroupAnimate(v => Thickness = v, Thickness, _Thickness);
-                _outlineRenderer.GroupAnimateColor(_Color);
+                ;// QAnimatorOLD.GroupAnimate(v => Thickness = v, Thickness, _Thickness);
+                ;// _outlineRenderer.GroupAnimateColor(_Color);
             }
         }
         public void Hide(bool instantly = false)
         {
-            using (QAnimatorOLD.Group(this, null, instantly ? 0f : Settings.FadeOutDuration, _outlineRenderer.GODeactivate))
+            ;// using (QAnimatorOLD.Group(this, null, instantly ? 0f : Settings.FadeOutDuration, _outlineRenderer.GODeactivate))
             {
-                QAnimatorOLD.GroupAnimate(v => Thickness = v, Thickness, 0f);
-                _outlineRenderer.GroupAnimateAlpha(0f);
+                ;// QAnimatorOLD.GroupAnimate(v => Thickness = v, Thickness, 0f);
+                ;// _outlineRenderer.GroupAnimateAlpha(0f);
             }
         }
 

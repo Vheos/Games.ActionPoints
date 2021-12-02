@@ -2,6 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.UnityCore;
+    using Tools.Extensions.Math;
 
     abstract public class AUIPoint : AUIComponent
     {
@@ -9,11 +10,10 @@ namespace Vheos.Games.ActionPoints
         public int Index
         { get; set; }
         public void PlayCantUseAnim()
-        => transform.AnimateLocalScale(this, _originalScale, _originalScale * Settings.CantUseScale, Settings.CantUseAnimDuration, null, QAnimatorOLD.Curve.Boomerang);
+        => transform.AnimateLocalScaleRatio(Settings.CantUseScale.ToVector3(), Settings.CantUseAnimDuration, Settings.CantUseCurve);
 
         // Private
         protected ActionPointDrawable _drawable;
-        private Vector2 _originalScale;
         protected UISettings.ActionPointSettings Settings
         => UIManager.Settings.ActionPoint;
 
@@ -21,7 +21,6 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            _originalScale = transform.localScale;
             _drawable = Get<ActionPointDrawable>();
         }
         protected override void PlayStart()

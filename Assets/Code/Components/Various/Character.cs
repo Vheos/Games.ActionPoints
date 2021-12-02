@@ -134,7 +134,7 @@ namespace Vheos.Games.ActionPoints
             Get<Combatable>().TryLeaveCombat();
             Get<Teamable>().TryLeaveTeam();
 
-            transform.AnimateLocalRotation(this, transform.localRotation.eulerAngles.NewZ(180f), 1f, null, QAnimatorOLD.Curve.Qurve);
+            transform.AnimateLocalRotation(transform.localRotation.eulerAngles.NewZ(180f).ToRotation(), 1f);
         }
         private void OnGainTargeting(Targeter targeter, bool isFirst)
         {
@@ -158,7 +158,7 @@ namespace Vheos.Games.ActionPoints
             if (to != null && to.TryGet<Tool>(out var toTool))
             {
                 var startAnim = IsUnsheathed ? toTool.AnimationSet.Idle : toTool.AnimationSet.Sheathe;
-                    Get<ActionAnimator>().Animate(startAnim, true);
+                Get<ActionAnimator>().Animate(startAnim, true);
                 toTool.AttachTo(GetEquipableAttachTransform(slot));
             }
         }
