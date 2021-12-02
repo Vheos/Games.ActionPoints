@@ -28,12 +28,12 @@ namespace Vheos.Games.ActionPoints
         {
             enabled = true;
             this.GOActivate();
-            QAnimator.Animate(SetWidth, Settings.StartWidth, Settings.WidthAnimDuration);
+            QAnimator.Animate(SetWidth, Settings.StartWidth - Get<LineRenderer>().startWidth, Settings.WidthAnimDuration, _animGUID, ConflictResolution.Interrupt);
 
             _from = from;
             _to = to;
             UpdatePositionsAndTiling();
-            
+
             SubscribeTo(OnChangeTarget, onChangeTarget);
             _onChangeTarget = onChangeTarget;
         }
@@ -46,7 +46,7 @@ namespace Vheos.Games.ActionPoints
         {
             enabled = false;
             UnsubscribeFrom(OnChangeTarget, _onChangeTarget);
-            QAnimator.Animate(SetWidth,0f, instantly ? 0f : Settings.WidthAnimDuration, new EventInfo(this.GODeactivate).InArray());
+            QAnimator.Animate(SetWidth, 0f - Get<LineRenderer>().startWidth, instantly ? 0f : Settings.WidthAnimDuration, new EventInfo(this.GODeactivate).InArray(), _animGUID, ConflictResolution.Interrupt);
         }
         public void UpdatePositionsAndTiling()
         {
@@ -64,8 +64,8 @@ namespace Vheos.Games.ActionPoints
         => UIManager.Settings.TargetingLine;
         private void SetWidth(float width)
         {
-            Get<LineRenderer>().startWidth = width;
-            Get<LineRenderer>().endWidth = width * Settings.EndWidthRatio;
+            Get<LineRenderer>().startWidth += width;
+            Get<LineRenderer>().endWidth = Get<LineRenderer>().startWidth * Settings.EndWidthRatio;
         }
         private void TryInvokeEvents(Mousable from, Mousable to)
         {

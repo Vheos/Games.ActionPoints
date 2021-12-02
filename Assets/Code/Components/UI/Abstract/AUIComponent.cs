@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     abstract public class AUIComponent : AEventSubscriber
     {
         // Privates
+        protected readonly GUID _animGUID = GUID.New;
         protected UIBase Base
         { get; private set; }
         protected Character Character

@@ -23,7 +23,7 @@ namespace Vheos.Games.ActionPoints
             UpdateUsability();
         }
         public void MoveTo(Vector2 targetLocalPosition)
-        => transform.AnimateLocalPosition(targetLocalPosition, Settings.AnimDuration);
+        => this.AnimateLocalPosition(targetLocalPosition, Settings.AnimDuration);
 
         // Privates
         private UICostPointsBar _costPointsBar;
@@ -40,7 +40,7 @@ namespace Vheos.Games.ActionPoints
             if (!Character.Get<Actionable>().CanUse(Action))
                 return;
 
-            transform.AnimateLocalScaleRatio(Settings.HighlightScale.ToVector3(), Settings.HighlightDuration);
+            this.AnimateLocalScaleRatio(Settings.HighlightScale.ToVector3(), Settings.HighlightDuration);
         }
         private void OnPress(UIManager.ButtonFunction function)
         {
@@ -58,8 +58,8 @@ namespace Vheos.Games.ActionPoints
 
             _isPressed = true;
             Character.Get<ActionAnimator>().Animate(Action, ActionAnimationSet.Type.Target);
-            transform.AnimateLocalScaleRatio(Settings.ClickScale.ToVector3(), Settings.ClickDuration);
-            Get<SpriteRenderer>().AnimateColorRatio(Settings.ClickColorScale.ToColor(), Settings.ClickDuration);
+            this.AnimateLocalScaleRatio(Settings.ClickScale.ToVector3(), Settings.ClickDuration);
+            Get<SpriteRenderer>().AnimateColorRatio(Settings.ClickColorScale.ToVector4(), Settings.ClickDuration);
         }
         private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
@@ -84,12 +84,12 @@ namespace Vheos.Games.ActionPoints
                 Character.Get<Actionable>().Use(Action, null);
 
             _isPressed = false;
-            transform.AnimateLocalScaleRatio(Settings.HighlightScale.ToVector3(), Settings.ClickDuration);
-            Get<SpriteRenderer>().AnimateColor(Character.Color, Settings.ClickDuration);
+            this.AnimateLocalScaleRatio(Settings.ClickScale.Inv().ToVector3(), Settings.ClickDuration);
+            Get<SpriteRenderer>().AnimateColorRatio(Settings.ClickColorScale.Inv().ToVector4(), Settings.ClickDuration);
         }
         private void OnLoseHighlight()
         {
-            transform.AnimateLocalScaleRatio(Settings.HighlightScale.Inv().ToVector3(), Settings.HighlightDuration);
+            this.AnimateLocalScaleRatio(Settings.HighlightScale.Inv().ToVector3(), Settings.HighlightDuration);
         }
         private void OnTargetChanged(Targetable from, Targetable to)
         {
