@@ -15,7 +15,7 @@ MonoBehaviour:
   _Idle:
   - Duration: 0.75
     StayUpTime: 0
-    Style: 1
+    Style: 0
     Parameters: 94
     ArmRotation: {x: 0, y: 0, z: -30}
     ArmLength: 0.4
@@ -32,7 +32,7 @@ MonoBehaviour:
   _Sheathe:
   - Duration: 0.5
     StayUpTime: 0
-    Style: 1
+    Style: 0
     Parameters: 14
     ArmRotation: {x: 0, y: 0, z: 60}
     ArmLength: 0.6
@@ -48,8 +48,8 @@ MonoBehaviour:
     ForwardDistanceUseIdle: 0
   - Duration: 0.5
     StayUpTime: 0
-    Style: 1
-    Parameters: 20
+    Style: 0
+    Parameters: 14
     ArmRotation: {x: 0, y: 0, z: 60}
     ArmLength: -0.1
     HandRotation: {x: 0, y: 0, z: 60}

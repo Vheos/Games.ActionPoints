@@ -55,7 +55,9 @@
       "version": "file:E:/Creativity/Programs/C#/Tools/UnityCore/Package",
       "depth": 0,
       "source": "local",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.textmeshpro": "3.0.6"
+      }
     },
     "com.unity.modules.animation": {
       "version": "1.0.0",

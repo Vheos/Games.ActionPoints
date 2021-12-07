@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Sprite: {fileID: 100665763937561807, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
   _Animation: {fileID: 0}
-  _ActionPointsCost: 0
+  _ActionPointsCost: 5
   _FocusPointsCost: 0
   _TargetingANDTests: []
   _TargetingORTests: []
