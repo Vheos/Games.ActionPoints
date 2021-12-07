@@ -51,6 +51,30 @@ namespace Vheos.Games.ActionPoints
         static public T[] InArray<T>(this T t)
         => new[] { t };
 
+        // IEnumerable
+        static public bool TryFind<T>(this IEnumerable<T> t, Func<T, bool> test, out T r)
+        {
+            foreach (var element in t)
+                if (test(element))
+                {
+                    r = element;
+                    return true;
+                }
+            r = default;
+            return false;
+        }
+        static public bool TryFindIndex<T>(this IEnumerable<T> t, T a, out int r)
+        {
+            r = 0;
+            foreach (var element in t)
+            {
+                if (element.Equals(a))
+                    return true;
+                r++;
+            }
+            return false;
+        }
+
         // Quaternion
         static public Quaternion RotateAround(this Quaternion quaternion, Vector3 axis, float angle)
         => quaternion.Add(Quaternion.AngleAxis(angle, axis));
