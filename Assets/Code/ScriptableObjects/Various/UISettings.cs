@@ -83,7 +83,6 @@ namespace Vheos.Games.ActionPoints
             [Range(-0.5f, +0.5f)] public float Spacing = 0f;
             [Range(1f, 3f)] public float CantUseScale = 2f;
             [Range(0f, 1f)] public float CantUseAnimDuration = 0.5f;
-            public AnimationCurve CantUseCurve = default;
             [Range(0f, 1f)] public float AnimDuration = 0.5f;
             [Range(0f, 1f)] public float CostOpacity = 0.5f;            
         }
@@ -116,7 +115,6 @@ namespace Vheos.Games.ActionPoints
             public Gradient ColorCurve = null;
             [Range(1f, 3f)] public float WoundPulseScale = 2f;
             [Range(0f, 1f)] public float WoundPulseDuration = 0.5f;
-            public AnimationCurve WoundPulseCurve = default;
             [Range(0f, 1f)] public float PercentSignSize = 0.5f;
         }
         [System.Serializable]
