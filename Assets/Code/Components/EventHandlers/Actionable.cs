@@ -9,9 +9,9 @@ namespace Vheos.Games.ActionPoints
     public class Actionable : ABaseComponent
     {
         // Events
-        public Event<int, int> OnChangeActionPointsCount
+        public Event<int, int> OnChangeActionPoints
         { get; } = new Event<int, int>();
-        public Event<int, int> OnChangeFocusPointsCount
+        public Event<int, int> OnChangeFocusPoints
         { get; } = new Event<int, int>();
         public Event<bool> OnChangeExhausted
         { get; } = new Event<bool>();
@@ -44,7 +44,7 @@ namespace Vheos.Games.ActionPoints
             get => _actionProgress;
             set
             {
-                int previousCount = ActionPointsCount;
+                int previous = ActionPoints;
                 bool previousExhausted = IsExhausted;
                 _actionProgress = value;
 
@@ -53,8 +53,8 @@ namespace Vheos.Games.ActionPoints
                     OnOverflowActionProgress?.Invoke(_actionProgress - UsableMaxActionPoints);
                     _actionProgress.SetClampMax(+UsableMaxActionPoints);
                 }
-                if (previousCount != ActionPointsCount)
-                    OnChangeActionPointsCount?.Invoke(previousCount, ActionPointsCount);
+                if (previous != ActionPoints)
+                    OnChangeActionPoints?.Invoke(previous, ActionPoints);
                 if (previousExhausted && !IsExhausted)
                     OnChangeExhausted?.Invoke(false);
                 else if (!previousExhausted && IsExhausted)
@@ -68,20 +68,22 @@ namespace Vheos.Games.ActionPoints
             get => _focusProgress;
             set
             {
-                int previousCount = FocusPointsCount;
+                int previous = FocusPoints;
                 _focusProgress = value;
 
-                if (previousCount != FocusPointsCount)
-                    OnChangeFocusPointsCount?.Invoke(previousCount, FocusPointsCount);
+                if (previous != FocusPoints)
+                    OnChangeFocusPoints?.Invoke(previous, FocusPoints);
 
                 _focusProgress.SetClampMax(_actionProgress);
                 _focusProgress.SetClampMin(0f);
             }
         }
-        public int ActionPointsCount
+        public int ActionPoints
         => _actionProgress.RoundTowardsZero();
-        public int FocusPointsCount
+        public int FocusPoints
         => _focusProgress.RoundTowardsZero();
+        public int UsableActionPoints
+        => _actionProgress.Add(UsableMaxActionPoints).RoundTowardsZero();
         public int UsableMaxActionPoints
         => MaxActionPoints - LockedMaxActionPoints;
         public bool IsExhausted
