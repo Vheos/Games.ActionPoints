@@ -40,23 +40,35 @@ namespace Vheos.Games.ActionPoints
             if (Settings.AlignTextRotationToDirection)
                 transform.localRotation = Quaternion.LookRotation(transform.forward, localDirection);
 
-            ;// using (QAnimatorOLD.Group(this, null, Settings.FadeInDuration, StayUp))
+            using (QAnimator.Group(Settings.FadeInDuration, new EventInfo(StayUp)))
             {
-                ;// transform.GroupAnimateLocalPosition(direction * Settings.Distance);
-                ;// Get<TextMeshPro>().GroupAnimateAlpha(0f, 1f);
+                transform.GroupAnimateLocalPosition(direction * Settings.Distance);
+                Get<TextMeshPro>().GroupAnimateAlpha(1f);
             }
         }
         private void StayUp()
-        {
-            ;//var componentProperty = QAnimatorOLD.GetUID(QAnimatorOLD.ComponentProperty.TextMeshProColor);
-            ;// QAnimatorOLD.Delay(this, componentProperty, Settings.StayUpDuration, FadeOut);
-            StartCoroutine(Coroutines.AfterSeconds(Settings.StayUpDuration, FadeOut));
-        }
+        => StartCoroutine(Coroutines.AfterSeconds(Settings.StayUpDuration, FadeOut));
         private void FadeOut()
-        => QAnimator.Animate(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg(), Settings.FadeOutDuration, new EventInfo(this.GODeactivate));
-
+        => QAnimator.Animate(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg(), Settings.FadeOutDuration,
+           new OptionalParameters
+           {
+               ConflictResolution = ConflictResolution.Blend,
+               GUID = this,
+               EventInfo = new EventInfo(DestroySelf)
+           });
         private void Pulse()
         => transform.AnimateLocalScaleRatio(Settings.WoundPulseScale, Settings.WoundPulseDuration,
-            new OptionalParameters { Curve = Settings.WoundPulseCurve, EventInfo = new EventInfo(Pulse) });
+           new OptionalParameters
+           {
+               ConflictResolution = ConflictResolution.Blend,
+               GUID = this,
+               EventInfo = new EventInfo(Pulse),
+               CurveFuncType = CurveFuncType.Bounce,
+           });
+        private void DestroySelf()
+        {
+            QAnimator.Stop(this);
+            this.DestroyObject();
+        }
     }
 }

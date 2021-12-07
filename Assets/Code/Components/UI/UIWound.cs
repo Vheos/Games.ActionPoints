@@ -20,21 +20,21 @@ namespace Vheos.Games.ActionPoints
             float randFrom = index.IsEven() ? Settings.WoundAngleRandomRange.AvgComp() : Settings.WoundAngleRandomRange.x;
             float randTo = index.IsEven() ? Settings.WoundAngleRandomRange.y : Settings.WoundAngleRandomRange.AvgComp();
             transform.localRotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(randFrom, randTo).Neg());
+            transform.localPosition = Vector2.up.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
 
-            Vector2 fadeInPosition = Vector2.up.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
-            ;// using (QAnimatorOLD.Group(this, null, Settings.WoundAnimDuration))
+            using (QAnimator.Group(Settings.WoundAnimDuration, this.Interrupt()))
             {
-                ;// transform.GroupAnimateLocalPosition(fadeInPosition, Vector2.zero);
-                ;// Get<SpriteRenderer>().GroupAnimateAlpha(1f);
+                transform.GroupAnimateLocalPosition(Vector2.zero);
+                Get<SpriteRenderer>().GroupAnimateAlpha(1f);
             }
         }
-        public void Hide(bool instantly = false)
+        public void Hide(bool isInstant = false)
         {
             Vector2 fadeOutPosition = Vector2.right.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
-            ;// using (QAnimatorOLD.Group(this, null, instantly ? 0f : Settings.WoundAnimDuration, this.GODeactivate))
+            using (QAnimator.Group(isInstant ? 0f : Settings.WoundAnimDuration, this.InterruptAndDeactivate()))
             {
-                ;// transform.GroupAnimateLocalPosition(fadeOutPosition);
-                ;// Get<SpriteRenderer>().GroupAnimateAlpha(0f);
+                transform.GroupAnimateLocalPosition(fadeOutPosition);
+                Get<SpriteRenderer>().GroupAnimateAlpha(0f);
             }
         }
 
