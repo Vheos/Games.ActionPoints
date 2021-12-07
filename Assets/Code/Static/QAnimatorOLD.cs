@@ -3,14 +3,7 @@ namespace Vheos.Games.ActionPoints
 {
 
 
-    public enum Curve
-    {
-        Linear = 0,
-        Qurve,
-        QurveInverted,
-        Boomerang,
-        BoomerangInverted,
-    }
+
 
 }
 
@@ -263,7 +256,7 @@ namespace Vheos.Games.ActionPoints
         // Debug
         static public void DisplayDebugInfo()
         {
-            Debug.Log($"COROUTINES BY GUID ({_coroutineListsByGUID.Count})");
+            Debug.Log($"COROUTINES BY object ({_coroutineListsByGUID.Count})");
             foreach (var coroutineListByGUID in _coroutineListsByGUID)
             {
                 AnimationGUID guid = coroutineListByGUID.Key;
