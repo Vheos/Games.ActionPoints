@@ -46,9 +46,10 @@ namespace Vheos.Games.ActionPoints
         {
             if (!Character.Get<Actionable>().CanUse(Action))
             {
-                if (Character.Get<Actionable>().IsExhausted)
+                if (Character.Get<Actionable>().IsExhausted
+                || Character.Get<Actionable>().UsableActionPoints < Action.ActionPointsCost)
                     Base.PointsBar.NotifyExhausted();
-                if (Character.Get<Actionable>().FocusPointsCount < Action.FocusPointsCost)
+                if (Character.Get<Actionable>().FocusPoints < Action.FocusPointsCost)
                     _costPointsBar.NotifyUnfocused();
                 return;
             }
@@ -89,6 +90,9 @@ namespace Vheos.Games.ActionPoints
         }
         private void OnLoseHighlight()
         {
+            if (!Character.Get<Actionable>().CanUse(Action))
+                return;
+
             this.AnimateLocalScaleRatio(Settings.HighlightScale.Inv(), Settings.HighlightDuration);
         }
         private void OnTargetChanged(Targetable from, Targetable to)
@@ -107,7 +111,7 @@ namespace Vheos.Games.ActionPoints
             SubscribeTo(selectable.OnPress, OnPress);
             SubscribeTo(selectable.OnRelease, OnRelease);
             SubscribeTo(selectable.OnLoseHighlight, OnLoseHighlight);
-            SubscribeTo(Character.Get<Actionable>().OnChangeActionPointsCount, (from, to) => UpdateUsability());
+            SubscribeTo(Character.Get<Actionable>().OnChangeActionPoints, (from, to) => UpdateUsability());
             SubscribeTo(Character.Get<Actionable>().OnChangeExhausted, (state) => UpdateUsability());
             SubscribeTo(Character.Get<Woundable>().OnChangeWoundsCount, (from, to) => UpdateUsability());
         }
