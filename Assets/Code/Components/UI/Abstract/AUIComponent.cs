@@ -7,9 +7,6 @@ namespace Vheos.Games.ActionPoints
     abstract public class AUIComponent : AEventSubscriber
     {
         // Privates
-        protected readonly GUID _animGUID = GUID.New;
-        protected OptionalParameters OptionalsInterrupt;
-        protected OptionalParameters OptionalsInterruptAndDeactivateSelf;
         protected UIBase Base
         { get; private set; }
         protected Character Character
@@ -32,9 +29,6 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            OptionalsInterrupt = new OptionalParameters() { ConflictResolution = ConflictResolution.Interrupt, GUID = _animGUID };
-            OptionalsInterruptAndDeactivateSelf = new OptionalParameters() { ConflictResolution = ConflictResolution.Interrupt, GUID = _animGUID, EventInfo = new EventInfo(this.GODeactivate) };
-
             TryFindUIBase();
             name = GetType().Name;
         }
