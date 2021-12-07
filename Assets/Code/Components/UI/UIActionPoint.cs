@@ -23,7 +23,7 @@ namespace Vheos.Games.ActionPoints
         {
             _drawable.Opacity = Settings.PartialProgressOpacity;
             _uiWound.Hide(true);
-            UpdateOpacity(0, Character.Get<Actionable>().ActionPointsCount);
+            UpdateOpacity(0, Character.Get<Actionable>().ActionPoints);
             UpdateWoundVisibility(0, Character.Get<Woundable>().WoundsCount);
         }
 
@@ -50,7 +50,7 @@ namespace Vheos.Games.ActionPoints
         // Play
         protected override void DefineAutoSubscriptions()
         {
-            SubscribeTo(Character.Get<Actionable>().OnChangeActionPointsCount, UpdateOpacity);
+            SubscribeTo(Character.Get<Actionable>().OnChangeActionPoints, UpdateOpacity);
             SubscribeTo(Character.Get<Woundable>().OnChangeWoundsCount, UpdateWoundVisibility);
         }
     }

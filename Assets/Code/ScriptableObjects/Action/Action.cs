@@ -40,8 +40,8 @@ namespace Vheos.Games.ActionPoints
         // Publics (use)
         public bool CanBeUsedBy(Actionable actionable)
         => !actionable.IsExhausted
-        && actionable.ActionPointsCount + actionable.UsableMaxActionPoints >= _ActionPointsCost
-        && actionable.FocusPointsCount >= _FocusPointsCost;
+        && actionable.ActionPoints + actionable.UsableMaxActionPoints >= _ActionPointsCost
+        && actionable.FocusPoints >= _FocusPointsCost;
         public void Use(Actionable user, Targetable target)
         {
             user.ActionProgress -= _ActionPointsCost;

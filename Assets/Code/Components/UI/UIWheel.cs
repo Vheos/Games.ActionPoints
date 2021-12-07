@@ -30,16 +30,16 @@ namespace Vheos.Games.ActionPoints
         public void Show()
         {
             this.GOActivate();
-            transform.AnimateLocalScale(Vector3.one, Settings.AnimDuration, OptionalsInterrupt);
+            transform.AnimateLocalScale(Vector3.one, Settings.AnimDuration, this.Interrupt());
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = true;
 
             AlignButtons();
             IsExpanded = true;
         }
-        public void Hide(bool instantly = false)
+        public void Hide(bool isInstant = false)
         {
-            transform.AnimateLocalScale(Vector3.zero, instantly ? 0f : Settings.AnimDuration, OptionalsInterruptAndDeactivateSelf);
+            transform.AnimateLocalScale(Vector3.zero, isInstant ? 0f : Settings.AnimDuration, this.InterruptAndDeactivate());
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = false;
             IsExpanded = false;
