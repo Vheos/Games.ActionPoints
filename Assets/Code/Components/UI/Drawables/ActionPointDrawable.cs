@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     {
         // Pubilcs
         public void AnimateOpacity(float to, float duration)
-        => QAnimator.Animate(v => Opacity = v, to - Opacity, duration);
+        => QAnimator.Animate(v => Opacity += v, to - Opacity, duration);
 
         // MProps
         public Texture Shape
