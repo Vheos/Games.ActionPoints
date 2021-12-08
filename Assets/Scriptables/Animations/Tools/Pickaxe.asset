@@ -32,7 +32,7 @@ MonoBehaviour:
   _Sheathe:
   - Duration: 1
     StayUpTime: 0
-    Style: 1
+    Style: 0
     Parameters: 30
     ArmRotation: {x: 0, y: 0, z: 120}
     ArmLength: 0.2

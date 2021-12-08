@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PickaxeHit
   m_EditorClassIdentifier: 
   _Target:
-  - Duration: 0.5
+  - Duration: 0.8
     StayUpTime: 0
     Style: 1
     Parameters: 78
