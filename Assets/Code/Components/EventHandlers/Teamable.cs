@@ -10,8 +10,8 @@ namespace Vheos.Games.ActionPoints
     public class Teamable : ABaseComponent
     {
         // Events
-        public Event<Team, Team> OnChangeTeam
-        { get; } = new Event<Team, Team>();
+        public AutoEvent<Team, Team> OnChangeTeam
+        { get; } = new AutoEvent<Team, Team>();
 
         // Input
         public ComponentInput<Team> StartingTeam

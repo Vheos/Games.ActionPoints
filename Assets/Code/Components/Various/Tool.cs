@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
 
     [RequireComponent(typeof(SpriteRenderer))]
-    public class Tool : AEventSubscriber
+    public class Tool : AAutoSubscriber
     {
         // Inspector
         [SerializeField] protected Vector3 _LocalPositionOffset = Vector3.zero;

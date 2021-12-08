@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using Animator = UnityEngine.Animator;
 
-    public class Character : AEventSubscriber
+    public class Character : AAutoSubscriber
     {
         // Inspector
         [SerializeField] protected Action[] _Actions = new Action[1];

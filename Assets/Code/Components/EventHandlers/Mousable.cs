@@ -4,24 +4,23 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.General;
-    using Event = Tools.UnityCore.Event;
-    using static CursorManager;
+        using static CursorManager;
     using static UIManager;
 
     [DisallowMultipleComponent]
-    public class Mousable : AEventSubscriber
+    public class Mousable : AAutoSubscriber
     {
         // Events
-        public Event OnGainHighlight
-        { get; } = new Event();
-        public Event OnLoseHighlight
-        { get; } = new Event();
-        public Event<MouseButton, Vector3> OnPress
-        { get; } = new Event<MouseButton, Vector3>();
-        public Event<MouseButton, Vector3> OnHold
-        { get; } = new Event<MouseButton, Vector3>();
-        public Event<MouseButton, bool> OnRelease
-        { get; } = new Event<MouseButton, bool>();
+        public AutoEvent OnGainHighlight
+        { get; } = new AutoEvent();
+        public AutoEvent OnLoseHighlight
+        { get; } = new AutoEvent();
+        public AutoEvent<MouseButton, Vector3> OnPress
+        { get; } = new AutoEvent<MouseButton, Vector3>();
+        public AutoEvent<MouseButton, Vector3> OnHold
+        { get; } = new AutoEvent<MouseButton, Vector3>();
+        public AutoEvent<MouseButton, bool> OnRelease
+        { get; } = new AutoEvent<MouseButton, bool>();
 
         // Publics
         public Collider Trigger

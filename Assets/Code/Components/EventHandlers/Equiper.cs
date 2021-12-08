@@ -9,11 +9,11 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
 
     [DisallowMultipleComponent]
-    sealed public class Equiper : AEventSubscriber
+    sealed public class Equiper : AAutoSubscriber
     {
         // Events
-        public Event<Slot, Equipable, Equipable> OnChangeEquipable
-        { get; } = new Event<Slot, Equipable, Equipable>();
+        public AutoEvent<Slot, Equipable, Equipable> OnChangeEquipable
+        { get; } = new AutoEvent<Slot, Equipable, Equipable>();
 
         // Inputs
         public ComponentInput<Slot, Transform> AttachTransformsBySlot

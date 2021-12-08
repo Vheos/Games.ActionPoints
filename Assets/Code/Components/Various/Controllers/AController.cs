@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     
     [DisallowMultipleComponent]
-    abstract public class AController : AEventSubscriber
+    abstract public class AController : AAutoSubscriber
     {
 
     }

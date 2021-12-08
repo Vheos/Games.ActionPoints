@@ -7,13 +7,13 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Collections;
 
     [DisallowMultipleComponent]
-    sealed public class Targetable : AEventSubscriber
+    sealed public class Targetable : AAutoSubscriber
     {
         // Events
-        public Event<Targeter, bool> OnGainTargeting
-        { get; } = new Event<Targeter, bool>();
-        public Event<Targeter, bool> OnLoseTargeting
-        { get; } = new Event<Targeter, bool>();
+        public AutoEvent<Targeter, bool> OnGainTargeting
+        { get; } = new AutoEvent<Targeter, bool>();
+        public AutoEvent<Targeter, bool> OnLoseTargeting
+        { get; } = new AutoEvent<Targeter, bool>();
 
         // Publics
         public IReadOnlyList<Targeter> Targeters

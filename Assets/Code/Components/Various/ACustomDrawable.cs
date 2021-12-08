@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
 
     [DisallowMultipleComponent]
-    abstract public class ACustomDrawable : AEventSubscriber
+    abstract public class ACustomDrawable : AAutoSubscriber
     {
         // MProps
         protected float GetFloat(string name)

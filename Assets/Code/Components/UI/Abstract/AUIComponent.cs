@@ -4,7 +4,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.General;
 
-    abstract public class AUIComponent : AEventSubscriber
+    abstract public class AUIComponent : AAutoSubscriber
     {
         // Privates
         protected UIBase Base

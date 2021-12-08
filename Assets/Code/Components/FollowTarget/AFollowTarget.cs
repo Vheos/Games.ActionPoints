@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
 
-    abstract public class AFollowTarget : AEventSubscriber
+    abstract public class AFollowTarget : AAutoSubscriber
     {
         // Inspector
         [SerializeField] protected Transform _Transform = null;

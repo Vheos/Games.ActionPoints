@@ -4,23 +4,22 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.General;
-    using Event = Tools.UnityCore.Event;
-    using static UIManager;
+        using static UIManager;
 
     [DisallowMultipleComponent]
     public class Selectable : ABaseComponent
     {
         // Events
-        public Event OnGainHighlight
-        { get; } = new Event();
-        public Event OnLoseHighlight
-        { get; } = new Event();
-        public Event<ButtonFunction> OnPress
-        { get; } = new Event<ButtonFunction>();
-        public Event<ButtonFunction> OnHold
-        { get; } = new Event<ButtonFunction>();
-        public Event<ButtonFunction, bool> OnRelease
-        { get; } = new Event<ButtonFunction, bool>();
+        public AutoEvent OnGainHighlight
+        { get; } = new AutoEvent();
+        public AutoEvent OnLoseHighlight
+        { get; } = new AutoEvent();
+        public AutoEvent<ButtonFunction> OnPress
+        { get; } = new AutoEvent<ButtonFunction>();
+        public AutoEvent<ButtonFunction> OnHold
+        { get; } = new AutoEvent<ButtonFunction>();
+        public AutoEvent<ButtonFunction, bool> OnRelease
+        { get; } = new AutoEvent<ButtonFunction, bool>();
 
         // Privates
         internal void GainHighlight()

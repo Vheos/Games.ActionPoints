@@ -4,7 +4,7 @@
     using Tools.Extensions.Math;
     using Tools.UnityCore;
 
-    public class LightFlicker : AEventSubscriber
+    public class LightFlicker : AAutoSubscriber
     {
         // Inspector
         [SerializeField] protected Vector2 _IntervalRandRange = new Vector2(0.1f, 0.4f);

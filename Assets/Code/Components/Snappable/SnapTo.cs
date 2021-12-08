@@ -4,7 +4,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
 
-    public class SnapTo : AEventSubscriber
+    public class SnapTo : AAutoSubscriber
     {
         // Inspector
         [SerializeField] protected bool _RunInEditor = true;

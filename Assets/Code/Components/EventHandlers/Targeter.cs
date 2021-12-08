@@ -7,11 +7,11 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
 
     [DisallowMultipleComponent]
-    public class Targeter : AEventSubscriber
+    public class Targeter : AAutoSubscriber
     {
         // Events
-        public Event<Targetable, Targetable> OnChangeTarget
-        { get; } = new Event<Targetable, Targetable>();
+        public AutoEvent<Targetable, Targetable> OnChangeTarget
+        { get; } = new AutoEvent<Targetable, Targetable>();
 
         // Publics
         private Targetable _target;

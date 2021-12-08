@@ -9,11 +9,11 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
 
     [DisallowMultipleComponent]
-    public class Equipable : AEventSubscriber
+    public class Equipable : AAutoSubscriber
     {
         // Events
-        public Event<Equiper, Equiper> OnChangeEquiper
-        { get; } = new Event<Equiper, Equiper>();
+        public AutoEvent<Equiper, Equiper> OnChangeEquiper
+        { get; } = new AutoEvent<Equiper, Equiper>();
 
         // Inputs
         public ComponentInput<Slot> EquipSlot

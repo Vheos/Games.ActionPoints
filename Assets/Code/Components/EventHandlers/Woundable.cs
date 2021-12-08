@@ -4,19 +4,18 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
     using Tools.Extensions.Math;
     using Tools.Extensions.General;
-    using Event = Tools.UnityCore.Event;
 
     public class Woundable : ABaseComponent
     {
         // Events   
-        public Event<float, bool> OnReceiveDamage
-        { get; } = new Event<float, bool>();
-        public Event<float, bool> OnReceiveHealing
-        { get; } = new Event<float, bool>();
-        public Event<int, int> OnChangeWoundsCount
-        { get; } = new Event<int, int>();
-        public Event OnDie
-        { get; } = new Event();
+        public AutoEvent<float, bool> OnReceiveDamage
+        { get; } = new AutoEvent<float, bool>();
+        public AutoEvent<float, bool> OnReceiveHealing
+        { get; } = new AutoEvent<float, bool>();
+        public AutoEvent<int, int> OnChangeWoundsCount
+        { get; } = new AutoEvent<int, int>();
+        public AutoEvent OnDie
+        { get; } = new AutoEvent();
 
         // Inputs
         public ComponentInput<int> MaxWounds

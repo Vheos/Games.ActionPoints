@@ -9,14 +9,14 @@ namespace Vheos.Games.ActionPoints
     public class Actionable : ABaseComponent
     {
         // Events
-        public Event<int, int> OnChangeActionPoints
-        { get; } = new Event<int, int>();
-        public Event<int, int> OnChangeFocusPoints
-        { get; } = new Event<int, int>();
-        public Event<bool> OnChangeExhausted
-        { get; } = new Event<bool>();
-        public Event<float> OnOverflowActionProgress
-        { get; } = new Event<float>();
+        public AutoEvent<int, int> OnChangeActionPoints
+        { get; } = new AutoEvent<int, int>();
+        public AutoEvent<int, int> OnChangeFocusPoints
+        { get; } = new AutoEvent<int, int>();
+        public AutoEvent<bool> OnChangeExhausted
+        { get; } = new AutoEvent<bool>();
+        public AutoEvent<float> OnOverflowActionProgress
+        { get; } = new AutoEvent<float>();
 
         // Input
         public ComponentInput<int> MaxActionPoints

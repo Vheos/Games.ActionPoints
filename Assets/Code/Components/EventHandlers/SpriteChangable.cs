@@ -4,11 +4,11 @@ namespace Vheos.Games.ActionPoints
     using Tools.UnityCore;
 
     [DisallowMultipleComponent]
-    sealed public class SpriteChangable : AEventSubscriber
+    sealed public class SpriteChangable : AAutoSubscriber
     {
         // Events
-        public Event<Sprite, Sprite> OnChangeSprite
-        { get; } = new Event<Sprite, Sprite>();
+        public AutoEvent<Sprite, Sprite> OnChangeSprite
+        { get; } = new AutoEvent<Sprite, Sprite>();
 
         // Privates
         private Sprite _previousSprite;

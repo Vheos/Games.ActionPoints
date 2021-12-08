@@ -2,18 +2,17 @@ namespace Vheos.Games.ActionPoints
 {
     using UnityEngine;
     using Tools.UnityCore;
-    using Event = Tools.UnityCore.Event;
-
+    
     [DisallowMultipleComponent]
-    sealed public class Movable : AEventSubscriber
+    sealed public class Movable : AAutoSubscriber
     {
         // Events
-        public Event OnStartMoving
-        { get; } = new Event();
-        public Event<Vector3, Vector3> OnMove
-        { get; } = new Event<Vector3, Vector3>();
-        public Event OnStop
-        { get; } = new Event();
+        public AutoEvent OnStartMoving
+        { get; } = new AutoEvent();
+        public AutoEvent<Vector3, Vector3> OnMove
+        { get; } = new AutoEvent<Vector3, Vector3>();
+        public AutoEvent OnStop
+        { get; } = new AutoEvent();
 
         // Privates
         private Vector3 _previousPosition;

@@ -4,7 +4,7 @@ namespace Vheos.Games.ActionPoints.Test
     using Tools.UnityCore;
     using Tools.Extensions.Math;
 
-    public class ControlTransformWithInput : AEventSubscriber
+    public class ControlTransformWithInput : AAutoSubscriber
     {
         // Inspector        
         [SerializeField] protected KeyCode _ControlMode = KeyCode.Mouse1;

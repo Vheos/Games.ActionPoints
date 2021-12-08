@@ -10,8 +10,8 @@ namespace Vheos.Games.ActionPoints
     public class Combatable : ABaseComponent
     {
         // Events
-        public Event<Combat> OnChangeCombat
-        { get; } = new Event<Combat>();
+        public AutoEvent<Combat> OnChangeCombat
+        { get; } = new AutoEvent<Combat>();
 
         // Publics
         public Combat Combat

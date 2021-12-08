@@ -17,9 +17,9 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected GameObject _CursorPrefab;
 
         // Events
-        static public Event<Vector2, Vector2> OnMoveCursor
+        static public AutoEvent<Vector2, Vector2> OnMoveCursor
         { get; private set; }
-        static public Event<Mousable, Mousable> OnChangeCursorMousable
+        static public AutoEvent<Mousable, Mousable> OnChangeCursorMousable
         { get; private set; }
 
         // Publics
@@ -162,8 +162,8 @@ namespace Vheos.Games.ActionPoints
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static private void StaticInitialize()
         {
-            OnMoveCursor = new Event<Vector2, Vector2>();
-            OnChangeCursorMousable = new Event<Mousable, Mousable>();
+            OnMoveCursor = new AutoEvent<Vector2, Vector2>();
+            OnChangeCursorMousable = new AutoEvent<Mousable, Mousable>();
         }
 
         // Play

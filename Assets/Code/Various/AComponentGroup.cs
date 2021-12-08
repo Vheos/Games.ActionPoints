@@ -1,15 +1,17 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
+    using Tools.UnityCore;
     using Tools.Extensions.Collections;
-    using Event = Tools.UnityCore.Event;
+
 
     abstract public class AComponentGroup<T> where T : Component
     {
         // Events
-        public Event OnMembersChanged
-        { get; } = new Event();
+        public AutoEvent OnMembersChanged
+        { get; } = new AutoEvent();
 
         // Publics
         public IReadOnlyList<T> Members

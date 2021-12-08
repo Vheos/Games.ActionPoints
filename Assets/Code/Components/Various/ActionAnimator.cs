@@ -8,8 +8,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
     using Tools.Extensions.Math;
-    using Event = Tools.UnityCore.Event;
-
+    
     public class ActionAnimator : ABaseComponent
     {
         // Const
@@ -21,8 +20,8 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected QAnimationClip[] _Idle = new QAnimationClip[1];
 
         // Events
-        public Event OnFinishAnimation
-        { get; } = new Event();
+        public AutoEvent OnFinishAnimation
+        { get; } = new AutoEvent();
 
         // Publics
         public bool IsPlaying
