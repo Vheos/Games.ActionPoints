@@ -4,7 +4,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Tools.UnityCore;
     using Tools.Extensions.Math;
-    using Vheos.Tools.Extensions.Collections;
+    using Tools.Extensions.Collections;
 
     public class Actionable : ABaseComponent
     {

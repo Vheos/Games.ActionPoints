@@ -1,0 +1,19 @@
+{
+    "name": "Vheos.Games.ActionPoints.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:bcab4e4e86986be4a8008cbaaf89f34d",
+        "GUID:c5156182bd413ac41bc3f003394ab1f2"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
