@@ -134,7 +134,8 @@ namespace Vheos.Games.ActionPoints
             Get<Combatable>().TryLeaveCombat();
             Get<Teamable>().TryLeaveTeam();
 
-            transform.AnimateLocalRotation(transform.localRotation.eulerAngles.NewZ(180f).ToRotation(), 1f);
+            QAnimator.Animate(1f)
+                .LocalRotation(transform, transform.localRotation.eulerAngles.NewZ(180f).ToRotation());
         }
         private void OnGainTargeting(Targeter targeter, bool isFirst)
         {

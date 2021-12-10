@@ -31,6 +31,7 @@ namespace Vheos.Games.ActionPoints
         protected override void FollowOnUpdate()
         => transform.rotation = transform.rotation.Lerp(FinalRotation, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         protected override void FollowOnAnimate()
-        => transform.AnimateRotation(FinalRotation, _AnimDuration);
+        => QAnimator.Animate(_AnimDuration)
+            .Rotation(transform, FinalRotation);
     }
 }

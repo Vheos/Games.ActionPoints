@@ -25,22 +25,19 @@ namespace Vheos.Games.ActionPoints
         public void AttachTo(Transform target)
         {
             transform.BecomeChildOf(target, true);
-            using (QAnimator.Group(_AnimDuration, (ConflictResolution.Interrupt, this)))
-            {
-                transform.GroupAnimateLocalPosition(_LocalPositionOffset);
-                transform.GroupAnimateLocalRotation(Quaternion.Euler(_LocalRotationOffset));
-                transform.GroupAnimateLocalScale(_originalScale);
-            }
+            QAnimator.Animate(_AnimDuration)
+                .LocalPosition(transform, _LocalPositionOffset)
+                .LocalRotation(transform, Quaternion.Euler(_LocalRotationOffset))
+                .LocalScale(transform, _originalScale);
         }
         public void DetachTo(Transform target)
         {
             transform.BecomeSiblingOf(target, true);
-            using (QAnimator.Group(_AnimDuration, (ConflictResolution.Interrupt, this)))
-            {
-                transform.GroupAnimateLocalPosition(target.localPosition);
-                transform.GroupAnimateLocalRotation(target.localRotation);
-                transform.GroupAnimateLocalScale(target.localScale);
-            }
+
+            QAnimator.Animate(_AnimDuration)
+                .LocalPosition(transform, target.localPosition)
+                .LocalRotation(transform, target.localRotation)
+                .LocalScale(transform, target.localScale);
         }
 
         // Privates

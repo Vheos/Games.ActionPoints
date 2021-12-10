@@ -33,19 +33,16 @@ namespace Vheos.Games.ActionPoints
         public void Show()
         {
             _outlineRenderer.GOActivate();
-            using (QAnimator.Group(Settings.FadeInDuration, _outlineRenderer.Interrupt()))
-            {
-                QAnimator.GroupAnimate(v => Thickness += v, _Thickness - Thickness);
-                _outlineRenderer.GroupAnimateColor(_Color);
-            }
+            _outlineRenderer.Animate(Settings.FadeInDuration, ConflictResolution.Interrupt)
+                .Custom(v => Thickness += v, _Thickness - Thickness)
+                .Color(_outlineRenderer, _Color);
         }
         public void Hide(bool isInstant = false)
         {
-            using (QAnimator.Group(isInstant ? 0f : Settings.FadeOutDuration, _outlineRenderer.InterruptAndDeactivate()))
-            {
-                QAnimator.GroupAnimate(v => Thickness += v, 0f - Thickness);
-                _outlineRenderer.GroupAnimateAlpha(0f);
-            }
+            _outlineRenderer.Animate(isInstant ? 0f : Settings.FadeOutDuration, ConflictResolution.Interrupt)
+                .Custom(v => Thickness += v, 0f - Thickness)
+                .Alpha(_outlineRenderer, 0f)
+                .Events(_outlineRenderer.GODeactivate);
         }
 
         // Private

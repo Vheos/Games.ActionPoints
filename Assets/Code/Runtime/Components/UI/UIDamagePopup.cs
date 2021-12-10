@@ -40,35 +40,22 @@ namespace Vheos.Games.ActionPoints
             if (Settings.AlignTextRotationToDirection)
                 transform.localRotation = Quaternion.LookRotation(transform.forward, localDirection);
 
-            using (QAnimator.Group(Settings.FadeInDuration, new EventInfo(StayUp)))
-            {
-                transform.GroupAnimateLocalPosition(direction * Settings.Distance);
-                Get<TextMeshPro>().GroupAnimateAlpha(1f);
-            }
+            QAnimator.Animate(Settings.FadeInDuration)
+                .LocalPosition(transform, direction * Settings.Distance)
+                .Alpha(Get<TextMeshPro>(), 1f)
+                .Events(StayUp);
+
         }
         private void StayUp()
-        => StartCoroutine(Coroutines.AfterSeconds(Settings.StayUpDuration, FadeOut));
+        => QAnimator.Animate(Settings.StayUpDuration)
+            .Events(FadeOut);
         private void FadeOut()
-        => QAnimator.Animate(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg(), Settings.FadeOutDuration,
-           new OptionalParameters
-           {
-               ConflictResolution = ConflictResolution.Blend,
-               GUID = this,
-               EventInfo = new EventInfo(DestroySelf)
-           });
+        => this.Animate(Settings.FadeOutDuration)
+            .Custom(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg())
+            .Events(this.StopAnimations, this.DestroyObject);
         private void Pulse()
-        => transform.AnimateLocalScaleRatio(Settings.WoundPulseScale, Settings.WoundPulseDuration,
-           new OptionalParameters
-           {
-               ConflictResolution = ConflictResolution.Blend,
-               GUID = this,
-               EventInfo = new EventInfo(Pulse),
-               CurveFuncType = CurveFuncType.Bounce,
-           });
-        private void DestroySelf()
-        {
-            QAnimator.Stop(this);
-            this.DestroyObject();
-        }
+        => this.Animate(Settings.WoundPulseDuration)
+            .LocalScaleRatio(transform, Settings.WoundPulseScale)
+            .Set(CurveFuncType.Bounce);
     }
 }

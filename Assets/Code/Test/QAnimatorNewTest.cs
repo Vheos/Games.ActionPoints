@@ -15,9 +15,11 @@ namespace Vheos.Games.ActionPoints.Test
         private void OnUpdate()
         {
             if (KeyCode.KeypadPlus.Released())
-                QAnimator.Animate(t => transform.localRotation *= t, Quaternion.Euler(_Offset), _Duration);
+                QAnimator.Animate(_Duration)
+                    .Custom(t => transform.localRotation *= t, Quaternion.Euler(_Offset));
             if (KeyCode.KeypadMultiply.Released())
-                this.AnimateLocalScale(_Offset, _Duration);
+                QAnimator.Animate(_Duration)
+                    .LocalScale(transform, _Offset);
         }
 
         protected override void DefineAutoSubscriptions()

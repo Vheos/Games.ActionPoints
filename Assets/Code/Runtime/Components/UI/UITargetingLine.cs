@@ -28,7 +28,8 @@ namespace Vheos.Games.ActionPoints
         {
             enabled = true;
             this.GOActivate();
-            QAnimator.Animate(SetWidth, Settings.StartWidth - Get<LineRenderer>().startWidth, Settings.WidthAnimDuration, this.Interrupt());
+            this.Animate(Settings.WidthAnimDuration, ConflictResolution.Interrupt)
+                .Custom(SetWidth, Settings.StartWidth - Get<LineRenderer>().startWidth);
 
             _from = from;
             _to = to;
@@ -46,7 +47,9 @@ namespace Vheos.Games.ActionPoints
         {
             enabled = false;
             UnsubscribeFrom(OnChangeTarget, _onChangeTarget);
-            QAnimator.Animate(SetWidth, 0f - Get<LineRenderer>().startWidth, isInstant ? 0f : Settings.WidthAnimDuration, this.InterruptAndDeactivate());
+            this.Animate(isInstant ? 0f : Settings.WidthAnimDuration, ConflictResolution.Interrupt)
+                .Custom(SetWidth, 0f - Get<LineRenderer>().startWidth)
+                .Events(this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
         {
@@ -69,7 +72,7 @@ namespace Vheos.Games.ActionPoints
         }
         private void TryInvokeEvents(Mousable from, Mousable to)
         {
-            Targetable fromTargetable = from != null && from.Has<Targetable>() 
+            Targetable fromTargetable = from != null && from.Has<Targetable>()
                                       ? from.Get<Targetable>() : null;
             Target = to != null && to.Has<Targetable>()
                    ? to.Get<Targetable>() : null;

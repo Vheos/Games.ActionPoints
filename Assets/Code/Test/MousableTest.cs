@@ -15,7 +15,6 @@ namespace Vheos.Games.ActionPoints.Test
         private void OnGainHighlight()
         {
             Debug.Log($"{name} - GainHighlight");
-            transform.AnimateLocalScaleRatio(_HighlightedScale.ToVector3(), _AnimDuration);
         }
         private void OnPress(CursorManager.MouseButton button, Vector3 location)
         {
@@ -32,7 +31,6 @@ namespace Vheos.Games.ActionPoints.Test
         private void OnLoseHighlight()
         {
             Debug.Log($"{name} - LoseHighlight");
-            transform.AnimateLocalScaleRatio(_HighlightedScale.Inv().ToVector3(), _AnimDuration);
         }
 
         // Play

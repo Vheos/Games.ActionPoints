@@ -8,7 +8,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
     using Tools.Extensions.Math;
-    
+
     public class ActionAnimator : ABaseComponent
     {
         // Const
@@ -81,44 +81,38 @@ namespace Vheos.Games.ActionPoints
         private void AnimateClip(QAnimationClip clip, bool isInstant = false)
         {
             QAnimationClip idle = CurrentIdle.Last();
-            using (QAnimator.Group(isInstant ? 0f : clip.Duration, 
-                new OptionalParameters
-                {
-                    ConflictResolution = ConflictResolution.Interrupt,
-                    GUID = this,
-                    CurveFuncType = clip.Style,
-                }))
+            QAnimation anim = this.Animate(isInstant ? 0f : clip.Duration, ConflictResolution.Interrupt)
+                .Set(clip.Style);
+
+            if (clip.ArmRotationEnabled)
+                anim.Custom(SetAddArmAngles, clip.ChooseArmRotation(idle) - _armAngles);
+            if (clip.ArmLengthEnabled)
+                anim.Custom(v => _arm.Length += v, clip.ChooseArmLength(idle) - _arm.Length);
+            if (clip.HandRotationEnabled)
+                anim.Custom(SetAddHandAngles, clip.ChooseHandRotation(idle) - _handAngles);
+            if (clip.HandScaleEnabled)
+                anim.LocalScale(HandTransform, clip.ChooseHandScale(idle).ToVector3());
+            if (clip.LookAtEnabled)
             {
-                if (clip.ArmRotationEnabled)
-                    QAnimator.GroupAnimate(SetAddArmAngles, clip.ChooseArmRotation(idle) - _armAngles );
-                if (clip.ArmLengthEnabled)
-                    QAnimator.GroupAnimate(v => _arm.Length += v, clip.ChooseArmLength(idle) - _arm.Length);
-                if (clip.HandRotationEnabled)
-                    QAnimator.GroupAnimate(SetAddHandAngles, clip.ChooseHandRotation(idle) - _handAngles);
-                if (clip.HandScaleEnabled)
-                    HandTransform.GroupAnimateLocalScale(clip.ChooseHandScale(idle).ToVector3());
-                if (clip.LookAtEnabled)
-                {
-                    if (!TryGet<Combatable>(out var combatable)
-                    || !combatable.IsInCombat)
-                        return;
+                if (!TryGet<Combatable>(out var combatable)
+                || !combatable.IsInCombat)
+                    return;
 
-                    Vector3 targetPosition = clip.ChooseLookAt(idle) switch
-                    {
-                        QAnimationClip.LookAtTarget.AllyMidpoint => combatable.AllyMidpoint,
-                        QAnimationClip.LookAtTarget.EnemyMidpoint => combatable.EnemyMidpoint,
-                        QAnimationClip.LookAtTarget.CombatMidpoint => combatable.Combat.Midpoint,
-                        _ => float.NaN.ToVector3(),
-                    };
-
-                    Get<RotateTowards>().SetTarget(targetPosition, true);
-                }
-                if (clip.ForwardDistanceEnabled)
+                Vector3 targetPosition = clip.ChooseLookAt(idle) switch
                 {
-                    Vector3 startingPosition = TryGet<Combatable>(out var combatable) && combatable.IsInCombat
-                                             ? combatable.AnchorPosition : transform.position;
-                    transform.GroupAnimatePosition(startingPosition + transform.right * clip.ChooseForwardDistance(idle));
-                }
+                    QAnimationClip.LookAtTarget.AllyMidpoint => combatable.AllyMidpoint,
+                    QAnimationClip.LookAtTarget.EnemyMidpoint => combatable.EnemyMidpoint,
+                    QAnimationClip.LookAtTarget.CombatMidpoint => combatable.Combat.Midpoint,
+                    _ => float.NaN.ToVector3(),
+                };
+
+                Get<RotateTowards>().SetTarget(targetPosition, true);
+            }
+            if (clip.ForwardDistanceEnabled)
+            {
+                Vector3 startingPosition = TryGet<Combatable>(out var combatable) && combatable.IsInCombat
+                                         ? combatable.AnchorPosition : transform.position;
+                anim.Position(transform, startingPosition + transform.right * clip.ChooseForwardDistance(idle));
             }
         }
         private void AnimateClipsRecursivelyFrom(IReadOnlyList<QAnimationClip> clips, int clipIndex)
@@ -131,13 +125,8 @@ namespace Vheos.Games.ActionPoints
             }
 
             AnimateClip(clips[clipIndex]);
-            QAnimator.Delay(clips[clipIndex].TotalTime,
-                new OptionalParameters
-                {
-                    ConflictResolution = ConflictResolution.Blend,
-                    GUID = this,
-                    EventInfo = new EventInfo(() => AnimateClipsRecursivelyFrom(clips, ++clipIndex)),
-                });
+            this.Animate(clips[clipIndex].TotalTime)
+                .Events(() => AnimateClipsRecursivelyFrom(clips, ++clipIndex));
         }
         private IReadOnlyList<QAnimationClip> AnimationTypeToClips(Action action, ActionAnimationSet.Type type)
         => type switch
