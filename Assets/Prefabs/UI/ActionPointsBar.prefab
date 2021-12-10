@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3450881049469912262}
   - component: {fileID: -231333448455023606}
   - component: {fileID: 5749825457494317656}
-  - component: {fileID: 1925031994750389287}
+  - component: {fileID: 8264824192268098807}
   m_Layer: 0
   m_Name: ActionPointsBar
   m_TagString: Untagged
@@ -58,10 +58,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876dd6fc1094d0d448efb0e951c5c60b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Target: {fileID: 0}
+  _Transform: {fileID: 0}
+  _Vector: {x: 0, y: 0, z: 0}
   _Offset: {x: 0, y: -0.5, z: 0}
   _LockedAxes: 0
   _HalfTime: 0
+  _AnimDuration: 0.5
 --- !u!114 &5749825457494317656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,11 +76,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2edc51c4b584114b931d07f8c916795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Target: {fileID: 0}
+  _Transform: {fileID: 0}
+  _Vector: {x: 0, y: 0, z: 0}
   _Offset: {x: 0, y: 0, z: 0}
   _LockedAxes: 0
   _HalfTime: 0
---- !u!114 &1925031994750389287
+  _AnimDuration: 0.5
+--- !u!114 &8264824192268098807
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,6 +91,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1313598395280984248}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d870fd74ea18147938b6323757e54b, type: 3}
+  m_Script: {fileID: 11500000, guid: e6bb66e842a653f459cdfccab4a4345d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
