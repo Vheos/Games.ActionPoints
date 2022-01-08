@@ -29,3 +29,9 @@ MonoBehaviour:
     - 100
     - 0
     - 0
+  - _Effect: {fileID: 11400000, guid: f18ee305bcc86a94e9cb42c01f8703cd, type: 2}
+    _Direction: 0
+    _Values:
+    - 0
+    - 100
+    - 0

@@ -29,11 +29,43 @@ MonoBehaviour:
     HandScaleUseIdle: 0
     LookAtUseIdle: 0
     ForwardDistanceUseIdle: 0
+  - Duration: 0.8
+    StayUpTime: 0
+    Style: 1
+    Parameters: 78
+    ArmRotation: {x: 0, y: 0, z: 75}
+    ArmLength: 0.4
+    HandRotation: {x: 0, y: 0, z: 45}
+    HandScale: 1
+    LookAt: 1
+    ForwardDistance: 0.1
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
+    LookAtUseIdle: 0
+    ForwardDistanceUseIdle: 0
+  - Duration: 0.8
+    StayUpTime: 0
+    Style: 1
+    Parameters: 78
+    ArmRotation: {x: 0, y: 0, z: 75}
+    ArmLength: 0.4
+    HandRotation: {x: 0, y: 0, z: 45}
+    HandScale: 1
+    LookAt: 1
+    ForwardDistance: 0.1
+    ArmLengthUseIdle: 0
+    ArmRotationUseIdle: 0
+    HandRotationUseIdle: 0
+    HandScaleUseIdle: 0
+    LookAtUseIdle: 0
+    ForwardDistanceUseIdle: 0
   _Use:
   - Duration: 0.3
     StayUpTime: 0.3
     Style: 1
-    Parameters: 74
+    Parameters: 2147483647
     ArmRotation: {x: 0, y: 0, z: -30}
     ArmLength: 0.4
     HandRotation: {x: 0, y: 0, z: -60}
@@ -42,7 +74,7 @@ MonoBehaviour:
     ForwardDistance: -0.1
     ArmLengthUseIdle: 0
     ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
+    HandRotationUseIdle: 1
+    HandScaleUseIdle: 1
     LookAtUseIdle: 0
     ForwardDistanceUseIdle: 0

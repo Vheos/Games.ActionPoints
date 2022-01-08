@@ -743,6 +743,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5856196702644929917, guid: a31ea5a96b25aa14b95c9343d896e018, type: 3}
+    - {fileID: 6418985834492819477, guid: a31ea5a96b25aa14b95c9343d896e018, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a31ea5a96b25aa14b95c9343d896e018, type: 3}
 --- !u!1 &382416277 stripped
 GameObject:
@@ -1617,10 +1618,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1761159101}
-  - component: {fileID: 1761159103}
   - component: {fileID: 1761159104}
   - component: {fileID: 1761159100}
   - component: {fileID: 1761159102}
+  - component: {fileID: 1761159103}
   - component: {fileID: 1761159105}
   m_Layer: 0
   m_Name: GameObject
@@ -1706,93 +1707,61 @@ MonoBehaviour:
   m_GameObject: {fileID: 1761159099}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9c5d93ebaa18b4449e8055ffc3d7e32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Offset: {x: 2, y: 1, z: 1}
-  _Curve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _Duration: 1
---- !u!33 &1761159104
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1761159099}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1761159105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1761159099}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b803fc6503eb7b49b148e9a8b7cb8fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentCache: {fileID: 0}
   _MonoBehaviour: {fileID: 0}
   Generic:
     m_PersistentCalls:
       m_Calls: []
+    m_CallsDirty: 1
   _AnimationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.5
-      value: 0.5
-      inSlope: 3.1893504
-      outSlope: 3.1893504
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.03452182
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 1
-    m_PostInfinity: 0
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
     m_RotationOrder: 4
   _Gradient:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
+    key0:
+      r: 1
+      g: 1
+      b: 1
+      a: 1
+    key1:
+      r: 1
+      g: 1
+      b: 1
+      a: 1
+    key2:
+      r: 0
+      g: 0
+      b: 0
+      a: 0
+    key3:
+      r: 0
+      g: 0
+      b: 0
+      a: 0
+    key4:
+      r: 0
+      g: 0
+      b: 0
+      a: 0
+    key5:
+      r: 0
+      g: 0
+      b: 0
+      a: 0
+    key6:
+      r: 0
+      g: 0
+      b: 0
+      a: 0
+    key7:
+      r: 0
+      g: 0
+      b: 0
+      a: 0
     ctime0: 0
     ctime1: 65535
     ctime2: 0
@@ -1814,10 +1783,37 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   _ReadOnly: helo
   _script: {fileID: 0}
-  _scriptableObjectTest: {fileID: 0}
-  _actionTargetTest:
-    TargetTest: {fileID: 0}
-    TestForTrue: 1
+  _scriptableObjectTest: {fileID: 11400000, guid: ebda0bcf31a961444936e4162469cad1, type: 2}
+  _actionTargetTest: {TargetTest: {fileID: 0}, TestForTrue: 1}
+--- !u!33 &1761159104
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761159099}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1761159105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761159099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9c5d93ebaa18b4449e8055ffc3d7e32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentCache: {fileID: 0}
+  _isWithinAutoSubscriptionsBlock: 0
+  _Offset: {x: 0, y: 0, z: 0}
+  _Curve:
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _Duration: 0
 --- !u!4 &1766742359 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6382050970733388425, guid: 2f3897690fa4d7a47bf1af40be412a5e, type: 3}
