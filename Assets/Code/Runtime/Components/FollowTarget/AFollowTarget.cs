@@ -63,9 +63,9 @@ namespace Vheos.Games.ActionPoints
             base.DefineAutoSubscriptions();
             SubscribeTo(Get<Updatable>().OnUpdate, TryFollowTargetOnUpdate);
         }
-        public override void EditAwake()
+        protected override void PlayAwake()
         {
-            base.EditAwake();
+            base.PlayAwake();
             _useTransform = _Transform != null;
         }
 
