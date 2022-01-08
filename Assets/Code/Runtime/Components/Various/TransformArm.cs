@@ -18,7 +18,7 @@ namespace Vheos.Games.ActionPoints
             set
             {
                 _Length = value;
-                foreach (var childTransform in this.GetChildTransforms())
+                foreach (var childTransform in this.GetChildComponents<Transform>())
                     childTransform.localPosition = _Length.Append(childTransform.localPosition.YZ());
             }
         }

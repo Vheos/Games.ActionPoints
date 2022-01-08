@@ -75,7 +75,7 @@ namespace Vheos.Games.ActionPoints.Editor
                 foreach (var name in TOGGLABLE_PROPERTIES)
                 {
                     if (!System.Enum.TryParse<QAnimationClip.VisibleParameters>(name, out var enumValue)
-                    || !parametersProp.intValue.As<QAnimationClip.VisibleParameters>().HasFlag(enumValue))
+                    || !parametersProp.intValue.Cast<QAnimationClip.VisibleParameters>().HasFlag(enumValue))
                         continue;
 
                     GUI.enabled = true;

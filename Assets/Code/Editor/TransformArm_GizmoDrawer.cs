@@ -13,7 +13,7 @@ namespace Vheos.Games.ActionPoints.Editor
             if (!comp.isActiveAndEnabled)
                 return;
 
-            foreach (var childTransform in comp.GetChildTransforms())
+            foreach (var childTransform in comp.GetChildComponents<Transform>())
             {
                 Gizmos.color = comp.GizmoColor;
                 Gizmos.DrawLine(comp.transform.position, childTransform.position);
