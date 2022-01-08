@@ -26,6 +26,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             AssignInspectorValues();
+            Tween.DefaultCurve = Qurve.ValuesByProgress;
         }
 
         // Edit
