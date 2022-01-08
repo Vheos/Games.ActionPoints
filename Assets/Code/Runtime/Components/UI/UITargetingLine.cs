@@ -28,8 +28,10 @@ namespace Vheos.Games.ActionPoints
         {
             enabled = true;
             this.GOActivate();
-            this.Animate(Settings.WidthAnimDuration, ConflictResolution.Interrupt)
-                .Custom(SetWidth, Settings.StartWidth - Get<LineRenderer>().startWidth);
+            this.NewTween()
+                .SetDuration(Settings.WidthAnimDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .AddPropertyModifier(SetWidth, Settings.StartWidth - Get<LineRenderer>().startWidth);
 
             _from = from;
             _to = to;
@@ -47,9 +49,11 @@ namespace Vheos.Games.ActionPoints
         {
             enabled = false;
             UnsubscribeFrom(OnChangeTarget, _onChangeTarget);
-            this.Animate(isInstant ? 0f : Settings.WidthAnimDuration, ConflictResolution.Interrupt)
-                .Custom(SetWidth, 0f - Get<LineRenderer>().startWidth)
-                .Events(this.GODeactivate);
+            this.NewTween()
+                .SetDuration(isInstant ? 0f : Settings.WidthAnimDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .AddPropertyModifier(SetWidth, 0f - Get<LineRenderer>().startWidth)
+                .AddOnFinishEvents(this.GODeactivate);
         }
         public void UpdatePositionsAndTiling()
         {

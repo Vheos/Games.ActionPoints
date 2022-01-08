@@ -130,12 +130,17 @@ namespace Vheos.Games.ActionPoints
         => _ui.PopupHandler.PopDamage(transform.position, damage, isWound);
         private void OnHasDied()
         {
-            Get<ActionAnimator>().Stop();
+            Get<ActionAnimator>().StopTweens();
             Get<Combatable>().TryLeaveCombat();
             Get<Teamable>().TryLeaveTeam();
 
-            QAnimator.Animate(1f)
-                .LocalRotation(transform, transform.localRotation.eulerAngles.NewZ(180f).ToRotation());
+            this.NewTween()
+                .SetDuration(1f)
+                .LocalRotation(transform.localRotation.eulerAngles.NewZ(180f).ToRotation());
+
+            this.NewTween()
+                .SetDuration(1f)
+                .LocalRotation(transform.localRotation.eulerAngles.NewZ(180f).ToRotation());
         }
         private void OnGainTargeting(Targeter targeter, bool isFirst)
         {

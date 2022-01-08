@@ -10,7 +10,7 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [Range(0f, 1f)] public float Duration = 0.5f;
         [Range(0f, 1f)] public float StayUpTime = 0f;
-        public CurveFuncType Style = CurveFuncType.Normal;
+        public CurveShape Style = CurveShape.Normal;
         public VisibleParameters Parameters;
 
         public Vector3 ArmRotation = Vector3.zero;

@@ -15,11 +15,13 @@ namespace Vheos.Games.ActionPoints.Test
         private void OnUpdate()
         {
             if (KeyCode.KeypadPlus.Released())
-                QAnimator.Animate(_Duration)
-                    .Custom(t => transform.localRotation *= t, Quaternion.Euler(_Offset));
+                this.NewTween()
+                   .SetDuration(_Duration)
+                   .LocalRotation(Quaternion.Euler(_Offset));
             if (KeyCode.KeypadMultiply.Released())
-                QAnimator.Animate(_Duration)
-                    .LocalScale(transform, _Offset);
+                this.NewTween()
+                   .SetDuration(_Duration)
+                   .LocalScaleRatio(_Offset);
         }
 
         protected override void DefineAutoSubscriptions()
@@ -32,8 +34,8 @@ namespace Vheos.Games.ActionPoints.Test
             base.PlayAwake();
             _animEventInfos = new[]
             {
-                new EventInfo(EventThresholdType.Progress, 0.5f, () => Debug.Log($"HALFWAY THERE!")),
-                new EventInfo(EventThresholdType.Value, 1f, () => Debug.Log($"THERE!!!")),
+                new EventInfo(EventThresholdVariable.Progress, 0.5f, () => Debug.Log($"HALFWAY THERE!")),
+                new EventInfo(EventThresholdVariable.CurveValue, 1f, () => Debug.Log($"THERE!!!")),
             };
         }
     }

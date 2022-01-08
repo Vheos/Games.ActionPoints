@@ -29,13 +29,17 @@ namespace Vheos.Games.ActionPoints
             _visualFocusProgress = 0;
             foreach (var point in _points)
                 point.ResetVisuals();
-            this.Animate(Settings.AnimDuration, ConflictResolution.Interrupt)
-                .LocalScale(transform, _originalScale);
+            this.NewTween()
+                .SetDuration(Settings.AnimDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .LocalScale(_originalScale);
         }
         public void Hide(bool isInstant = false)
-        => this.Animate(isInstant ? 0f : Settings.AnimDuration, ConflictResolution.Interrupt)
-            .LocalScale(transform, Vector3.zero)
-            .Events(this.GODeactivate);
+        => this.NewTween()
+                .SetDuration(isInstant ? 0f : Settings.AnimDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+               .LocalScale(Vector3.zero)
+               .AddOnFinishEvents(this.GODeactivate);
         public void NotifyExhausted()
         {
             for (int i = 0; i < Character.Get<Actionable>().UsableMaxActionPoints; i++)

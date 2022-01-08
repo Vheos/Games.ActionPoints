@@ -40,22 +40,26 @@ namespace Vheos.Games.ActionPoints
             if (Settings.AlignTextRotationToDirection)
                 transform.localRotation = Quaternion.LookRotation(transform.forward, localDirection);
 
-            QAnimator.Animate(Settings.FadeInDuration)
-                .LocalPosition(transform, direction * Settings.Distance)
-                .Alpha(Get<TextMeshPro>(), 1f)
-                .Events(StayUp);
+            this.NewTween()
+                .SetDuration(Settings.FadeInDuration)
+                .LocalPosition(direction * Settings.Distance)
+                .TMPAlpha(1f)
+                .AddOnFinishEvents(StayUp);
 
         }
         private void StayUp()
-        => QAnimator.Animate(Settings.StayUpDuration)
-            .Events(FadeOut);
+        => this.NewTween()
+            .SetDuration(Settings.StayUpDuration)
+            .AddOnFinishEvents(FadeOut);
         private void FadeOut()
-        => this.Animate(Settings.FadeOutDuration)
-            .Custom(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg())
-            .Events(this.StopAnimations, this.DestroyObject);
+        => this.NewTween()
+            .SetDuration(Settings.FadeOutDuration)
+            .AddPropertyModifier(v => Get<TextMeshPro>().alpha += v, Get<TextMeshPro>().alpha.Neg())
+            .AddOnFinishEvents(this.StopTweens, this.DestroyObject);
         private void Pulse()
-        => this.Animate(Settings.WoundPulseDuration)
-            .LocalScaleRatio(transform, Settings.WoundPulseScale)
-            .Set(CurveFuncType.Bounce);
+        => this.NewTween()
+            .SetDuration(Settings.WoundPulseDuration)
+            .LocalScaleRatio(Settings.WoundPulseScale)
+            .SetCurveShape(CurveShape.Bounce);
     }
 }

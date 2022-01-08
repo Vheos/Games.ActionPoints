@@ -23,8 +23,9 @@ namespace Vheos.Games.ActionPoints
             UpdateUsability();
         }
         public void MoveTo(Vector2 targetLocalPosition)
-        => QAnimator.Animate(Settings.AnimDuration)
-            .LocalPosition(transform, targetLocalPosition);
+        => this.NewTween()
+            .SetDuration(Settings.AnimDuration)
+            .LocalPosition(targetLocalPosition);
 
         // Privates
         private UICostPointsBar _costPointsBar;
@@ -34,16 +35,18 @@ namespace Vheos.Games.ActionPoints
         private void UpdateUsability()
         {
             Color targetColor = Character.Get<Actionable>().CanUse(Action) ? Character.Color : Settings.UnusableColor;
-            QAnimator.Animate(Settings.UnusableDuration)
-                .Color(Get<SpriteRenderer>(), targetColor);
+            this.NewTween()
+                .SetDuration(Settings.UnusableDuration)
+                .SpriteColor(targetColor);
         }
         private void OnGainHighlight()
         {
             if (!Character.Get<Actionable>().CanUse(Action))
                 return;
 
-            QAnimator.Animate(Settings.HighlightDuration)
-                .LocalScaleRatio(transform, Settings.HighlightScale);
+            this.NewTween()
+                .SetDuration(Settings.HighlightDuration)
+                .LocalScaleRatio(Settings.HighlightScale);
         }
         private void OnPress(UIManager.ButtonFunction function)
         {
@@ -62,9 +65,10 @@ namespace Vheos.Games.ActionPoints
 
             _isPressed = true;
             Character.Get<ActionAnimator>().Animate(Action, ActionAnimationSet.Type.Target);
-            QAnimator.Animate(Settings.ClickDuration)
-                .LocalScaleRatio(transform, Settings.ClickScale)
-                .ColorRatio(Get<SpriteRenderer>(), Settings.ClickColorScale);
+            this.NewTween()
+                .SetDuration(Settings.ClickDuration)
+                .LocalScaleRatio(Settings.ClickScale)
+                .SpriteColorRatio(Settings.ClickColorScale);
         }
         private void OnRelease(UIManager.ButtonFunction function, bool isClick)
         {
@@ -89,17 +93,19 @@ namespace Vheos.Games.ActionPoints
                 Character.Get<Actionable>().Use(Action, null);
 
             _isPressed = false;
-            QAnimator.Animate(Settings.ClickDuration)
-                .LocalScaleRatio(transform, Settings.ClickScale.Inv())
-                .ColorRatio(Get<SpriteRenderer>(), Settings.ClickColorScale.Inv());
+            this.NewTween()
+                .SetDuration(Settings.ClickDuration)
+                .LocalScaleRatio(Settings.ClickScale.Inv())
+                .SpriteColorRatio(Settings.ClickColorScale.Inv());
         }
         private void OnLoseHighlight()
         {
             if (!Character.Get<Actionable>().CanUse(Action))
                 return;
 
-            QAnimator.Animate(Settings.HighlightDuration)
-                .LocalScaleRatio(transform, Settings.HighlightScale.Inv());
+            this.NewTween()
+                .SetDuration(Settings.HighlightDuration)
+                .LocalScaleRatio(Settings.HighlightScale.Inv());
         }
         private void OnTargetChanged(Targetable from, Targetable to)
         {

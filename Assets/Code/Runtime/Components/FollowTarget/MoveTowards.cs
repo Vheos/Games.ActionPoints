@@ -33,7 +33,8 @@ namespace Vheos.Games.ActionPoints
         protected override void FollowOnUpdate()
         => transform.position = transform.position.Lerp(FinalPosition, NewUtility.LerpHalfTimeToAlpha(_HalfTime));
         protected override void FollowOnAnimate()
-        => QAnimator.Animate(_AnimDuration).
-            Position(transform, FinalPosition);
+        => this.NewTween()
+            .SetDuration(_AnimDuration)
+            .Position(FinalPosition);
     }
 }

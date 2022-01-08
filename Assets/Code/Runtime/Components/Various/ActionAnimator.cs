@@ -50,8 +50,6 @@ namespace Vheos.Games.ActionPoints
             IsPlaying = true;
             AnimateClipsRecursivelyFrom(clips, 0);
         }
-        public void Stop()
-        => QAnimator.Stop(this);
 
         // Privates
         private TransformArm _arm;
@@ -81,17 +79,19 @@ namespace Vheos.Games.ActionPoints
         private void AnimateClip(QAnimationClip clip, bool isInstant = false)
         {
             QAnimationClip idle = CurrentIdle.Last();
-            QAnimation anim = this.Animate(isInstant ? 0f : clip.Duration, ConflictResolution.Interrupt)
-                .Set(clip.Style);
+            Tween tween = this.NewTween()
+                .SetDuration(isInstant ? 0f : clip.Duration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .SetCurveShape(clip.Style);
 
             if (clip.ArmRotationEnabled)
-                anim.Custom(SetAddArmAngles, clip.ChooseArmRotation(idle) - _armAngles);
+                tween.AddPropertyModifier(SetAddArmAngles, clip.ChooseArmRotation(idle) - _armAngles);
             if (clip.ArmLengthEnabled)
-                anim.Custom(v => _arm.Length += v, clip.ChooseArmLength(idle) - _arm.Length);
+                tween.AddPropertyModifier(v => _arm.Length += v, clip.ChooseArmLength(idle) - _arm.Length);
             if (clip.HandRotationEnabled)
-                anim.Custom(SetAddHandAngles, clip.ChooseHandRotation(idle) - _handAngles);
+                tween.AddPropertyModifier(SetAddHandAngles, clip.ChooseHandRotation(idle) - _handAngles);
             if (clip.HandScaleEnabled)
-                anim.LocalScale(HandTransform, clip.ChooseHandScale(idle).ToVector3());
+                tween.AddPropertyModifier(v => HandTransform.localScale *= v, clip.ChooseHandScale(idle) - HandTransform.localScale.x, DeltaValueType.Ratio);
             if (clip.LookAtEnabled)
             {
                 if (!TryGet<Combatable>(out var combatable)
@@ -112,7 +112,7 @@ namespace Vheos.Games.ActionPoints
             {
                 Vector3 startingPosition = TryGet<Combatable>(out var combatable) && combatable.IsInCombat
                                          ? combatable.AnchorPosition : transform.position;
-                anim.Position(transform, startingPosition + transform.right * clip.ChooseForwardDistance(idle));
+                tween.Position(startingPosition + transform.right * clip.ChooseForwardDistance(idle));
             }
         }
         private void AnimateClipsRecursivelyFrom(IReadOnlyList<QAnimationClip> clips, int clipIndex)
@@ -125,8 +125,9 @@ namespace Vheos.Games.ActionPoints
             }
 
             AnimateClip(clips[clipIndex]);
-            this.Animate(clips[clipIndex].TotalTime)
-                .Events(() => AnimateClipsRecursivelyFrom(clips, ++clipIndex));
+            this.NewTween()
+                .SetDuration(clips[clipIndex].TotalTime)
+                .AddOnFinishEvents(() => AnimateClipsRecursivelyFrom(clips, ++clipIndex));
         }
         private IReadOnlyList<QAnimationClip> AnimationTypeToClips(Action action, ActionAnimationSet.Type type)
         => type switch

@@ -10,9 +10,10 @@ namespace Vheos.Games.ActionPoints
         public int Index
         { get; set; }
         public void PlayCantUseAnim()
-        => QAnimator.Animate(Settings.CantUseAnimDuration)
-            .LocalScaleRatio(transform, Settings.CantUseScale)
-            .Set(CurveFuncType.Bounce);
+        => this.NewTween()
+            .SetDuration(Settings.CantUseAnimDuration)
+            .LocalScaleRatio(Settings.CantUseScale)
+            .SetCurveShape(CurveShape.Bounce);
 
         // Private
         protected ActionPointDrawable _drawable;

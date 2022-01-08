@@ -33,16 +33,20 @@ namespace Vheos.Games.ActionPoints
         public void Show()
         {
             _outlineRenderer.GOActivate();
-            _outlineRenderer.Animate(Settings.FadeInDuration, ConflictResolution.Interrupt)
-                .Custom(v => Thickness += v, _Thickness - Thickness)
-                .Color(_outlineRenderer, _Color);
+            _outlineRenderer.NewTween()
+                .SetDuration(Settings.FadeInDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .AddPropertyModifier(v => Thickness += v, _Thickness - Thickness)
+                .SpriteColor(_Color);
         }
         public void Hide(bool isInstant = false)
         {
-            _outlineRenderer.Animate(isInstant ? 0f : Settings.FadeOutDuration, ConflictResolution.Interrupt)
-                .Custom(v => Thickness += v, 0f - Thickness)
-                .Alpha(_outlineRenderer, 0f)
-                .Events(_outlineRenderer.GODeactivate);
+            _outlineRenderer.NewTween()
+                .SetDuration(isInstant ? 0f : Settings.FadeOutDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .AddPropertyModifier(v => Thickness += v, 0f - Thickness)
+                .SpriteAlpha(0f)
+                .AddOnFinishEvents(_outlineRenderer.GODeactivate);
         }
 
         // Private

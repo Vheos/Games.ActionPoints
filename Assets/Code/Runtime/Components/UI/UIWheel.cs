@@ -30,8 +30,10 @@ namespace Vheos.Games.ActionPoints
         public void Show()
         {
             this.GOActivate();
-            this.Animate(Settings.AnimDuration, ConflictResolution.Interrupt)
-                .LocalScale(transform, Vector3.one);
+            this.NewTween()
+                .SetDuration(Settings.AnimDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .LocalScale( Vector3.one);
 
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = true;
@@ -41,9 +43,11 @@ namespace Vheos.Games.ActionPoints
         }
         public void Hide(bool isInstant = false)
         {
-            this.Animate(isInstant ? 0f : Settings.AnimDuration, ConflictResolution.Interrupt)
-                .LocalScale(transform, Vector3.zero)
-                .Events(this.GODeactivate);
+            this.NewTween()
+                .SetDuration(isInstant ? 0f : Settings.AnimDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .LocalScale( Vector3.zero)
+                .AddOnFinishEvents(this.GODeactivate);
 
             foreach (var button in _buttons)
                 button.Get<Mousable>().enabled = false;

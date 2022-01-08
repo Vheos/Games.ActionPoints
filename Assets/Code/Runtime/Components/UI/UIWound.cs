@@ -22,17 +22,21 @@ namespace Vheos.Games.ActionPoints
             transform.localRotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(randFrom, randTo).Neg());
             transform.localPosition = Vector2.up.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
 
-            this.Animate(Settings.WoundAnimDuration, ConflictResolution.Interrupt)
-                .LocalPosition(transform, Vector3.zero)
-                .Alpha(Get<SpriteRenderer>(), 1f);
+            this.NewTween()
+                .SetDuration(Settings.WoundAnimDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .LocalPosition(Vector3.zero)
+                .SpriteAlpha(1f);
         }
         public void Hide(bool isInstant = false)
         {
             Vector2 fadeOutPosition = Vector2.right.Mul(Settings.FadeDistance).Rotate(transform.localRotation);
-            this.Animate(isInstant ? 0f : Settings.WoundAnimDuration, ConflictResolution.Interrupt)
-                .LocalPosition(transform, fadeOutPosition)
-                .Alpha(Get<SpriteRenderer>(), 0f)
-                .Events(this.GODeactivate);
+            this.NewTween()
+                .SetDuration(isInstant ? 0f : Settings.WoundAnimDuration)
+                .SetConflictResolution(ConflictResolution.Interrupt)
+                .LocalPosition(fadeOutPosition)
+                .SpriteAlpha(0f)
+                .AddOnFinishEvents(this.GODeactivate);
         }
 
         // Privates
