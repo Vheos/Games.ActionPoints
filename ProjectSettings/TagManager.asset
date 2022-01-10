@@ -11,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - Mousable
+  - 
   - 
   - 
   - 
@@ -40,7 +40,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: UI
-    uniqueID: 1652410771
     locked: 0
