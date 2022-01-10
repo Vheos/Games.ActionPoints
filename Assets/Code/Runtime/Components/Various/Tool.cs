@@ -13,11 +13,8 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected Vector3 _LocalPositionOffset = Vector3.zero;
         [SerializeField] protected Vector3 _LocalRotationOffset = Vector3.zero;
         [SerializeField] [Range(0f, 1f)] protected float _AnimDuration;
-        [SerializeField] protected ToolAnimationSet _AnimationSet;
 
         // Publics
-        public ToolAnimationSet AnimationSet
-        => _AnimationSet;
         public Equipable.Slot EquipSlot
         => Get<Equipable>().EquipSlot;
         public Equiper Equiper

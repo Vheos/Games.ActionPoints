@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints.Editor
     using UnityEditor;
 
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
-    public class ReadOnly_PropertyDrawer : PropertyDrawer
+    public class ReadOnlyAttribute_PropertyDrawer : PropertyDrawer
     {
         // Edit
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

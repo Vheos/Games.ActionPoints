@@ -10,6 +10,6 @@ namespace Vheos.Games.ActionPoints
     {
         // Overrides
         protected override Vector3 TargetVector
-        => Quaternion.LookRotation(_useTransform ? this.DirectionTowards(_Transform) : _Vector).eulerAngles; 
+        => Quaternion.LookRotation(_useTransform ? this.DirectionTowards(_Transform) : this.transform.position.DirectionTowards(_Vector)).eulerAngles; 
     }
 }

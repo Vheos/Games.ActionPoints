@@ -10,10 +10,10 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [SerializeField] [Range(0f, 2f)] protected float _GlobalSpeedScale = 1f;
         [SerializeField] protected KeyCode _CombatPauseButton = KeyCode.Space;
-        [SerializeField] protected CommonActions _CommonActions;
+        [SerializeField] protected Action[] _CommonActions;
 
         // Publics
-        static public CommonActions Common
+        static public Action[] CommonActions
         => _instance._CommonActions;
         static public float GlobalSpeedScale
         => _instance._GlobalSpeedScale;
@@ -47,20 +47,6 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             _isCombatPaused = false;
-        }
-
-        // Defines
-        [Serializable]
-        sealed public class CommonActions
-        {
-            public Action Equip;
-            public Action StartCombat;
-            public Action[] AllActions
-            => new[]
-            {
-                Equip,
-                StartCombat,
-            };
         }
     }
 }

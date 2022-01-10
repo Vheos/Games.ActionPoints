@@ -64,7 +64,6 @@ namespace Vheos.Games.ActionPoints
                 Base.TargetingLine.ShowAndFollowCursor(transform, OnTargetChanged);
 
             _isPressed = true;
-            Character.Get<ActionAnimator>().Animate(Action, ActionAnimationSet.Type.Target);
             this.NewTween()
                 .SetDuration(Settings.ClickDuration)
                 .LocalScaleRatio(Settings.ClickScale)
@@ -79,12 +78,9 @@ namespace Vheos.Games.ActionPoints
             {
                 if (Character.Get<Targeter>().Target != null)
                 {
-                    Character.Get<ActionAnimator>().Animate(Action, ActionAnimationSet.Type.UseThenIdle);
                     Character.Get<Actionable>().Use(Action, Character.Get<Targeter>().Target);
                     Character.Get<Targeter>().Target = null;
                 }
-                else
-                    Character.Get<ActionAnimator>().Animate(Action, ActionAnimationSet.Type.Idle);
 
                 Character.Get<Targeter>().Target = null;
                 Base.TargetingLine.Hide();

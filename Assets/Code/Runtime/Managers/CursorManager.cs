@@ -8,6 +8,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.Collections;
     using static CursorManager;
+    using Vheos.Tools.Extensions.General;
 
     [DisallowMultipleComponent]
     public class CursorManager : AManager<CursorManager>
@@ -74,8 +75,7 @@ namespace Vheos.Games.ActionPoints
             else
                 CursorTransform = new GameObject().transform;
 
-            CursorTransform.name = nameof(CursorTransform);
-            CursorTransform.BecomeChildOf(parent);
+            CursorTransform.name = "Cursor";
         }
         static private void UpdateCursorMousable()
         {
@@ -185,7 +185,7 @@ namespace Vheos.Games.ActionPoints
         // Defines
         public enum MouseButton
         {
-            None = -1,
+            None,
             Left,
             Right,
             Middle,

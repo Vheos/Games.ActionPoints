@@ -18,12 +18,12 @@ namespace Vheos.Games.ActionPoints
         { get; } = new AutoEvent();
 
         // Inputs
-        public ComponentInput<int> MaxWounds
-        { get; } = new ComponentInput<int>();
-        public ComponentInput<float> BluntArmor
-        { get; } = new ComponentInput<float>();
-        public ComponentInput<float> SharpArmor
-        { get; } = new ComponentInput<float>();
+        public Getter<int> MaxWounds
+        { get; } = new Getter<int>();
+        public Getter<float> BluntArmor
+        { get; } = new Getter<float>();
+        public Getter<float> SharpArmor
+        { get; } = new Getter<float>();
 
         // Publics
         public int WoundsCount

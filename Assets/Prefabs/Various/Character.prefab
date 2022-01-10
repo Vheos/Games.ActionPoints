@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 2577891044044771579}
   - component: {fileID: -428951047976933685}
   - component: {fileID: 1175068193691336511}
-  - component: {fileID: -2664441110396537798}
   - component: {fileID: 2577891044044771578}
   - component: {fileID: 4968717072247663834}
   - component: {fileID: -6099012239799725985}
@@ -193,36 +192,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-2664441110396537798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2577891044044771577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7376e358218494b8780dc18d8d55e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _ArmAttachmentTransform: {fileID: 7462834601545949588}
-  _Idle:
-  - Duration: 0.5
-    StayUpTime: 0
-    Style: 1
-    Parameters: 0
-    ArmRotation: {x: 0, y: 0, z: 0}
-    ArmLength: 0
-    HandRotation: {x: 0, y: 0, z: 0}
-    HandScale: 1
-    LookAt: 1
-    ForwardDistance: 0
-    ArmLengthUseIdle: 0
-    ArmRotationUseIdle: 0
-    HandRotationUseIdle: 0
-    HandScaleUseIdle: 0
-    LookAtUseIdle: 0
-    ForwardDistanceUseIdle: 0
 --- !u!65 &2577891044044771578
 BoxCollider:
   m_ObjectHideFlags: 0

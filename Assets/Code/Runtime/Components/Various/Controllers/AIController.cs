@@ -25,7 +25,7 @@ namespace Vheos.Games.ActionPoints
         {
             if (!Get<Combatable>().IsInCombat)
                 return;
-
+            /*
             switch (_state)
             {
                 case State.Inactive:
@@ -53,6 +53,7 @@ namespace Vheos.Games.ActionPoints
                         _state = State.Inactive;
                     break;
             }
+            */
         }
         private IEnumerable<Action> AvailableActions
         {

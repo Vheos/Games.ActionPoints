@@ -9,6 +9,7 @@ namespace Vheos.Games.ActionPoints.Test
     [CreateAssetMenu(fileName = nameof(ScriptableObjectTest), menuName = nameof(ScriptableObjectTest))]
     public class ScriptableObjectTest : ScriptableObject
     {
+        /*
         void Awake()
         => Debug.Log($"{Time.frameCount} - Awake");
         void OnEnable()
@@ -25,5 +26,6 @@ namespace Vheos.Games.ActionPoints.Test
         => Debug.Log($"{Time.frameCount} - OnDisable");
         void OnDestroy()
         => Debug.Log($"{Time.frameCount} - OnDestroy");
+        */
     }
 }

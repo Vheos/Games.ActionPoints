@@ -67,8 +67,8 @@ MonoBehaviour:
   _GlobalSpeedScale: 1
   _CombatPauseButton: 32
   _CommonActions:
-    Equip: {fileID: 11400000, guid: 02fc9dcda7e343048ace203499013b7f, type: 2}
-    StartCombat: {fileID: 11400000, guid: 403ba732ffb62e04c9c5830a81f50ade, type: 2}
+  - {fileID: 11400000, guid: 02fc9dcda7e343048ace203499013b7f, type: 2}
+  - {fileID: 11400000, guid: 403ba732ffb62e04c9c5830a81f50ade, type: 2}
 --- !u!114 &8814995318805333585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd7715b14a4164499c3e84b497e3839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _CameraPrefab: {fileID: 5560417539369938383, guid: 580203eb261a9ca41bc4ad405e414ff0, type: 3}
 --- !u!114 &214484333637442682
 MonoBehaviour:
   m_ObjectHideFlags: 0

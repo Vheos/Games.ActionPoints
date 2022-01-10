@@ -19,10 +19,10 @@ namespace Vheos.Games.ActionPoints
         { get; } = new AutoEvent<float>();
 
         // Input
-        public ComponentInput<int> MaxActionPoints
-        { get; } = new ComponentInput<int>();
-        public ComponentInput<int> LockedMaxActionPoints
-        { get; } = new ComponentInput<int>();
+        public Getter<int> MaxActionPoints
+        { get; } = new Getter<int>();
+        public Getter<int> LockedMaxActionPoints
+        { get; } = new Getter<int>();
 
         // Publics
         public IReadOnlyList<Action> Actions

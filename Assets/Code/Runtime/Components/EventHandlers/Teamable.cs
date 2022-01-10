@@ -14,8 +14,8 @@ namespace Vheos.Games.ActionPoints
         { get; } = new AutoEvent<Team, Team>();
 
         // Input
-        public ComponentInput<Team> StartingTeam
-        { get; } = new ComponentInput<Team>();
+        public Getter<Team> StartingTeam
+        { get; } = new Getter<Team>();
 
         // Publics
         public Team Team

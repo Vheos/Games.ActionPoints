@@ -16,8 +16,8 @@ namespace Vheos.Games.ActionPoints
         { get; } = new AutoEvent<Equiper, Equiper>();
 
         // Inputs
-        public ComponentInput<Slot> EquipSlot
-        { get; } = new ComponentInput<Slot>();
+        public Getter<Slot> EquipSlot
+        { get; } = new Getter<Slot>();
 
         // Publics
         public Equiper Equiper

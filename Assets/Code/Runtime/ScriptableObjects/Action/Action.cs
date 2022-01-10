@@ -16,7 +16,6 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [Header("Visual")]
         [SerializeField] protected Sprite _Sprite = null;
-        [SerializeField] protected ActionAnimationSet _Animation = null;
         [Header("Cost")]
         [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 0;
         [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 0;
@@ -28,8 +27,6 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public Sprite Sprite
         => _Sprite;
-        public ActionAnimationSet Animation
-        => _Animation;
         public int ActionPointsCost
         => _ActionPointsCost;
         public int FocusPointsCost
@@ -52,8 +49,11 @@ namespace Vheos.Games.ActionPoints
         public bool CanTarget(Targeter user, Targetable target)
         {
             foreach (var and in _TargetingANDTests)
+            {
+                Debug.Log($"AND test {and.TargetTest.GetType().Name}");
                 if (!and.Test(user, target))
                     return false;
+            }
 
             foreach (var or in _TargetingORTests)
                 if (or.Test(user, target))
