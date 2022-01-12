@@ -1,12 +1,13 @@
 {
-    "name": "Vheos.Games.NAME.Test",
+    "name": "Vheos.Games.ActionPoints.Test",
     "rootNamespace": "",
     "references": [
-        "GUID:c5156182bd413ac41bc3f003394ab1f2"
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:c5156182bd413ac41bc3f003394ab1f2",
+        "GUID:5e2175ce3626fcc4c93e8d208e26ab9b"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

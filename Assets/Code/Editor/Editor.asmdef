@@ -1,8 +1,9 @@
 {
-    "name": "Vheos.Games.NAME.Editor",
+    "name": "Vheos.Games.ActionPoints.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:c5156182bd413ac41bc3f003394ab1f2"
+        "GUID:c5156182bd413ac41bc3f003394ab1f2",
+        "GUID:5e2175ce3626fcc4c93e8d208e26ab9b"
     ],
     "includePlatforms": [
         "Editor"

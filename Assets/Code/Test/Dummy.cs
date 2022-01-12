@@ -1,0 +1,2 @@
+sealed internal class Dummy
+{ }
