@@ -18,10 +18,6 @@ namespace Vheos.Games.ActionPoints
             int c = ((v + (v >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;
             return c;
         }
-        static public void GOActivate(this Component t)
-        => t.gameObject.SetActive(true);
-        static public void GODeactivate(this Component t)
-        => t.gameObject.SetActive(false);
         static public float RandomMinMax(this Vector2 t)
         => UnityEngine.Random.Range(t.x, t.y);
         static public Quaternion ToZRotation(this float t)
@@ -51,7 +47,28 @@ namespace Vheos.Games.ActionPoints
         static public T[] InArray<T>(this T t)
         => new[] { t };
 
-        // IEnumerable
+        // Try
+        static public bool TryNonDefault<T>(this T t, out T r)
+        {
+            if (!t.Equals(default))
+            {
+                r = t;
+                return true;
+            }
+            r = default;
+            return false;
+        }
+        static public bool TryNonNull<T>(this T? t, out T r) where T : struct
+        {
+            if (t.HasValue)
+            {
+                r = t.Value;
+                return true;
+            }
+
+            r = default;
+            return false;
+        }
         static public bool TryFind<T>(this IEnumerable<T> t, Func<T, bool> test, out T r)
         {
             foreach (var element in t)
@@ -72,6 +89,17 @@ namespace Vheos.Games.ActionPoints
                     return true;
                 r++;
             }
+            return false;
+        }
+        static public bool TryGet<T>(this IList<T> t, int a, out T r, T defaultValue)
+        {
+            if (a >= 0 && a < t.Count)
+            {
+                r = t[a];
+                return true;
+            }
+
+            r = defaultValue;
             return false;
         }
 

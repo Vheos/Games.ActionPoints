@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints.Test
     using Tools.UnityCore;
     using Tools.Extensions.Math;
 
-    public class SceneManagerTest : ABaseComponent
+    public class SceneManagerTest : MonoBehaviour
     {
         [ScenePicker] [SerializeField] protected string[] _Scenes;
         [SerializeField] protected InputAction _InputAction;

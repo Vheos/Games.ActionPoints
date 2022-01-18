@@ -1,3 +1,4 @@
+/*
 namespace Vheos.Games.ActionPoints
 {
     using System;
@@ -10,7 +11,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine.InputSystem;
 
     [DisallowMultipleComponent]
-    public class CursorManager : AComponentManager<CursorManager, Cursor>
+    public class CursorManager : AComponentManager<CursorManager, UICursor>
     {
         // Inspector
         [SerializeField] protected MouseButton[] _Buttons;
@@ -140,3 +141,4 @@ namespace Vheos.Games.ActionPoints
         }
     }
 }
+*/

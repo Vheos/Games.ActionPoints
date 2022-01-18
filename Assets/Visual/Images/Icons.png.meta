@@ -14,6 +14,24 @@ TextureImporter:
   - first:
       213: -2235351154195819768
     second: Wound
+  - first:
+      213: 1161201145128540330
+    second: Attack
+  - first:
+      213: 2130535880278150251
+    second: Move
+  - first:
+      213: 184950751378207249
+    second: Eat
+  - first:
+      213: 1202984965197363600
+    second: Wound
+  - first:
+      213: 5543941588292853863
+    second: Cursor_Idle
+  - first:
+      213: -1863859237976802683
+    second: Cursor_Click
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -58,7 +76,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -107,9 +125,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 128
-        width: 128
-        height: 128
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,8 +135,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 85975d519b2fb8390800000000000000
-      internalID: -7814885851622180520
+      spriteID: aa8d9280a4a6d1010800000000000000
+      internalID: 1161201145128540330
       vertices: []
       indices: 
       edges: []
@@ -127,19 +145,19 @@ TextureImporter:
       name: Move
       rect:
         serializedVersion: 2
-        x: 128
-        y: 128
-        width: 128
-        height: 128
+        x: 256
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 1
+      tessellationDetail: 0
       bones: []
-      spriteID: fccaa8c9af2a56100800000000000000
-      internalID: 100665763937561807
+      spriteID: b6c0435581f219d10800000000000000
+      internalID: 2130535880278150251
       vertices: []
       indices: 
       edges: []
@@ -148,19 +166,19 @@ TextureImporter:
       name: Eat
       rect:
         serializedVersion: 2
-        x: 256
-        y: 128
-        width: 128
-        height: 128
+        x: 512
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 1
+      tessellationDetail: 0
       bones: []
-      spriteID: 8b61aee0c54355e30800000000000000
-      internalID: 4491553773363795640
+      spriteID: 112f6dc7ab3119200800000000000000
+      internalID: 184950751378207249
       vertices: []
       indices: 
       edges: []
@@ -171,17 +189,59 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 128
-        height: 128
+        width: 256
+        height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 80316e9f7ff6af0e0800000000000000
-      internalID: -2235351154195819768
+      spriteID: 09979b0c37cd1b010800000000000000
+      internalID: 1202984965197363600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cursor_Idle
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 760e5b1608900fc40800000000000000
+      internalID: 5543941588292853863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cursor_Click
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58aff01f5ed3226e0800000000000000
+      internalID: -1863859237976802683
       vertices: []
       indices: 
       edges: []
