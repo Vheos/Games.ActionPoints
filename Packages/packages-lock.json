@@ -23,10 +23,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.0.2",
+      "version": "1.2.0",
       "depth": 0,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
@@ -58,8 +60,8 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
-    "vheos.tools.unitycore": {
-      "version": "file:E:/Creativity/Programs/C#/Tools/UnityCore/Package",
+    "vheos.games.core": {
+      "version": "file:E:/Creativity/Programs/C#/Games/Core/Package",
       "depth": 0,
       "source": "local",
       "dependencies": {

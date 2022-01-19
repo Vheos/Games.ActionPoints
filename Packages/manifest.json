@@ -2,11 +2,11 @@
   "dependencies": {
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ide.visualstudio": "2.0.12",
-    "com.unity.inputsystem": "1.0.2",
+    "com.unity.inputsystem": "1.2.0",
     "com.unity.test-framework": "1.1.30",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.ugui": "1.0.0",
-    "vheos.tools.unitycore": "file:E:/Creativity/Programs/C#/Tools/UnityCore/Package",
+    "vheos.games.core": "file:E:/Creativity/Programs/C#/Games/Core/Package",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.audio": "1.0.0",
     "com.unity.modules.imgui": "1.0.0",

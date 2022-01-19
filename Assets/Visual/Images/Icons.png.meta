@@ -50,10 +50,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -92,6 +94,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 1
+  swizzle: 50462976
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -136,7 +139,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: aa8d9280a4a6d1010800000000000000
-      internalID: 1161201145128540330
+      internalID: -7814885851622180520
       vertices: []
       indices: 
       edges: []
@@ -157,7 +160,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: b6c0435581f219d10800000000000000
-      internalID: 2130535880278150251
+      internalID: 100665763937561807
       vertices: []
       indices: 
       edges: []
@@ -178,7 +181,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 112f6dc7ab3119200800000000000000
-      internalID: 184950751378207249
+      internalID: 4491553773363795640
       vertices: []
       indices: 
       edges: []
@@ -199,7 +202,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 09979b0c37cd1b010800000000000000
-      internalID: 1202984965197363600
+      internalID: -2235351154195819768
       vertices: []
       indices: 
       edges: []
@@ -256,9 +259,15 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Cursor_Idle: 5543941588292853863
+      Attack: -7814885851622180520
+      Move: 100665763937561807
+      Eat: 4491553773363795640
+      Wound: -2235351154195819768
+      Cursor_Click: -1863859237976802683
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
