@@ -9,14 +9,10 @@ namespace Vheos.Games.ActionPoints
     sealed public class Woundable : ABaseComponent
     {
         // Events   
-        public AutoEvent<float, bool> OnReceiveDamage
-        { get; } = new AutoEvent<float, bool>();
-        public AutoEvent<float, bool> OnReceiveHealing
-        { get; } = new AutoEvent<float, bool>();
-        public AutoEvent<int, int> OnChangeWoundsCount
-        { get; } = new AutoEvent<int, int>();
-        public AutoEvent OnDie
-        { get; } = new AutoEvent();
+        public readonly AutoEvent<float, bool> OnReceiveDamage = new();
+        public readonly AutoEvent<float, bool> OnReceiveHealing = new();
+        public readonly AutoEvent<int, int> OnChangeWoundsCount = new();
+        public readonly AutoEvent OnDie = new();
 
         // Inputs
         public Getter<int> MaxWounds

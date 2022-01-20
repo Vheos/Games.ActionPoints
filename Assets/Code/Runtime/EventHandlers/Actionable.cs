@@ -10,14 +10,10 @@ namespace Vheos.Games.ActionPoints
     sealed public class Actionable : ABaseComponent
     {
         // Events
-        public AutoEvent<int, int> OnChangeActionPoints
-        { get; } = new AutoEvent<int, int>();
-        public AutoEvent<int, int> OnChangeFocusPoints
-        { get; } = new AutoEvent<int, int>();
-        public AutoEvent<bool> OnChangeExhausted
-        { get; } = new AutoEvent<bool>();
-        public AutoEvent<float> OnOverflowActionProgress
-        { get; } = new AutoEvent<float>();
+        public readonly AutoEvent<int, int> OnChangeActionPoints = new();
+        public readonly AutoEvent<int, int> OnChangeFocusPoints = new();
+        public readonly AutoEvent<bool> OnChangeExhausted = new();
+        public readonly AutoEvent<float> OnOverflowActionProgress = new();
 
         // Getters
         public Getter<int> MaxActionPoints
@@ -95,7 +91,7 @@ namespace Vheos.Games.ActionPoints
         => action.Use(this, target);
 
         // Privates
-        private readonly HashSet<Action> _actions = new HashSet<Action>();
+        private readonly HashSet<Action> _actions = new();
         private float _actionProgress;
         private float _focusProgress;
     }

@@ -12,12 +12,9 @@ namespace Vheos.Games.ActionPoints
     public class Player : ABaseComponent
     {
         // Events
-        public AutoEvent OnInputPressConfirm
-        { get; } = new AutoEvent();
-        public AutoEvent OnInputReleaseConfirm
-        { get; } = new AutoEvent();
-        public AutoEvent<Vector2> OnInputMoveCursor
-        { get; } = new AutoEvent<Vector2>();
+        public readonly AutoEvent OnInputPressConfirm = new();
+        public readonly AutoEvent OnInputReleaseConfirm = new();
+        public readonly AutoEvent<Vector2> OnInputMoveCursor = new();
         private void InvokeOnInputMoveCursor()
         {
             var delta = _moveCursor.ReadValue<Vector2>();
