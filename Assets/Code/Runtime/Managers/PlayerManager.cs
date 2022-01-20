@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using System.Diagnostics.CodeAnalysis;
     using UnityEngine;
     using UnityEngine.InputSystem;
-    using Tools.UnityCore;
+    using Games.Core;
     using Tools.Extensions.General;
     using Tools.Extensions.Collections;
 
@@ -85,7 +85,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
 
-            _joinAction = new InputAction(nameof(_joinAction), _JoinAction.action.type);
+            _joinAction = new InputAction(nameof(_joinAction), InputActionType.PassThrough);
             foreach (var binding in _JoinAction.action.bindings)
                 _joinAction.AddBinding(binding);
             _joinAction.Enable();
