@@ -229,7 +229,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cursor_Click
+      name: Cursor_Press
       rect:
         serializedVersion: 2
         x: 512
@@ -265,7 +265,7 @@ TextureImporter:
       Move: 100665763937561807
       Eat: 4491553773363795640
       Wound: -2235351154195819768
-      Cursor_Click: -1863859237976802683
+      Cursor_Press: -1863859237976802683
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 

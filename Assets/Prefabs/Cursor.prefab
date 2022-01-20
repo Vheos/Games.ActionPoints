@@ -53,6 +53,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Sensitivity: 1
+  _Idle:
+    Sprite: {fileID: 5543941588292853863, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+    ColorScale: 1
+    Scale: 1
+  _Pressed:
+    Sprite: {fileID: -1863859237976802683, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+    ColorScale: 0.75
+    Scale: 0.9
 --- !u!114 &9149067993749765088
 MonoBehaviour:
   m_ObjectHideFlags: 0
