@@ -10,12 +10,6 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
     using Tools.Extensions.Collections;
 
-    public enum InputActionEnum
-    {
-        Confirm,
-        MoveCursor,
-    }
-
     [DisallowMultipleComponent]
     public class PlayerManager : AComponentManager<PlayerManager, Player>
     {

@@ -7,7 +7,7 @@ namespace Vheos.Tools.UnityCore
 
     public class ComponentManagerTest : MonoBehaviour
     {
-        [SerializeField] protected AAutoSubscriber _Manager;
+        [SerializeField] protected ABaseComponent _Manager;
         public bool LogComponents;
         public bool InstantiateComponent;
 

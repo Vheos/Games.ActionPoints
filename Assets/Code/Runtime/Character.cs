@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Vheos.Tools.Extensions.UnityObjects;
     using UnityEngine.InputSystem;
 
-    public class Character : AAutoSubscriber
+    public class Character : ABaseComponent
     {
     }
 }

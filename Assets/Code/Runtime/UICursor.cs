@@ -8,25 +8,9 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine.UI;
     using Vheos.Tools.Extensions.General;
 
-    [Serializable]
-    public struct ImageProperties
-    {
-        public Sprite Sprite;
-        [Range(0f, 1f)] public float ColorScale;
-        [Range(0f, 2f)] public float Scale;
-
-        static public ImageProperties Default
-        => new ImageProperties()
-        {
-            Sprite = null,
-            ColorScale = 1f,
-            Scale = 1f,
-        };
-    }
-
     [RequireComponent(typeof(Updatable))]
     [DisallowMultipleComponent]
-    public class UICursor : AAutoSubscriber
+    public class UICursor : ABaseComponent
     {
         // Inspector
         [Header("Visual")]
@@ -40,6 +24,7 @@ namespace Vheos.Games.ActionPoints
         { get; } = new AutoEvent<Vector2, Vector2>();
         public AutoEvent<UICursorable, UICursorable> OnChangeCursorable
         { get; } = new AutoEvent<UICursorable, UICursorable>();
+
         // Public
         public Color Color
         { get; private set; }
@@ -97,12 +82,12 @@ namespace Vheos.Games.ActionPoints
         // Play
         public void Initialize(Player player, Color color)
         {
-            SubscribeAuto(player.GetOrAdd<Playable>().OnDestroy, this.DestroyObject);
-            SubscribeAuto(player.OnInputMoveCursor, OnInputMoveCursor);
-            SubscribeAuto(player.OnInputPressConfirm, OnInputPressConfirm);
-            SubscribeAuto(player.OnInputReleaseConfirm, () => SetImageProperties(_Idle));
-            SubscribeAuto(Get<Updatable>().OnUpdate, OnUpdate);
-            SubscribeAuto(OnChangeCursorable, (from, to) => Debug.Log($"{from?.name}   ->   {to?.name}"));
+            player.OnPlayDestroy.SubscribeAuto(this, this.DestroyObject);
+            player.OnInputMoveCursor.SubscribeAuto(this, OnInputMoveCursor);
+            player.OnInputPressConfirm.SubscribeAuto(this, OnInputPressConfirm);
+            player.OnInputReleaseConfirm.SubscribeAuto(this, () => SetImageProperties(_Idle));
+            Get<Updatable>().OnUpdate.SubscribeAuto(this, OnUpdate);
+            OnChangeCursorable.SubscribeAuto(this, (from, to) => Debug.Log($"{from?.name}   ->   {to?.name}"));
 
             Color = color;
             SetImageProperties(_Idle);

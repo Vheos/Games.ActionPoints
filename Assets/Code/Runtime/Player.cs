@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
 
     [RequireComponent(typeof(Updatable))]
     [DisallowMultipleComponent]
-    public class Player : AAutoSubscriber
+    public class Player : ABaseComponent
     {
         // Events
         public AutoEvent OnInputPressConfirm
@@ -86,7 +86,7 @@ namespace Vheos.Games.ActionPoints
             _moveCursor = newActions.FindAction(nameof(InputActionEnum.MoveCursor));
             _deltaTimeDependentMoveCursor = !_inputUser.pairedDevices.Any(t => t is Pointer);
 
-            SubscribeAuto(Get<Updatable>().OnUpdate, InvokeOnInputMoveCursor);
+            Get<Updatable>().OnUpdate.SubscribeAuto(this, InvokeOnInputMoveCursor);
             TrySubscribeInputActions();
             EnableActions();
 
