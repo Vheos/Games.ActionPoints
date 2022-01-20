@@ -3,12 +3,6 @@ namespace Vheos.Games.ActionPoints
     using System;
     using UnityEngine;
 
-    public enum InputActionEnum
-    {
-        Confirm,
-        MoveCursor,
-    }
-
     [Serializable]
     public struct ImageProperties
     {
@@ -17,7 +11,7 @@ namespace Vheos.Games.ActionPoints
         [Range(0f, 2f)] public float Scale;
 
         static public ImageProperties Default
-        => new ImageProperties()
+        => new()
         {
             Sprite = null,
             ColorScale = 1f,
