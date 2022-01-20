@@ -1,8 +1,8 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using Games.Core;
     using UnityEngine;
-    using Tools.UnityCore;
 
     [DisallowMultipleComponent]
     public class UICursorManager : AComponentManager<UICursorManager, UICursor>

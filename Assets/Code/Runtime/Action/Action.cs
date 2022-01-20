@@ -2,7 +2,7 @@ namespace Vheos.Games.ActionPoints
 {
     using System;
     using UnityEngine;
-    using Tools.UnityCore;
+    using Games.Core;
 
     [CreateAssetMenu(fileName = nameof(Action), menuName = CONTEXT_MENU_PATH + nameof(Action))]
     public class Action : ScriptableObject

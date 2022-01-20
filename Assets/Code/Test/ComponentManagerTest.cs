@@ -2,6 +2,7 @@ namespace Vheos.Tools.UnityCore
 {
     using System;
     using UnityEngine;
+    using Games.Core;
     using Tools.Extensions.General;
     using Tools.Extensions.Reflection;
 

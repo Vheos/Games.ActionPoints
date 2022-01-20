@@ -2,7 +2,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
 {
     using System;
     using UnityEngine;
-    using Tools.UnityCore;
+    using Games.Core;
 
     [CreateAssetMenu(fileName = nameof(DealDamage), menuName = CONTEXT_MENU_PATH + nameof(DealDamage))]
     public class DealDamage : ActionEffect
