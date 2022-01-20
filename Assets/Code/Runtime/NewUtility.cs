@@ -42,8 +42,6 @@ namespace Vheos.Games.ActionPoints
         }
         static public bool SameGOAs(this Component t, Component a)
         => t.gameObject == a.gameObject;
-        static public T ChooseIf<T>(this T t, Func<T, bool> test, T onFalse = default)
-        => test(t) ? t : onFalse;
         static public T[] InArray<T>(this T t)
         => new[] { t };
 
@@ -55,17 +53,6 @@ namespace Vheos.Games.ActionPoints
                 r = t;
                 return true;
             }
-            r = default;
-            return false;
-        }
-        static public bool TryNonNull<T>(this T? t, out T r) where T : struct
-        {
-            if (t.HasValue)
-            {
-                r = t.Value;
-                return true;
-            }
-
             r = default;
             return false;
         }
