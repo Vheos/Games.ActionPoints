@@ -6,9 +6,15 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.Math;
+    using System.Collections.Generic;
 
     public class UICursor : AUICursor
     {
+        // Inspector
+        [Header("Visual")]
+        [SerializeField] protected ImageProperties _Idle = ImageProperties.Default;
+        [SerializeField] protected ImageProperties _Pressed = ImageProperties.Default;
+
         // Public
         public Color Color
         { get; private set; }
@@ -21,6 +27,10 @@ namespace Vheos.Games.ActionPoints
             name = $"{player.name}_Cursor";
 
             Color = color;
+
+            Get<Image>().color = new();
+            transform.localScale = new();
+            SetImageProperties(_Idle);
         }
 
         private void SetImageProperties(ImageProperties properties)
@@ -31,6 +41,16 @@ namespace Vheos.Games.ActionPoints
                 .SetConflictResolution(ConflictResolution.Interrupt)
                 .LocalScale(properties.Scale.ToVector3())
                 .ImageColor(Color * properties.ColorScale);
+        }
+        protected override void OnInputPressConfirm()
+        {
+            base.OnInputPressConfirm();
+            SetImageProperties(_Pressed);
+        }
+        protected override void OnInputReleaseConfirm()
+        {
+            base.OnInputReleaseConfirm();
+            SetImageProperties(_Idle);
         }
     }
 }
