@@ -4,7 +4,7 @@ namespace Vheos.Games.ActionPoints
     using System.Linq;
     using UnityEngine;
     using UnityEngine.InputSystem;
-    using Tools.UnityCore;
+    using Games.Core;
     using UnityEngine.InputSystem.Users;
 
     [RequireComponent(typeof(Updatable))]
@@ -91,7 +91,9 @@ namespace Vheos.Games.ActionPoints
             EnableActions();
 
             name = $"{nameof(Player)}{ID + 1}";
-            UICursorManager.InstantiateComponent().Initialize(this, cursorColor);
+            var newCursor = UICursorManager.InstantiateComponent();
+            newCursor.Initialize(CanvasManager.Any, CameraManager.Any);
+            newCursor.BindToPlayer(this, cursorColor);
 
             PlayerManager.OnPlayerJoin.Invoke(this);
         }
