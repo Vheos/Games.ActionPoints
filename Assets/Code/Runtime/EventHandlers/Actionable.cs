@@ -16,10 +16,8 @@ namespace Vheos.Games.ActionPoints
         public readonly AutoEvent<float> OnOverflowActionProgress = new();
 
         // Getters
-        public Getter<int> MaxActionPoints
-        { get; } = new Getter<int>();
-        public Getter<int> LockedMaxActionPoints
-        { get; } = new Getter<int>();
+        public Getter<int> MaxActionPoints { get; } = new();
+        public Getter<int> LockedMaxActionPoints { get; } = new();
 
         // Publics
         public IReadOnlyCollection<Action> Actions

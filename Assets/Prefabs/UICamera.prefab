@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8091936603251869656}
   - component: {fileID: 8777190819166839560}
-  m_Layer: 0
-  m_Name: Camera
+  m_Layer: 5
+  m_Name: UICamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ Camera:
   m_GameObject: {fileID: 3598012608003661709}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 4
   m_BackGroundColor: {r: 0.5566406, g: 0.75, b: 0.375, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -58,12 +58,12 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 45
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
+  orthographic: 1
+  orthographic size: 100
+  m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 23
+    m_Bits: 32
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

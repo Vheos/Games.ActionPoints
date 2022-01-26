@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9149067993749765089}
-  - component: {fileID: 5926623973151988978}
+  - component: {fileID: 737779621490586369}
   - component: {fileID: 9149067993749765088}
   - component: {fileID: 9149067993749765103}
   - component: {fileID: 1822960860669541286}
   m_Layer: 5
-  m_Name: Cursor
+  m_Name: UICursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,7 +40,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5926623973151988978
+--- !u!114 &737779621490586369
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9149067993749765090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78d3524d3fa2f8c438de18c0b1db270c, type: 3}
+  m_Script: {fileID: 11500000, guid: 84cead11b3660004d8090698b0a501fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _Sensitivity: 1
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: bf79ac40e7d48824dbcad5a0482561a4, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

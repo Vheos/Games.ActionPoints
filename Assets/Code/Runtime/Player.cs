@@ -33,8 +33,12 @@ namespace Vheos.Games.ActionPoints
         // Publics   
         public int ID
         { get; private set; }
+        public UICursor Cursor
+        { get; private set; }
+        public UITargetingLine TargetingLine
+        { get; private set; }
         public bool IsUsingControlScheme(InputControlScheme controlScheme)
-        => _inputUser.controlScheme == controlScheme;
+            => _inputUser.controlScheme == controlScheme;
         public bool IsUsingDevice(InputDevice device)
         => _inputUser.pairedDevices.Contains(device);
 
@@ -71,7 +75,7 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Play
-        public void Initialize(InputActionAsset actionAsset, InputDevice device, InputControlScheme controlScheme, int id, Color cursorColor)
+        public void Initialize(InputActionAsset actionAsset, InputDevice device, InputControlScheme controlScheme, int id, Color color)
         {
             ID = id;
             var newActions = Instantiate(actionAsset);
@@ -88,9 +92,14 @@ namespace Vheos.Games.ActionPoints
             EnableActions();
 
             name = $"{nameof(Player)}{ID + 1}";
-            var newCursor = UICursorManager.InstantiateComponent();
-            newCursor.Initialize(CanvasManager.Any, CameraManager.Any);
-            newCursor.BindToPlayer(this, cursorColor);
+
+            Cursor = UICursorManager.InstantiateComponent();
+            Cursor.Initialize(UICanvasManager.Any);
+            Cursor.BindToPlayer(this, color);
+
+            TargetingLine = UITargetingLineManager.InstantiateComponent();
+            TargetingLine.Initialize(UICanvasManager.Any);
+            TargetingLine.BindToPlayer(this, color);
 
             PlayerManager.OnPlayerJoin.Invoke(this);
         }

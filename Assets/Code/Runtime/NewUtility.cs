@@ -4,6 +4,7 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using Games.Core;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
@@ -44,6 +45,14 @@ namespace Vheos.Games.ActionPoints
         => t.gameObject == a.gameObject;
         static public T[] InArray<T>(this T t)
         => new[] { t };
+        static public Vector3 WorldPointToCameraSpaceWorldPoint(this Canvas t, Vector3 a)
+        => t.worldCamera.transform.position + t.worldCamera.transform.position.DirectionTowards(a) * t.planeDistance;
+        static public Vector3 WorldPointToAnchoredPoint(this Canvas t, Vector3 a)
+        => t.worldCamera.WorldToScreenPoint(a) / t.scaleFactor;
+        static public bool IsOnLayer(this GameObject t, BuiltInLayer a)
+        => t.layer == (int)a;
+        static public bool IsOnLayer(this Component t, BuiltInLayer a)
+        => t.gameObject.IsOnLayer(a);
 
         // Try
         static public bool TryNonDefault<T>(this T t, out T r)
@@ -142,13 +151,6 @@ namespace Vheos.Games.ActionPoints
         => UnityEngine.Random.value < chance;
         static public bool Flip()
         => Roll(0.5f);
-        static public RaycastHit[] RaycastFromCamera(Camera camera, int layerMask, bool hitTriggers, bool sortByDistance)
-        {
-            QueryTriggerInteraction triggerInteraction = hitTriggers ? QueryTriggerInteraction.Collide : QueryTriggerInteraction.Ignore;
-            RaycastHit[] hits = Physics.RaycastAll(camera.CursorRay(), float.PositiveInfinity, layerMask, triggerInteraction);
-            if (sortByDistance)
-                hits = hits.SortedByDistanceFrom(camera);
-            return hits;
-        }
+
     }
 }
