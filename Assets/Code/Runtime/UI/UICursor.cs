@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
+    using Selectable = Games.Core.Selectable;
 
     [RequireComponent(typeof(Updatable))]
     [DisallowMultipleComponent]
@@ -23,41 +24,30 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         private UICanvas _uiCanvas;
-        private Cursorable _cursorable;
+        private Selecter _selecter;
         private void OnInputMoveCursor(Vector2 offset)
         => transform.position = transform.position.Add(offset * _Sensitivity).Clamp(Vector2.zero, _uiCanvas.Size);
         private void OnInputPressConfirm()
         {
             SetImageProperties(_Pressed);
-            if (_cursorable != null)
-                _cursorable.TryInvokeOnPress(this);
+            _selecter.TryPress();
         }
         private void OnInputReleaseConfirm()
         {
             SetImageProperties(_Idle);
-            if (_cursorable != null)
-            {
-                Ray ray = _uiCanvas.GetCameraFor(_cursorable).ScreenPointToRay(_uiCanvas.ScreenPosition(this));
-                bool withinTrigger = _cursorable.Trigger.Raycast(ray, out _, float.PositiveInfinity);
-                _cursorable.TryInvokeOnRelease(this, withinTrigger);
-            }
+
+            if (!_selecter.IsSelectingAny)
+                return;
+
+            var fullClick = _selecter.Selectable == RaycastableManager.FindClosest<Selectable>(_uiCanvas, this);
+            _selecter.TryRelease(fullClick);
         }
         private void OnUpdate()
         {
-            if (_cursorable != null
-            && _cursorable.TryInvokeOnHold(this))
+            if (_selecter.IsHolding)
                 return;
 
-            var previousCursorable = _cursorable;
-            var closestCursorable = CursorableManager.FindClosest<Cursorable>(_uiCanvas, _uiCanvas.CanvasPosition(this));
-            _cursorable = closestCursorable.ChooseIf(t => t != null && !t.IsHeld);
-            if (_cursorable == previousCursorable)
-                return;
-
-            if (previousCursorable != null)
-                previousCursorable.TryInvokeOnLoseHighlight(this);
-            if (_cursorable != null)
-                _cursorable.TryInvokeOnGainHighlight(this);
+            _selecter.Selectable = RaycastableManager.FindClosest<Selectable>(_uiCanvas, this);
         }
         private Color _color;
         private void SetImageProperties(ImageProperties properties)
@@ -81,6 +71,7 @@ namespace Vheos.Games.ActionPoints
         public void BindToPlayer(Player player, Color color)
         {
             Player = player;
+            _selecter = Player.Get<Selecter>();
             _color = color;
 
             Player.OnPlayDestroy.SubscribeOneShot(this.DestroyObject);

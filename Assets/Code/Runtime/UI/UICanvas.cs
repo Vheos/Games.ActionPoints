@@ -60,10 +60,11 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayStart()
         {
             base.PlayStart();
-            Get<RectResizeable>().OnResize.SubscribeAuto(this, UpdateCanvasCamera);
-
             WorldCamera = CameraManager.Any;
             CanvasCamera = UICanvasManager.InstantiateUICamera();
+
+            Get<RectResizeable>().OnResize.SubscribeAuto(this, UpdateCanvasCamera);
+            UpdateCanvasCamera(default, Size);
         }
     }
 }

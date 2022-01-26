@@ -62,7 +62,7 @@ namespace Vheos.Games.ActionPoints
             _outlineRenderer = this.CreateChildComponent<SpriteRenderer>(nameof(SpriteOutline));
             _outlineRenderer.sharedMaterial = _Material;
             _mprops = Get<SpriteOutlineMProps>();
-            _mprops.Renderer = _outlineRenderer;
+            _mprops.Initialize(_outlineRenderer);
 
             UpdateOutlineSprite(null, Get<SpriteRenderer>().sprite);
             Hide(true);

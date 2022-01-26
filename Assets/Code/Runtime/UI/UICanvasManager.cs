@@ -17,19 +17,5 @@ namespace Vheos.Games.ActionPoints
         // Publics
         static public Camera InstantiateUICamera()
         => CameraManager.InstantiateComponent(_instance._UICameraPrefab);
-
-        // Play
-        /*
-        protected override void PlayStart()
-        {
-            base.PlayStart();
-            var uiCamera = InstantiateUICamera();
-            var referenceResolution = _Prefab.GetComponent<CanvasScaler>().referenceResolution;
-            uiCamera.transform.position = referenceResolution.Div(2f).Append(-_Prefab.planeDistance);
-            uiCamera.orthographicSize = referenceResolution.y / 2f;
-            foreach (var canvas in _components)
-                canvas.worldCamera = uiCamera;
-        }
-        */
     }
 }

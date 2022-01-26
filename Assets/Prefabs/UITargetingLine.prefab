@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5421020388957066970}
   - component: {fileID: 7416973358124477019}
   - component: {fileID: 1604666777655107843}
-  - component: {fileID: 1604666777655107845}
+  - component: {fileID: 5225332301184339559}
   m_Layer: 5
   m_Name: UITargetingLine
   m_TagString: Untagged
@@ -179,7 +179,7 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &1604666777655107845
+--- !u!114 &5225332301184339559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,6 +188,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1604666777655107842}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d5a67e0e36b74840bbf69219c19fdb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 739773d97b69431458d7c409677151bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

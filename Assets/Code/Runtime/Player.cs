@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using UnityEngine.InputSystem.Users;
 
+    [RequireComponent(typeof(Selecter))]
     [RequireComponent(typeof(Updatable))]
     [DisallowMultipleComponent]
     public class Player : ABaseComponent
@@ -38,7 +39,7 @@ namespace Vheos.Games.ActionPoints
         public UITargetingLine TargetingLine
         { get; private set; }
         public bool IsUsingControlScheme(InputControlScheme controlScheme)
-            => _inputUser.controlScheme == controlScheme;
+        => _inputUser.controlScheme == controlScheme;
         public bool IsUsingDevice(InputDevice device)
         => _inputUser.pairedDevices.Contains(device);
 

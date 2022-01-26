@@ -34,7 +34,9 @@ namespace Vheos.Games.ActionPoints
             _targeter = targeter;
             _from = from;
             _to = to;
-            //OnUpdate();
+
+            if (_targeter != null)
+                _targeter.Targetable = null;
         }
         public void Hide(bool isInstant = false)
         {
@@ -44,6 +46,9 @@ namespace Vheos.Games.ActionPoints
                 .AddPropertyModifier(AssignWidth, 0f - Get<LineRenderer>().startWidth)
                 .AddOnFinishEvents(() => IsActive = false)
                 .FinishIf(isInstant);
+
+            if (_targeter != null)
+                _targeter.Targetable = null;
 
             _targeter = null;
             _from = null;
@@ -78,7 +83,7 @@ namespace Vheos.Games.ActionPoints
             if (_to != null)
                 To = _uiCanvas.CanvasPosition(_to);
             if (_targeter != null)
-                _targeter.Targetable = CursorableManager.FindClosest<Targetable>(_uiCanvas, To);
+                _targeter.Targetable = RaycastableManager.FindClosest<Targetable>(_uiCanvas, To);
 
             Get<UITargetingLineMProps>().TilingX = From.DistanceTo(To) * _Tiling / _uiCanvas.Size.y;
         }
@@ -88,9 +93,11 @@ namespace Vheos.Games.ActionPoints
         {
             _uiCanvas = uicanvas;
             this.BecomeChildOf(_uiCanvas);
-            Get<LineRenderer>().positionCount = 2;
-            Get<Updatable>().OnUpdate.SubscribeAuto(this, OnUpdate);
+            Get<UITargetingLineMProps>().Initialize(Get<LineRenderer>());
+            Get<LineRenderer>().positionCount = 2;            
             Hide(true);
+
+            Get<Updatable>().OnUpdate.SubscribeAuto(this, OnUpdate);
         }
         public void BindToPlayer(Player player, Color color)
         {
@@ -98,7 +105,7 @@ namespace Vheos.Games.ActionPoints
 
             name = $"{player.name}_TargetingLine";
             Get<LineRenderer>().startColor = Get<LineRenderer>().startColor.NewA(_StartOpacity);
-            Get<LineRenderer>().endColor  = _color;
+            Get<LineRenderer>().endColor = _color;
         }
 
         /*

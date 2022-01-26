@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 737779621490586369}
   - component: {fileID: 9149067993749765088}
   - component: {fileID: 9149067993749765103}
-  - component: {fileID: 1822960860669541286}
+  - component: {fileID: 5291296498541087189}
   m_Layer: 5
   m_Name: UICursor
   m_TagString: Untagged
@@ -58,7 +58,7 @@ MonoBehaviour:
     ColorScale: 1
     Scale: 1
   _Pressed:
-    Sprite: {fileID: -1863859237976802683, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+    Sprite: {fileID: 5543941588292853863, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
     ColorScale: 0.75
     Scale: 0.9
 --- !u!114 &9149067993749765088
@@ -99,7 +99,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9149067993749765090}
   m_CullTransparentMesh: 1
---- !u!114 &1822960860669541286
+--- !u!114 &5291296498541087189
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,6 +108,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9149067993749765090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d5a67e0e36b74840bbf69219c19fdb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 739773d97b69431458d7c409677151bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
