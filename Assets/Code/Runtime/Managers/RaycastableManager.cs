@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     using System.Linq;
 
     [DisallowMultipleComponent]
-    public class CursorableManager : AComponentManager<CursorableManager, Cursorable>
+    public class RaycastableManager : AComponentManager<RaycastableManager, Raycastable>
     {
         static public T FindClosest<T>(UICanvas uiCanvas, Vector2 canvasPosition) where T : Component
         {
@@ -34,5 +34,9 @@ namespace Vheos.Games.ActionPoints
             }
             return closestComponent;
         }
+        static public T FindClosest<T>(UICanvas uiCanvas, GameObject pointer) where T : Component
+        => FindClosest<T>(uiCanvas, uiCanvas.CanvasPosition(pointer));
+        static public T FindClosest<T>(UICanvas uiCanvas, Component pointer) where T : Component
+        => FindClosest<T>(uiCanvas, uiCanvas.CanvasPosition(pointer));
     }
 }
