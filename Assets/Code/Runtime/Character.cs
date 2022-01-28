@@ -10,6 +10,11 @@ namespace Vheos.Games.ActionPoints
 
     public class Character : ABaseComponent
     {
+        // Inspector
+        [SerializeField] [Range(0, 10)] protected int _MaxActionPoints;
+        [SerializeField] [Range(-1f, 1f)] protected float _ActionSpeed;
+
+        // Privates
         private void Selectable_OnGainHighlight(Selecter selecter, bool isFirst)
         {
             //Debug.Log($"{selecter.name} -> {name}:\tOnGainHighlight, {isFirst}");
@@ -52,6 +57,12 @@ namespace Vheos.Games.ActionPoints
                     .Position(this.transform.position.Lerp(Get<Targeter>().Targetable.transform.position, 0.5f));
             }
 
+            if (withinTrigger
+            && selecter.TryGet(out Player player)
+            && TryGet(out PlayerOwnable playerOwnable)
+            && playerOwnable.Owner == null)
+                playerOwnable.Owner = player;
+
             selecter.Get<Player>().TargetingLine.Hide();
         }
         private void Selectable_OnHold(Selecter selecter)
@@ -67,6 +78,10 @@ namespace Vheos.Games.ActionPoints
         private void Targetable_OnGainTargeting(Targeter targeter, bool isFirst)
         {
             // Debug.Log($"{name}:\tOnGainTargeting, {isFirst}");
+            if (targeter.TryGet(out PlayerOwnable playerOwnable)
+            && playerOwnable.Owner != null)
+                Get<SpriteOutline>().Color = playerOwnable.Owner.Color;
+
             Get<SpriteOutline>().Show();
         }
         private void Targetable_OnLoseTargeting(Targeter targeter, bool isLast)
@@ -75,6 +90,7 @@ namespace Vheos.Games.ActionPoints
             Get<SpriteOutline>().Hide();
         }
 
+        // Play
         protected override void PlayAwake()
         {
             base.PlayAwake();
@@ -87,6 +103,13 @@ namespace Vheos.Games.ActionPoints
 
             Get<Targetable>().OnGainTargeting.SubscribeAuto(this, Targetable_OnGainTargeting);
             Get<Targetable>().OnLoseTargeting.SubscribeAuto(this, Targetable_OnLoseTargeting);
+
+            if (Has<Actionable>())
+            {
+                Get<Actionable>().MaxActionPoints.Set(() => _MaxActionPoints);
+                Get<Updatable>().OnUpdate.SubscribeAuto(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
+                Get<Actionable>().OnOverflowActionProgress.SubscribeAuto(this, t => Get<Actionable>().FocusProgress += t);
+            }
 
         }
     }
