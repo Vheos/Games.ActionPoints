@@ -1,19 +1,19 @@
-﻿Shader "Custom/UIActionPoint"
+﻿Shader "Custom/ActionPoint"
 {   
 	Properties
 	{
 		// Per bar
-		[Enum(Right, 0, Up, 1)] Direction ("Direction", Int) = 0
-		BezelWidth("Bezel width", Range(0, 0.5)) = 0.1
-		[MaterialToggle] IgnoreBezel("Ignore bezel", Int) = 1
-		[PerRendererData] ColorA("Color A", Color) = (1, 1, 1, 1)
-		[PerRendererData] ColorB("Color B", Color) = (1, 1, 1, 1)
-		[PerRendererData] ColorC("Color C", Color) = (1, 1, 1, 1)
+		BezelWidth("Bezel width", Range(0, 0.5)) = 0
+		FocusColor("Focus color", Color) = (0, 1, 1, 1)
+		ActionColor("Action color", Color) = (1, 1, 1, 1)
+		ExhaustColor("Exhaust color", Color) = (1, 0, 0, 1)
+		BackgroundColor("Background color", Color) = (0, 0, 0, 1)
+
 		// Per point
 		[PerRendererData] Shape("Shape", 2D) = "white" {}	
 		[PerRendererData] Opacity("Opacity", Range(0, 1)) = 0
-		[PerRendererData] ThresholdA("Threshold A", Range(0, 1)) = 0
-		[PerRendererData] ThresholdB("Threshold B", Range(0, 1)) = 0	
+		[PerRendererData] FocusProgress("Focus progress", Range(0, 1)) = 0
+		[PerRendererData] ActionProgress("Action progress", Range(-1, 1)) = 0
 	}
 
 	SubShader
@@ -41,14 +41,13 @@
 			// Properties
 			int Direction;
 			fixed BezelWidth;
-			int IgnoreBezel;
-			fixed4 ColorA;
-			fixed4 ColorB;
-			fixed4 ColorC;
+			fixed4 FocusColor;
+			fixed4 ActionColor;
+			fixed4 ExhaustColor;
+			fixed4 BackgroundColor;
 			sampler2D Shape;
-			fixed4 Shape_ST;
-			fixed ThresholdA;
-			fixed ThresholdB;
+			fixed FocusProgress;
+			fixed ActionProgress;
 			fixed Opacity;
 
             // Structs
@@ -72,18 +71,10 @@
 				fixed2 bezelledCoords = input.texcoord / bezelDiv + bezelAdd;
 
 				// Offsets
-				fixed2 offsetA = fixed2(1 - ThresholdA, 0);
-				fixed2 offsetB = fixed2(1 - ThresholdB, 0);
-				if(Direction == 1)
-				{  
-					offsetA = offsetA.yx;
-					offsetB = offsetB.yx;
-				}
-				if(!IgnoreBezel)
-				{  
-					offsetA /= bezelDiv;
-					offsetB /= bezelDiv;
-				}
+				fixed4 chosenActionColor = ActionProgress >= 0 ? ActionColor : ExhaustColor;
+				fixed absActionProgress = abs(ActionProgress);
+				fixed2 offsetA = fixed2(1 - FocusProgress, 0);
+				fixed2 offsetB = fixed2(1 - absActionProgress, 0);
 				
 				// Masks
 				fixed maskA = Is01(bezelledCoords + offsetA) ? tex2D(Shape, bezelledCoords + offsetA) : 0;
@@ -93,9 +84,9 @@
 
 				// Colors
 				fixed4 color = 0;
-				color = lerp(color, ColorC, maskShape);
-				color = lerp(color, ColorB, maskB * maskBezel);
-				color = lerp(color, ColorA, maskA * maskBezel);
+				color = lerp(color, BackgroundColor, maskShape);
+				color = lerp(color, chosenActionColor, maskB * maskBezel);
+				color = lerp(color, FocusColor, maskA * maskBezel);
 
 				// Return
 				return PremultipliedAlpha(color) * Opacity;
