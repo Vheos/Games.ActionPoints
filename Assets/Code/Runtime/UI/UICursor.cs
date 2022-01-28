@@ -18,11 +18,8 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected ImageProperties _Idle = ImageProperties.Default;
         [SerializeField] protected ImageProperties _Pressed = ImageProperties.Default;
 
-        // Publics
-        public Player Player
-        { get; private set; }
-
         // Privates
+        private Player _player;
         private UICanvas _uiCanvas;
         private Selecter _selecter;
         private void OnInputMoveCursor(Vector2 offset)
@@ -49,15 +46,13 @@ namespace Vheos.Games.ActionPoints
 
             _selecter.Selectable = RaycastableManager.FindClosest<Selectable>(_uiCanvas, this);
         }
-        private Color _color;
         private void SetImageProperties(ImageProperties properties)
         {
             Get<Image>().sprite = properties.Sprite;
-            this.NewTween()
+            this.NewTween(ConflictResolution.Interrupt)
                 .SetDuration(0.1f)
-                .SetConflictResolution(ConflictResolution.Interrupt)
                 .LocalScale(properties.Scale.ToVector3())
-                .ImageRGB(_color * properties.ColorScale);
+                .ImageRGB(_player.Color * properties.ColorScale);
         }
 
         // Play
@@ -68,17 +63,16 @@ namespace Vheos.Games.ActionPoints
             transform.position = _uiCanvas.Size * 0.5f.ToVector2();
             Get<Updatable>().OnUpdate.SubscribeAuto(this, OnUpdate);
         }
-        public void BindToPlayer(Player player, Color color)
+        public void BindToPlayer(Player player)
         {
-            Player = player;
-            _selecter = Player.Get<Selecter>();
-            _color = color;
+            _player = player;
+            _selecter = _player.Get<Selecter>();
 
-            Player.OnPlayDestroy.SubscribeOneShot(this.DestroyObject);
-            Player.OnInputMoveCursor.SubscribeAuto(this, OnInputMoveCursor);
-            Player.OnInputPressConfirm.SubscribeAuto(this, OnInputPressConfirm);
-            Player.OnInputReleaseConfirm.SubscribeAuto(this, OnInputReleaseConfirm);
-            name = $"{Player.name}_Cursor";
+            _player.OnPlayDestroy.SubscribeOneShot(this.DestroyObject);
+            _player.OnInputMoveCursor.SubscribeAuto(this, OnInputMoveCursor);
+            _player.OnInputPressConfirm.SubscribeAuto(this, OnInputPressConfirm);
+            _player.OnInputReleaseConfirm.SubscribeAuto(this, OnInputReleaseConfirm);
+            name = $"{_player.name}_Cursor";
 
             transform.localScale = new();
             SetImageProperties(_Idle);

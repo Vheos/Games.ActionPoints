@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Vheos.Tools.Extensions.General;
-    using Vheos.Tools.UtilityN;
+    using Vheos.Tools.Utilities;
 
     [RequireComponent(typeof(LineRenderer))]
     [RequireComponent(typeof(UITargetingLineMProps))]
@@ -26,9 +26,8 @@ namespace Vheos.Games.ActionPoints
         public void Show(Targeter targeter, Transform from, Transform to)
         {
             IsActive = true;
-            this.NewTween()
+            this.NewTween(ConflictResolution.Interrupt)
                 .SetDuration(_WidthAnimDuration)
-                .SetConflictResolution(ConflictResolution.Interrupt)
                 .AddPropertyModifier(AssignWidth, _StartWidth * _uiCanvas.Size.y - Get<LineRenderer>().startWidth);
 
             _targeter = targeter;
@@ -40,9 +39,8 @@ namespace Vheos.Games.ActionPoints
         }
         public void Hide(bool isInstant = false)
         {
-            this.NewTween()
+            this.NewTween(ConflictResolution.Interrupt)
                 .SetDuration(_WidthAnimDuration)
-                .SetConflictResolution(ConflictResolution.Interrupt)
                 .AddPropertyModifier(AssignWidth, 0f - Get<LineRenderer>().startWidth)
                 .AddOnFinishEvents(() => IsActive = false)
                 .FinishIf(isInstant);
@@ -56,8 +54,8 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
+        private Player _player;
         private UICanvas _uiCanvas;
-        private Color _color;
         private Transform _from;
         private Transform _to;
         private Targeter _targeter;
@@ -93,19 +91,19 @@ namespace Vheos.Games.ActionPoints
         {
             _uiCanvas = uicanvas;
             this.BecomeChildOf(_uiCanvas);
-            Get<UITargetingLineMProps>().Initialize(Get<LineRenderer>());
-            Get<LineRenderer>().positionCount = 2;            
+            Get<UITargetingLineMProps>().Initialize();
+            Get<LineRenderer>().positionCount = 2;
             Hide(true);
 
             Get<Updatable>().OnUpdate.SubscribeAuto(this, OnUpdate);
         }
-        public void BindToPlayer(Player player, Color color)
+        public void BindToPlayer(Player player)
         {
-            _color = color;
+            _player = player;
 
             name = $"{player.name}_TargetingLine";
             Get<LineRenderer>().startColor = Get<LineRenderer>().startColor.NewA(_StartOpacity);
-            Get<LineRenderer>().endColor = _color;
+            Get<LineRenderer>().endColor = _player.Color;
         }
 
         /*
