@@ -34,6 +34,8 @@ namespace Vheos.Games.ActionPoints
         // Publics   
         public int ID
         { get; private set; }
+        public Color Color
+        { get; private set; }
         public UICursor Cursor
         { get; private set; }
         public UITargetingLine TargetingLine
@@ -79,6 +81,7 @@ namespace Vheos.Games.ActionPoints
         public void Initialize(InputActionAsset actionAsset, InputDevice device, InputControlScheme controlScheme, int id, Color color)
         {
             ID = id;
+            Color = color;
             var newActions = Instantiate(actionAsset);
             _inputUser = InputUser.PerformPairingWithDevice(device);
             _inputUser.AssociateActionsWithUser(newActions);
@@ -96,11 +99,11 @@ namespace Vheos.Games.ActionPoints
 
             Cursor = UICursorManager.InstantiateComponent();
             Cursor.Initialize(UICanvasManager.Any);
-            Cursor.BindToPlayer(this, color);
+            Cursor.BindToPlayer(this);
 
             TargetingLine = UITargetingLineManager.InstantiateComponent();
             TargetingLine.Initialize(UICanvasManager.Any);
-            TargetingLine.BindToPlayer(this, color);
+            TargetingLine.BindToPlayer(this);
 
             PlayerManager.OnPlayerJoin.Invoke(this);
         }
