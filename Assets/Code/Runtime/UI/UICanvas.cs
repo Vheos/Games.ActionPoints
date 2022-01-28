@@ -12,7 +12,7 @@ namespace Vheos.Games.ActionPoints
     [DisallowMultipleComponent]
     public class UICanvas : ABaseComponent
     {
-        // Pubilcs
+        // Publics
         public Camera WorldCamera
         { get; private set; }
         public Camera CanvasCamera

@@ -29,17 +29,15 @@ namespace Vheos.Games.ActionPoints
         public void Show()
         {
             _outlineRenderer.gameObject.SetActive(true);
-            _outlineRenderer.NewTween()
+            _outlineRenderer.NewTween(ConflictResolution.Interrupt)
                 .SetDuration(_FadeInDuration)
-                .SetConflictResolution(ConflictResolution.Interrupt)
                 .AddPropertyModifier(v => _mprops.Thickness += v, _Thickness - _mprops.Thickness)
                 .SpriteColor(_Color);
         }
         public void Hide(bool isInstant = false)
         {
-            _outlineRenderer.NewTween()
+            _outlineRenderer.NewTween(ConflictResolution.Interrupt)
                 .SetDuration(_FadeOutDuration)
-                .SetConflictResolution(ConflictResolution.Interrupt)
                 .AddPropertyModifier(v => _mprops.Thickness += v, 0f - _mprops.Thickness)
                 .SpriteAlpha(0f)
                 .AddOnFinishEvents(() => _outlineRenderer.gameObject.SetActive(false))
