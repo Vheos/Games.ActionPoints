@@ -39,23 +39,26 @@ namespace Vheos.Games.ActionPoints
             get => _actionProgress;
             set
             {
-                int previous = ActionPoints;
-                bool previousExhausted = IsExhausted;
-                _actionProgress = value;
+                if (_actionProgress == value)
+                    return;
 
-                if (_actionProgress > UsableMaxActionPoints)
-                {
-                    OnOverflowActionProgress?.Invoke(_actionProgress - UsableMaxActionPoints);
-                    _actionProgress.SetClampMax(+UsableMaxActionPoints);
-                }
-                if (previous != ActionPoints)
-                    OnChangeActionPoints?.Invoke(previous, ActionPoints);
+                int previousActionPoints = ActionPoints;
+                bool previousExhausted = IsExhausted;                
+
+                _actionProgress = value;
+                float overflow = _actionProgress - UsableMaxActionPoints;
+                _actionProgress.SetClamp(-UsableMaxActionPoints, +UsableMaxActionPoints);
+                if (_actionProgress < _focusProgress)
+                    FocusProgress = _actionProgress;
+
+                if (overflow > 0f)
+                    OnOverflowActionProgress?.Invoke(overflow);                
+                if (previousActionPoints != ActionPoints)
+                    OnChangeActionPoints?.Invoke(previousActionPoints, ActionPoints);
                 if (previousExhausted && !IsExhausted)
                     OnChangeExhausted?.Invoke(false);
                 else if (!previousExhausted && IsExhausted)
                     OnChangeExhausted?.Invoke(true);
-
-                _actionProgress.SetClampMin(-UsableMaxActionPoints);
             }
         }
         public float FocusProgress
@@ -63,14 +66,15 @@ namespace Vheos.Games.ActionPoints
             get => _focusProgress;
             set
             {
-                int previous = FocusPoints;
+                if (_focusProgress == value)
+                    return;
+
+                int previousFocusPoints = FocusPoints;
                 _focusProgress = value;
+                _focusProgress.SetClampMax(_actionProgress.ClampMin(0f));
 
-                if (previous != FocusPoints)
-                    OnChangeFocusPoints?.Invoke(previous, FocusPoints);
-
-                _focusProgress.SetClampMax(_actionProgress);
-                _focusProgress.SetClampMin(0f);
+                if (previousFocusPoints != FocusPoints)
+                    OnChangeFocusPoints?.Invoke(previousFocusPoints, FocusPoints);
             }
         }
         public int ActionPoints
