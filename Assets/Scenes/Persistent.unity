@@ -434,19 +434,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8091936603251869656, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4760101
+      value: 2.0058472
       objectReference: {fileID: 0}
     - target: {fileID: 8091936603251869656, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.370866
+      value: -7.4859257
       objectReference: {fileID: 0}
     - target: {fileID: 8091936603251869656, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9961947
+      value: 0.9914449
       objectReference: {fileID: 0}
     - target: {fileID: 8091936603251869656, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.08715578
+      value: 0.13052616
       objectReference: {fileID: 0}
     - target: {fileID: 8091936603251869656, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
       propertyPath: m_LocalRotation.y
@@ -458,7 +458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8091936603251869656, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8091936603251869656, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -467,6 +467,22 @@ PrefabInstance:
     - target: {fileID: 8091936603251869656, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8777190819166839560, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8777190819166839560, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8777190819166839560, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8777190819166839560, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 23
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

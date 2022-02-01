@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84cead11b3660004d8090698b0a501fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Sensitivity: 1
+  _Sensitivity: 2
   _Idle:
     Sprite: {fileID: 5543941588292853863, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
     ColorScale: 1
