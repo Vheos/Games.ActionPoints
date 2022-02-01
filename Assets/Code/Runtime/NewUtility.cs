@@ -53,6 +53,12 @@ namespace Vheos.Games.ActionPoints
         => t.layer == (int)a;
         static public bool IsOnLayer(this Component t, BuiltInLayer a)
         => t.gameObject.IsOnLayer(a);
+        static public Bounds Scale(this Bounds t, Vector3 a)
+        => new(t.center, t.size.Mul(a));
+        static public Bounds Scale(this Bounds t, GameObject a)
+        => new(t.center, t.size.Mul(a.transform.localScale));
+        static public Bounds Scale(this Bounds t, Component a)
+        => new(t.center, t.size.Mul(a.transform.localScale));
 
         // Try
         static public bool TryNonDefault<T>(this T t, out T r)
@@ -111,20 +117,28 @@ namespace Vheos.Games.ActionPoints
         /// <summary> Returns this vector projected on a plane with normal a. </summary>
         static public Vector3 ProjectOnPlane(this Vector3 t, Vector3 a)
         => Vector3.ProjectOnPlane(t, a);
-        static public Vector3 Rotate(this Vector2 t, Vector3 a, float b, bool inDegrees = true)
+        static public Vector3 Rotate(this Vector2 t, Vector3 a, float b, bool inDegrees = false)
         => t.Append().Rotate(a, b, inDegrees);
-        static public Vector3 Rotate(this Vector3 t, Vector3 a, float b, bool inDegrees = true)
+        static public Vector3 Rotate(this Vector3 t, Vector3 a, float b, bool inDegrees = false)
         {
             if (!inDegrees)
                 b *= Mathf.Deg2Rad;
-
             return Quaternion.AngleAxis(b, a) * t;
+        }
+        public static Vector2 Rotate(this Vector2 t, float a, bool inDegrees = false)
+        {
+            if (inDegrees)
+                a *= Mathf.Rad2Deg;
+
+            float sina = Mathf.Sin(a);
+            float cosa = Mathf.Cos(a);
+            return new Vector2(cosa * t.x - sina * t.y, sina * t.x + cosa * t.y);
         }
 
 
 
         // UTILITY
-        static public Vector2 PointOnCircle(float angle, float radius = 1f, bool inDegrees = true)
+        static public Vector2 PointOnCircle(float angle, float radius = 1f, bool inDegrees = false)
         {
             if (inDegrees)
                 angle *= Mathf.Deg2Rad;
@@ -143,6 +157,30 @@ namespace Vheos.Games.ActionPoints
         => UnityEngine.Random.value < chance;
         static public bool Flip()
         => Roll(0.5f);
+        static private Vector2 FindCircleCenter(Vector2 a, Vector2 b, Vector2 c)
+        {
+            float xab = a.x - b.x;
+            float xac = a.x - c.x;
+            float yab = a.y - b.y;
+            float yac = a.y - c.y;
+            float sxac = a.x.Pow(2) - c.x.Pow(2);
+            float syac = a.y.Pow(2) - c.y.Pow(2);
+            float sxba = b.x.Pow(2) - a.x.Pow(2);
+            float syba = b.y.Pow(2) - a.y.Pow(2);
+
+            float f = (sxac * xab + syac * xab + sxba * xac + syba * xac)
+                    / 2f / (yac * xab - yab * xac);
+            float g = (sxac * yab + syac * yab + sxba * yac + syba * yac)
+                    / 2f / (xac * yab - xab * yac);
+
+            return new(g, f);
+        }
+        static public Vector2 FindCircleCenter(Vector2[] points)
+        {
+            if (points.Length < 3)
+                return float.NaN.ToVector2();
+            return FindCircleCenter(points[0], points[1], points[2]);
+        }
 
     }
 }
