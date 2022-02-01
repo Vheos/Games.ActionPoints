@@ -16,7 +16,7 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [SerializeField] protected Transform _PointsBarPrefab;
         [SerializeField] protected ActionPoint _PointPrefab;
-        [SerializeField] [Range(0f, 1f)] protected float _Spacing;
+        [SerializeField] [Range(-1f, 1f)] protected float _Spacing;
         [SerializeField] [Range(0f, 1f)] protected float _HalfTime;
 
         // Events
@@ -52,8 +52,8 @@ namespace Vheos.Games.ActionPoints
 
             _actionPointBar = Instantiate(_PointsBarPrefab);
             _actionPointBar.name = $"{typeof(ActionPointsBar).Name}";
-            _actionPointBar.GetComponent<MoveTowards>().SetTarget(this);
-            _actionPointBar.GetComponent<RotateAs>().SetTarget(CameraManager.AnyNonUI);
+            _actionPointBar.GetComponent<MoveTowards>().SetTarget(this, true);
+            _actionPointBar.GetComponent<RotateAs>().SetTarget(CameraManager.AnyNonUI, true);
 
             _actionPoints = new();
             int maxActionPoints = Get<Actionable>().MaxActionPoints;
