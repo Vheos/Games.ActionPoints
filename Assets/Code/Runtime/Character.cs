@@ -21,7 +21,7 @@ namespace Vheos.Games.ActionPoints
             if (isFirst)
                 this.NewTween()
                     .SetDuration(0.2f)
-                    .LocalScaleRatio(1.2f);
+                    .LocalScaleRatio(1.1f);
         }
         private void Selectable_OnLoseHighlight(Selecter selecter, bool isLast)
         {
@@ -29,15 +29,35 @@ namespace Vheos.Games.ActionPoints
             if (isLast)
                 this.NewTween()
                     .SetDuration(0.2f)
-                    .LocalScaleRatio(1.2f.Inv());
+                    .LocalScaleRatio(1.1f.Inv());
         }
+
+        private void Selectable_OnPress(Selecter selecter)
+        {
+            this.NewTween()
+                .SetDuration(0.1f)
+                .LocalScaleRatio(0.9f)
+                .SpriteRGBRatio(0.75f);
+        }
+        private void Selectable_OnRelease(Selecter selecter, bool withinTrigger)
+        {
+            this.NewTween()
+                .SetDuration(0.1f)
+                .LocalScaleRatio(0.9f.Inv())
+                .SpriteRGBRatio(0.75f.Inv());
+
+            if (withinTrigger
+            && TryGet(out Actionable actionable))
+                Debug.Log($"hello :)");
+        }
+        /*
         private void Selectable_OnPress(Selecter selecter)
         {
             //Debug.Log($"{selecter.name} -> {name}:\tOnPress");
             this.NewTween()
                 .SetDuration(0.2f)
                 .LocalScaleRatio(0.9f)
-                .SpriteRGBRatio(0.5f);
+                .SpriteRGBRatio(0.75f);
 
             selecter.Get<Player>().TargetingLine.Show(Get<Targeter>(), this.transform, selecter.Get<Player>().Cursor.transform);
         }
@@ -47,7 +67,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween()
                 .SetDuration(0.2f)
                 .LocalScaleRatio(0.9f.Inv())
-                .SpriteRGBRatio(0.5f.Inv());
+                .SpriteRGBRatio(0.75f.Inv());
 
             if (Get<Targeter>().IsTargetingAny
             && !Get<Targeter>().IsTargeting(Get<Targetable>()))
@@ -65,14 +85,10 @@ namespace Vheos.Games.ActionPoints
 
             selecter.Get<Player>().TargetingLine.Hide();
         }
+        */
         private void Selectable_OnHold(Selecter selecter)
         {
             //Debug.Log($"{selecter.name} -> {name}:\tOnHold");
-
-        }
-        private void Targeter_OnChangeTarget(Targetable from, Targetable to)
-        {
-            //Debug.Log($"{(from != null ? from.name : "")} -> {(to != null ? to.name : "")}");
 
         }
         private void Targetable_OnGainTargeting(Targeter targeter, bool isFirst)
