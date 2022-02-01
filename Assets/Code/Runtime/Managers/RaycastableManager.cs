@@ -14,19 +14,19 @@ namespace Vheos.Games.ActionPoints
             T closestComponent = null;
             float minDistance = float.PositiveInfinity;
             bool raycastOnlyUI = false;
-            foreach (var cursorable in ActiveComponents.Where(t => t.Has<T>()))
+            foreach (var raycastable in ActiveComponents.Where(t => t.Has<T>()))
             {
-                bool isUI = cursorable.IsOnLayer(BuiltInLayer.UI);
+                bool isUI = raycastable.IsOnLayer(BuiltInLayer.UI);
                 if (raycastOnlyUI && !isUI)
                     continue;
 
                 Camera camera = isUI ? uiCanvas.CanvasCamera : uiCanvas.WorldCamera;
-                float distance = cursorable.DistanceTo(camera);
+                float distance = raycastable.DistanceTo(camera);
                 if (distance < minDistance
-                && cursorable.Trigger.Raycast(camera.ScreenPointToRay(uiCanvas.CanvasToScreenPosition(canvasPosition)), out var hitInfo, float.PositiveInfinity)
-                && cursorable.PerformRaycastTests(hitInfo.point))
+                && raycastable.Trigger.Raycast(camera.ScreenPointToRay(uiCanvas.CanvasToScreenPosition(canvasPosition)), out var hitInfo, float.PositiveInfinity)
+                && raycastable.PerformRaycastTests(hitInfo.point))
                 {
-                    closestComponent = cursorable.Get<T>();
+                    closestComponent = raycastable.Get<T>();
                     minDistance = distance;
                     if (isUI)
                         raycastOnlyUI = true;
