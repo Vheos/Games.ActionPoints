@@ -1,0 +1,60 @@
+namespace Vheos.Games.ActionPoints
+{
+    using System;
+    using UnityEngine;
+    using Games.Core;
+    using Tools.Extensions.Math;
+
+    [RequireComponent(typeof(Equipable))]
+    public class Equipment : ABaseComponent
+    {
+        // Inspector
+        [SerializeField] protected EquipSlot _Slot;
+
+        // Privates
+        private void Selectable_OnPress(Selecter selecter)
+        {
+            selecter.Get<Player>().TargetingLine.Show(Get<Targeter>(), this.transform);
+        }
+        private void Selectable_OnRelease(Selecter selecter, bool withinTrigger)
+        {
+            if (Get<Targeter>().TryGetTargetable(out Equiper equiper))
+            {
+                if (equiper.TryEquip(Get<Equipable>()))
+                    this.NewTween()
+                        .SetDuration(0.4f)
+                        .Position(Get<Targeter>().Targetable.transform.position);
+                else if (equiper.TryUnequip(Get<Equipable>()))
+                    this.NewTween()
+                        .SetDuration(0.4f)
+                        .Position(transform.position + NewUtility.RandomPointOnCircle(0.5f).Append());
+            }
+
+            selecter.Get<Player>().TargetingLine.Hide();
+        }
+        private void Targetable_OnGainTargeting(Targeter targeter, bool isFirst)
+        {
+            if (isFirst && !targeter.SameGOAs(this))
+                Get<SpriteOutline>().Show();
+        }
+        private void Targetable_OnLoseTargeting(Targeter targeter, bool isLast)
+        {
+            if (isLast && !targeter.SameGOAs(this))
+                Get<SpriteOutline>().Hide();
+        }
+
+        // Play
+        protected override void PlayAwake()
+        {
+            base.PlayAwake();
+
+            Get<Equipable>().EquipSlot.Set(() => (int)_Slot);
+
+            Get<Selectable>().OnPress.SubscribeAuto(this, Selectable_OnPress);
+            Get<Selectable>().OnRelease.SubscribeAuto(this, Selectable_OnRelease);
+
+            Get<Targetable>().OnGainTargeting.SubscribeAuto(this, Targetable_OnGainTargeting);
+            Get<Targetable>().OnLoseTargeting.SubscribeAuto(this, Targetable_OnLoseTargeting);
+        }
+    }
+}
