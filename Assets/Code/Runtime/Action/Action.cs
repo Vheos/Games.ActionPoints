@@ -11,18 +11,14 @@ namespace Vheos.Games.ActionPoints
         protected const string CONTEXT_MENU_PATH = "";
 
         // Inspector
-        [Header("Visual")]
-        [SerializeField] protected Sprite _Sprite = null;
-        [Header("Cost")]
+        [SerializeField] protected ActionButtonVisuals _ButtonVisuals;
         [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 0;
         [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 0;
-        [Header("Use")]
         [SerializeField] protected ActionEffectData[] _Effects = new ActionEffectData[1];
 
         // Publics
-        public string Text;
-        public Sprite Sprite
-        => _Sprite;
+        public ActionButtonVisuals ButtonVisuals
+        => _ButtonVisuals;
         public int ActionPointsCost
         => _ActionPointsCost;
         public int FocusPointsCost
