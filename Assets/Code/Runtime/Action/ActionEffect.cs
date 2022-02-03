@@ -9,9 +9,23 @@ namespace Vheos.Games.ActionPoints
         // Constants
         protected const string CONTEXT_MENU_PATH = "ActionEffects/";
 
-        // Public
+        // Publics
         abstract public void Invoke(ABaseComponent user, ABaseComponent target, params float[] values);
-        abstract public int RequiredValuesCount
-        { get; }
+        public Type[] CachedRequiredComponents
+        {
+            get
+            {
+                if (_cachedRequiredComponenets == null)
+                    _cachedRequiredComponenets = RequiredComponents;
+                return _cachedRequiredComponenets;
+            }
+        }
+        virtual public int RequiredValuesCount
+        => 0;
+
+        // Privates
+        private Type[] _cachedRequiredComponenets;
+        virtual protected Type[] RequiredComponents
+        => new Type[0];
     }
 }

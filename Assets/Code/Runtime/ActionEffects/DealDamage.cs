@@ -8,6 +8,8 @@ namespace Vheos.Games.ActionPoints.ActionScripts
     public class DealDamage : ActionEffect
     {
         // Overrides
+        override protected Type[] RequiredComponents
+        => new[] { typeof(Woundable) };
         override public int RequiredValuesCount
         => 3;
         override public void Invoke(ABaseComponent user, ABaseComponent target, params float[] values)
