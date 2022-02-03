@@ -23,6 +23,8 @@ namespace Vheos.Games.ActionPoints
         public AutoEvent<Targetable, Targetable> OnChangeTarget { get; } = new();
 
         // Publics
+        public Player Player
+        { get; private set; }
         public void Show(Targeter targeter, Transform from, Transform to)
         {
             IsActive = true;
@@ -54,17 +56,16 @@ namespace Vheos.Games.ActionPoints
         }
 
         // Privates
-        private Player _player;
         private UICanvas _uiCanvas;
+        private Targeter _targeter;
         private Transform _from;
         private Transform _to;
-        private Targeter _targeter;
-        private Vector3 From
+        private Vector3 LineFrom
         {
             get => Get<LineRenderer>().GetPosition(0);
             set => Get<LineRenderer>().SetPosition(0, value);
         }
-        private Vector3 To
+        private Vector3 LineTo
         {
             get => Get<LineRenderer>().GetPosition(1);
             set => Get<LineRenderer>().SetPosition(1, value);
@@ -77,19 +78,20 @@ namespace Vheos.Games.ActionPoints
         private void OnUpdate()
         {
             if (_from != null)
-                From = _uiCanvas.CanvasPosition(_from);
+                LineFrom = _uiCanvas.CanvasPosition(_from);
             if (_to != null)
-                To = _uiCanvas.CanvasPosition(_to);
+                LineTo = _uiCanvas.CanvasPosition(_to);
             if (_targeter != null)
-                _targeter.Targetable = RaycastableManager.FindClosest<Targetable>(_uiCanvas, To);
+                _targeter.Targetable = RaycastableManager.FindClosest<Targetable>(_uiCanvas, LineTo);
 
-            Get<UITargetingLineMProps>().TilingX = From.DistanceTo(To) * _Tiling / _uiCanvas.Size.y;
+            Get<UITargetingLineMProps>().TilingX = LineFrom.DistanceTo(LineTo) * _Tiling / _uiCanvas.Size.y;
         }
 
         // Play
         public void Initialize(UICanvas uicanvas)
         {
             _uiCanvas = uicanvas;
+
             this.BecomeChildOf(_uiCanvas);
             Get<UITargetingLineMProps>().Initialize();
             Get<LineRenderer>().positionCount = 2;
@@ -99,29 +101,12 @@ namespace Vheos.Games.ActionPoints
         }
         public void BindToPlayer(Player player)
         {
-            _player = player;
-
+            Player = player;
             name = $"{player.name}_TargetingLine";
+            BindDestroyObject(Player);
+
             Get<LineRenderer>().startColor = Get<LineRenderer>().startColor.NewA(_StartOpacity);
-            Get<LineRenderer>().endColor = _player.Color;
+            Get<LineRenderer>().endColor = Player.Color;
         }
-
-        /*
-        public void ShowAndFollowCursor(Transform from, Action<Targetable, Targetable> onChangeTarget = null)
-        {
-            CursorManager.SetCursorDistance(from);
-            Show(from, CursorManager.CursorTransform, onChangeTarget);
-        }
-        private void TryInvokeEvents(Mousable from, Mousable to)
-        {
-            Targetable fromTargetable = from != null && from.Has<Targetable>()
-                                      ? from.Get<Targetable>() : null;
-            Target = to != null && to.Has<Targetable>()
-                   ? to.Get<Targetable>() : null;
-
-            if (fromTargetable != Target)
-                OnChangeTarget.Invoke(fromTargetable, Target);
-        }
-        */
     }
 }

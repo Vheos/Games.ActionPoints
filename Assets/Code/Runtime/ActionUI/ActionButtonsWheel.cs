@@ -23,7 +23,7 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         private readonly HashSet<ActionButton> _buttons = new();
-        private PositionsWheel _positionsWheel;
+        private RectCircle _positionsWheel;
         private void DestroyButtons()
         {
             _buttons.Destroy();
@@ -33,7 +33,7 @@ namespace Vheos.Games.ActionPoints
         {
             var actionsEnumerator = UI.Actionable.Actions.GetEnumerator();
             int index = 0;
-            foreach (var (Position, Angle) in _positionsWheel.GetLocalPositionsAndAngles(_ButtonPrefab.Radius, UI.Actionable.Actions.Count))
+            foreach (var (Position, Angle) in _positionsWheel.GetElementsPositionsAndAngles(UI.Actionable.Actions.Count, _ButtonPrefab.Radius))
                 if (actionsEnumerator.MoveNext())
                 {
                     var newButton = this.CreateChildComponent(_ButtonPrefab);
@@ -60,9 +60,8 @@ namespace Vheos.Games.ActionPoints
             {
                 Rect = UI.Rect,
                 EncapsulateClosestCorner = true,
-                WheelAngle = -90f,
-                DistanceFromPerimeter = 1f,
-            };            
+                Angle = -90f,
+            };
             CreateButtons();
 
             UI.Actionable.OnChangeActions.SubscribeAuto(this, Actionable_OnChangeActions);

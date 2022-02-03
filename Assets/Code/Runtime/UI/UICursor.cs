@@ -18,8 +18,11 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected ImageProperties _Idle = ImageProperties.Default;
         [SerializeField] protected ImageProperties _Pressed = ImageProperties.Default;
 
+        // Publics
+        public Player Player
+        { get; private set; }
+
         // Privates
-        private Player _player;
         private UICanvas _uiCanvas;
         private Selecter _selecter;
         private void OnInputMoveCursor(Vector2 offset)
@@ -52,7 +55,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween(ConflictResolution.Interrupt)
                 .SetDuration(0.1f)
                 .LocalScale(properties.Scale.ToVector3())
-                .ImageRGB(_player.Color * properties.ColorScale);
+                .RGB(ColorComponentType.Image, Player.Color * properties.ColorScale);
         }
 
         // Play
@@ -65,16 +68,16 @@ namespace Vheos.Games.ActionPoints
         }
         public void BindToPlayer(Player player)
         {
-            _player = player;
-            _selecter = _player.Get<Selecter>();
+            Player = player;
+            _selecter = Player.Get<Selecter>();
+            name = $"{Player.name}_Cursor";
 
-            _player.OnPlayDestroy.SubscribeOneShot(this.DestroyObject);
-            _player.OnInputMoveCursor.SubscribeAuto(this, OnInputMoveCursor);
-            _player.OnInputPressConfirm.SubscribeAuto(this, OnInputPressConfirm);
-            _player.OnInputReleaseConfirm.SubscribeAuto(this, OnInputReleaseConfirm);
-            name = $"{_player.name}_Cursor";
+            BindDestroyObject(Player);
+            Player.OnInputMoveCursor.SubscribeAuto(this, OnInputMoveCursor);
+            Player.OnInputPressConfirm.SubscribeAuto(this, OnInputPressConfirm);
+            Player.OnInputReleaseConfirm.SubscribeAuto(this, OnInputReleaseConfirm);            
 
-            transform.localScale = new();
+            transform.localScale = default;
             SetImageProperties(_Idle);
         }
     }
