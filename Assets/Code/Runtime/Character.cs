@@ -13,43 +13,28 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [SerializeField] [Range(0, 10)] protected int _MaxActionPoints;
         [SerializeField] [Range(-1f, 1f)] protected float _ActionSpeed;
+        [SerializeField] protected ActionUI _ActionUIPrefab;
+        [SerializeField] protected string[] _StartingActions;
 
         // Privates
+        private ActionUI _actionUI;
         private void Selectable_OnGainHighlight(Selecter selecter, bool isFirst)
         {
-            //Debug.Log($"{selecter.name} -> {name}:\tOnGainHighlight, {isFirst}");
-            if (isFirst)
-                this.NewTween()
-                    .SetDuration(0.2f)
-                    .LocalScaleRatio(1.1f);
         }
         private void Selectable_OnLoseHighlight(Selecter selecter, bool isLast)
-        {
-            //Debug.Log($"{selecter.name} -> {name}:\tOnLoseHighlight, {isLast}");
-            if (isLast)
-                this.NewTween()
-                    .SetDuration(0.2f)
-                    .LocalScaleRatio(1.1f.Inv());
+        {   
         }
-
         private void Selectable_OnPress(Selecter selecter)
-        {
-            this.NewTween()
-                .SetDuration(0.1f)
-                .LocalScaleRatio(0.9f)
-                .SpriteRGBRatio(0.75f);
-        }
+        { }
         private void Selectable_OnRelease(Selecter selecter, bool withinTrigger)
         {
-            this.NewTween()
-                .SetDuration(0.1f)
-                .LocalScaleRatio(0.9f.Inv())
-                .SpriteRGBRatio(0.75f.Inv());
-
-            if (withinTrigger
-            && TryGet(out Actionable actionable))
-                Debug.Log($"hello :)");
+            if (withinTrigger)
+            {
+                _actionUI.ButtonsWheel.Get<Expandable>().Toggle();
+                _actionUI.PointsBar.Get<Expandable>().Toggle();
+            }
         }
+
         /*
         private void Selectable_OnPress(Selecter selecter)
         {
@@ -111,6 +96,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
 
+
             Get<Selectable>().OnGainSelection.SubscribeAuto(this, Selectable_OnGainHighlight);
             Get<Selectable>().OnLoseSelection.SubscribeAuto(this, Selectable_OnLoseHighlight);
             Get<Selectable>().OnPress.SubscribeAuto(this, Selectable_OnPress);
@@ -123,10 +109,22 @@ namespace Vheos.Games.ActionPoints
             if (Has<Actionable>())
             {
                 Get<Actionable>().MaxActionPoints.Set(() => _MaxActionPoints);
+                foreach (var actionText in _StartingActions)
+                {
+                    var newAction = ScriptableObject.CreateInstance<Action>();
+                    newAction.Text = actionText;
+                    Get<Actionable>().TryAddActions(newAction);
+                }
+
                 Get<Updatable>().OnUpdate.SubscribeAuto(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
                 Get<Actionable>().OnOverflowActionProgress.SubscribeAuto(this, t => Get<Actionable>().FocusProgress += t);
             }
 
+            if (_ActionUIPrefab != null)
+            {
+                _actionUI = Instantiate(_ActionUIPrefab);
+                _actionUI.Initialize(Get<Actionable>(), () => Get<Collider>().LocalBounds().ToRect().Scale(this));
+            }
         }
     }
 }
