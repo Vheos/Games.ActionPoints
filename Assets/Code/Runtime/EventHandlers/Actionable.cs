@@ -10,6 +10,7 @@ namespace Vheos.Games.ActionPoints
     sealed public class Actionable : ABaseComponent
     {
         // Events
+        public readonly AutoEvent OnChangeActions = new();
         public readonly AutoEvent<int, int> OnChangeActionPoints = new();
         public readonly AutoEvent<int, int> OnChangeFocusPoints = new();
         public readonly AutoEvent<bool> OnChangeExhausted = new();
@@ -24,13 +25,13 @@ namespace Vheos.Games.ActionPoints
         => _actions;
         public void TryAddActions(params Action[] actions)
         {
-            foreach (var action in actions)
-                _actions.TryAddUnique(action);
+            if (_actions.TryAddUnique(actions))
+                OnChangeActions.Invoke();
         }
         public void TryRemoveActions(params Action[] actions)
         {
-            foreach (var action in actions)
-                _actions.TryRemove(action);
+            if (_actions.TryRemove(actions))
+                OnChangeActions.Invoke();
         }
         public void ClearActions()
         => _actions.Clear();
