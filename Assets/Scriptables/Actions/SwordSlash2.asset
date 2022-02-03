@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94a4d58a9db32ce4f9d5ca8be17d1749, type: 3}
+  m_Name: SwordSlash2
+  m_EditorClassIdentifier: 
+  _ButtonVisuals:
+    Sprite: {fileID: 2860006914309871096, guid: 20eb8786ff4d12140919ff6e79638513, type: 3}
+    Text: SWORD SLASH
+    Color: {r: 1, g: 1, b: 1, a: 1}
+  _ActionPointsCost: 0
+  _FocusPointsCost: 0
+  _Effects:
+  - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
+    Values:
+    - 0
+    - 0
+    - 0
+  - Effect: {fileID: 11400000, guid: ba8b517b1e2e04a4384419abd8b3dd4b, type: 2}
+    Values:
+    - 0
