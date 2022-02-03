@@ -8,4 +8,11 @@ namespace Vheos.Games.ActionPoints
         Confirm,
         MoveCursor,
     }
+
+    public enum EquipSlot
+    {
+        Hand,
+        Head,
+        Accessory,
+    }
 }
