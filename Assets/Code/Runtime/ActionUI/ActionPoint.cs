@@ -2,12 +2,8 @@ namespace Vheos.Games.ActionPoints
 {
     using System;
     using UnityEngine;
-    using UnityEngine.UI;
     using Games.Core;
     using Tools.Extensions.Math;
-    using System.Collections.Generic;
-    using Tools.Extensions.UnityObjects;
-    using Vheos.Tools.Utilities;
 
     [RequireComponent(typeof(ActionPointMProps))]
     [DisallowMultipleComponent]
@@ -19,16 +15,16 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected Texture2D _ActionShape;
         [SerializeField] protected Texture2D _FocusShape;
 
+        // Publics
+        public ActionPointsBar Bar
+        { get; private set; }
+
         // Privates
         private int _index;
         private void UpdateActionProgress(float from, float to)
-        {
-            Get<ActionPointMProps>().ActionProgress = to.Sub(_index).Clamp01();
-        }
+        => Get<ActionPointMProps>().ActionProgress = to.Abs().Sub(_index).Clamp01() * to.Sig();
         private void UpdateFocusProgress(float from, float to)
-        {
-            Get<ActionPointMProps>().FocusProgress = to.Sub(_index).Clamp01();
-        }
+        => Get<ActionPointMProps>().FocusProgress = to.Abs().Sub(_index).Clamp01() * to.Sig();
         private void UpdateOpacity(int from, int to)
         {
             if (_index >= from.Abs() && _index < to.Abs())
@@ -53,19 +49,29 @@ namespace Vheos.Games.ActionPoints
             .SetCurveShape(CurveShape.Bounce)
             .LocalScale(transform.localScale.NewY(0f))
             .AddOnChangeCurveValueDirectionEvents(t => Get<ActionPointMProps>().Shape = to);
+        private void UpdateInstantly()
+        {
+            Get<ActionPointMProps>().Opacity = _index < Bar.UI.Actionable.ActionPoints.Abs() ? _FullOpacity : _PartialOpacity;
+            Get<ActionPointMProps>().Shape = _index < Bar.UI.Actionable.FocusPoints ? _FocusShape : _ActionShape;
+        }
 
         // Play
-        public void Initialize(ActionPointsBar actionPointsBar, int index)
+        public void Initialize(ActionPointsBar bar, int index)
         {
+            Bar = bar;
             _index = index;
-            Get<ActionPointMProps>().Initialize();
-            actionPointsBar.OnChangeVisualActionProgress.SubscribeAuto(this, UpdateActionProgress);
-            actionPointsBar.OnChangeVisualFocusProgress.SubscribeAuto(this, UpdateFocusProgress);
-            actionPointsBar.Get<Actionable>().OnChangeActionPoints.SubscribeAuto(this, UpdateOpacity);
-            actionPointsBar.Get<Actionable>().OnChangeFocusPoints.SubscribeAuto(this, UpdateShape);
+            name = $"Point{_index + 1}";
+            BindEnableDisable(bar);
 
-            Get<ActionPointMProps>().Opacity = _PartialOpacity;
-            Get<ActionPointMProps>().Shape = _ActionShape;
+            Get<ActionPointMProps>().Initialize();
+            OnPlayEnable.Subscribe(UpdateInstantly);
+            UpdateInstantly();
+
+            Bar.OnChangeVisualActionProgress.SubscribeAuto(this, UpdateActionProgress);
+            Bar.OnChangeVisualFocusProgress.SubscribeAuto(this, UpdateFocusProgress);
+
+            Bar.UI.Actionable.OnChangeActionPoints.SubscribeAuto(this, UpdateOpacity);
+            Bar.UI.Actionable.OnChangeFocusPoints.SubscribeAuto(this, UpdateShape);
         }
     }
 }
