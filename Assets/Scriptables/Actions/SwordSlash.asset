@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a4d58a9db32ce4f9d5ca8be17d1749, type: 3}
   m_Name: SwordSlash
   m_EditorClassIdentifier: 
-  _Sprite: {fileID: 0}
+  _ButtonVisuals:
+    Sprite: {fileID: 0}
+    Text: SWORD SLASH
+    Color: {r: 1, g: 1, b: 1, a: 1}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
   _Effects:
-  - _Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
-    _Values:
-    - 20
-    - 5
+  - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
+    Values:
+    - 0
+    - 0
+    - 0
+  - Effect: {fileID: 11400000, guid: ba8b517b1e2e04a4384419abd8b3dd4b, type: 2}
+    Values:
     - 0
