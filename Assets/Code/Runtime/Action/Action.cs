@@ -20,6 +20,7 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected ActionEffectData[] _Effects = new ActionEffectData[1];
 
         // Publics
+        public string Text;
         public Sprite Sprite
         => _Sprite;
         public int ActionPointsCost
