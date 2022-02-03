@@ -3,10 +3,7 @@ namespace Vheos.Games.ActionPoints
     using System;
     using UnityEngine;
     using Games.Core;
-    using Vheos.Tools.Extensions.UnityObjects;
-    using UnityEngine.InputSystem;
-    using Vheos.Tools.Extensions.Math;
-    using Vheos.Tools.Extensions.General;
+    using Tools.Extensions.Math;
 
     public class Character : ABaseComponent
     {
@@ -14,7 +11,7 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] [Range(0, 10)] protected int _MaxActionPoints;
         [SerializeField] [Range(-1f, 1f)] protected float _ActionSpeed;
         [SerializeField] protected ActionUI _ActionUIPrefab;
-        [SerializeField] protected string[] _StartingActions;
+        [SerializeField] protected Action[] _StartingActions;
 
         // Privates
         private ActionUI _actionUI;
@@ -22,7 +19,7 @@ namespace Vheos.Games.ActionPoints
         {
         }
         private void Selectable_OnLoseHighlight(Selecter selecter, bool isLast)
-        {   
+        {
         }
         private void Selectable_OnPress(Selecter selecter)
         { }
@@ -78,24 +75,19 @@ namespace Vheos.Games.ActionPoints
         }
         private void Targetable_OnGainTargeting(Targeter targeter, bool isFirst)
         {
-            // Debug.Log($"{name}:\tOnGainTargeting, {isFirst}");
-            if (targeter.TryGet(out PlayerOwnable playerOwnable)
-            && playerOwnable.Owner != null)
-                Get<SpriteOutline>().Color = playerOwnable.Owner.Color;
-
-            Get<SpriteOutline>().Show();
+            if (isFirst)
+                Get<SpriteOutline>().Show();
         }
         private void Targetable_OnLoseTargeting(Targeter targeter, bool isLast)
         {
-            //Debug.Log($"{name}:\tOnLoseTargeting, {isLast}");
-            Get<SpriteOutline>().Hide();
+            if (isLast)
+                Get<SpriteOutline>().Hide();
         }
 
         // Play
         protected override void PlayAwake()
         {
             base.PlayAwake();
-
 
             Get<Selectable>().OnGainSelection.SubscribeAuto(this, Selectable_OnGainHighlight);
             Get<Selectable>().OnLoseSelection.SubscribeAuto(this, Selectable_OnLoseHighlight);
@@ -106,15 +98,13 @@ namespace Vheos.Games.ActionPoints
             Get<Targetable>().OnGainTargeting.SubscribeAuto(this, Targetable_OnGainTargeting);
             Get<Targetable>().OnLoseTargeting.SubscribeAuto(this, Targetable_OnLoseTargeting);
 
+            //Get<Equiper>().OnChangeEquipable.SubscribeAuto(this, (from, to) =>
+            //    Debug.Log($"Equiper {name}: {(from != null ? from.name : "null")} -> {(to != null ? to.name : "null")}"));
+
             if (Has<Actionable>())
             {
                 Get<Actionable>().MaxActionPoints.Set(() => _MaxActionPoints);
-                foreach (var actionText in _StartingActions)
-                {
-                    var newAction = ScriptableObject.CreateInstance<Action>();
-                    newAction.Text = actionText;
-                    Get<Actionable>().TryAddActions(newAction);
-                }
+                Get<Actionable>().TryAddActions(_StartingActions);
 
                 Get<Updatable>().OnUpdate.SubscribeAuto(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
                 Get<Actionable>().OnOverflowActionProgress.SubscribeAuto(this, t => Get<Actionable>().FocusProgress += t);
