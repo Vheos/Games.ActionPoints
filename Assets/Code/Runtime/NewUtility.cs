@@ -8,6 +8,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
+    using Vheos.Tools.Utilities;
 
     static public class NewUtility
     {
@@ -59,6 +60,24 @@ namespace Vheos.Games.ActionPoints
         => new(t.center, t.size.Mul(a.transform.localScale));
         static public Bounds Scale(this Bounds t, Component a)
         => new(t.center, t.size.Mul(a.transform.localScale));
+        static public Rect Scale(this Rect t, Vector3 a)
+        => new()
+        {
+            size = t.size.Mul(a),
+            center = t.center,
+        };
+        static public Rect Scale(this Rect t, GameObject a)
+        => new()
+        {
+            size = t.size.Mul(a.transform.localScale),
+            center = t.center,
+        };
+        static public Rect Scale(this Rect t, Component a)
+        => new()
+        {
+            size = t.size.Mul(a.transform.localScale),
+            center = t.center,
+        };
 
         // Try
         static public bool TryNonDefault<T>(this T t, out T r)
@@ -128,13 +147,121 @@ namespace Vheos.Games.ActionPoints
         public static Vector2 Rotate(this Vector2 t, float a, bool inDegrees = false)
         {
             if (inDegrees)
-                a *= Mathf.Rad2Deg;
+                a *= Mathf.Deg2Rad;
 
-            float sina = Mathf.Sin(a);
-            float cosa = Mathf.Cos(a);
-            return new Vector2(cosa * t.x - sina * t.y, sina * t.x + cosa * t.y);
+            float sin = Mathf.Sin(-a);
+            float cos = Mathf.Cos(-a);
+            return new Vector2(t.x * cos - t.y * sin, t.x * sin + t.y * cos);
         }
+        static public bool IntersectRays(Ray2D a, Ray2D b, out Vector2 r)
+        {
+            var det = a.direction.y * b.direction.x - a.direction.x * b.direction.y;
 
+            if (det != 0)
+            {
+                float dx = b.origin.x - a.origin.x;
+                float dy = b.origin.y - a.origin.y;
+                float u = (a.direction.x * dy - a.direction.y * dx) / det;
+                float v = (b.direction.x * dy - b.direction.y * dx) / det;
+
+                if (u >= 0f && v >= 0f)
+                {
+                    r = a.GetPoint(v);
+                    return true;
+                }
+            }
+
+            r = float.NaN.ToVector2();
+            return false;
+        }
+        public static bool IntersectSegments(Segment2D a, Segment2D b, out Vector2 r)
+        {
+            float dax = a.To.x - a.From.x;
+            float day = a.To.y - a.From.y;
+            float dby = b.To.y - b.From.y;
+            float dbx = b.To.x - b.From.x;
+            float det = day * dbx - dax * dby;
+
+            if (det != 0f)
+            {
+                float dx = b.From.x - a.From.x;
+                float dy = b.From.y - a.From.y;
+                float u = (dax * dy - day * dx) / det;   // progress of intersection along segment B
+                float v = (dbx * dy - dby * dx) / det;   // progress of intersection along segment A
+
+                if (u >= 0f && u <= 1f
+                && v >= 0f && v <= 1f)
+                {
+                    float x = a.From.x + dax * v;
+                    float y = a.From.y + day * v;
+                    r = new(x, y);
+                    return true;
+                }
+            }
+
+            r = float.NaN.ToVector2();
+            return false;
+        }
+        public static bool IntersectRayAndSegment(Ray2D a, Segment2D b, out Vector2 r)
+        {
+            float dby = b.To.y - b.From.y;
+            float dbx = b.To.x - b.From.x;
+            float det = a.direction.y * dbx - a.direction.x * dby;
+
+            if (det != 0f)
+            {
+                float dx = b.From.x - a.origin.x;
+                float dy = b.From.y - a.origin.y;
+                float u = (a.direction.x * dy - a.direction.y * dx) / det;   // progress of intersection along segment B
+                float v = (dbx * dy - dby * dx) / det;   // distance of intersection along ray A
+
+                if (u >= 0f && u <= 1f
+                && v >= 0f)
+                {
+                    r = a.GetPoint(v);
+                    return true;
+                }
+            }
+
+            r = float.NaN.ToVector2();
+            return false;
+        }
+        static public IEnumerable<Vector2> Corners(this Rect t)
+        {
+            yield return t.center + t.size.Mul(-0.5f, +0.5f);
+            yield return t.center + t.size.Mul(+0.5f, +0.5f);
+            yield return t.center + t.size.Mul(+0.5f, -0.5f);
+            yield return t.center + t.size.Mul(-0.5f, -0.5f);
+        }
+        static public IEnumerable<Ray2D> EdgeRays(this Rect t)
+        {
+            yield return new(t.center + t.size.Mul(-0.5f, +0.5f), Vector2.right);
+            yield return new(t.center + t.size.Mul(+0.5f, +0.5f), Vector2.down);
+            yield return new(t.center + t.size.Mul(+0.5f, -0.5f), Vector2.left);
+            yield return new(t.center + t.size.Mul(-0.5f, -0.5f), Vector2.up);
+        }
+        static public IEnumerable<Segment2D> EdgeSegments(this Rect t)
+        {
+            yield return new(t.center + t.size.Mul(-0.5f, +0.5f), t.center + t.size.Mul(+0.5f, +0.5f));
+            yield return new(t.center + t.size.Mul(+0.5f, +0.5f), t.center + t.size.Mul(+0.5f, -0.5f));
+            yield return new(t.center + t.size.Mul(+0.5f, -0.5f), t.center + t.size.Mul(-0.5f, -0.5f));
+            yield return new(t.center + t.size.Mul(-0.5f, -0.5f), t.center + t.size.Mul(-0.5f, +0.5f));
+        }
+        static public Vector2 ClosestCorner(this Rect t, Vector2 a)
+        {
+            float minDistance = float.PositiveInfinity;
+            Vector2 minCorner = default;
+            foreach (var corner in t.Corners())
+            {
+                float distance = a.DistanceTo(corner);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    minCorner = corner;
+                }
+            }
+            return minCorner;
+        }
 
 
         // UTILITY
