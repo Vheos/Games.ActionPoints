@@ -104,8 +104,6 @@ namespace Vheos.Games.ActionPoints
             TargetingLine = UITargetingLineManager.InstantiateComponent();
             TargetingLine.Initialize(UICanvasManager.Any);
             TargetingLine.BindToPlayer(this);
-
-            PlayerManager.OnPlayerJoin.Invoke(this);
         }
         protected override void PlayEnable()
         {
@@ -122,7 +120,6 @@ namespace Vheos.Games.ActionPoints
             base.PlayDestroy();
             DisableActions();
             _inputUser.UnpairDevicesAndRemoveUser();
-            PlayerManager.OnPlayerLeave.Invoke(this);
         }
     }
 }

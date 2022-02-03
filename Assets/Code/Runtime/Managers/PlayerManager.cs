@@ -68,7 +68,10 @@ namespace Vheos.Games.ActionPoints
 
             var playerID = FindAvailableID();
             _PlayerColors.TryGet(playerID, out var playerColor, Color.white);
-            InstantiateComponent().Initialize(_Actions, context.control.device, controlScheme, playerID, playerColor);
+            var newPlayer = InstantiateComponent();
+            newPlayer.Initialize(_Actions, context.control.device, controlScheme, playerID, playerColor);
+            newPlayer.OnPlayDestroy.SubscribeOneShot(() => OnPlayerLeave.Invoke(newPlayer));
+            OnPlayerJoin.Invoke(newPlayer);            
         }
 
         // Initializers
