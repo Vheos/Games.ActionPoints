@@ -4,7 +4,6 @@ namespace Vheos.Games.ActionPoints.Test
     using UnityEngine;
     using UnityEngine.InputSystem;
     using Games.Core;
-    using Tools.UnityCore;
     using Tools.Extensions.Math;
 
     public class SceneManagerTest : MonoBehaviour

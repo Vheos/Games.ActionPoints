@@ -1,4 +1,4 @@
-namespace Vheos.Tools.UnityCore
+namespace Vheos.Games.ActionPoints.Test
 {
     using System;
     using UnityEngine;
