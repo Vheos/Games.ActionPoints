@@ -15,9 +15,9 @@ namespace Vheos.Games.ActionPoints
         public readonly AutoEvent OnDie = new();
 
         // Inputs
-        public Getter<int> MaxWounds { get; } = new();
-        public Getter<float> BluntArmor { get; } = new();
-        public Getter<float> SharpArmor { get; } = new();
+        public readonly Getter<int> MaxWounds = new();
+        public readonly Getter<float> BluntArmor = new();
+        public readonly Getter<float> SharpArmor = new();
 
         // Publics
         public int WoundsCount

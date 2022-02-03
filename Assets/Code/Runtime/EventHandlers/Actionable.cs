@@ -17,8 +17,8 @@ namespace Vheos.Games.ActionPoints
         public readonly AutoEvent<float> OnOverflowActionProgress = new();
 
         // Getters
-        public Getter<int> MaxActionPoints { get; } = new();
-        public Getter<int> LockedMaxActionPoints { get; } = new();
+        public readonly Getter<int> MaxActionPoints = new();
+        public readonly Getter<int> LockedMaxActionPoints = new();
 
         // Publics
         public IReadOnlyCollection<Action> Actions
@@ -44,7 +44,7 @@ namespace Vheos.Games.ActionPoints
                     return;
 
                 int previousActionPoints = ActionPoints;
-                bool previousExhausted = IsExhausted;                
+                bool previousExhausted = IsExhausted;
 
                 _actionProgress = value;
                 float overflow = _actionProgress - UsableMaxActionPoints;
@@ -53,7 +53,7 @@ namespace Vheos.Games.ActionPoints
                     FocusProgress = _actionProgress;
 
                 if (overflow > 0f)
-                    OnOverflowActionProgress?.Invoke(overflow);                
+                    OnOverflowActionProgress?.Invoke(overflow);
                 if (previousActionPoints != ActionPoints)
                     OnChangeActionPoints?.Invoke(previousActionPoints, ActionPoints);
                 if (previousExhausted && !IsExhausted)
