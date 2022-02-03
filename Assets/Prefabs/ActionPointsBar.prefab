@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 723520003236822371}
   - component: {fileID: 7778436318990988254}
-  - component: {fileID: 1779543007141994437}
   - component: {fileID: 3676456388240199777}
+  - component: {fileID: 2081783392837954057}
   m_Layer: 0
   m_Name: ActionPointsBar
   m_TagString: Untagged
@@ -49,18 +49,6 @@ MonoBehaviour:
   _PointPrefab: {fileID: 4540874001801052056, guid: 008e506552b8ac04ea0a115c1b6beb03, type: 3}
   _Spacing: -0.1
   _HalfTime: 0.1
---- !u!114 &1779543007141994437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723520003236822369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 641b7924747d77d46a2c519707e6e81b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3676456388240199777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,5 +59,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 739773d97b69431458d7c409677151bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2081783392837954057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723520003236822369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a743724536a19439a433d6b4541794, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

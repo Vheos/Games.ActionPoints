@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 723520003236822371}
   - component: {fileID: -7765257155594446352}
+  - component: {fileID: 2081783392837954057}
   m_Layer: 0
   m_Name: ActionButtonsWheel
   m_TagString: Untagged
@@ -45,3 +46,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ButtonPrefab: {fileID: 8146316743540505492, guid: 868ac7cc7c51a2943845df4b041d588b, type: 3}
+--- !u!114 &2081783392837954057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723520003236822369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a743724536a19439a433d6b4541794, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
