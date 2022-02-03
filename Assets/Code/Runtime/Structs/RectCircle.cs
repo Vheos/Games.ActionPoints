@@ -9,6 +9,26 @@ namespace Vheos.Games.ActionPoints
 
     public struct RectCircle
     {
+        // Publics
+        public Rect Rect;
+        public float Angle;
+        public bool EncapsulateClosestCorner;
+        public IEnumerable<(Vector2 Position, float Angle)> GetElementsPositionsAndAngles(int targetCount, float radius, float distanceFromPerimeter = 1f)
+        {
+            var (WheelCenter, WheelRadius) = Circle;
+            WheelRadius += radius * distanceFromPerimeter;
+
+            float angle = radius.Div(WheelRadius).ArcSin().Mul(2) * Mathf.Rad2Deg;
+            int count = 360.Div(angle).RoundDown().ClampMax(targetCount);
+
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 offset = Vector2.right.Mul(WheelRadius);
+                float offsetAngle = Angle + angle * count.Sub(1).Div(2).Sub(i);
+                yield return (WheelCenter + offset.Rotate(offsetAngle, true), offsetAngle);
+            }
+        }
+
         // Privates
         private IEnumerable<Vector2> EdgePoints
         {
@@ -38,63 +58,5 @@ namespace Vheos.Games.ActionPoints
                 return new(center, radius);
             }
         }
-
-        // Publics
-        public Rect Rect;
-        public float Angle;
-        public bool EncapsulateClosestCorner;        
-        public IEnumerable<(Vector2 Position, float Angle)> GetElementsPositionsAndAngles(int targetCount, float radius, float distanceFromPerimeter = 1f)
-        {
-            var (WheelCenter, WheelRadius) = Circle;
-            WheelRadius += radius * distanceFromPerimeter;
-
-            float angle = radius.Div(WheelRadius).ArcSin().Mul(2) * Mathf.Rad2Deg;
-            int count = 360.Div(angle).RoundDown().ClampMax(targetCount);
-
-            for (int i = 0; i < count; i++)
-            {
-                Vector2 offset = Vector2.right.Mul(WheelRadius);
-                float offsetAngle = Angle + angle * count.Sub(1).Div(2).Sub(i);
-                yield return (WheelCenter + offset.Rotate(offsetAngle, true), offsetAngle);
-            }
-        }
     }
 }
-
-/*
-#if UNITY_EDITOR
-namespace Vheos.Games.ActionPoints.Editor
-{
-    using System;
-    using System.Linq;
-    using UnityEngine;
-    using UnityEditor;
-    using Tools.Extensions.Math;
-
-    public static class TransformArm_GizmoDrawer
-    {
-        [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
-        static void Pickable(ButtonsWheel component, GizmoType type)
-        {
-            if (!component.isActiveAndEnabled)
-                return;
-
-            Gizmos.color = Color.magenta;
-            foreach (var scaledEdgePoint in component.EdgePoints)
-                Gizmos.DrawWireSphere(scaledEdgePoint.TransformNoScale(component.transform), 0.05f);
-
-            Gizmos.color = Color.cyan;
-            var (WheelCenter, WheelRadius) = component.Circle;
-            Gizmos.DrawWireSphere(WheelCenter.TransformNoScale(component.transform), WheelRadius);
-
-
-            Gizmos.color = Color.yellow;
-            foreach (var localButtonOffset in component.LocalButtonPositions)
-                Gizmos.DrawWireSphere(localButtonOffset.TransformNoScale(component.transform), component.ButtonRadius);
-        }
-    }
-}
-#endif
-*/
-//float minY = scaledRect.size.y.Sub(scaledRect.size.x).Div(2f);
-//.ClampMin(float.NegativeInfinity, minY);

@@ -6,10 +6,10 @@ namespace Vheos.Games.ActionPoints
     [Serializable]
     public struct ImageProperties
     {
+        // Publics
         public Sprite Sprite;
         [Range(0f, 1f)] public float ColorScale;
         [Range(0f, 2f)] public float Scale;
-
         static public ImageProperties Default
         => new()
         {

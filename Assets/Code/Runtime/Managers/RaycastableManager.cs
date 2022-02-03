@@ -23,7 +23,7 @@ namespace Vheos.Games.ActionPoints
                 Camera camera = isUI ? uiCanvas.CanvasCamera : uiCanvas.WorldCamera;
                 float distance = raycastable.DistanceTo(camera);
                 if (distance < minDistance
-                && raycastable.Trigger.Raycast(camera.ScreenPointToRay(uiCanvas.CanvasToScreenPosition(canvasPosition)), out var hitInfo, float.PositiveInfinity)
+                && raycastable.Collider.Raycast(camera.ScreenPointToRay(uiCanvas.CanvasToScreenPosition(canvasPosition)), out var hitInfo, float.PositiveInfinity)
                 && raycastable.PerformRaycastTests(hitInfo.point))
                 {
                     closestComponent = raycastable.Get<T>();
