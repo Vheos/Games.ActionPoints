@@ -25,6 +25,8 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public Player Player
         { get; private set; }
+        public void Show(Targeter targeter, Transform from)
+        => Show(targeter, from, Player.Cursor.transform);
         public void Show(Targeter targeter, Transform from, Transform to)
         {
             IsActive = true;
