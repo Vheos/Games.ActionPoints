@@ -265,6 +265,8 @@ namespace Vheos.Games.ActionPoints
 
 
         // UTILITY
+        static public Vector2 RandomPointOnCircle(float radius = 1f)
+        => PointOnCircle(UnityEngine.Random.value * 2 * Mathf.PI, radius);
         static public Vector2 PointOnCircle(float angle, float radius = 1f, bool inDegrees = false)
         {
             if (inDegrees)
