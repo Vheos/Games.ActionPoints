@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.UnityObjects;
     using Vheos.Tools.Extensions.Math;
+    using System.Linq;
 
     [RequireComponent(typeof(Expandable))]
     [DisallowMultipleComponent]
@@ -34,14 +35,19 @@ namespace Vheos.Games.ActionPoints
             var actionsEnumerator = UI.Actionable.Actions.GetEnumerator();
             int index = 0;
             foreach (var (Position, Angle) in _positionsWheel.GetElementsPositionsAndAngles(UI.Actionable.Actions.Count, _ButtonPrefab.Radius))
-                if (actionsEnumerator.MoveNext())
-                {
-                    var newButton = this.CreateChildComponent(_ButtonPrefab);
-                    newButton.Initialize(this, index++);
-                    newButton.Get<TextMeshPro>().text = actionsEnumerator.Current.Text;
-                    newButton.transform.localPosition = Position;
-                    _buttons.Add(newButton);
-                }
+            {
+                if (!actionsEnumerator.MoveNext())
+                    break;
+
+                if (actionsEnumerator.Current == null
+                || !actionsEnumerator.Current.ButtonVisuals.HasAnyVisuals)
+                    continue;
+
+                var newButton = this.CreateChildComponent(_ButtonPrefab);
+                newButton.Initialize(this, index++, actionsEnumerator.Current);
+                newButton.transform.localPosition = Position;
+                _buttons.Add(newButton);
+            }
         }
         private void Actionable_OnChangeActions()
         {
