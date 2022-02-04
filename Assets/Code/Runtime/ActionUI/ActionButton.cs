@@ -33,6 +33,7 @@ namespace Vheos.Games.ActionPoints
             name = $"Button{index + 1}";
             BindEnableDisable(wheel);
 
+            transform.localScale = _Radius.ToVector3();
             if (action.ButtonVisuals.Sprite != null)
             {
                 var spriteRenderer = Add<SpriteRenderer>();
@@ -42,11 +43,12 @@ namespace Vheos.Games.ActionPoints
             }
             else if (action.ButtonVisuals.Text != null)
             {
-                var textMeshPro = Add<TextMeshPro>();
-                textMeshPro.rectTransform.sizeDelta = _Radius.ToVector2();
+                transform.localScale = transform.localScale.Mul(1f, 1.5f, 1f);
+
+                var textMeshPro = Add<TextMeshPro>();                
                 textMeshPro.text = action.ButtonVisuals.Text;
                 textMeshPro.color = action.ButtonVisuals.Color;
-                textMeshPro.transform.SetLocalScaleY(1.5f);
+                textMeshPro.rectTransform.sizeDelta = Vector2.one;                
                 textMeshPro.fontStyle = FontStyles.Bold;
                 textMeshPro.enableAutoSizing = true;
                 textMeshPro.fontSizeMin = 0f;
