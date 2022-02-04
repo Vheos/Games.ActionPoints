@@ -23,12 +23,12 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public IReadOnlyCollection<Action> Actions
         => _actions;
-        public void TryAddActions(params Action[] actions)
+        public void TryAddActions(IEnumerable<Action> actions)
         {
             if (_actions.TryAddUnique(actions))
                 OnChangeActions.Invoke();
         }
-        public void TryRemoveActions(params Action[] actions)
+        public void TryRemoveActions(IEnumerable<Action> actions)
         {
             if (_actions.TryRemove(actions))
                 OnChangeActions.Invoke();

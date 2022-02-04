@@ -83,31 +83,43 @@ namespace Vheos.Games.ActionPoints
             if (isLast)
                 Get<SpriteOutline>().Hide();
         }
+        private void Equiper_OnChangeEquipable(Equipable from, Equipable to)
+        {
+            if (from != null && from.TryGet(out Equipment previousEquipment))
+                Get<Actionable>().TryRemoveActions(previousEquipment.Actions);
+
+            if (to != null && to.TryGet(out Equipment currentEquipment))
+                Get<Actionable>().TryAddActions(currentEquipment.Actions);
+        }
 
         // Play
         protected override void PlayAwake()
         {
             base.PlayAwake();
 
-            Get<Selectable>().OnGainSelection.SubscribeAuto(this, Selectable_OnGainHighlight);
-            Get<Selectable>().OnLoseSelection.SubscribeAuto(this, Selectable_OnLoseHighlight);
-            Get<Selectable>().OnPress.SubscribeAuto(this, Selectable_OnPress);
-            Get<Selectable>().OnRelease.SubscribeAuto(this, Selectable_OnRelease);
-            Get<Selectable>().OnHold.SubscribeAuto(this, Selectable_OnHold);
+            Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainHighlight);
+            Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseHighlight);
+            Get<Selectable>().OnPress.SubEnableDisable(this, Selectable_OnPress);
+            Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);
+            Get<Selectable>().OnHold.SubEnableDisable(this, Selectable_OnHold);
 
-            Get<Targetable>().OnGainTargeting.SubscribeAuto(this, Targetable_OnGainTargeting);
-            Get<Targetable>().OnLoseTargeting.SubscribeAuto(this, Targetable_OnLoseTargeting);
+            Get<Targetable>().OnGainTargeting.SubEnableDisable(this, Targetable_OnGainTargeting);
+            Get<Targetable>().OnLoseTargeting.SubEnableDisable(this, Targetable_OnLoseTargeting);
 
             //Get<Equiper>().OnChangeEquipable.SubscribeAuto(this, (from, to) =>
             //    Debug.Log($"Equiper {name}: {(from != null ? from.name : "null")} -> {(to != null ? to.name : "null")}"));
+
+
+            Get<Equiper>().OnChangeEquipable.SubEnableDisable(this, Equiper_OnChangeEquipable);
+
 
             if (Has<Actionable>())
             {
                 Get<Actionable>().MaxActionPoints.Set(() => _MaxActionPoints);
                 Get<Actionable>().TryAddActions(_StartingActions);
 
-                Get<Updatable>().OnUpdate.SubscribeAuto(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
-                Get<Actionable>().OnOverflowActionProgress.SubscribeAuto(this, t => Get<Actionable>().FocusProgress += t);
+                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
+                Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
             }
 
             if (_ActionUIPrefab != null)
