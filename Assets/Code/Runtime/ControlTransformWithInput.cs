@@ -47,7 +47,7 @@ namespace Vheos.Games.ActionPoints.Test
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            Get<Updatable>().OnUpdate.SubscribeAuto(this, ApplyInput);
+            Get<Updatable>().OnUpdate.SubEnableDisable(this, ApplyInput);
             _control = _InputActions.FindAction(nameof(InputActionName.Control));
             _move = _InputActions.FindAction(nameof(InputActionName.Move));
             _rotate = _InputActions.FindAction(nameof(InputActionName.Rotate));

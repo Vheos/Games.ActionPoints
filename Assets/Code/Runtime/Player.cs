@@ -91,7 +91,7 @@ namespace Vheos.Games.ActionPoints
             _moveCursor = newActions.FindAction(nameof(InputActionEnum.MoveCursor));
             _deltaTimeDependentMoveCursor = !_inputUser.pairedDevices.Any(t => t is Pointer);
 
-            Get<Updatable>().OnUpdate.SubscribeAuto(this, InvokeOnInputMoveCursor);
+            Get<Updatable>().OnUpdate.SubEnableDisable(this, InvokeOnInputMoveCursor);
             TrySubscribeInputActions();
             EnableActions();
 

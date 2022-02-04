@@ -65,7 +65,7 @@ namespace Vheos.Games.ActionPoints
             UpdateOutlineSprite(null, Get<SpriteRenderer>().sprite);
             Hide(true);
 
-            Get<SpriteChangable>().OnChangeSprite.SubscribeAuto(this, UpdateOutlineSprite);
+            Get<SpriteChangable>().OnChangeSprite.SubEnableDisable(this, UpdateOutlineSprite);
         }
     }
 }

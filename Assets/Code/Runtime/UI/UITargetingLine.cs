@@ -99,7 +99,7 @@ namespace Vheos.Games.ActionPoints
             Get<LineRenderer>().positionCount = 2;
             Hide(true);
 
-            Get<Updatable>().OnUpdate.SubscribeAuto(this, OnUpdate);
+            Get<Updatable>().OnUpdate.SubEnableDisable(this, OnUpdate);
         }
         public void BindToPlayer(Player player)
         {

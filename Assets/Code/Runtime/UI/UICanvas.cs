@@ -63,7 +63,7 @@ namespace Vheos.Games.ActionPoints
             WorldCamera = CameraManager.Any;
             CanvasCamera = UICanvasManager.InstantiateUICamera();
 
-            Get<RectResizeable>().OnResize.SubscribeAuto(this, UpdateCanvasCamera);
+            Get<RectResizeable>().OnResize.SubEnableDisable(this, UpdateCanvasCamera);
             UpdateCanvasCamera(default, Size);
         }
     }

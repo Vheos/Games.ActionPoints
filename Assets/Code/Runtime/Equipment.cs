@@ -4,12 +4,18 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Games.Core;
     using Tools.Extensions.Math;
+    using System.Collections.Generic;
 
     [RequireComponent(typeof(Equipable))]
     public class Equipment : ABaseComponent
     {
         // Inspector
         [SerializeField] protected EquipSlot _Slot;
+        [SerializeField] protected Action[] _Actions;
+
+        // Publics
+        public IReadOnlyCollection<Action> Actions
+        => _Actions;
 
         // Privates
         private void Selectable_OnPress(Selecter selecter)
@@ -50,11 +56,11 @@ namespace Vheos.Games.ActionPoints
 
             Get<Equipable>().EquipSlot.Set(() => (int)_Slot);
 
-            Get<Selectable>().OnPress.SubscribeAuto(this, Selectable_OnPress);
-            Get<Selectable>().OnRelease.SubscribeAuto(this, Selectable_OnRelease);
+            Get<Selectable>().OnPress.SubEnableDisable(this, Selectable_OnPress);
+            Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);
 
-            Get<Targetable>().OnGainTargeting.SubscribeAuto(this, Targetable_OnGainTargeting);
-            Get<Targetable>().OnLoseTargeting.SubscribeAuto(this, Targetable_OnLoseTargeting);
+            Get<Targetable>().OnGainTargeting.SubEnableDisable(this, Targetable_OnGainTargeting);
+            Get<Targetable>().OnLoseTargeting.SubEnableDisable(this, Targetable_OnLoseTargeting);
         }
     }
 }

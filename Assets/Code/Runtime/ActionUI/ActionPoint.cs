@@ -64,14 +64,14 @@ namespace Vheos.Games.ActionPoints
             BindEnableDisable(bar);
 
             Get<ActionPointMProps>().Initialize();
-            OnPlayEnable.Subscribe(UpdateInstantly);
+            OnPlayEnable.Sub(UpdateInstantly);
             UpdateInstantly();
 
-            Bar.OnChangeVisualActionProgress.SubscribeAuto(this, UpdateActionProgress);
-            Bar.OnChangeVisualFocusProgress.SubscribeAuto(this, UpdateFocusProgress);
+            Bar.OnChangeVisualActionProgress.SubEnableDisable(this, UpdateActionProgress);
+            Bar.OnChangeVisualFocusProgress.SubEnableDisable(this, UpdateFocusProgress);
 
-            Bar.UI.Actionable.OnChangeActionPoints.SubscribeAuto(this, UpdateOpacity);
-            Bar.UI.Actionable.OnChangeFocusPoints.SubscribeAuto(this, UpdateShape);
+            Bar.UI.Actionable.OnChangeActionPoints.SubEnableDisable(this, UpdateOpacity);
+            Bar.UI.Actionable.OnChangeFocusPoints.SubEnableDisable(this, UpdateShape);
         }
     }
 }

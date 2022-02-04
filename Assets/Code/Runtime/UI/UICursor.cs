@@ -64,7 +64,7 @@ namespace Vheos.Games.ActionPoints
             _uiCanvas = uiCanvas;
             this.BecomeChildOf(_uiCanvas);
             transform.position = _uiCanvas.Size * 0.5f.ToVector2();
-            Get<Updatable>().OnUpdate.SubscribeAuto(this, OnUpdate);
+            Get<Updatable>().OnUpdate.SubEnableDisable(this, OnUpdate);
         }
         public void BindToPlayer(Player player)
         {
@@ -73,9 +73,9 @@ namespace Vheos.Games.ActionPoints
             name = $"{Player.name}_Cursor";
 
             BindDestroyObject(Player);
-            Player.OnInputMoveCursor.SubscribeAuto(this, OnInputMoveCursor);
-            Player.OnInputPressConfirm.SubscribeAuto(this, OnInputPressConfirm);
-            Player.OnInputReleaseConfirm.SubscribeAuto(this, OnInputReleaseConfirm);            
+            Player.OnInputMoveCursor.SubEnableDisable(this, OnInputMoveCursor);
+            Player.OnInputPressConfirm.SubEnableDisable(this, OnInputPressConfirm);
+            Player.OnInputReleaseConfirm.SubEnableDisable(this, OnInputReleaseConfirm);            
 
             transform.localScale = default;
             SetImageProperties(_Idle);

@@ -45,10 +45,10 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            Get<Selectable>().OnGainSelection.SubscribeAuto(this, Selectable_OnGainHighlight);
-            Get<Selectable>().OnLoseSelection.SubscribeAuto(this, Selectable_OnLoseHighlight);
-            Get<Selectable>().OnPress.SubscribeAuto(this, Selectable_OnPress);
-            Get<Selectable>().OnRelease.SubscribeAuto(this, Selectable_OnRelease);
+            Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainHighlight);
+            Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseHighlight);
+            Get<Selectable>().OnPress.SubEnableDisable(this, Selectable_OnPress);
+            Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);
             UpdateColorComponentType();
         }
     }

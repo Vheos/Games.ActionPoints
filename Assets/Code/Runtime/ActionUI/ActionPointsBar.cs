@@ -77,11 +77,11 @@ namespace Vheos.Games.ActionPoints
 
             CreatePoints();
 
-            Get<Updatable>().OnUpdate.SubscribeAuto(this, TryInvokeEvents);
-            OnPlayEnable.Subscribe(UpdateInstantly);
+            Get<Updatable>().OnUpdate.SubEnableDisable(this, TryInvokeEvents);
+            OnPlayEnable.Sub(UpdateInstantly);
 
-            Get<Expandable>().OnStartExpanding.Subscribe(() => IsActive = true);
-            Get<Expandable>().OnFinishCollapsing.Subscribe(() => IsActive = false);
+            Get<Expandable>().OnStartExpanding.SubDestroy(this, () => IsActive = true);
+            Get<Expandable>().OnFinishCollapsing.SubDestroy(this, () => IsActive = false);
             Get<Expandable>().ExpandTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.one));
             Get<Expandable>().CollapseTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.zero));
             Get<Expandable>().TryCollapse(true);

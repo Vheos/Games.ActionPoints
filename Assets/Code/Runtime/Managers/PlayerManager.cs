@@ -70,7 +70,7 @@ namespace Vheos.Games.ActionPoints
             _PlayerColors.TryGet(playerID, out var playerColor, Color.white);
             var newPlayer = InstantiateComponent();
             newPlayer.Initialize(_Actions, context.control.device, controlScheme, playerID, playerColor);
-            newPlayer.OnPlayDestroy.SubscribeOneShot(() => OnPlayerLeave.Invoke(newPlayer));
+            newPlayer.OnPlayDestroy.SubOnce(() => OnPlayerLeave.Invoke(newPlayer));
             OnPlayerJoin.Invoke(newPlayer);            
         }
 
