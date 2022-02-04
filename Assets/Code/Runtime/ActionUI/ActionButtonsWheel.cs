@@ -27,7 +27,7 @@ namespace Vheos.Games.ActionPoints
         private RectCircle _positionsWheel;
         private void DestroyButtons()
         {
-            _buttons.Destroy();
+            _buttons.DestroyObject();
             _buttons.Clear();
         }
         private void CreateButtons()
@@ -43,8 +43,9 @@ namespace Vheos.Games.ActionPoints
                 || !actionsEnumerator.Current.ButtonVisuals.HasAnyVisuals)
                     continue;
 
-                var newButton = this.CreateChildComponent(_ButtonPrefab);
+                var newButton = Instantiate(_ButtonPrefab);                
                 newButton.Initialize(this, index++, actionsEnumerator.Current);
+                newButton.BecomeChildOf(this);
                 newButton.transform.localPosition = Position;
                 _buttons.Add(newButton);
             }
@@ -70,12 +71,12 @@ namespace Vheos.Games.ActionPoints
             };
             CreateButtons();
 
-            UI.Actionable.OnChangeActions.SubscribeAuto(this, Actionable_OnChangeActions);
+            UI.Actionable.OnChangeActions.SubDestroy(this, Actionable_OnChangeActions);
 
-            Get<Expandable>().OnStartExpanding.Subscribe(Activate);
-            Get<Expandable>().OnFinishExpanding.Subscribe(Enable);
-            Get<Expandable>().OnStartCollapsing.Subscribe(Disable);
-            Get<Expandable>().OnFinishCollapsing.Subscribe(Deactivate);
+            Get<Expandable>().OnStartExpanding.SubDestroy(this, Activate);
+            Get<Expandable>().OnFinishExpanding.SubDestroy(this, Enable);
+            Get<Expandable>().OnStartCollapsing.SubDestroy(this, Disable);
+            Get<Expandable>().OnFinishCollapsing.SubDestroy(this, Deactivate);
             Get<Expandable>().ExpandTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.one));
             Get<Expandable>().CollapseTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.zero));
             Get<Expandable>().TryCollapse(true);
