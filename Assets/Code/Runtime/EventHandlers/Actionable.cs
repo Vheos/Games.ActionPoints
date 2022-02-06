@@ -5,12 +5,13 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.Math;
     using Tools.Extensions.Collections;
+    using System.Linq;
 
     [DisallowMultipleComponent]
     sealed public class Actionable : ABaseComponent
     {
         // Events
-        public readonly AutoEvent OnChangeActions = new();
+        public readonly AutoEvent<IEnumerable<Action>, IEnumerable<Action>> OnChangeActions = new();
         public readonly AutoEvent<int, int> OnChangeActionPoints = new();
         public readonly AutoEvent<int, int> OnChangeFocusPoints = new();
         public readonly AutoEvent<bool> OnChangeExhausted = new();
@@ -23,15 +24,26 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public IReadOnlyCollection<Action> Actions
         => _actions;
-        public void TryAddActions(IEnumerable<Action> actions)
+        public bool TryChangeActions(IEnumerable<Action> toRemove, IEnumerable<Action> toAdd)
         {
-            if (_actions.TryAddUnique(actions))
-                OnChangeActions.Invoke();
-        }
-        public void TryRemoveActions(IEnumerable<Action> actions)
-        {
-            if (_actions.TryRemove(actions))
-                OnChangeActions.Invoke();
+            HashSet<Action> actuallyRemovedActions = new();
+            if (toRemove != null)
+                foreach (var action in toAdd != null ? toRemove.Except(toAdd) : toRemove)
+                    if (_actions.TryRemove(action))
+                        actuallyRemovedActions.Add(action);
+
+            HashSet<Action> actuallyAddedActions = new();
+            if (toAdd != null)
+                foreach (var action in toRemove != null ? toAdd.Except(toRemove) : toAdd)
+                    if (_actions.TryAddUnique(action))
+                        actuallyAddedActions.Add(action);
+
+            if (actuallyRemovedActions.IsEmpty()
+            && actuallyAddedActions.IsEmpty())
+                return false;
+
+            OnChangeActions.Invoke(actuallyRemovedActions, actuallyAddedActions);
+            return true;
         }
         public void ClearActions()
         => _actions.Clear();
