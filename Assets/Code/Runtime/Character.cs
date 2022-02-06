@@ -10,7 +10,6 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [SerializeField] [Range(0, 10)] protected int _MaxActionPoints;
         [SerializeField] [Range(-1f, 1f)] protected float _ActionSpeed;
-        [SerializeField] protected ActionUI _ActionUIPrefab;
         [SerializeField] protected Action[] _StartingActions;
 
         // Privates
@@ -85,17 +84,29 @@ namespace Vheos.Games.ActionPoints
         }
         private void Equiper_OnChangeEquipable(Equipable from, Equipable to)
         {
-            if (from != null && from.TryGet(out Equipment previousEquipment))
-                Get<Actionable>().TryRemoveActions(previousEquipment.Actions);
+            var previousEquipment = from != null ? from.Get<Equipment>() : null;
+            var currentEquipment = to != null ? to.Get<Equipment>() : null;
+            if (previousEquipment != null)
+                previousEquipment.NewTween()
+                    .SetDuration(0.4f)
+                    .Position(transform.position + NewUtility.RandomPointOnCircle().Abs().Append());
+            if (currentEquipment != null)
+                currentEquipment.NewTween()
+                    .SetDuration(0.4f)
+                    .Position(transform.position);
 
-            if (to != null && to.TryGet(out Equipment currentEquipment))
-                Get<Actionable>().TryAddActions(currentEquipment.Actions);
+            var previousActions = from != null ? previousEquipment.Actions : null;
+            var currentActions = to != null ? currentEquipment.Actions : null;
+            Get<Actionable>().TryChangeActions(previousActions, currentActions);
         }
 
         // Play
         protected override void PlayAwake()
         {
             base.PlayAwake();
+
+            _actionUI = Instantiate(Settings.Prefabs.ActionUI);
+            _actionUI.Initialize(Get<Actionable>(), () => Get<Collider>().LocalBounds().ToRect().Scale(this));
 
             Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainHighlight);
             Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseHighlight);
@@ -116,17 +127,13 @@ namespace Vheos.Games.ActionPoints
             if (Has<Actionable>())
             {
                 Get<Actionable>().MaxActionPoints.Set(() => _MaxActionPoints);
-                Get<Actionable>().TryAddActions(_StartingActions);
+                Get<Actionable>().TryChangeActions(null, _StartingActions);
 
                 Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
                 Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
             }
 
-            if (_ActionUIPrefab != null)
-            {
-                _actionUI = Instantiate(_ActionUIPrefab);
-                _actionUI.Initialize(Get<Actionable>(), () => Get<Collider>().LocalBounds().ToRect().Scale(this));
-            }
+
         }
     }
 }

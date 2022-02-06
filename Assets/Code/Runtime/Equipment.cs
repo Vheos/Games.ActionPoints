@@ -25,16 +25,8 @@ namespace Vheos.Games.ActionPoints
         private void Selectable_OnRelease(Selecter selecter, bool withinTrigger)
         {
             if (Get<Targeter>().TryGetTargetable(out Equiper equiper))
-            {
-                if (equiper.TryEquip(Get<Equipable>()))
-                    this.NewTween()
-                        .SetDuration(0.4f)
-                        .Position(Get<Targeter>().Targetable.transform.position);
-                else if (equiper.TryUnequip(Get<Equipable>()))
-                    this.NewTween()
-                        .SetDuration(0.4f)
-                        .Position(transform.position + NewUtility.RandomPointOnCircle(0.5f).Append());
-            }
+                if (!equiper.TryEquip(Get<Equipable>()))
+                    equiper.TryUnequip(Get<Equipable>());
 
             selecter.Get<Player>().TargetingLine.Hide();
         }
