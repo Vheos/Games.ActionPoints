@@ -15,7 +15,7 @@ MonoBehaviour:
   _ButtonVisuals:
     Sprite: {fileID: 0}
     Text: SWORD SLASH
-    Color: {r: 1, g: 1, b: 1, a: 1}
+    Color: {r: 1, g: 0.875, b: 0.5, a: 1}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
   _Effects:
@@ -23,7 +23,4 @@ MonoBehaviour:
     Values:
     - 0
     - 0
-    - 0
-  - Effect: {fileID: 11400000, guid: ba8b517b1e2e04a4384419abd8b3dd4b, type: 2}
-    Values:
     - 0

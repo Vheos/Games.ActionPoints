@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: SwordSlash2
   m_EditorClassIdentifier: 
   _ButtonVisuals:
-    Sprite: {fileID: 2860006914309871096, guid: 20eb8786ff4d12140919ff6e79638513, type: 3}
+    Sprite: {fileID: 0}
     Text: SWORD SLASH
-    Color: {r: 1, g: 1, b: 1, a: 1}
+    Color: {r: 1, g: 0.875, b: 0.5, a: 1}
   _ActionPointsCost: 0
   _FocusPointsCost: 0
   _Effects:
