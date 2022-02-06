@@ -9,20 +9,39 @@ namespace Vheos.Games.ActionPoints.Test
 
     public class TextMeshProTest : MonoBehaviour
     {
-        public TextMeshPro TextMeshPro;
-        public bool Log;
+        private TextMeshPro _textMeshPro;
 
+        private void Awake()
+        {
+            _textMeshPro = gameObject.AddComponent<TextMeshPro>();
+            _textMeshPro.ForceMeshUpdate();
+            Debug.Log($"Awake 1: {_textMeshPro.renderer.localBounds.size}");
+            _textMeshPro.text = "SWORD CIACH";
+            _textMeshPro.rectTransform.sizeDelta = Vector2.one;
+            _textMeshPro.fontStyle = FontStyles.Bold;
+            _textMeshPro.enableAutoSizing = true;
+            _textMeshPro.fontSizeMin = 0f;
+            _textMeshPro.horizontalAlignment = HorizontalAlignmentOptions.Center;
+            _textMeshPro.verticalAlignment = VerticalAlignmentOptions.Middle;
+            _textMeshPro.ForceMeshUpdate();
+            Debug.Log($"Awake 2: {_textMeshPro.renderer.localBounds.size}");
+        }
+
+        private void OnEnable()
+        {
+            Debug.Log($"OnEnable: {_textMeshPro.renderer.localBounds.size}");
+        }
+        private void Start()
+        {
+            Debug.Log($"Start: {_textMeshPro.renderer.localBounds.size}");
+        }
         private void Update()
         {
-            if (!Log.Consume())
-                return;
-
-            Debug.Log($"{TextMeshPro.mesh.bounds}");
-           // Debug.Log($"{TextMeshPro.meshFilter.sharedMesh.bounds}");
-            Debug.Log($"{TextMeshPro.meshFilter.mesh.bounds}");
-            Debug.Log($"{TextMeshPro.renderer.localBounds}");
-            Debug.Log($"{TextMeshPro.renderedWidth} / {TextMeshPro.renderedHeight}");
-            Debug.Log($"{TextMeshPro.preferredWidth} / {TextMeshPro.preferredHeight}");
+            Debug.Log($"Update: {_textMeshPro.renderer.localBounds.size}");
+        }
+        private void LateUpdate()
+        {
+            Debug.Log($"LateUpdate: {_textMeshPro.renderer.localBounds.size}");
         }
     }
 }
