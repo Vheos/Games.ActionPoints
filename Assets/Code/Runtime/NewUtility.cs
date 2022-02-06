@@ -2,13 +2,13 @@ namespace Vheos.Games.ActionPoints
 {
     using System;
     using System.Collections.Generic;
+    using System.Text.RegularExpressions;
     using System.Runtime.CompilerServices;
     using UnityEngine;
     using Games.Core;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
-    using Tools.Extensions.General;
-    using Vheos.Tools.Utilities;
+    using System.Linq;
 
     static public class NewUtility
     {
@@ -26,9 +26,9 @@ namespace Vheos.Games.ActionPoints
         => Quaternion.Euler(0, 0, t);
         static public bool IsCompilerGenerated(this Type t)
         => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) != null;
-        static public bool CursorRaycast(this Collider t, Camera camera, out RaycastHit hitInfo)
-        => t.Raycast(camera.CursorRay(), out hitInfo, float.PositiveInfinity);
-        static public bool IsUnderCursor(this Collider t, Camera camera)
+        static public bool CursorRaycast(this Collider t, CCamera camera, out RaycastHit hitInfo)
+        => t.Raycast(camera.Unity.CursorRay(), out hitInfo, float.PositiveInfinity);
+        static public bool IsUnderCursor(this Collider t, CCamera camera)
         => t.CursorRaycast(camera, out _);
         static public T Random<T>(this IEnumerable<T> t)
         {
@@ -78,6 +78,20 @@ namespace Vheos.Games.ActionPoints
             size = t.size.Mul(a.transform.localScale),
             center = t.center,
         };
+        static public string SplitCamelCase(this string t)
+        => Regex.Replace(t, "([a-z](?=[A-Z0-9]))", "$1 ");
+        static public void Shuffle<T>(this IList<T> t)
+        {
+            for (int i = 0; i < t.Count - 1; i++)
+            {
+                int j = UnityEngine.Random.Range(i, t.Count);
+                T tmp = t[i];
+                t[i] = t[j];
+                t[j] = tmp;
+            }
+        }
+        static public IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> t)
+        => t ?? Enumerable.Empty<T>();
 
         // Try
         static public bool TryNonDefault<T>(this T t, out T r)
