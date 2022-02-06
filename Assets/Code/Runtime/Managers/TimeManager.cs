@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine.InputSystem;
 
     [DisallowMultipleComponent]
-    public class TimeManager : AGlobalComponent<TimeManager>
+    public class TimeManager : AStaticComponent<TimeManager>
     {
         // Inspector
         [SerializeField] [Range(0f, 2f)] protected float _TimeScale = 1f;
@@ -29,8 +29,7 @@ namespace Vheos.Games.ActionPoints
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            AssignInspectorValues();
-            Tween.DefaultCurve = Qurve.ValuesByProgress;
+            AssignInspectorValues();            
             _Pause.Enable();
         }
         protected override void PlayEnable()

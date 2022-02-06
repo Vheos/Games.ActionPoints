@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
 
     [DisallowMultipleComponent]
-    public class UICursorManager : AComponentManager<UICursorManager, UICursor>
+    public class UICursorManager : AStaticManager<UICursorManager, UICursor>
     {
         // Inspector
         [SerializeField] protected bool _DisableNativeCursor;

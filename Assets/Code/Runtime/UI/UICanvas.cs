@@ -4,7 +4,8 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using UnityEngine.UI;
     using Games.Core;
-    using Vheos.Tools.Extensions.Math;
+    using Tools.Extensions.Math;
+    using UnityCamera = UnityEngine.Camera;
 
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasScaler))]
@@ -13,12 +14,17 @@ namespace Vheos.Games.ActionPoints
     public class UICanvas : ABaseComponent
     {
         // Publics
-        public Camera WorldCamera
+        public CCamera WorldCamera
         { get; private set; }
-        public Camera CanvasCamera
+        private CCamera _canvasCamera;
+        public CCamera CanvasCamera
         {
-            get => Get<Canvas>().worldCamera;
-            private set => Get<Canvas>().worldCamera = value;
+            get => _canvasCamera;
+            private set
+            {
+                _canvasCamera = value;
+                Get<Canvas>().worldCamera = _canvasCamera.Unity;
+            }
         }
         public Vector2 Size
         => Get<RectTransform>().rect.size;
@@ -28,20 +34,20 @@ namespace Vheos.Games.ActionPoints
         => Get<Canvas>().scaleFactor;
 
         // Position
-        public Camera GetCameraFor(GameObject t)
+        public CCamera GetCameraFor(GameObject t)
         => t.IsOnLayer(BuiltInLayer.UI) ? CanvasCamera : WorldCamera;
-        public Camera GetCameraFor(Component t)
+        public CCamera GetCameraFor(Component t)
         => GetCameraFor(t.gameObject);
         public Vector2 CanvasPosition(GameObject t)
         => t.IsOnLayer(BuiltInLayer.UI)
             ? t.transform.position
-            : WorldCamera.WorldToScreenPoint(t.transform.position) / ScaleFactor;
+            : WorldCamera.Unity.WorldToScreenPoint(t.transform.position) / ScaleFactor;
         public Vector2 CanvasPosition(Component t)
         => CanvasPosition(t.gameObject);
         public Vector2 ScreenPosition(GameObject t)
         => t.IsOnLayer(BuiltInLayer.UI)
             ? t.transform.position * ScaleFactor
-            : WorldCamera.WorldToScreenPoint(t.transform.position);
+            : WorldCamera.Unity.WorldToScreenPoint(t.transform.position);
         public Vector2 ScreenPosition(Component t)
         => ScreenPosition(t.gameObject);
         public Vector2 CanvasToScreenPosition(Vector2 t)
@@ -53,7 +59,7 @@ namespace Vheos.Games.ActionPoints
         private void UpdateCanvasCamera(Vector2 from, Vector2 to)
         {
             CanvasCamera.transform.position = to.Div(2f).Append(-PlaneDistance);
-            CanvasCamera.orthographicSize = to.y / 2f;
+            CanvasCamera.Unity.orthographicSize = to.y / 2f;
         }
 
         // Play

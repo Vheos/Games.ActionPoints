@@ -6,10 +6,10 @@ namespace Vheos.Games.ActionPoints
     using System.Linq;
 
     [DisallowMultipleComponent]
-    public class CameraManager : AComponentManager<CameraManager, Camera>
+    public class CameraManager : AStaticManager<CameraManager, CCamera>
     {
         // Publics
-        static public Camera AnyNonUI
+        static public CCamera AnyNonUI
         => _components.FirstOrDefault(t => !t.IsOnLayer(BuiltInLayer.UI));
     }
 }

@@ -9,13 +9,13 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
 
     [DisallowMultipleComponent]
-    public class UICanvasManager : AComponentManager<UICanvasManager, UICanvas>
+    public class UICanvasManager : AStaticManager<UICanvasManager, UICanvas>
     {
         // Inspector
-        [SerializeField] protected Camera _UICameraPrefab;
+        [SerializeField] protected CCamera _UICameraPrefab;
 
         // Publics
-        static public Camera InstantiateUICamera()
+        static public CCamera InstantiateUICamera()
         => CameraManager.InstantiateComponent(_instance._UICameraPrefab);
     }
 }

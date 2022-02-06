@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     using System.Linq;
 
     [DisallowMultipleComponent]
-    public class RaycastableManager : AComponentManager<RaycastableManager, Raycastable>
+    public class RaycastableManager : AStaticManager<RaycastableManager, Raycastable>
     {
         static public T FindClosest<T>(UICanvas uiCanvas, Vector2 canvasPosition) where T : Component
         {
@@ -20,10 +20,10 @@ namespace Vheos.Games.ActionPoints
                 if (raycastOnlyUI && !isUI)
                     continue;
 
-                Camera camera = isUI ? uiCanvas.CanvasCamera : uiCanvas.WorldCamera;
+                CCamera camera = isUI ? uiCanvas.CanvasCamera : uiCanvas.WorldCamera;
                 float distance = raycastable.DistanceTo(camera);
                 if (distance < minDistance
-                && raycastable.Collider.Raycast(camera.ScreenPointToRay(uiCanvas.CanvasToScreenPosition(canvasPosition)), out var hitInfo, float.PositiveInfinity)
+                && raycastable.Collider.Raycast(camera.Unity.ScreenPointToRay(uiCanvas.CanvasToScreenPosition(canvasPosition)), out var hitInfo, float.PositiveInfinity)
                 && raycastable.PerformRaycastTests(hitInfo.point))
                 {
                     closestComponent = raycastable.Get<T>();

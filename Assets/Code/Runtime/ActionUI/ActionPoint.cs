@@ -48,7 +48,7 @@ namespace Vheos.Games.ActionPoints
             .SetDuration(1f)
             .SetCurveShape(CurveShape.Bounce)
             .LocalScale(transform.localScale.NewY(0f))
-            .AddOnChangeCurveValueDirectionEvents(t => Get<ActionPointMProps>().Shape = to);
+            .OnChangeCurveValueDirection(t => Get<ActionPointMProps>().Shape = to);
         private void UpdateInstantly()
         {
             Get<ActionPointMProps>().Opacity = _index < Bar.UI.Actionable.ActionPoints.Abs() ? _FullOpacity : _PartialOpacity;

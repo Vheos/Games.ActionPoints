@@ -5,6 +5,6 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
 
     [DisallowMultipleComponent]
-    public class UITargetingLineManager : AComponentManager<UITargetingLineManager, UITargetingLine>
+    public class UITargetingLineManager : AStaticManager<UITargetingLineManager, UITargetingLine>
     { }
 }

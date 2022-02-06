@@ -11,7 +11,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Collections;
 
     [DisallowMultipleComponent]
-    public class PlayerManager : AComponentManager<PlayerManager, Player>
+    public class PlayerManager : AStaticManager<PlayerManager, Player>
     {
         // Events
         static public AutoEvent<Player> OnPlayerJoin
