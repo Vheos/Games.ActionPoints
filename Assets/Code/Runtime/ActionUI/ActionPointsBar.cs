@@ -14,7 +14,6 @@ namespace Vheos.Games.ActionPoints
     public class ActionPointsBar : ABaseComponent
     {
         // Inspector
-        [SerializeField] protected ActionPoint _PointPrefab;
         [SerializeField] [Range(-1f, 1f)] protected float _Spacing;
         [SerializeField] [Range(0f, 1f)] protected float _HalfTime;
 
@@ -35,11 +34,13 @@ namespace Vheos.Games.ActionPoints
         private void CreatePoints()
         {
             int maxActionPoints = UI.Actionable.MaxActionPoints;
+            ActionPoint pointPrefab = Settings.Prefabs.ActionPoint;
+            Debug.Log($"{pointPrefab != null} / {maxActionPoints}");
             for (int i = 0; i < maxActionPoints; i++)
             {
-                var newActionPoint = this.CreateChildComponent(_PointPrefab);
-                float offsetX = (i - maxActionPoints.Sub(1).Div(2)) * _Spacing.Add(1) * _PointPrefab.transform.localScale.x;
-                float offsetY = Vector2.down.y * _PointPrefab.transform.localScale.y / 2f;
+                var newActionPoint = this.CreateChildComponent(pointPrefab);
+                float offsetX = (i - maxActionPoints.Sub(1).Div(2)) * _Spacing.Add(1) * pointPrefab.transform.localScale.x;
+                float offsetY = Vector2.down.y * pointPrefab.transform.localScale.y / 2f;
 
                 newActionPoint.transform.localPosition = UI.Rect.Value.EdgePoint(Vector2.down).Add(offsetX, offsetY);
                 newActionPoint.Initialize(this, i);

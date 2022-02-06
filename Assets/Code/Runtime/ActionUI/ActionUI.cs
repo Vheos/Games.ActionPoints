@@ -13,10 +13,6 @@ namespace Vheos.Games.ActionPoints
     [DisallowMultipleComponent]
     public class ActionUI : ABaseComponent
     {
-        // Inspector
-        [SerializeField] protected ActionPointsBar _PointsBarPrefab;
-        [SerializeField] protected ActionButtonsWheel _ButtonsWheelPrefab;
-
         // Publics
         public Actionable Actionable
         { get; private set; }
@@ -36,10 +32,10 @@ namespace Vheos.Games.ActionPoints
             Get<MoveTowards>().SetTarget(Actionable, true);
             Get<RotateAs>().SetTarget(CameraManager.AnyNonUI, true);
 
-            PointsBar = this.CreateChildComponent(_PointsBarPrefab);
+            PointsBar = this.CreateChildComponent(Settings.Prefabs.ActionPointsBar);
             PointsBar.Initialize(this);
 
-            ButtonsWheel = this.CreateChildComponent(_ButtonsWheelPrefab);
+            ButtonsWheel = this.CreateChildComponent(Settings.Prefabs.ActionButtonsWheel);
             ButtonsWheel.Initialize(this);
         }
     }
