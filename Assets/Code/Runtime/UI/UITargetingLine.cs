@@ -18,7 +18,11 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public Player Player
         { get; private set; }
-        public void Show(Targeter targeter, Transform from,bool instantly = false)
+        public void Show(Component component, bool instantly = false)
+        => Show(component.GetComponent<Targeter>(), component.transform, Player.Cursor.transform, instantly);
+        public void Show(Targeter targeter, bool instantly = false)
+        => Show(targeter, targeter.transform, Player.Cursor.transform, instantly);
+        public void Show(Targeter targeter, Transform from, bool instantly = false)
         => Show(targeter, from, Player.Cursor.transform, instantly);
         public void Show(Targeter targeter, Transform from, Transform to, bool instantly = false)
         {
