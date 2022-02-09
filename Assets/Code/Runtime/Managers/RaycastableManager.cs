@@ -1,10 +1,11 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Linq;
     using UnityEngine;
     using Games.Core;
     using Tools.Extensions.UnityObjects;
-    using System.Linq;
+    using Tools.Extensions.Math;
 
     [DisallowMultipleComponent]
     public class RaycastableManager : AStaticManager<RaycastableManager, Raycastable>
@@ -21,15 +22,17 @@ namespace Vheos.Games.ActionPoints
                     continue;
 
                 CCamera camera = isUI ? uiCanvas.CanvasCamera : uiCanvas.WorldCamera;
-                float distance = raycastable.DistanceTo(camera);
-                if (distance < minDistance
-                && raycastable.Collider.Raycast(camera.Unity.ScreenPointToRay(uiCanvas.CanvasToScreenPosition(canvasPosition)), out var hitInfo, float.PositiveInfinity)
+                if (raycastable.Collider.Raycast(camera.Unity.ScreenPointToRay(uiCanvas.CanvasToScreenPosition(canvasPosition)), out var hitInfo, float.PositiveInfinity)
                 && raycastable.PerformRaycastTests(hitInfo.point))
                 {
-                    closestComponent = raycastable.Get<T>();
-                    minDistance = distance;
-                    if (isUI)
-                        raycastOnlyUI = true;
+                    float distance = hitInfo.point.DistanceTo(camera);
+                    if (distance < minDistance)
+                    {
+                        closestComponent = raycastable.Get<T>();
+                        minDistance = distance;
+                        if (isUI)
+                            raycastOnlyUI = true;
+                    }
                 }
             }
             return closestComponent;
