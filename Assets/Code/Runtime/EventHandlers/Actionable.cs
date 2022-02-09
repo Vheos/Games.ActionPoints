@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.Math;
     using Tools.Extensions.Collections;
-    
+
 
     [DisallowMultipleComponent]
     sealed public class Actionable : ABaseComponent
@@ -32,6 +32,9 @@ namespace Vheos.Games.ActionPoints
                 int previousMaxActionPoints = _maxActionPoints;
                 _maxActionPoints = value;
                 OnChangeMaxActionPoints.Invoke(previousMaxActionPoints, _maxActionPoints);
+
+                if (ActionProgress < _maxActionPoints)
+                    ActionProgress = ActionProgress.ClampMax(_maxActionPoints);
             }
         }
         public readonly Getter<int> LockedMaxActionPoints = new();
