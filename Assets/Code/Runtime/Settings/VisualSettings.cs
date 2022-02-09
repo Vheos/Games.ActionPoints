@@ -107,6 +107,10 @@ namespace Vheos.Games.ActionPoints
         public struct ActionButtonSettings
         {
             [Range(0f, 1f)] public float Radius;
+            [Range(0.5f, 2f)] public float HighlightScale;
+            [Range(0.5f, 2f)] public float PressScale;
+            [Range(0f, 1f)] public float UnusableColorScale;
+            [Range(0f, 1f)] public float ChangeUsabilityDuration;
         }
         #endregion
     }
