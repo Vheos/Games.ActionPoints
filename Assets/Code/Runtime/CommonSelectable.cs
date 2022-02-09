@@ -11,6 +11,8 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public void UpdateColorComponentType()
         => _colorComponentType = this.FindColorComponentType();
+        public readonly Getter<float> HighlightScale = new();
+        public readonly Getter<float> PressScale = new();
 
         // Privates
         private ColorComponentType _colorComponentType;
@@ -19,7 +21,7 @@ namespace Vheos.Games.ActionPoints
             if (isFirst)
                 this.NewTween()
                     .SetDuration(this.Settings().GainHighlightDuration)
-                    .LocalScaleRatio(this.Settings().HighlightScale)
+                    .LocalScaleRatio(HighlightScale)
                     .RGBRatio(_colorComponentType, this.Settings().HighlightColorScale);
         }
         private void Selectable_OnLoseHighlight(Selecter selecter, bool isLast)
@@ -27,24 +29,26 @@ namespace Vheos.Games.ActionPoints
             if (isLast)
                 this.NewTween()
                     .SetDuration(this.Settings().LoseHighlightDuration)
-                    .LocalScaleRatio(this.Settings().HighlightScale.Inv())
+                    .LocalScaleRatio(HighlightScale.Value.Inv())
                     .RGBRatio(_colorComponentType, this.Settings().HighlightColorScale.Inv());
         }
         private void Selectable_OnPress(Selecter selecter)
         => this.NewTween()
             .SetDuration(this.Settings().PressDuration)
-            .LocalScaleRatio(this.Settings().PressScale)
+            .LocalScaleRatio(PressScale)
             .RGBRatio(_colorComponentType, this.Settings().PressColorScale);
-        private void Selectable_OnRelease(Selecter selecter, bool withinTrigger)
+        private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
         => this.NewTween()
             .SetDuration(this.Settings().ReleaseDuration)
-            .LocalScaleRatio(this.Settings().PressScale.Inv())
+            .LocalScaleRatio(PressScale.Value.Inv())
             .RGBRatio(_colorComponentType, this.Settings().PressColorScale.Inv());
 
         // Play
         protected override void PlayAwake()
         {
             base.PlayAwake();
+            HighlightScale.Set(() => this.Settings().HighlightScale);
+            PressScale.Set(() => this.Settings().PressScale);
             Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainHighlight);
             Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseHighlight);
             Get<Selectable>().OnPress.SubEnableDisable(this, Selectable_OnPress);
