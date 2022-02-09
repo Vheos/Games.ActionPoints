@@ -16,10 +16,6 @@ namespace Vheos.Games.ActionPoints
     [DisallowMultipleComponent]
     public class ActionPointsBar : AActionUIElementsGroup<ActionPoint>
     {
-        // Inspector
-        [field: SerializeField, Range(-1f, 1f)] public float Spacing { get; private set; }
-        [field: SerializeField, Range(0f, 1f)] public float HalfTime { get; private set; }
-
         // Events
         public AutoEvent<float, float> OnChangeVisualActionProgress = new();
         public AutoEvent<float, float> OnChangeVisualFocusProgress = new();
@@ -33,7 +29,7 @@ namespace Vheos.Games.ActionPoints
         private float _visualFocusProgress;
         private void UpdateVisualProgresses()
         {
-            float lerpAlpha = Utility.HalfTimeToLerpAlpha(HalfTime);
+            float lerpAlpha = Utility.HalfTimeToLerpAlpha(this.Settings().VisualProgressHalfTime);
 
             float previousVisualActionProgress = _visualActionProgress;
             _visualActionProgress = _visualActionProgress.Lerp(UI.Actionable.ActionProgress, lerpAlpha);
@@ -79,7 +75,7 @@ namespace Vheos.Games.ActionPoints
         {
             for (int i = 0; i < count; i++)
             {
-                var newPoint = this.CreateChildComponent(Settings.Prefabs.ActionPoint);
+                var newPoint = this.CreateChildComponent(SettingsManager.Prefabs.ActionPoint);
                 newPoint.Initialize(this);
                 newPoint.AnimateCreate(!isActiveAndEnabled);
                 _newElements.Add(newPoint);
@@ -88,13 +84,13 @@ namespace Vheos.Games.ActionPoints
         }
         private void UpdatePositionsAndIndices()
         {
-            var prefabScale = Settings.Prefabs.ActionPoint.transform.localScale;
+            var prefabScale = SettingsManager.Prefabs.ActionPoint.transform.localScale;
             float offsetY = Vector2.down.y * prefabScale.y / 2f;
             for (int i = 0; i < _elements.Count; i++)
             {
                 _elements[i].SetIndex(i);
 
-                float offsetX = (i - _elements.Count.Sub(1).Div(2)) * Spacing.Add(1) * prefabScale.x;
+                float offsetX = (i - _elements.Count.Sub(1).Div(2)) * this.Settings().Spacing.Add(1) * prefabScale.x;
                 Vector2 localPosition = UI.Rect.Value.EdgePoint(Vector2.down).Add(offsetX, offsetY);
                 bool isNew = _newElements.Contains(_elements[i]);
                 _elements[i].AnimateMove(localPosition, !isActiveAndEnabled || isNew);

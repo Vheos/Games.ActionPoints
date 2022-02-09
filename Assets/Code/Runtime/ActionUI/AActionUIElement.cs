@@ -9,7 +9,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.General;
 
     [DisallowMultipleComponent]
-    abstract public class AActionUIElement<T> : ABaseComponent where T : ABaseComponent
+    abstract public class AActionUIElement<T> : ABaseComponent
     {
         // Publics
         public void SetIndex(int index)
@@ -18,22 +18,24 @@ namespace Vheos.Games.ActionPoints
         {
             transform.localScale = default;
             this.NewTween()
-              .SetDuration(0.4f)
+              .SetDuration(this.Settings().CreateElementDuration)
               .LocalScale(_originalScale)
+              .Alpha(ColorComponentType.Any, 1f)
               .FinishIf(instantly);
         }
         public void AnimateDestroy(bool instantly = false)
         {
             enabled = false;
             this.NewTween()
-              .SetDuration(0.4f)
+              .SetDuration(this.Settings().DestroyElementDuration)
               .LocalScale(Vector3.zero)
+              .Alpha(ColorComponentType.Any, 0f)
               .AddEventsOnFinish(this.DestroyObject)
               .FinishIf(instantly);
         }
         public void AnimateMove(Vector3 targetLocalPosition, bool instantly = false)
         => this.NewTween(ConflictResolution.Interrupt)
-            .SetDuration(0.4f)
+            .SetDuration(this.Settings().MoveElementDuration)
             .LocalPosition(targetLocalPosition)
             .FinishIf(instantly);
 

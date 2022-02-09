@@ -7,37 +7,32 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
 
-
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(SpriteOutlineMProps))]
     [RequireComponent(typeof(SpriteChangable))]
     public class SpriteOutline : ABaseComponent
     {
         // Inspector
-        [field: SerializeField] public Color Color { get; private set; } = UnityEngine.Color.white;
-        [field: SerializeField, Range(0f, 1f)] public float Thickness { get; private set; } = 0.5f;
-        [field: SerializeField, Range(0f, 1f)] public float FadeInDuration { get; private set; }
-        [field: SerializeField, Range(0f, 1f)] public float FadeOutDuration { get; private set; }
-        [field: SerializeField] public Material Material { get; private set; }
+        [field: SerializeField] public Color Color { get; private set; } = Color.white;
 
         // Publics
-        public void Show()
+        public void Show(bool instantly = false)
         {
             _outlineRenderer.gameObject.SetActive(true);
             _outlineRenderer.NewTween(ConflictResolution.Interrupt)
-                .SetDuration(FadeInDuration)
-                .AddPropertyModifier(v => _mprops.Thickness += v, Thickness - _mprops.Thickness)
-                .Color(ColorComponentType.SpriteRenderer, Color);
+                .SetDuration(this.Settings().ExpandDuration)
+                .AddPropertyModifier(v => _mprops.Thickness += v, this.Settings().Thickness - _mprops.Thickness)
+                .Color(ColorComponentType.SpriteRenderer, Color)
+                .FinishIf(instantly);
         }
-        public void Hide(bool isInstant = false)
-        {
-            _outlineRenderer.NewTween(ConflictResolution.Interrupt)
-                .SetDuration(FadeOutDuration)
-                .AddPropertyModifier(v => _mprops.Thickness += v, 0f - _mprops.Thickness)
-                .Alpha(ColorComponentType.SpriteRenderer, 0f)
-                .AddEventsOnFinish(() => _outlineRenderer.gameObject.SetActive(false))
-                .FinishIf(isInstant);
-        }
+        public void Hide(bool instantly = false)
+        => _outlineRenderer.NewTween(ConflictResolution.Interrupt)
+            .SetDuration(this.Settings().CollapseDuration)
+            .AddPropertyModifier(v => _mprops.Thickness += v, 0f - _mprops.Thickness)
+            .Alpha(ColorComponentType.SpriteRenderer, 0f)
+            .AddEventsOnFinish(() => _outlineRenderer.gameObject.SetActive(false))
+            .FinishIf(instantly);
+
 
         // Private
         private SpriteOutlineMProps _mprops;
@@ -53,7 +48,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
             _outlineRenderer = this.CreateChildComponent<SpriteRenderer>(nameof(SpriteOutline));
-            _outlineRenderer.sharedMaterial = Material;
+            _outlineRenderer.sharedMaterial = this.Settings().Material;
             _mprops = Get<SpriteOutlineMProps>();
             _mprops.Initialize(_outlineRenderer);
 

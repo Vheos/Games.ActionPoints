@@ -12,27 +12,22 @@ namespace Vheos.Games.ActionPoints
     [RequireComponent(typeof(UITargetingLineMProps))]
     public class UITargetingLine : ABaseComponent
     {
-        // Inspector
-        [field: SerializeField, Range(0f, 1f)] public float StartOpacity { get; private set; }
-        [field: SerializeField, Range(0f, 1f)] public float StartWidth { get; private set; }
-        [field: SerializeField, Range(0f, 1f)] public float EndWidthRatio { get; private set; }
-        [field: SerializeField, Range(0f, 1f)] public float WidthAnimDuration { get; private set; }
-        [field: SerializeField, Range(1f, 100f)] public float Tiling { get; private set; }
-
         // Events
         public AutoEvent<Targetable, Targetable> OnChangeTarget { get; } = new();
 
         // Publics
         public Player Player
         { get; private set; }
-        public void Show(Targeter targeter, Transform from)
-        => Show(targeter, from, Player.Cursor.transform);
-        public void Show(Targeter targeter, Transform from, Transform to)
+        public void Show(Targeter targeter, Transform from,bool instantly = false)
+        => Show(targeter, from, Player.Cursor.transform, instantly);
+        public void Show(Targeter targeter, Transform from, Transform to, bool instantly = false)
         {
             IsActive = true;
             this.NewTween(ConflictResolution.Interrupt)
-                .SetDuration(WidthAnimDuration)
-                .AddPropertyModifier(AssignWidth, StartWidth * _uiCanvas.Size.y - Get<LineRenderer>().startWidth);
+                .SetDuration(this.Settings().ExpandDuration)
+                .AddPropertyModifier(v => Get<LineRenderer>().startWidth += v, this.Settings().StartWidth * _uiCanvas.Size.y - Get<LineRenderer>().startWidth)
+                .AddPropertyModifier(v => Get<LineRenderer>().endWidth += v, this.Settings().EndWidth * _uiCanvas.Size.y - Get<LineRenderer>().endWidth)
+                .FinishIf(instantly);
 
             _targeter = targeter;
             _from = from;
@@ -41,13 +36,14 @@ namespace Vheos.Games.ActionPoints
             if (_targeter != null)
                 _targeter.Targetable = null;
         }
-        public void Hide(bool isInstant = false)
+        public void Hide(bool instantly = false)
         {
             this.NewTween(ConflictResolution.Interrupt)
-                .SetDuration(WidthAnimDuration)
-                .AddPropertyModifier(AssignWidth, 0f - Get<LineRenderer>().startWidth)
+                .SetDuration(this.Settings().CollapseDuration)
+                .AddPropertyModifier(v => Get<LineRenderer>().startWidth += v, 0f - Get<LineRenderer>().startWidth)
+                .AddPropertyModifier(v => Get<LineRenderer>().endWidth += v, 0f - Get<LineRenderer>().endWidth)
                 .AddEventsOnFinish(() => IsActive = false)
-                .FinishIf(isInstant);
+                .FinishIf(instantly);
 
             if (_targeter != null)
                 _targeter.Targetable = null;
@@ -72,11 +68,6 @@ namespace Vheos.Games.ActionPoints
             get => Get<LineRenderer>().GetPosition(1);
             set => Get<LineRenderer>().SetPosition(1, value);
         }
-        private void AssignWidth(float width)
-        {
-            Get<LineRenderer>().startWidth += width;
-            Get<LineRenderer>().endWidth = Get<LineRenderer>().startWidth * EndWidthRatio;
-        }
         private void OnUpdate()
         {
             if (_from != null)
@@ -86,7 +77,7 @@ namespace Vheos.Games.ActionPoints
             if (_targeter != null)
                 _targeter.Targetable = RaycastableManager.FindClosest<Targetable>(_uiCanvas, LineTo);
 
-            Get<UITargetingLineMProps>().TilingX = LineFrom.DistanceTo(LineTo) * Tiling / _uiCanvas.Size.y;
+            Get<UITargetingLineMProps>().TilingX = LineFrom.DistanceTo(LineTo) * this.Settings().Tiling / _uiCanvas.Size.y;
         }
 
         // Play
@@ -107,7 +98,7 @@ namespace Vheos.Games.ActionPoints
             name = $"{player.name}_TargetingLine";
             BindDestroyObject(Player);
 
-            Get<LineRenderer>().startColor = Get<LineRenderer>().startColor.NewA(StartOpacity);
+            Get<LineRenderer>().startColor = new(1f, 1f, 1f, this.Settings().StartOpacity);
             Get<LineRenderer>().endColor = Player.Color;
         }
     }

@@ -13,9 +13,6 @@ namespace Vheos.Games.ActionPoints
     [DisallowMultipleComponent]
     public class ActionButton : AActionUIElement<ActionButtonsWheel>
     {
-        // Inspector
-        [field: SerializeField, Range(0.1f, 1f)] public float Radius { get; private set; }
-
         // Publics
         public Action Action
         { get; private set; }
@@ -30,7 +27,7 @@ namespace Vheos.Games.ActionPoints
             Get<Raycastable>().BindEnableDisable(this);
             Get<Selectable>().BindEnableDisable(this);
 
-            _originalScale = Radius.Mul(2).ToVector3();
+            _originalScale = this.Settings().Radius.Mul(2).ToVector3();
             Component _visualComponent = null;
             if (action.ButtonVisuals.Sprite != null)
             {
@@ -56,7 +53,7 @@ namespace Vheos.Games.ActionPoints
             }
 
             Get<Raycastable>().RaycastTarget = _visualComponent;
-            if (TryGet(out SelectableButtonVisuals selectableButtonVisuals))
+            if (TryGet(out CommonSelectable selectableButtonVisuals))
                 selectableButtonVisuals.UpdateColorComponentType();
         }
     }

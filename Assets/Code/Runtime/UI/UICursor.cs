@@ -15,8 +15,6 @@ namespace Vheos.Games.ActionPoints
     {
         // Inspector
         [field: SerializeField, Range(0f, 2f)] public float Sensitivity { get; private set; } = 1f;
-        [field: SerializeField] public ImageProperties Idle { get; private set; } = ImageProperties.Default;
-        [field: SerializeField] public ImageProperties Pressed { get; private set; } = ImageProperties.Default;
 
         // Publics
         public Player Player
@@ -29,13 +27,12 @@ namespace Vheos.Games.ActionPoints
         => transform.position = transform.position.Add(offset * Sensitivity / _uiCanvas.ScaleFactor).Clamp(Vector2.zero, _uiCanvas.Size);
         private void OnInputPressConfirm()
         {
-            SetImageProperties(Pressed);
+            AnimatePress();
             _selecter.TryPress();
         }
         private void OnInputReleaseConfirm()
         {
-            SetImageProperties(Idle);
-
+            AnimateRelease();
             if (!_selecter.IsSelectingAny)
                 return;
 
@@ -49,15 +46,24 @@ namespace Vheos.Games.ActionPoints
 
             _selecter.Selectable = RaycastableManager.FindClosest<Selectable>(_uiCanvas, this);
         }
-        private void SetImageProperties(ImageProperties properties)
+        private void AnimatePress(bool instantly = false)
         {
-            Get<Image>().sprite = properties.Sprite;
-            this.NewTween(ConflictResolution.Interrupt)
-                .SetDuration(0.1f)
-                .LocalScale(properties.Scale.ToVector3())
-                .RGB(ColorComponentType.Image, Player.Color * properties.ColorScale);
+            Get<Image>().sprite = this.Settings().PressSprite;
+            this.NewTween()
+                .SetDuration(this.Settings().PressDuration)
+                .LocalScaleRatio(this.Settings().PressScale)
+                .RGBRatio(ColorComponentType.Image, this.Settings().PressColorScale)
+                .FinishIf(instantly);
         }
-
+        private void AnimateRelease(bool instantly = false)
+        {
+            Get<Image>().sprite = this.Settings().IdleSprite;
+            this.NewTween()
+                .SetDuration(this.Settings().ReleaseDuration)
+                .LocalScaleRatio(this.Settings().PressScale.Inv())
+                .RGBRatio(ColorComponentType.Image, this.Settings().PressColorScale.Inv())
+                .FinishIf(instantly);
+        }
         // Play
         public void Initialize(UICanvas uiCanvas)
         {
@@ -65,6 +71,8 @@ namespace Vheos.Games.ActionPoints
             this.BecomeChildOf(_uiCanvas);
             transform.position = _uiCanvas.Size * 0.5f.ToVector2();
             Get<Updatable>().OnUpdate.SubEnableDisable(this, OnUpdate);
+
+            AnimateRelease(true);
         }
         public void BindToPlayer(Player player)
         {
@@ -76,9 +84,8 @@ namespace Vheos.Games.ActionPoints
             Player.OnInputMoveCursor.SubEnableDisable(this, OnInputMoveCursor);
             Player.OnInputPressConfirm.SubEnableDisable(this, OnInputPressConfirm);
             Player.OnInputReleaseConfirm.SubEnableDisable(this, OnInputReleaseConfirm);
-
-            transform.localScale = default;
-            SetImageProperties(Idle);
+            
+            Get<Image>().color = Player.Color;
         }
     }
 }

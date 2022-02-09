@@ -44,7 +44,7 @@ namespace Vheos.Games.ActionPoints
         {
             foreach (var action in addedActions)
             {
-                var newButton = Instantiate(Settings.Prefabs.ActionButton);
+                var newButton = Instantiate(SettingsManager.Prefabs.ActionButton);
                 newButton.BecomeChildOf(this);
                 newButton.Initialize(this, action);
                 newButton.AnimateCreate(!isActiveAndEnabled);
@@ -54,7 +54,7 @@ namespace Vheos.Games.ActionPoints
         }
         private void UpdateButtonPositions()
         {
-            var buttonTransforms = _positionsWheel.GetElementsPositionsAndAngles(UI.Actionable.Actions.Count, Settings.Prefabs.ActionButton.Radius).GetEnumerator();
+            var buttonTransforms = _positionsWheel.GetElementsPositionsAndAngles(UI.Actionable.Actions.Count, this.Settings().Radius).GetEnumerator();
             foreach (var button in GetSortedButtons(_elements))
                 if (buttonTransforms.MoveNext())
                 {

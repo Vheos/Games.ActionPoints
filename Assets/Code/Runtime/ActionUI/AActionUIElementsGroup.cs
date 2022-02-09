@@ -27,8 +27,8 @@ namespace Vheos.Games.ActionPoints
 
             Get<Expandable>().OnStartExpanding.SubDestroy(this, Activate);
             Get<Expandable>().OnFinishCollapsing.SubDestroy(this, Deactivate);
-            Get<Expandable>().ExpandTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.one));
-            Get<Expandable>().CollapseTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.zero));
+            Get<Expandable>().ExpandTween.Set(() => this.NewTween().SetDuration(this.Settings().ExpandGroupDuration).LocalScale(Vector3.one));
+            Get<Expandable>().CollapseTween.Set(() => this.NewTween().SetDuration(this.Settings().CollapseGroupDuration).LocalScale(Vector3.zero));
             Get<Expandable>().TryExpand(true);
         }
     }
