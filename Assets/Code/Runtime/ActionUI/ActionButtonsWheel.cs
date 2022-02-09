@@ -1,37 +1,43 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using UnityEngine;
-    using TMPro;
     using Games.Core;
     using Tools.Extensions.UnityObjects;
-    using Vheos.Tools.Extensions.Math;
-    using System.Linq;
-    using Vheos.Tools.Extensions.General;
+    using Tools.Extensions.General;
 
     [RequireComponent(typeof(Expandable))]
     [DisallowMultipleComponent]
-    public class ActionButtonsWheel : ABaseComponent
+    public class ActionButtonsWheel : AActionUIElementsGroup<ActionButton>
     {
-        // Publics
-        public ActionUI UI
-        { get; private set; }
-        public IReadOnlyCollection<ActionButton> Buttons
-        => _buttons;
-
         // Privates
-        private readonly HashSet<ActionButton> _buttons = new();
         private RectCircle _positionsWheel;
         private bool TryGetButtonForAction(Action action, out ActionButton button)
-        => _buttons.FirstOrDefault(t => t.Action == action).TryNonNull(out button);
+        => _elements.FirstOrDefault(t => t.Action == action).TryNonNull(out button);
+        private IEnumerable<ActionButton> GetSortedButtons(IEnumerable<ActionButton> buttons)
+        {
+            var r = buttons.ToArray();
+            r.Shuffle();
+            return r;
+        }
+
+        // Common
+        private void UpdateButtonsCount(IEnumerable<Action> removedActions, IEnumerable<Action> addedActions)
+        {
+            DestroyButtons(removedActions);
+            CreateButtons(addedActions);
+            UpdateButtonPositions();
+            _newElements.Clear();
+        }
         private void DestroyButtons(IEnumerable<Action> removedActions)
         {
             foreach (var action in removedActions)
                 if (TryGetButtonForAction(action, out var button))
                 {
-                    _buttons.Remove(button);
-                    button.AnimateDestroy();
+                    button.AnimateDestroy(!isActiveAndEnabled);
+                    _elements.Remove(button);
                 }
         }
         private void CreateButtons(IEnumerable<Action> addedActions)
@@ -39,48 +45,28 @@ namespace Vheos.Games.ActionPoints
             foreach (var action in addedActions)
             {
                 var newButton = Instantiate(Settings.Prefabs.ActionButton);
-                _buttons.Add(newButton);
+                newButton.BecomeChildOf(this);
                 newButton.Initialize(this, action);
-                newButton.BecomeChildOf(this);               
+                newButton.AnimateCreate(!isActiveAndEnabled);
+                _newElements.Add(newButton);
             }
-        }
-        private IEnumerable<ActionButton> GetSortedButtons(IEnumerable<ActionButton> buttons)
-        {
-            var r = buttons.ToArray();
-            r.Shuffle();
-            return r;
+            _elements.AddRange(_newElements);
         }
         private void UpdateButtonPositions()
         {
             var buttonTransforms = _positionsWheel.GetElementsPositionsAndAngles(UI.Actionable.Actions.Count, Settings.Prefabs.ActionButton.Radius).GetEnumerator();
-            foreach (var button in GetSortedButtons(_buttons))
+            foreach (var button in GetSortedButtons(_elements))
                 if (buttonTransforms.MoveNext())
                 {
-                    button.AnimateMove(buttonTransforms.Current.Position);
+                    bool isNew = _newElements.Contains(button);
+                    button.AnimateMove(buttonTransforms.Current.Position, !isActiveAndEnabled || isNew);
                 }
-
-        }
-        private void Actionable_OnChangeActions(IEnumerable<Action> removedActions, IEnumerable<Action> addedActions)
-        {
-            foreach (var action in removedActions)
-                Debug.Log($"-- {action.name}");
-            foreach (var action in addedActions)
-                Debug.Log($"++ {action.name}");
-            Debug.Log($"SettingsTest: {Settings.Visual.ActionButton.TestFloat}");
-            Debug.Log($"");
-
-
-            DestroyButtons(removedActions);
-            CreateButtons(addedActions);
-            UpdateButtonPositions();
         }
 
         // Play
-        public void Initialize(ActionUI ui)
+        override public void Initialize(ActionUI ui)
         {
-            UI = ui;
-            name = $"ButtonsWheel";
-            BindEnableDisable(ui);
+            base.Initialize(ui);
 
             _positionsWheel = new()
             {
@@ -89,15 +75,10 @@ namespace Vheos.Games.ActionPoints
                 Angle = -90f,
             };
 
-            UI.Actionable.OnChangeActions.SubDestroy(this, Actionable_OnChangeActions);
+            UI.Actionable.OnChangeActions.SubDestroy(this, UpdateButtonsCount);
 
-            Get<Expandable>().OnStartExpanding.SubDestroy(this, Activate);
             Get<Expandable>().OnFinishExpanding.SubDestroy(this, Enable);
             Get<Expandable>().OnStartCollapsing.SubDestroy(this, Disable);
-            Get<Expandable>().OnFinishCollapsing.SubDestroy(this, Deactivate);
-            Get<Expandable>().ExpandTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.one));
-            Get<Expandable>().CollapseTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.zero));
-            Get<Expandable>().TryCollapse(true);
         }
     }
 }

@@ -4,10 +4,11 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Games.Core;
     using Tools.Extensions.Math;
+    using Tools.Extensions.UnityObjects;
 
     [RequireComponent(typeof(ActionPointMProps))]
     [DisallowMultipleComponent]
-    public class ActionPoint : ABaseComponent
+    public class ActionPoint : AActionUIElement<ActionPointsBar>
     {
         // Inspector
         [SerializeField] [Range(0f, 1f)] protected float _PartialOpacity;
@@ -15,24 +16,27 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] protected Texture2D _ActionShape;
         [SerializeField] protected Texture2D _FocusShape;
 
-        // Publics
-        public ActionPointsBar Bar
-        { get; private set; }
+        public void UpdateInstantly(float visualActionProgress, float visualFocusProgress, int realActionPoints, int realFocusPoints)
+        {
+            UpdateActionProgress(default, visualActionProgress);
+            UpdateFocusProgress(default, visualFocusProgress);
+            Get<ActionPointMProps>().Opacity = _index < realActionPoints.Abs() ? _FullOpacity : _PartialOpacity;
+            Get<ActionPointMProps>().Shape = _index < realFocusPoints ? _FocusShape : _ActionShape;
+        }
 
-        // Privates
-        private int _index;
+        // Privates        
         private void UpdateActionProgress(float from, float to)
         => Get<ActionPointMProps>().ActionProgress = to.Abs().Sub(_index).Clamp01() * to.Sig();
         private void UpdateFocusProgress(float from, float to)
         => Get<ActionPointMProps>().FocusProgress = to.Abs().Sub(_index).Clamp01() * to.Sig();
-        private void UpdateOpacity(int from, int to)
+        private void TryUpdateOpacity(int from, int to)
         {
             if (_index >= from.Abs() && _index < to.Abs())
                 AnimateOpacity(_FullOpacity);
             else if (_index >= to.Abs() && _index < from.Abs())
                 AnimateOpacity(_PartialOpacity);
         }
-        private void UpdateShape(int from, int to)
+        private void TryUpdateShape(int from, int to)
         {
             if (_index >= from && _index < to)
                 AnimateShape(_FocusShape);
@@ -48,30 +52,19 @@ namespace Vheos.Games.ActionPoints
             .SetDuration(1f)
             .SetCurveShape(CurveShape.Bounce)
             .LocalScale(transform.localScale.NewY(0f))
-            .OnChangeCurveValueDirection(t => Get<ActionPointMProps>().Shape = to);
-        private void UpdateInstantly()
-        {
-            Get<ActionPointMProps>().Opacity = _index < Bar.UI.Actionable.ActionPoints.Abs() ? _FullOpacity : _PartialOpacity;
-            Get<ActionPointMProps>().Shape = _index < Bar.UI.Actionable.FocusPoints ? _FocusShape : _ActionShape;
-        }
+            .AddEventsOnChangeCurveDirection(t => Get<ActionPointMProps>().Shape = to);
 
         // Play
-        public void Initialize(ActionPointsBar bar, int index)
+        override public void Initialize(ActionPointsBar bar)
         {
-            Bar = bar;
-            _index = index;
-            name = $"Point{_index + 1}";
-            BindEnableDisable(bar);
+            base.Initialize(bar);
+            Get<ActionPointMProps>().Initialize();       
 
-            Get<ActionPointMProps>().Initialize();
-            OnPlayEnable.Sub(UpdateInstantly);
-            UpdateInstantly();
+            _group.OnChangeVisualActionProgress.SubEnableDisable(this, UpdateActionProgress);
+            _group.OnChangeVisualFocusProgress.SubEnableDisable(this, UpdateFocusProgress);
 
-            Bar.OnChangeVisualActionProgress.SubEnableDisable(this, UpdateActionProgress);
-            Bar.OnChangeVisualFocusProgress.SubEnableDisable(this, UpdateFocusProgress);
-
-            Bar.UI.Actionable.OnChangeActionPoints.SubEnableDisable(this, UpdateOpacity);
-            Bar.UI.Actionable.OnChangeFocusPoints.SubEnableDisable(this, UpdateShape);
+            _group.OnChangeRealActionPoints.SubEnableDisable(this, TryUpdateOpacity);
+            _group.OnChangeRealFocusPoints.SubEnableDisable(this, TryUpdateShape);
         }
     }
 }

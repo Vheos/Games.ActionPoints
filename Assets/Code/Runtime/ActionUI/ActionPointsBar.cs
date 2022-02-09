@@ -7,11 +7,14 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
     using Tools.Utilities;
+    using System.Linq;
+    using Vheos.Tools.Extensions.General;
+    using Vheos.Tools.Extensions.Collections;
 
     [RequireComponent(typeof(Expandable))]
     [RequireComponent(typeof(Updatable))]
     [DisallowMultipleComponent]
-    public class ActionPointsBar : ABaseComponent
+    public class ActionPointsBar : AActionUIElementsGroup<ActionPoint>
     {
         // Inspector
         [SerializeField] [Range(-1f, 1f)] protected float _Spacing;
@@ -20,72 +23,94 @@ namespace Vheos.Games.ActionPoints
         // Events
         public AutoEvent<float, float> OnChangeVisualActionProgress = new();
         public AutoEvent<float, float> OnChangeVisualFocusProgress = new();
-
-        // Publics
-        public ActionUI UI
-        { get; private set; }
-        public IReadOnlyCollection<ActionPoint> Points
-        => _points;
+        public AutoEvent<int, int> OnChangeRealActionPoints
+        => UI.Actionable.OnChangeActionPoints;
+        public AutoEvent<int, int> OnChangeRealFocusPoints
+        => UI.Actionable.OnChangeFocusPoints;
 
         // Privates
-        private readonly HashSet<ActionPoint> _points = new();
-        private float _visualActionProgess;
-        private float _visualFocusProgess;
-        private void CreatePoints()
-        {
-            int maxActionPoints = UI.Actionable.MaxActionPoints;
-            ActionPoint pointPrefab = Settings.Prefabs.ActionPoint;
-            Debug.Log($"{pointPrefab != null} / {maxActionPoints}");
-            for (int i = 0; i < maxActionPoints; i++)
-            {
-                var newActionPoint = this.CreateChildComponent(pointPrefab);
-                float offsetX = (i - maxActionPoints.Sub(1).Div(2)) * _Spacing.Add(1) * pointPrefab.transform.localScale.x;
-                float offsetY = Vector2.down.y * pointPrefab.transform.localScale.y / 2f;
-
-                newActionPoint.transform.localPosition = UI.Rect.Value.EdgePoint(Vector2.down).Add(offsetX, offsetY);
-                newActionPoint.Initialize(this, i);
-                _points.Add(newActionPoint);
-            }
-        }
-        private void TryInvokeEvents()
+        private float _visualActionProgress;
+        private float _visualFocusProgress;
+        private void UpdateVisualProgresses()
         {
             float lerpAlpha = Utility.HalfTimeToLerpAlpha(_HalfTime);
 
-            float previousVisualActionProgress = _visualActionProgess;
-            _visualActionProgess.SetLerp(UI.Actionable.ActionProgress, lerpAlpha);
-            if (_visualActionProgess != previousVisualActionProgress)
-                OnChangeVisualActionProgress.Invoke(previousVisualActionProgress, _visualActionProgess);
+            float previousVisualActionProgress = _visualActionProgress;
+            _visualActionProgress = _visualActionProgress.Lerp(UI.Actionable.ActionProgress, lerpAlpha);
+            if (_visualActionProgress != previousVisualActionProgress)
+                OnChangeVisualActionProgress.Invoke(previousVisualActionProgress, _visualActionProgress);
 
-            float previousVisualFocusProgress = _visualFocusProgess;
-            _visualFocusProgess.SetLerp(UI.Actionable.FocusProgress, lerpAlpha);
-            if (_visualFocusProgess != previousVisualFocusProgress)
-                OnChangeVisualFocusProgress.Invoke(previousVisualFocusProgress, _visualFocusProgess);
+            float previousVisualFocusProgress = _visualFocusProgress;
+            _visualFocusProgress = _visualFocusProgress.Lerp(UI.Actionable.FocusProgress, lerpAlpha);
+            if (_visualFocusProgress != previousVisualFocusProgress)
+                OnChangeVisualFocusProgress.Invoke(previousVisualFocusProgress, _visualFocusProgress);
         }
-        private void UpdateInstantly()
+        private void UpdatePointsInstantly()
         {
-            OnChangeVisualActionProgress.Invoke(_visualActionProgess, UI.Actionable.ActionProgress);
-            _visualActionProgess = UI.Actionable.ActionProgress;
-            OnChangeVisualFocusProgress.Invoke(_visualFocusProgess, UI.Actionable.FocusProgress);
-            _visualFocusProgess = UI.Actionable.FocusProgress;
+            _visualActionProgress = UI.Actionable.ActionProgress;
+            _visualFocusProgress = UI.Actionable.FocusProgress;
+            int realActionPoints = UI.Actionable.ActionPoints;
+            int realFocusPoints = UI.Actionable.FocusPoints;
+            foreach (var point in _elements)
+                point.UpdateInstantly(_visualActionProgress, _visualFocusProgress, realActionPoints, realFocusPoints);
+        }
+
+        // Common
+        private void UpdatePointsCount(int from, int to)
+        {
+            int deltaPoints = to - from;
+            if (deltaPoints < 0)
+                DestroyPoints(-deltaPoints);
+            else if (deltaPoints > 0)
+                CreatePoints(deltaPoints);
+
+            UpdatePositionsAndIndices();
+            UpdatePointsInstantly();
+
+            _newElements.Clear();
+        }
+        private void DestroyPoints(int count)
+        {
+            for (int i = _elements.Count - count; i < _elements.Count; i++)
+                _elements[i].AnimateDestroy(!isActiveAndEnabled);
+            _elements.RemoveRange(_elements.Count - count, count);
+        }
+        private void CreatePoints(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var newPoint = this.CreateChildComponent(Settings.Prefabs.ActionPoint);
+                newPoint.Initialize(this);
+                newPoint.AnimateCreate(!isActiveAndEnabled);
+                _newElements.Add(newPoint);
+            }
+            _elements.Add(_newElements);
+        }
+        private void UpdatePositionsAndIndices()
+        {
+            var prefabScale = Settings.Prefabs.ActionPoint.transform.localScale;
+            float offsetY = Vector2.down.y * prefabScale.y / 2f;
+            for (int i = 0; i < _elements.Count; i++)
+            {
+                _elements[i].SetIndex(i);
+
+                float offsetX = (i - _elements.Count.Sub(1).Div(2)) * _Spacing.Add(1) * prefabScale.x;
+                Vector2 localPosition = UI.Rect.Value.EdgePoint(Vector2.down).Add(offsetX, offsetY);
+                bool isNew = _newElements.Contains(_elements[i]);
+                _elements[i].AnimateMove(localPosition, !isActiveAndEnabled || isNew);
+            }
         }
 
         // Play
-        public void Initialize(ActionUI ui)
+        override public void Initialize(ActionUI ui)
         {
-            UI = ui;
-            name = $"PointsBar";
-            BindEnableDisable(ui);
+            base.Initialize(ui);
 
-            CreatePoints();
+            OnPlayEnable.Sub(UpdatePointsInstantly);
 
-            Get<Updatable>().OnUpdate.SubEnableDisable(this, TryInvokeEvents);
-            OnPlayEnable.Sub(UpdateInstantly);
+            UI.Actionable.OnChangeMaxActionPoints.SubDestroy(this, UpdatePointsCount);
 
-            Get<Expandable>().OnStartExpanding.SubDestroy(this, () => IsActive = true);
-            Get<Expandable>().OnFinishCollapsing.SubDestroy(this, () => IsActive = false);
-            Get<Expandable>().ExpandTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.one));
-            Get<Expandable>().CollapseTween.Set(() => this.NewTween().SetDuration(0.4f).LocalScale(Vector3.zero));
-            Get<Expandable>().TryCollapse(true);
+            Get<Updatable>().OnUpdate.SubEnableDisable(this, UpdateVisualProgresses);
         }
     }
 }
