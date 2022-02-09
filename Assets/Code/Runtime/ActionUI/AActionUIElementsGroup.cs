@@ -12,9 +12,11 @@ namespace Vheos.Games.ActionPoints
     [DisallowMultipleComponent]
     abstract public class AActionUIElementsGroup<T> : ABaseComponent
     {
-        // Privates
-        protected ActionUI UI
+        // Publics
+        public ActionUI UI
         { get; private set; }
+
+        // Privates
         protected readonly List<T> _elements = new();
         protected readonly HashSet<T> _newElements = new();
 

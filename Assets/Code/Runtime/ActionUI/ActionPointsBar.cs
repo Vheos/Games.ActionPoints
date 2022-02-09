@@ -19,10 +19,6 @@ namespace Vheos.Games.ActionPoints
         // Events
         public AutoEvent<float, float> OnChangeVisualActionProgress = new();
         public AutoEvent<float, float> OnChangeVisualFocusProgress = new();
-        public AutoEvent<int, int> OnChangeRealActionPoints
-        => UI.Actionable.OnChangeActionPoints;
-        public AutoEvent<int, int> OnChangeRealFocusPoints
-        => UI.Actionable.OnChangeFocusPoints;
 
         // Privates
         private float _visualActionProgress;

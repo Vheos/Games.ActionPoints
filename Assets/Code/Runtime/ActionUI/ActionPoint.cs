@@ -62,8 +62,8 @@ namespace Vheos.Games.ActionPoints
             _group.OnChangeVisualActionProgress.SubEnableDisable(this, UpdateActionProgress);
             _group.OnChangeVisualFocusProgress.SubEnableDisable(this, UpdateFocusProgress);
 
-            _group.OnChangeRealActionPoints.SubEnableDisable(this, TryUpdateOpacity);
-            _group.OnChangeRealFocusPoints.SubEnableDisable(this, TryUpdateShape);
+            _group.UI.Actionable.OnChangeActionPoints.SubEnableDisable(this, TryUpdateOpacity);
+            _group.UI.Actionable.OnChangeFocusPoints.SubEnableDisable(this, TryUpdateShape);
         }
     }
 }
