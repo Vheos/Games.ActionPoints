@@ -11,6 +11,8 @@ namespace Vheos.Games.ActionPoints
         [SerializeField] [Range(0, 10)] protected int _MaxActionPoints;
         [SerializeField] [Range(-1f, 1f)] protected float _ActionSpeed;
         [SerializeField] protected Action[] _StartingActions;
+        [SerializeField] [Range(-5f, +5f)] protected float _ActionProgress;
+        [SerializeField] [Range(-5f, +5f)] protected float _FocusProgress;
 
         // Privates
         private ActionUI _actionUI;
@@ -98,6 +100,8 @@ namespace Vheos.Games.ActionPoints
             var previousActions = from != null ? previousEquipment.Actions : null;
             var currentActions = to != null ? currentEquipment.Actions : null;
             Get<Actionable>().TryChangeActions(previousActions, currentActions);
+            Get<Actionable>().MaxActionPoints += (currentEquipment != null ? currentEquipment.MaxActionPoints : 0)
+                                               - (previousEquipment != null ? previousEquipment.MaxActionPoints : 0);
         }
 
         // Play
@@ -107,6 +111,17 @@ namespace Vheos.Games.ActionPoints
 
             _actionUI = Instantiate(Settings.Prefabs.ActionUI);
             _actionUI.Initialize(Get<Actionable>(), () => Get<Collider>().LocalBounds().ToRect().Scale(this));
+
+            if (Has<Actionable>())
+            {
+
+                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
+                Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
+                //Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress = _ActionProgress, () => Get<Actionable>().FocusProgress = _FocusProgress);
+
+                Get<Actionable>().MaxActionPoints = _MaxActionPoints;
+                Get<Actionable>().TryChangeActions(null, _StartingActions);
+            }
 
             Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainHighlight);
             Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseHighlight);
@@ -124,14 +139,6 @@ namespace Vheos.Games.ActionPoints
             Get<Equiper>().OnChangeEquipable.SubEnableDisable(this, Equiper_OnChangeEquipable);
 
 
-            if (Has<Actionable>())
-            {
-                Get<Actionable>().MaxActionPoints.Set(() => _MaxActionPoints);
-                Get<Actionable>().TryChangeActions(null, _StartingActions);
-
-                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
-                Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
-            }
 
 
         }

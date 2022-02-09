@@ -12,10 +12,13 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [SerializeField] protected EquipSlot _Slot;
         [SerializeField] protected Action[] _Actions;
+        [SerializeField] [Range(-2, +2)] protected int _MaxActionPoints;
 
         // Publics
         public IReadOnlyCollection<Action> Actions
         => _Actions;
+        public int MaxActionPoints
+        => _MaxActionPoints;
 
         // Privates
         private void Selectable_OnPress(Selecter selecter)
