@@ -109,7 +109,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
 
-            _actionUI = Instantiate(Settings.Prefabs.ActionUI);
+            _actionUI = Instantiate(SettingsManager.Prefabs.ActionUI);
             _actionUI.Initialize(Get<Actionable>(), () => Get<Collider>().LocalBounds().ToRect().Scale(this));
 
             if (Has<Actionable>())

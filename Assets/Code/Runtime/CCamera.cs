@@ -6,6 +6,5 @@ namespace Vheos.Games.ActionPoints
 
     [RequireComponent(typeof(Camera))]
     public class CCamera : AUnityComponentWrapper<Camera>
-    {
-    }
+    { }
 }

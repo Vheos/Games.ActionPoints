@@ -56,21 +56,3 @@ namespace Vheos.Games.ActionPoints
         }
     }
 }
-
-/*
-else if (Values.Length<Effect.RequiredValuesCount)
-    return WarningTooFewValues();
-else if (Values.Length > Effect.RequiredValuesCount)
-    return WarningRedundantValues();
-private bool WarningTooFewValues()
-{
-    Debug.LogWarning($"TooFewValues:\ttrying to invoke effect {Effect.GetType().Name} with {Values.Length} values, while it requires {Effect.RequiredValuesCount}\n" +
-    $"Fallback:\treturn without invoking the effect");
-    return false;
-}
-private bool WarningRedundantValues()
-{
-    Debug.LogWarning($"RedundantValues:\tinvoking effect {Effect.GetType().Name} with {Values.Length - Effect.RequiredValuesCount} values too many");
-    return true;
-}
-*/

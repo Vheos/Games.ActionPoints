@@ -22,6 +22,7 @@ namespace Vheos.Games.ActionPoints
         public ActionButtonsWheel ButtonsWheel
         { get; private set; }
 
+
         // Play
         public void Initialize(Actionable actionable, Func<Rect> rectGetter)
         {
@@ -32,10 +33,10 @@ namespace Vheos.Games.ActionPoints
             Get<MoveTowards>().SetTarget(Actionable, true);
             Get<RotateAs>().SetTarget(CameraManager.AnyNonUI, true);
 
-            PointsBar = this.CreateChildComponent(Settings.Prefabs.ActionPointsBar);
+            PointsBar = this.CreateChildComponent(SettingsManager.Prefabs.ActionPointsBar);
             PointsBar.Initialize(this);
 
-            ButtonsWheel = this.CreateChildComponent(Settings.Prefabs.ActionButtonsWheel);
+            ButtonsWheel = this.CreateChildComponent(SettingsManager.Prefabs.ActionButtonsWheel);
             ButtonsWheel.Initialize(this);
         }
     }
