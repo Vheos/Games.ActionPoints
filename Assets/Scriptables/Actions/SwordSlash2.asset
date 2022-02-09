@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ButtonVisuals:
     Sprite: {fileID: 0}
-    Text: SWORD SLASH
+    Text: 
     Color: {r: 1, g: 0.875, b: 0.5, a: 1}
   _ActionPointsCost: 0
   _FocusPointsCost: 0

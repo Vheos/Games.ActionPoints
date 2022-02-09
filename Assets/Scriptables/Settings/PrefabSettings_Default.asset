@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionUI: {fileID: 9126600172214695551, guid: dec3c96f9925b29418b98d078e777fd2, type: 3}
   ActionPointsBar: {fileID: 7778436318990988254, guid: c6d6d58d8b923e74ba548a317645d13c, type: 3}
-  ActionPoint: {fileID: 4540874001801052056, guid: 008e506552b8ac04ea0a115c1b6beb03, type: 3}
+  ActionPoint: {fileID: 3504549619065347712, guid: 008e506552b8ac04ea0a115c1b6beb03, type: 3}
   ActionButtonsWheel: {fileID: -7765257155594446352, guid: c5e5c6b937dbc484b846a754513fbecf, type: 3}
   ActionButton: {fileID: 8146316743540505492, guid: 868ac7cc7c51a2943845df4b041d588b, type: 3}

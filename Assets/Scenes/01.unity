@@ -452,6 +452,7 @@ MonoBehaviour:
   _Actions:
   - {fileID: 11400000, guid: 61c118cfce9267f4fbcd5d3160dee360, type: 2}
   - {fileID: 11400000, guid: dcbc8ca9731a4424aa5754c0ead3a04d, type: 2}
+  _MaxActionPoints: -1
 --- !u!4 &295689538
 Transform:
   m_ObjectHideFlags: 0
@@ -663,6 +664,7 @@ MonoBehaviour:
   _Slot: 0
   _Actions:
   - {fileID: 11400000, guid: dcbc8ca9731a4424aa5754c0ead3a04d, type: 2}
+  _MaxActionPoints: 1
 --- !u!114 &536219750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -909,6 +911,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4590056948223180880, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4590056948223180880, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
       propertyPath: _ActionSpeed
       value: 0.5
