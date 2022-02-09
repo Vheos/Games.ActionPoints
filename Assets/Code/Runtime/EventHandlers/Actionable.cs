@@ -21,22 +21,6 @@ namespace Vheos.Games.ActionPoints
         public readonly AutoEvent<float> OnOverflowActionProgress = new();
 
         // Getters
-        public int MaxActionPoints
-        {
-            get => _maxActionPoints;
-            set
-            {
-                if (value == _maxActionPoints)
-                    return;
-
-                int previousMaxActionPoints = _maxActionPoints;
-                _maxActionPoints = value;
-                OnChangeMaxActionPoints.Invoke(previousMaxActionPoints, _maxActionPoints);
-
-                if (ActionProgress < _maxActionPoints)
-                    ActionProgress = ActionProgress.ClampMax(_maxActionPoints);
-            }
-        }
         public readonly Getter<int> LockedMaxActionPoints = new();
 
         // Publics
@@ -65,6 +49,22 @@ namespace Vheos.Games.ActionPoints
         }
         public void ClearActions()
         => _actions.Clear();
+        public int MaxActionPoints
+        {
+            get => _maxActionPoints;
+            set
+            {
+                if (value == _maxActionPoints)
+                    return;
+
+                int previousMaxActionPoints = _maxActionPoints;
+                _maxActionPoints = value;
+                OnChangeMaxActionPoints.Invoke(previousMaxActionPoints, _maxActionPoints);
+
+                if (ActionProgress > _maxActionPoints)
+                    ActionProgress = ActionProgress.ClampMax(_maxActionPoints);
+            }
+        }
         public float ActionProgress
         {
             get => _actionProgress;
