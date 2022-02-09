@@ -118,10 +118,10 @@ namespace Vheos.Games.ActionPoints
         => MaxActionPoints - LockedMaxActionPoints;
         public bool IsExhausted
          => _actionProgress < 0;
-        public bool CanUse(Action action)
-        => action.CanBeUsedBy(this);
-        public void Use(Action action, Targetable target)
-        => action.Use(this, target);
+        public bool CanAfford(Action action)
+        => !IsExhausted
+        && UsableActionPoints >= action.ActionPointsCost
+        && FocusPoints >= action.FocusPointsCost;
 
         // Privates
         private readonly HashSet<Action> _actions = new();

@@ -17,10 +17,6 @@ namespace Vheos.Games.ActionPoints
         [field: SerializeField] public ActionEffectData[] Effects { get; private set; }
 
         // Publics (use)
-        public bool CanBeUsedBy(Actionable actionable)
-        => !actionable.IsExhausted
-        && actionable.UsableActionPoints >= ActionPointsCost
-        && actionable.FocusPoints >= FocusPointsCost;
         public void Use(Actionable user, Targetable target)
         {
             user.ActionProgress -= ActionPointsCost;
