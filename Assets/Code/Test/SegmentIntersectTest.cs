@@ -6,19 +6,19 @@ namespace Vheos.Games.ActionPoints.Test
 
     public class SegmentIntersectTest : MonoBehaviour
     {
-        [SerializeField] protected Segment2D _A;
-        [SerializeField] protected Segment2D _B;
+        [field: SerializeField] public Segment2D A { get; private set; }
+        [field: SerializeField] public Segment2D B { get; private set; }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(_A.From, _A.To);
+            Gizmos.DrawLine(A.From, A.To);
 
             Gizmos.color = Color.magenta;
-            Gizmos.DrawLine(_B.From, _B.To);
+            Gizmos.DrawLine(B.From, B.To);
 
 
-            if (NewUtility.IntersectSegments(_A, _B, out var intersectionPoint))
+            if (NewUtility.IntersectSegments(A, B, out var intersectionPoint))
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawSphere(intersectionPoint, 0.05f);
@@ -26,7 +26,7 @@ namespace Vheos.Games.ActionPoints.Test
             else
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawSphere(_A.From, 0.05f);
+                Gizmos.DrawSphere(A.From, 0.05f);
             }
         }
     }

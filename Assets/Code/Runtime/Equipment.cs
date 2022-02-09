@@ -10,15 +10,9 @@ namespace Vheos.Games.ActionPoints
     public class Equipment : ABaseComponent
     {
         // Inspector
-        [SerializeField] protected EquipSlot _Slot;
-        [SerializeField] protected Action[] _Actions;
-        [SerializeField] [Range(-2, +2)] protected int _MaxActionPoints;
-
-        // Publics
-        public IReadOnlyCollection<Action> Actions
-        => _Actions;
-        public int MaxActionPoints
-        => _MaxActionPoints;
+        [field: SerializeField] public EquipSlot Slot {get; private set;}
+        [field: SerializeField] public Action[] Actions {get; private set;}
+        [field: SerializeField, Range(-2, +2)] public int MaxActionPoints { get; private set; }
 
         // Privates
         private void Selectable_OnPress(Selecter selecter)
@@ -49,7 +43,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
 
-            Get<Equipable>().EquipSlot.Set(() => (int)_Slot);
+            Get<Equipable>().EquipSlot.Set(() => (int)Slot);
 
             Get<Selectable>().OnPress.SubEnableDisable(this, Selectable_OnPress);
             Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);

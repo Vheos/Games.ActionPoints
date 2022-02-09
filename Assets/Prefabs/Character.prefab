@@ -58,10 +58,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481c2dc6c33eb4e4eaed4f3a60543007, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MaxActionPoints: 0
-  _ActionSpeed: 0
-  _ActionUIPrefab: {fileID: 9126600172214695551, guid: dec3c96f9925b29418b98d078e777fd2, type: 3}
-  _StartingActions: []
+  <MaxActionPoints>k__BackingField: 4
+  <ActionSpeed>k__BackingField: 0.5
+  <StartingActions>k__BackingField:
+  - {fileID: 11400000, guid: 68597f9a938a4e24d85e7a8c0850e50a, type: 2}
+  - {fileID: 11400000, guid: 536befe42f21d1144a002b0c84fb5378, type: 2}
+  - {fileID: 11400000, guid: 79ad63f6d4fa675488b37f6aa4d2c6c1, type: 2}
+  <ActionProgress>k__BackingField: 0
+  <FocusProgress>k__BackingField: 0
 --- !u!114 &1496881883444649891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,11 +78,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32613d7416b3ac049a1bf837976b99b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Color: {r: 1, g: 1, b: 1, a: 1}
-  _Thickness: 0.5
-  _FadeInDuration: 0.2
-  _FadeOutDuration: 0.4
-  _Material: {fileID: 2100000, guid: aac94756d6ba7a6408070068d32f644f, type: 2}
+  <Color>k__BackingField: {r: 1, g: 1, b: 1, a: 1}
+  <Thickness>k__BackingField: 0.5
+  <FadeInDuration>k__BackingField: 0.2
+  <FadeOutDuration>k__BackingField: 0.4
+  <Material>k__BackingField: {fileID: 2100000, guid: aac94756d6ba7a6408070068d32f644f, type: 2}
 --- !u!114 &8099017625504549054
 MonoBehaviour:
   m_ObjectHideFlags: 0

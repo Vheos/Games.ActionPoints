@@ -17,8 +17,8 @@ namespace Vheos.Games.ActionPoints
     public class ActionPointsBar : AActionUIElementsGroup<ActionPoint>
     {
         // Inspector
-        [SerializeField] [Range(-1f, 1f)] protected float _Spacing;
-        [SerializeField] [Range(0f, 1f)] protected float _HalfTime;
+        [field: SerializeField, Range(-1f, 1f)] public float Spacing { get; private set; }
+        [field: SerializeField, Range(0f, 1f)] public float HalfTime { get; private set; }
 
         // Events
         public AutoEvent<float, float> OnChangeVisualActionProgress = new();
@@ -33,7 +33,7 @@ namespace Vheos.Games.ActionPoints
         private float _visualFocusProgress;
         private void UpdateVisualProgresses()
         {
-            float lerpAlpha = Utility.HalfTimeToLerpAlpha(_HalfTime);
+            float lerpAlpha = Utility.HalfTimeToLerpAlpha(HalfTime);
 
             float previousVisualActionProgress = _visualActionProgress;
             _visualActionProgress = _visualActionProgress.Lerp(UI.Actionable.ActionProgress, lerpAlpha);
@@ -94,7 +94,7 @@ namespace Vheos.Games.ActionPoints
             {
                 _elements[i].SetIndex(i);
 
-                float offsetX = (i - _elements.Count.Sub(1).Div(2)) * _Spacing.Add(1) * prefabScale.x;
+                float offsetX = (i - _elements.Count.Sub(1).Div(2)) * Spacing.Add(1) * prefabScale.x;
                 Vector2 localPosition = UI.Rect.Value.EdgePoint(Vector2.down).Add(offsetX, offsetY);
                 bool isNew = _newElements.Contains(_elements[i]);
                 _elements[i].AnimateMove(localPosition, !isActiveAndEnabled || isNew);

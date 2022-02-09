@@ -11,17 +11,17 @@ namespace Vheos.Games.ActionPoints
     public class ActionPoint : AActionUIElement<ActionPointsBar>
     {
         // Inspector
-        [SerializeField] [Range(0f, 1f)] protected float _PartialOpacity;
-        [SerializeField] [Range(0f, 1f)] protected float _FullOpacity;
-        [SerializeField] protected Texture2D _ActionShape;
-        [SerializeField] protected Texture2D _FocusShape;
+        [field: SerializeField, Range(0f, 1f)] public float PartialOpacity { get; private set; }
+        [field: SerializeField, Range(0f, 1f)] public float FullOpacity { get; private set; }
+        [field: SerializeField] public Texture2D ActionShape { get; private set; }
+        [field: SerializeField] public Texture2D FocusShape { get; private set; }
 
         public void UpdateInstantly(float visualActionProgress, float visualFocusProgress, int realActionPoints, int realFocusPoints)
         {
             UpdateActionProgress(default, visualActionProgress);
             UpdateFocusProgress(default, visualFocusProgress);
-            Get<ActionPointMProps>().Opacity = _index < realActionPoints.Abs() ? _FullOpacity : _PartialOpacity;
-            Get<ActionPointMProps>().Shape = _index < realFocusPoints ? _FocusShape : _ActionShape;
+            Get<ActionPointMProps>().Opacity = _index < realActionPoints.Abs() ? FullOpacity : PartialOpacity;
+            Get<ActionPointMProps>().Shape = _index < realFocusPoints ? FocusShape : ActionShape;
         }
 
         // Privates        
@@ -32,16 +32,16 @@ namespace Vheos.Games.ActionPoints
         private void TryUpdateOpacity(int from, int to)
         {
             if (_index >= from.Abs() && _index < to.Abs())
-                AnimateOpacity(_FullOpacity);
+                AnimateOpacity(FullOpacity);
             else if (_index >= to.Abs() && _index < from.Abs())
-                AnimateOpacity(_PartialOpacity);
+                AnimateOpacity(PartialOpacity);
         }
         private void TryUpdateShape(int from, int to)
         {
             if (_index >= from && _index < to)
-                AnimateShape(_FocusShape);
+                AnimateShape(FocusShape);
             else if (_index >= to && _index < from)
-                AnimateShape(_ActionShape);
+                AnimateShape(ActionShape);
         }
         private void AnimateOpacity(float to)
         => this.NewTween(ConflictResolution.Interrupt)
@@ -58,7 +58,7 @@ namespace Vheos.Games.ActionPoints
         override public void Initialize(ActionPointsBar bar)
         {
             base.Initialize(bar);
-            Get<ActionPointMProps>().Initialize();       
+            Get<ActionPointMProps>().Initialize();
 
             _group.OnChangeVisualActionProgress.SubEnableDisable(this, UpdateActionProgress);
             _group.OnChangeVisualFocusProgress.SubEnableDisable(this, UpdateFocusProgress);

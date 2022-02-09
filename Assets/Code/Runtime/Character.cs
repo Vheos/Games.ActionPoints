@@ -8,11 +8,11 @@ namespace Vheos.Games.ActionPoints
     public class Character : ABaseComponent
     {
         // Inspector
-        [SerializeField] [Range(0, 10)] protected int _MaxActionPoints;
-        [SerializeField] [Range(-1f, 1f)] protected float _ActionSpeed;
-        [SerializeField] protected Action[] _StartingActions;
-        [SerializeField] [Range(-5f, +5f)] protected float _ActionProgress;
-        [SerializeField] [Range(-5f, +5f)] protected float _FocusProgress;
+        [field: SerializeField, Range(0, 10)] public int MaxActionPoints { get; private set; }
+        [field: SerializeField, Range(-1f, 1f)] public float ActionSpeed { get; private set; }
+        [field: SerializeField] public Action[] StartingActions { get; private set; }
+        [field: SerializeField, Range(-5f, +5f)] public float ActionProgress { get; private set; }
+        [field: SerializeField, Range(-5f, +5f)] public float FocusProgress { get; private set; }
 
         // Privates
         private ActionUI _actionUI;
@@ -115,12 +115,12 @@ namespace Vheos.Games.ActionPoints
             if (Has<Actionable>())
             {
 
-                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * _ActionSpeed);
+                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * ActionSpeed);
                 Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
                 //Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress = _ActionProgress, () => Get<Actionable>().FocusProgress = _FocusProgress);
 
-                Get<Actionable>().MaxActionPoints = _MaxActionPoints;
-                Get<Actionable>().TryChangeActions(null, _StartingActions);
+                Get<Actionable>().MaxActionPoints = MaxActionPoints;
+                Get<Actionable>().TryChangeActions(null, StartingActions);
             }
 
             Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainHighlight);

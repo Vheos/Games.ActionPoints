@@ -8,12 +8,12 @@ namespace Vheos.Games.ActionPoints
     public class UICursorManager : AStaticManager<UICursorManager, UICursor>
     {
         // Inspector
-        [SerializeField] protected bool _DisableNativeCursor;
+        [field: SerializeField] public bool DisableNativeCursor { get; private set; }
 
         protected override void PlayAwake()
         {
             base.PlayAwake();
-            if (_DisableNativeCursor)
+            if (DisableNativeCursor)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;

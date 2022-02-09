@@ -52,11 +52,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfa07c861da9ecb42bc4484a23ae2226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _StartOpacity: 0.25
-  _StartWidth: 0.025
-  _EndWidthRatio: 0.25
-  _WidthAnimDuration: 0.4
-  _Tiling: 10
+  <StartOpacity>k__BackingField: 0.2
+  <StartWidth>k__BackingField: 0.02
+  <EndWidthRatio>k__BackingField: 0.2
+  <WidthAnimDuration>k__BackingField: 0.2
+  <Tiling>k__BackingField: 20
 --- !u!114 &7416973358124477019
 MonoBehaviour:
   m_ObjectHideFlags: 0

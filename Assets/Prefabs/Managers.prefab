@@ -68,8 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6e5868c3e98464eae2df68568acb59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _VisualSettings: {fileID: 11400000, guid: d143340ade8f1b944aae39fe7bb0196a, type: 2}
-  _PrefabSettings: {fileID: 11400000, guid: 51406f5aa4703ec409b8a52ac424f845, type: 2}
+  <VisualSettings>k__BackingField: {fileID: 11400000, guid: d143340ade8f1b944aae39fe7bb0196a, type: 2}
+  <PrefabSettings>k__BackingField: {fileID: 11400000, guid: 51406f5aa4703ec409b8a52ac424f845, type: 2}
 --- !u!114 &3909449117901916575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,13 +82,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0e0c8ebcccfcdd468a00ca8e0fab046, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _StartingScene: Assets/Scenes/01.unity
-  _SceneTransitionOrder:
+  <StartingScene>k__BackingField: Assets/Scenes/01.unity
+  <SceneTransitionOrder>k__BackingField:
     FirstOperation: 0
     FirstOperationTiming: 0
     SecondOperation: 1
     SecondOperationTiming: 0
-  _WaitInBetween: 0
+  <WaitInBetween>k__BackingField: 0
 --- !u!114 &3909449117901916564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,19 +101,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a88c69055a5d6d47989cb342396892f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _TimeScale: 1
-  _UpdatesPerSecond: 60
-  _FixedUpdatesPerSecond: 50
-  _Pause:
+  <TimeScale>k__BackingField: 1
+  <UpdatesPerSecond>k__BackingField: 60
+  <FixedUpdatesPerSecond>k__BackingField: 50
+  <Pause>k__BackingField:
     m_Name: Pause
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: 5fe61421-14f4-4de9-a140-796ba576a678
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e6ae03dc-456f-4560-8884-d8be9e18c033
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: 8f14e0ca-3007-4c9e-9957-b8605848b215
+      m_Id: 9018c78a-1b27-473d-a70d-284ae61e64e0
       m_Path: <Keyboard>/p
       m_Interactions: 
       m_Processors: 
@@ -133,9 +133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2906d7f4f760dff4fa62261de816c2d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 8766593516385359140, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
-  _PersistentComponents: 1
-  _EnsureAnyComponent: 1
+  <Prefab>k__BackingField: {fileID: 8766593516385359140, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
+  <PersistentComponents>k__BackingField: 1
+  <EnsureAnyComponent>k__BackingField: 1
 --- !u!114 &3909449117901916572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,19 +148,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a4c818be4c3db408f4a3f442514367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 7810912012921641213, guid: 37434cab7eae1f04d87058624aa0517a, type: 3}
-  _PersistentComponents: 1
-  _EnsureAnyComponent: 0
-  _Actions: {fileID: -944628639613478452, guid: 90ef15be7a3e4d949a768b16e5790e6f, type: 3}
-  _JoinAction: {fileID: 1026726547556581313, guid: 90ef15be7a3e4d949a768b16e5790e6f, type: 3}
-  _PlayerColors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 0.75, b: 0, a: 1}
-  - {r: 0.5, g: 1, b: 0, a: 1}
-  - {r: 0, g: 1, b: 1, a: 1}
-  - {r: 0, g: 0.25, b: 1, a: 1}
-  - {r: 0.5, g: 0, b: 1, a: 1}
-  - {r: 1, g: 0, b: 0.75, a: 1}
+  <Prefab>k__BackingField: {fileID: 7810912012921641213, guid: 37434cab7eae1f04d87058624aa0517a, type: 3}
+  <PersistentComponents>k__BackingField: 1
+  <EnsureAnyComponent>k__BackingField: 0
+  <Actions>k__BackingField: {fileID: -944628639613478452, guid: 90ef15be7a3e4d949a768b16e5790e6f, type: 3}
+  <JoinAction>k__BackingField: {fileID: 1026726547556581313, guid: 90ef15be7a3e4d949a768b16e5790e6f, type: 3}
+  <PlayerColors>k__BackingField:
+  - {r: 1, g: 0.25, b: 0.25, a: 1}
+  - {r: 1, g: 0.6254902, b: 0.25098038, a: 1}
+  - {r: 1, g: 1, b: 0.25098038, a: 1}
+  - {r: 0.6254902, g: 1, b: 0.25098038, a: 1}
 --- !u!114 &3909449117901916546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,10 +170,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e12b4ac07e7810e4da14aeb004ed9992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: -66601126168397642, guid: a2c31c22ae442a5428ffc95f53bf6c95, type: 3}
-  _PersistentComponents: 1
-  _EnsureAnyComponent: 1
-  _UICameraPrefab: {fileID: 6803609304893408197, guid: 23219dab8b802364288c4b7ea0adcd50, type: 3}
+  <Prefab>k__BackingField: {fileID: -66601126168397642, guid: a2c31c22ae442a5428ffc95f53bf6c95, type: 3}
+  <PersistentComponents>k__BackingField: 1
+  <EnsureAnyComponent>k__BackingField: 1
+  <UICameraPrefab>k__BackingField: {fileID: 6803609304893408197, guid: 23219dab8b802364288c4b7ea0adcd50, type: 3}
 --- !u!114 &3909449117901916561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,10 +186,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dac2ead95b833b40a12e3daba5cb9e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 737779621490586369, guid: 77f360719ef9b094d918fb7f47647539, type: 3}
-  _PersistentComponents: 1
-  _EnsureAnyComponent: 0
-  _DisableNativeCursor: 1
+  <Prefab>k__BackingField: {fileID: 737779621490586369, guid: 77f360719ef9b094d918fb7f47647539, type: 3}
+  <PersistentComponents>k__BackingField: 1
+  <EnsureAnyComponent>k__BackingField: 0
+  <DisableNativeCursor>k__BackingField: 1
 --- !u!114 &3909449117901916567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,9 +202,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e99f246a3431cf4aa14e0e88f059d2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 5421020388957066970, guid: 68db931d161ca554995403ca6143bd16, type: 3}
-  _PersistentComponents: 1
-  _EnsureAnyComponent: 0
+  <Prefab>k__BackingField: {fileID: 5421020388957066970, guid: 68db931d161ca554995403ca6143bd16, type: 3}
+  <PersistentComponents>k__BackingField: 1
+  <EnsureAnyComponent>k__BackingField: 0
 --- !u!114 &3909449117901916566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,9 +217,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9acdd52643f7332418df78dffc1f7024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 0}
-  _PersistentComponents: 0
-  _EnsureAnyComponent: 0
+  <Prefab>k__BackingField: {fileID: 0}
+  <PersistentComponents>k__BackingField: 0
+  <EnsureAnyComponent>k__BackingField: 0
 --- !u!114 &3909449117901916568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,19 +232,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9b39951e376d44e9d3725b8b90ab7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Scenes:
+  <Scenes>k__BackingField:
   - Assets/Scenes/01.unity
   - Assets/Scenes/02.unity
-  _InputAction:
+  <InputAction>k__BackingField:
     m_Name: Input
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: 9b3b720b-ebd3-4347-b9c7-2d074d0bd8c2
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 4ed2bf54-7c32-4a3b-8a35-423529088f60
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: f40ff7fc-6f58-4943-9fe4-ccbceabc7886
+      m_Id: 8b635d58-8b1e-4663-becb-3258aa8bbb98
       m_Path: <Keyboard>/tab
       m_Interactions: 
       m_Processors: 
@@ -267,7 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 268452bb58b62db479e691f2bb87eb03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Manager: {fileID: 0}
+  <Manager>k__BackingField: {fileID: 0}
   LogComponents: 0
   InstantiateComponent: 0
 --- !u!114 &3909449117901916560

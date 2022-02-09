@@ -14,9 +14,9 @@ namespace Vheos.Games.ActionPoints
     public class UICursor : ABaseComponent
     {
         // Inspector
-        [SerializeField] [Range(0f, 2f)] protected float _Sensitivity = 1f;
-        [SerializeField] protected ImageProperties _Idle = ImageProperties.Default;
-        [SerializeField] protected ImageProperties _Pressed = ImageProperties.Default;
+        [field: SerializeField, Range(0f, 2f)] public float Sensitivity { get; private set; } = 1f;
+        [field: SerializeField] public ImageProperties Idle { get; private set; } = ImageProperties.Default;
+        [field: SerializeField] public ImageProperties Pressed { get; private set; } = ImageProperties.Default;
 
         // Publics
         public Player Player
@@ -26,15 +26,15 @@ namespace Vheos.Games.ActionPoints
         private UICanvas _uiCanvas;
         private Selecter _selecter;
         private void OnInputMoveCursor(Vector2 offset)
-        => transform.position = transform.position.Add(offset * _Sensitivity).Clamp(Vector2.zero, _uiCanvas.Size);
+        => transform.position = transform.position.Add(offset * Sensitivity / _uiCanvas.ScaleFactor).Clamp(Vector2.zero, _uiCanvas.Size);
         private void OnInputPressConfirm()
         {
-            SetImageProperties(_Pressed);
+            SetImageProperties(Pressed);
             _selecter.TryPress();
         }
         private void OnInputReleaseConfirm()
         {
-            SetImageProperties(_Idle);
+            SetImageProperties(Idle);
 
             if (!_selecter.IsSelectingAny)
                 return;
@@ -75,10 +75,10 @@ namespace Vheos.Games.ActionPoints
             BindDestroyObject(Player);
             Player.OnInputMoveCursor.SubEnableDisable(this, OnInputMoveCursor);
             Player.OnInputPressConfirm.SubEnableDisable(this, OnInputPressConfirm);
-            Player.OnInputReleaseConfirm.SubEnableDisable(this, OnInputReleaseConfirm);            
+            Player.OnInputReleaseConfirm.SubEnableDisable(this, OnInputReleaseConfirm);
 
             transform.localScale = default;
-            SetImageProperties(_Idle);
+            SetImageProperties(Idle);
         }
     }
 }

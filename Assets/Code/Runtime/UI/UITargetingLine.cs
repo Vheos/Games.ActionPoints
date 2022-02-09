@@ -13,11 +13,11 @@ namespace Vheos.Games.ActionPoints
     public class UITargetingLine : ABaseComponent
     {
         // Inspector
-        [SerializeField] [Range(0f, 1f)] protected float _StartOpacity;
-        [SerializeField] [Range(0f, 1f)] protected float _StartWidth;
-        [SerializeField] [Range(0f, 1f)] protected float _EndWidthRatio;
-        [SerializeField] [Range(0f, 1f)] protected float _WidthAnimDuration;
-        [SerializeField] [Range(1f, 100f)] protected float _Tiling;
+        [field: SerializeField, Range(0f, 1f)] public float StartOpacity { get; private set; }
+        [field: SerializeField, Range(0f, 1f)] public float StartWidth { get; private set; }
+        [field: SerializeField, Range(0f, 1f)] public float EndWidthRatio { get; private set; }
+        [field: SerializeField, Range(0f, 1f)] public float WidthAnimDuration { get; private set; }
+        [field: SerializeField, Range(1f, 100f)] public float Tiling { get; private set; }
 
         // Events
         public AutoEvent<Targetable, Targetable> OnChangeTarget { get; } = new();
@@ -31,8 +31,8 @@ namespace Vheos.Games.ActionPoints
         {
             IsActive = true;
             this.NewTween(ConflictResolution.Interrupt)
-                .SetDuration(_WidthAnimDuration)
-                .AddPropertyModifier(AssignWidth, _StartWidth * _uiCanvas.Size.y - Get<LineRenderer>().startWidth);
+                .SetDuration(WidthAnimDuration)
+                .AddPropertyModifier(AssignWidth, StartWidth * _uiCanvas.Size.y - Get<LineRenderer>().startWidth);
 
             _targeter = targeter;
             _from = from;
@@ -44,7 +44,7 @@ namespace Vheos.Games.ActionPoints
         public void Hide(bool isInstant = false)
         {
             this.NewTween(ConflictResolution.Interrupt)
-                .SetDuration(_WidthAnimDuration)
+                .SetDuration(WidthAnimDuration)
                 .AddPropertyModifier(AssignWidth, 0f - Get<LineRenderer>().startWidth)
                 .AddEventsOnFinish(() => IsActive = false)
                 .FinishIf(isInstant);
@@ -75,7 +75,7 @@ namespace Vheos.Games.ActionPoints
         private void AssignWidth(float width)
         {
             Get<LineRenderer>().startWidth += width;
-            Get<LineRenderer>().endWidth = Get<LineRenderer>().startWidth * _EndWidthRatio;
+            Get<LineRenderer>().endWidth = Get<LineRenderer>().startWidth * EndWidthRatio;
         }
         private void OnUpdate()
         {
@@ -86,7 +86,7 @@ namespace Vheos.Games.ActionPoints
             if (_targeter != null)
                 _targeter.Targetable = RaycastableManager.FindClosest<Targetable>(_uiCanvas, LineTo);
 
-            Get<UITargetingLineMProps>().TilingX = LineFrom.DistanceTo(LineTo) * _Tiling / _uiCanvas.Size.y;
+            Get<UITargetingLineMProps>().TilingX = LineFrom.DistanceTo(LineTo) * Tiling / _uiCanvas.Size.y;
         }
 
         // Play
@@ -107,7 +107,7 @@ namespace Vheos.Games.ActionPoints
             name = $"{player.name}_TargetingLine";
             BindDestroyObject(Player);
 
-            Get<LineRenderer>().startColor = Get<LineRenderer>().startColor.NewA(_StartOpacity);
+            Get<LineRenderer>().startColor = Get<LineRenderer>().startColor.NewA(StartOpacity);
             Get<LineRenderer>().endColor = Player.Color;
         }
     }

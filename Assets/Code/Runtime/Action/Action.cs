@@ -11,29 +11,21 @@ namespace Vheos.Games.ActionPoints
         protected const string CONTEXT_MENU_PATH = "";
 
         // Inspector
-        [SerializeField] protected ActionButtonVisuals _ButtonVisuals;
-        [SerializeField] [Range(0, 5)] protected int _ActionPointsCost = 0;
-        [SerializeField] [Range(0, 5)] protected int _FocusPointsCost = 0;
-        [SerializeField] protected ActionEffectData[] _Effects = new ActionEffectData[1];
-
-        // Publics
-        public ActionButtonVisuals ButtonVisuals
-        => _ButtonVisuals;
-        public int ActionPointsCost
-        => _ActionPointsCost;
-        public int FocusPointsCost
-        => _FocusPointsCost;
+        [field: SerializeField] public ActionButtonVisuals ButtonVisuals { get; private set; }
+        [field: SerializeField, Range(0, 5)] public int ActionPointsCost { get; private set; }
+        [field: SerializeField, Range(0, 5)] public int FocusPointsCost { get; private set; }
+        [field: SerializeField] public ActionEffectData[] Effects { get; private set; }
 
         // Publics (use)
         public bool CanBeUsedBy(Actionable actionable)
         => !actionable.IsExhausted
-        && actionable.UsableActionPoints >= _ActionPointsCost
-        && actionable.FocusPoints >= _FocusPointsCost;
+        && actionable.UsableActionPoints >= ActionPointsCost
+        && actionable.FocusPoints >= FocusPointsCost;
         public void Use(Actionable user, Targetable target)
         {
-            user.ActionProgress -= _ActionPointsCost;
-            user.FocusProgress -= _FocusPointsCost;
-            foreach (var effectData in _Effects)
+            user.ActionProgress -= ActionPointsCost;
+            user.FocusProgress -= FocusPointsCost;
+            foreach (var effectData in Effects)
                 effectData.Invoke(user, target);
         }
     }

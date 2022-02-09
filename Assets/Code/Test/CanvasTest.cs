@@ -10,43 +10,43 @@ namespace Vheos.Games.ActionPoints.Test
     public class CanvasTest : MonoBehaviour
     {
         // Inspector
-        [SerializeField] protected InputAction _Log;
-        [SerializeField] protected Canvas _Canvas;
-        [SerializeField] protected GameObject _WorldObject;
+        [field: SerializeField] public InputAction Log { get; private set; }
+        [field: SerializeField] public Canvas Canvas { get; private set; }
+        [field: SerializeField] public GameObject WorldObject { get; private set; }
 
         // Privates
-        private void Log(InputAction.CallbackContext context)
+        private void Print(InputAction.CallbackContext context)
         {
-            var canvasRect = _Canvas.transform as RectTransform;
+            var canvasRect = Canvas.transform as RectTransform;
             var canvasObjectRect = transform as RectTransform;
             Debug.Log($"CANVAS");
             Debug.Log($"\tPosition: {canvasRect.position}");
-            Debug.Log($"\tCameraDistance: {canvasRect.DistanceTo(_Canvas.worldCamera)}");
-            Debug.Log($"\tPlaneDistance: {_Canvas.planeDistance}");
+            Debug.Log($"\tCameraDistance: {canvasRect.DistanceTo(Canvas.worldCamera)}");
+            Debug.Log($"\tPlaneDistance: {Canvas.planeDistance}");
             Debug.Log($"\tSize: {canvasRect.rect.size}");
-            Debug.Log($"\tPixelSize: {_Canvas.pixelRect.size}");
-            Debug.Log($"\tRenderSize: {_Canvas.renderingDisplaySize}");
-            Debug.Log($"\tScaleFactor: {_Canvas.scaleFactor}");
+            Debug.Log($"\tPixelSize: {Canvas.pixelRect.size}");
+            Debug.Log($"\tRenderSize: {Canvas.renderingDisplaySize}");
+            Debug.Log($"\tScaleFactor: {Canvas.scaleFactor}");
             Debug.Log($"");
             Debug.Log($"CANVAS OBJECT");
             Debug.Log($"\tPosition: {canvasObjectRect.position}");
             Debug.Log($"\tLocalPosition: {canvasObjectRect.localPosition}");
-            Debug.Log($"\tCameraDistance: {canvasObjectRect.DistanceTo(_Canvas.worldCamera)}");
+            Debug.Log($"\tCameraDistance: {canvasObjectRect.DistanceTo(Canvas.worldCamera)}");
             Debug.Log($"\tAnchoredPosition: {canvasObjectRect.anchoredPosition}");
             Debug.Log($"");
             Debug.Log($"WORLD OBJECT");
-            Debug.Log($"\tPosition: {_WorldObject.transform.position}");
-            Debug.Log($"\tLocalPosition: {_WorldObject.transform.localPosition}");
-            Debug.Log($"\tCameraDistance: {_WorldObject.DistanceTo(_Canvas.worldCamera)}");
+            Debug.Log($"\tPosition: {WorldObject.transform.position}");
+            Debug.Log($"\tLocalPosition: {WorldObject.transform.localPosition}");
+            Debug.Log($"\tCameraDistance: {WorldObject.DistanceTo(Canvas.worldCamera)}");
 
-            var calculatedPoint = new Ray(_Canvas.worldCamera.transform.position, _Canvas.worldCamera.DirectionTowards(_WorldObject)).GetPoint(_Canvas.planeDistance);
+            var calculatedPoint = new Ray(Canvas.worldCamera.transform.position, Canvas.worldCamera.DirectionTowards(WorldObject)).GetPoint(Canvas.planeDistance);
             Debug.Log($"\tCalculatedPoint: {calculatedPoint }");
-            Debug.Log($"\tCameraDistance: {calculatedPoint.DistanceTo(_Canvas.worldCamera.transform.position)}");
-            Debug.Log($"\tCalculatedPoint2: {_Canvas.worldCamera.transform.position + _Canvas.worldCamera.DirectionTowards(_WorldObject) * _Canvas.planeDistance }");
+            Debug.Log($"\tCameraDistance: {calculatedPoint.DistanceTo(Canvas.worldCamera.transform.position)}");
+            Debug.Log($"\tCalculatedPoint2: {Canvas.worldCamera.transform.position + Canvas.worldCamera.DirectionTowards(WorldObject) * Canvas.planeDistance }");
 
             return;
-            Ray ray = new(_Canvas.worldCamera.transform.position, _Canvas.worldCamera.DirectionTowards(canvasObjectRect));
-            Plane plane = new(_Canvas.worldCamera.transform.forward, _Canvas.transform.position.z);
+            Ray ray = new(Canvas.worldCamera.transform.position, Canvas.worldCamera.DirectionTowards(canvasObjectRect));
+            Plane plane = new(Canvas.worldCamera.transform.forward, Canvas.transform.position.z);
             plane.Raycast(ray, out var distance);
 
             Debug.Log($"\tRay: {ray}");
@@ -57,15 +57,15 @@ namespace Vheos.Games.ActionPoints.Test
         // Play
         private void Awake()
         {
-            _Log.Enable();
+            Log.Enable();
         }
         private void OnEnable()
         {
-            _Log.performed += Log;
+            Log.performed += Print;
         }
         private void OnDisable()
         {
-            _Log.performed -= Log;
+            Log.performed -= Print;
         }
 
     }

@@ -8,20 +8,20 @@ namespace Vheos.Games.ActionPoints.Test
 
     public class SceneManagerTest : MonoBehaviour
     {
-        [ScenePicker] [SerializeField] protected string[] _Scenes;
-        [SerializeField] protected InputAction _InputAction;
+        [field: SerializeField, ScenePicker] public string[] Scenes { get; private set; }
+        [field: SerializeField] public InputAction InputAction { get; private set; }
 
         private void Awake()
         {
-            _InputAction.Enable();
+            InputAction.Enable();
         }
         private void Update()
         {
-            if(_InputAction.triggered )
+            if (InputAction.triggered)
             {
-                int currentIndex = Array.IndexOf(_Scenes, SceneManager.ActiveScene.path);
-                int nextIndex = currentIndex.Add(1).PosMod(_Scenes.Length);
-                SceneManager.TransitionTo(_Scenes[nextIndex]);
+                int currentIndex = Array.IndexOf(Scenes, SceneManager.ActiveScene.path);
+                int nextIndex = currentIndex.Add(1).PosMod(Scenes.Length);
+                SceneManager.TransitionTo(Scenes[nextIndex]);
             }
         }
     }

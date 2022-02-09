@@ -12,10 +12,10 @@ namespace Vheos.Games.ActionPoints
     public class UICanvasManager : AStaticManager<UICanvasManager, UICanvas>
     {
         // Inspector
-        [SerializeField] protected CCamera _UICameraPrefab;
+        [field: SerializeField] public CCamera UICameraPrefab {get; private set;}
 
         // Publics
         static public CCamera InstantiateUICamera()
-        => CameraManager.InstantiateComponent(_instance._UICameraPrefab);
+        => CameraManager.InstantiateComponent(_instance.UICameraPrefab);
     }
 }

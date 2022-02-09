@@ -8,14 +8,8 @@ namespace Vheos.Games.ActionPoints
     public class SettingsManager : AStaticComponent<SettingsManager>
     {
         // Inspector
-       [SerializeField] protected VisualSettings _VisualSettings;
-        [SerializeField] protected PrefabSettings _PrefabSettings;        
-
-        // Publics
-        static public VisualSettings VisualSettings
-        => _instance._VisualSettings;
-        static public PrefabSettings PrefabSettings
-        => _instance._PrefabSettings;
+        [field: SerializeField] public VisualSettings VisualSettings { get; private set; }
+        [field: SerializeField] public PrefabSettings PrefabSettings { get; private set; }
 
         // Play
         protected override void PlayAwake()
@@ -29,8 +23,8 @@ namespace Vheos.Games.ActionPoints
     {
         // Publics
         static public VisualSettings Visual
-        => SettingsManager.VisualSettings;
+        => SettingsManager.Instance.VisualSettings;
         static public PrefabSettings Prefabs
-        => SettingsManager.PrefabSettings;  
+        => SettingsManager.Instance.PrefabSettings;
     }
 }

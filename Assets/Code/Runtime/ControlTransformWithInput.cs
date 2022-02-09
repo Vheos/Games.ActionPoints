@@ -9,11 +9,11 @@ namespace Vheos.Games.ActionPoints.Test
     public class ControlTransformWithInput : ABaseComponent
     {
         // Inspector        
-        [SerializeField] protected InputActionAsset _InputActions;
-        [SerializeField] [Range(0f, 10f)] protected float _MovementSpeed = 1f;
-        [SerializeField] [Range(0f, 10f)] protected float _RotationSpeed = 1f;
-        [SerializeField] protected bool _RotationInvertX = false;
-        [SerializeField] protected bool _RotationInvertY = true;
+        [field: SerializeField] public InputActionAsset InputActions { get; private set; }
+        [field: SerializeField, Range(0f, 10f)] public float MovementSpeed { get; private set; } = 1f;
+        [field: SerializeField, Range(0f, 10f)] public float RotationSpeed { get; private set; } = 1f;
+        [field: SerializeField] public bool RotationInvertX { get; private set; } = false;
+        [field: SerializeField] public bool RotationInvertY { get; private set; } = true;
 
         // Private
         private InputAction _control;
@@ -25,13 +25,13 @@ namespace Vheos.Games.ActionPoints.Test
                 return;
 
             // Rotation
-            Vector3 anglesOffset = _rotate.ReadValue<Vector2>().YX() * _RotationSpeed * 10;
+            Vector3 anglesOffset = _rotate.ReadValue<Vector2>().YX() * RotationSpeed * 10;
             Quaternion targetRotation = transform.rotation;
             targetRotation.eulerAngles += anglesOffset * Time.deltaTime;
             transform.rotation = targetRotation;
 
             // Position
-            var positionOffset = transform.rotation * _move.ReadValue<Vector3>() * _MovementSpeed;
+            var positionOffset = transform.rotation * _move.ReadValue<Vector3>() * MovementSpeed;
             transform.position = transform.position + positionOffset * Time.deltaTime;
         }
 
@@ -48,9 +48,9 @@ namespace Vheos.Games.ActionPoints.Test
         {
             base.PlayAwake();
             Get<Updatable>().OnUpdate.SubEnableDisable(this, ApplyInput);
-            _control = _InputActions.FindAction(nameof(InputActionName.Control));
-            _move = _InputActions.FindAction(nameof(InputActionName.Move));
-            _rotate = _InputActions.FindAction(nameof(InputActionName.Rotate));
+            _control = InputActions.FindAction(nameof(InputActionName.Control));
+            _move = InputActions.FindAction(nameof(InputActionName.Move));
+            _rotate = InputActions.FindAction(nameof(InputActionName.Rotate));
 
             _control.Enable();
             _move.Enable();

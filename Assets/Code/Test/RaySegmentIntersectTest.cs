@@ -6,20 +6,20 @@ namespace Vheos.Games.ActionPoints.Test
 
     public class RaySegmentIntersectTest : MonoBehaviour
     {
-        [SerializeField] protected Vector3 _RayA;
-        [SerializeField] protected Segment2D _B;
+        [field: SerializeField] public Vector3 RayA { get; private set; }
+        [field: SerializeField] public Segment2D B { get; private set; }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            Ray2D rayA = new(_RayA.XY(), Vector2.right.Rotate(_RayA.z, true));
+            Ray2D rayA = new(RayA.XY(), Vector2.right.Rotate(RayA.z, true));
             Gizmos.DrawLine(rayA.origin, rayA.origin + rayA.direction * 100f);
 
             Gizmos.color = Color.magenta;
-            Gizmos.DrawLine(_B.From, _B.To);
+            Gizmos.DrawLine(B.From, B.To);
 
 
-            if (NewUtility.IntersectRayAndSegment(rayA, _B, out var intersectionPoint))
+            if (NewUtility.IntersectRayAndSegment(rayA, B, out var intersectionPoint))
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawSphere(intersectionPoint, 0.05f);

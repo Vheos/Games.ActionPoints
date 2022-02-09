@@ -20,18 +20,18 @@ namespace Vheos.Games.ActionPoints
         { get; private set; }
 
         // Inspector
-        [SerializeField] protected InputActionAsset _Actions;
-        [SerializeField] protected InputActionReference _JoinAction;
-        [SerializeField] protected Color[] _PlayerColors;
+        [field: SerializeField] public InputActionAsset Actions { get; private set; }
+        [field: SerializeField] public InputActionReference JoinAction { get; private set; }
+        [field: SerializeField] public Color[] PlayerColors { get; private set; }
 
         // Private
         static private InputAction _joinAction;
         static private bool TryGetControlScheme(string name, out InputControlScheme controlScheme)
         => name.IsNotNullOrEmpty()
-        && _instance._Actions.controlSchemes.TryFind(t => t.name == name, out controlScheme);
+        && _instance.Actions.controlSchemes.TryFind(t => t.name == name, out controlScheme);
         static private bool TryGetControlScheme(InputDevice device, out InputControlScheme controlScheme)
         => device != null
-        && InputControlScheme.FindControlSchemeForDevice(device, _instance._Actions.controlSchemes).TryNonNull(out controlScheme);
+        && InputControlScheme.FindControlSchemeForDevice(device, _instance.Actions.controlSchemes).TryNonNull(out controlScheme);
         static private IEnumerable<InputControlScheme> GetControlSchemes(InputAction inputAction)
         {
             if (inputAction.GetBindingForControl(inputAction.activeControl).TryNonNull(out var binding))
@@ -41,7 +41,7 @@ namespace Vheos.Games.ActionPoints
         }
         static private IEnumerable<InputControlScheme> GetControlSchemes(params InputDevice[] devices)
         {
-            foreach (var controlScheme in _instance._Actions.controlSchemes)
+            foreach (var controlScheme in _instance.Actions.controlSchemes)
             {
                 var match = controlScheme.PickDevicesFrom(devices);
                 if (!match.hasMissingRequiredDevices)
@@ -67,11 +67,11 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             var playerID = FindAvailableID();
-            _PlayerColors.TryGet(playerID, out var playerColor, Color.white);
+            PlayerColors.TryGet(playerID, out var playerColor, Color.white);
             var newPlayer = InstantiateComponent();
-            newPlayer.Initialize(_Actions, context.control.device, controlScheme, playerID, playerColor);
+            newPlayer.Initialize(Actions, context.control.device, controlScheme, playerID, playerColor);
             newPlayer.OnPlayDestroy.SubOnce(() => OnPlayerLeave.Invoke(newPlayer));
-            OnPlayerJoin.Invoke(newPlayer);            
+            OnPlayerJoin.Invoke(newPlayer);
         }
 
         // Initializers
@@ -89,7 +89,7 @@ namespace Vheos.Games.ActionPoints
             base.PlayAwake();
 
             _joinAction = new InputAction(nameof(_joinAction), InputActionType.PassThrough);
-            foreach (var binding in _JoinAction.action.bindings)
+            foreach (var binding in JoinAction.action.bindings)
                 _joinAction.AddBinding(binding);
             _joinAction.Enable();
         }

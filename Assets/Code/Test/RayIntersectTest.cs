@@ -6,17 +6,17 @@ namespace Vheos.Games.ActionPoints.Test
 
     public class RayIntersectTest : MonoBehaviour
     {
-        [SerializeField] protected Vector3 _RayA;
-        [SerializeField] protected Vector3 _RayB;
+        [field: SerializeField] public Vector3 RayA { get; private set; }
+        [field: SerializeField] public Vector3 RayB { get; private set; }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            Ray2D rayA = new(_RayA.XY(), Vector2.right.Rotate(_RayA.z, true));
+            Ray2D rayA = new(RayA.XY(), Vector2.right.Rotate(RayA.z, true));
             Gizmos.DrawLine(rayA.origin, rayA.origin + rayA.direction * 100f);
 
             Gizmos.color = Color.magenta;
-            Ray2D rayB = new(_RayB.XY(), Vector2.right.Rotate(_RayB.z, true));
+            Ray2D rayB = new(RayB.XY(), Vector2.right.Rotate(RayB.z, true));
             Gizmos.DrawLine(rayB.origin, rayB.origin + rayB.direction * 100f);
 
 

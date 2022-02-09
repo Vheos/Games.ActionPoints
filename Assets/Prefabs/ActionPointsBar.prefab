@@ -46,9 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9087a0a4a2c7e847ad2533440b42995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _PointPrefab: {fileID: 4540874001801052056, guid: 008e506552b8ac04ea0a115c1b6beb03, type: 3}
-  _Spacing: -0.1
-  _HalfTime: 0.1
+  <Spacing>k__BackingField: -0.1
+  <HalfTime>k__BackingField: 0.1
 --- !u!114 &3676456388240199777
 MonoBehaviour:
   m_ObjectHideFlags: 0

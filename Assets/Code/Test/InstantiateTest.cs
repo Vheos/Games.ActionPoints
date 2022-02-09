@@ -7,21 +7,21 @@ namespace Vheos.Games.ActionPoints.Test
 
     public class InstantiateTest : MonoBehaviour
     {
-        [SerializeField] protected GameObject _Prefab;
-        [SerializeField] protected InputAction _InputAction;
-        [SerializeField] protected bool _CallOnAwake;
-        [SerializeField] protected bool _DestroyRightAfter;
+        [field: SerializeField] public GameObject Prefab { get; private set; }
+        [field: SerializeField] public InputAction InputAction { get; private set; }
+        [field: SerializeField] public bool CallOnAwake { get; private set; }
+        [field: SerializeField] public bool DestroyRightAfter { get; private set; }
 
         private void TryDebugInstantiate()
         {
-            if (_Prefab == null)
+            if (Prefab == null)
                 return;
 
             Debug.Log($"Calling Instantiate...");
-            var newComponent = gameObject.CreateSiblingComponent(_Prefab.GetComponent<MonoBehaviourTest>());
+            var newComponent = gameObject.CreateSiblingComponent(Prefab.GetComponent<MonoBehaviourTest>());
             Debug.Log($"Called!");
 
-            if (!_DestroyRightAfter)
+            if (!DestroyRightAfter)
                 return;
 
             Debug.Log($"Calling Destroy...");
@@ -30,13 +30,13 @@ namespace Vheos.Games.ActionPoints.Test
         }
         private void Awake()
         {
-            _InputAction.Enable();
-            if (_CallOnAwake)
+            InputAction.Enable();
+            if (CallOnAwake)
                 TryDebugInstantiate();
         }
         private void Update()
         {
-            if (_InputAction.triggered)
+            if (InputAction.triggered)
                 TryDebugInstantiate();
         }
     }

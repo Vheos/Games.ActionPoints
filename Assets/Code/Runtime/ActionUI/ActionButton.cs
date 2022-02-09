@@ -14,11 +14,9 @@ namespace Vheos.Games.ActionPoints
     public class ActionButton : AActionUIElement<ActionButtonsWheel>
     {
         // Inspector
-        [SerializeField] [Range(0.1f, 1f)] protected float _Radius;
+        [field: SerializeField, Range(0.1f, 1f)] public float Radius { get; private set; }
 
         // Publics
-        public float Radius
-        => _Radius;
         public Action Action
         { get; private set; }
 
@@ -32,7 +30,7 @@ namespace Vheos.Games.ActionPoints
             Get<Raycastable>().BindEnableDisable(this);
             Get<Selectable>().BindEnableDisable(this);
 
-            _originalScale = _Radius.Mul(2).ToVector3();
+            _originalScale = Radius.Mul(2).ToVector3();
             Component _visualComponent = null;
             if (action.ButtonVisuals.Sprite != null)
             {
