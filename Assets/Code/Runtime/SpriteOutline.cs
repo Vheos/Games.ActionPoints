@@ -40,7 +40,7 @@ namespace Vheos.Games.ActionPoints
                 .SetDuration(_FadeOutDuration)
                 .AddPropertyModifier(v => _mprops.Thickness += v, 0f - _mprops.Thickness)
                 .Alpha(ColorComponentType.SpriteRenderer, 0f)
-                .OnFinish(() => _outlineRenderer.gameObject.SetActive(false))
+                .AddEventsOnFinish(() => _outlineRenderer.gameObject.SetActive(false))
                 .FinishIf(isInstant);
         }
 

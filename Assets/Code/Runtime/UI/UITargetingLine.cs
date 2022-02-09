@@ -46,7 +46,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween(ConflictResolution.Interrupt)
                 .SetDuration(_WidthAnimDuration)
                 .AddPropertyModifier(AssignWidth, 0f - Get<LineRenderer>().startWidth)
-                .OnFinish(() => IsActive = false)
+                .AddEventsOnFinish(() => IsActive = false)
                 .FinishIf(isInstant);
 
             if (_targeter != null)
