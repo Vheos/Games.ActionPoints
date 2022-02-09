@@ -12,6 +12,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c39afcec48a444d93aa5587feefde4, type: 3}
   m_Name: VisualSettings_Default
   m_EditorClassIdentifier: 
-  TestFloat: 0.178
-  ActionButton:
-    TestFloat: 0.374
+  <General>k__BackingField:
+    SpriteMesh: {fileID: -49470727293274036, guid: f44a7ee4887857841924ce77cc08a836, type: 3}
+    ShadowSpriteMaterial: {fileID: 2100000, guid: a4163b717e050cb4db6e10ce02a76834, type: 2}
+  <UICursor>k__BackingField:
+    IdleSprite: {fileID: 5543941588292853863, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+    PressSprite: {fileID: -1863859237976802683, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
+    PressScale: 0.9
+    PressColorScale: 0.8
+    PressDuration: 0.1
+    ReleaseDuration: 0.2
+  <UITargetingLine>k__BackingField:
+    StartOpacity: 0.2
+    StartWidth: 0.02
+    EndOpacity: 1
+    EndWidth: 0.005
+    Tiling: 20
+    ExpandDuration: 0.2
+    CollapseDuration: 0.4
+  <CommonSelectable>k__BackingField:
+    HighlightScale: 1.1
+    HighlightColorScale: 1
+    PressScale: 0.95
+    PressColorScale: 0.8
+    GainHighlightDuration: 0.2
+    LoseHighlightDuration: 0.4
+    PressDuration: 0.1
+    ReleaseDuration: 0.2
+  <SpriteOutline>k__BackingField:
+    Material: {fileID: 2100000, guid: aac94756d6ba7a6408070068d32f644f, type: 2}
+    Thickness: 0.5
+    ExpandDuration: 0.2
+    CollapseDuration: 0.4
+  <ActionPoint>k__BackingField:
+    Material: {fileID: 2100000, guid: 0673aede17bdeb547a3efb67e66a2d03, type: 2}
+    ActionShape: {fileID: 2800000, guid: dd698da49620fea479a7bed6e340e9d2, type: 3}
+    FocusShape: {fileID: 2800000, guid: b48440f8228df7d4b80bf111256dee75, type: 3}
+    PartialOpacity: 0.25
+    FullOpacity: 1
+    ChangeOpacityDuration: 0.4
+    ChangeShapeDuration: 0.8
+    Spacing: -0.1
+    VisualProgressHalfTime: 0.1
+  <ActionButton>k__BackingField:
+    Radius: 0.25

@@ -140,11 +140,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f6f5a91b2fd60f4c8175c9e4339fc67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _InputActions: {fileID: -944628639613478452, guid: 0bdd9c99cf099d94eb419ddf08522740, type: 3}
-  _MovementSpeed: 3
-  _RotationSpeed: 1
-  _RotationInvertX: 0
-  _RotationInvertY: 1
+  <InputActions>k__BackingField: {fileID: -944628639613478452, guid: 0bdd9c99cf099d94eb419ddf08522740, type: 3}
+  <MovementSpeed>k__BackingField: 3
+  <RotationSpeed>k__BackingField: 0.5
+  <RotationInvertX>k__BackingField: 0
+  <RotationInvertY>k__BackingField: 1
 --- !u!1001 &1369201724
 PrefabInstance:
   m_ObjectHideFlags: 0

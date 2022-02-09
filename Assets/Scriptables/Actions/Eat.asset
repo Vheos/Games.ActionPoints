@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a4d58a9db32ce4f9d5ca8be17d1749, type: 3}
   m_Name: Eat
   m_EditorClassIdentifier: 
-  _ButtonVisuals:
+  <ButtonVisuals>k__BackingField:
     Sprite: {fileID: 4491553773363795640, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
-    Text: SWORD SLASH
+    Text: 
     Color: {r: 1, g: 1, b: 1, a: 1}
-  _ActionPointsCost: 0
-  _FocusPointsCost: 0
-  _Effects: []
+  <ActionPointsCost>k__BackingField: 0
+  <FocusPointsCost>k__BackingField: 0
+  <Effects>k__BackingField: []

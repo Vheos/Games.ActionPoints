@@ -12,15 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a4d58a9db32ce4f9d5ca8be17d1749, type: 3}
   m_Name: SwordSlash
   m_EditorClassIdentifier: 
-  _ButtonVisuals:
+  <ButtonVisuals>k__BackingField:
     Sprite: {fileID: 0}
     Text: 
-    Color: {r: 1, g: 0.875, b: 0.5, a: 1}
-  _ActionPointsCost: 0
-  _FocusPointsCost: 0
-  _Effects:
-  - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
-    Values:
-    - 0
-    - 0
-    - 0
+    Color: {r: 1, g: 1, b: 1, a: 1}
+  <ActionPointsCost>k__BackingField: 0
+  <FocusPointsCost>k__BackingField: 0
+  <Effects>k__BackingField: []
