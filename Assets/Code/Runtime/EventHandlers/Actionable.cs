@@ -1,24 +1,39 @@
 namespace Vheos.Games.ActionPoints
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using UnityEngine;
     using Games.Core;
     using Tools.Extensions.Math;
     using Tools.Extensions.Collections;
-    using System.Linq;
+    
 
     [DisallowMultipleComponent]
     sealed public class Actionable : ABaseComponent
     {
         // Events
         public readonly AutoEvent<IEnumerable<Action>, IEnumerable<Action>> OnChangeActions = new();
+        public readonly AutoEvent<int, int> OnChangeMaxActionPoints = new();
         public readonly AutoEvent<int, int> OnChangeActionPoints = new();
         public readonly AutoEvent<int, int> OnChangeFocusPoints = new();
         public readonly AutoEvent<bool> OnChangeExhausted = new();
         public readonly AutoEvent<float> OnOverflowActionProgress = new();
 
         // Getters
-        public readonly Getter<int> MaxActionPoints = new();
+        public int MaxActionPoints
+        {
+            get => _maxActionPoints;
+            set
+            {
+                if (value == _maxActionPoints)
+                    return;
+
+                int previousMaxActionPoints = _maxActionPoints;
+                _maxActionPoints = value;
+                OnChangeMaxActionPoints.Invoke(previousMaxActionPoints, _maxActionPoints);
+            }
+        }
         public readonly Getter<int> LockedMaxActionPoints = new();
 
         // Publics
@@ -107,6 +122,7 @@ namespace Vheos.Games.ActionPoints
 
         // Privates
         private readonly HashSet<Action> _actions = new();
+        private int _maxActionPoints;
         private float _actionProgress;
         private float _focusProgress;
     }
