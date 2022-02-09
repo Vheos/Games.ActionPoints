@@ -6,10 +6,8 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
 
     [RequireComponent(typeof(Selectable))]
-    public class SelectableButtonVisuals : ABaseComponent
+    public class CommonSelectable : ABaseComponent
     {
-        // Inspector
-
         // Publics
         public void UpdateColorComponentType()
         => _colorComponentType = this.FindColorComponentType();
@@ -20,26 +18,28 @@ namespace Vheos.Games.ActionPoints
         {
             if (isFirst)
                 this.NewTween()
-                    .SetDuration(0.2f)
-                    .LocalScaleRatio(1.1f);
+                    .SetDuration(this.Settings().GainHighlightDuration)
+                    .LocalScaleRatio(this.Settings().HighlightScale)
+                    .RGBRatio(_colorComponentType, this.Settings().HighlightColorScale);
         }
         private void Selectable_OnLoseHighlight(Selecter selecter, bool isLast)
         {
             if (isLast)
                 this.NewTween()
-                    .SetDuration(0.2f)
-                    .LocalScaleRatio(1.1f.Inv());
+                    .SetDuration(this.Settings().LoseHighlightDuration)
+                    .LocalScaleRatio(this.Settings().HighlightScale.Inv())
+                    .RGBRatio(_colorComponentType, this.Settings().HighlightColorScale.Inv());
         }
         private void Selectable_OnPress(Selecter selecter)
         => this.NewTween()
-            .SetDuration(0.1f)
-            .LocalScaleRatio(0.95f)
-            .RGBRatio(_colorComponentType, 0.75f);
+            .SetDuration(this.Settings().PressDuration)
+            .LocalScaleRatio(this.Settings().PressScale)
+            .RGBRatio(_colorComponentType, this.Settings().PressColorScale);
         private void Selectable_OnRelease(Selecter selecter, bool withinTrigger)
         => this.NewTween()
-            .SetDuration(0.1f)
-            .LocalScaleRatio(0.95f.Inv())
-            .RGBRatio(_colorComponentType, 0.75f.Inv());
+            .SetDuration(this.Settings().ReleaseDuration)
+            .LocalScaleRatio(this.Settings().PressScale.Inv())
+            .RGBRatio(_colorComponentType, this.Settings().PressColorScale.Inv());
 
         // Play
         protected override void PlayAwake()
