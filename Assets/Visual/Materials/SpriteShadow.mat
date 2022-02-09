@@ -2,13 +2,15 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SpriteShadow
   m_Shader: {fileID: 4800000, guid: 6e0211dd816cbd24eb6179441cc0e008, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -16,6 +18,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -59,6 +62,9 @@ Material:
     m_Floats:
     - IncidenceMin: 0.5
     - IncidenceSharpness: 2
+    - OpacityDitheringRatio: 1
+    - OpacityDitheringSize: 50
+    - OpacityDitheringStyle: 4
     - ShadowAlphaCutoff: 0.5
     - ViewDirectionOffset: 0
     - _BumpScale: 1
