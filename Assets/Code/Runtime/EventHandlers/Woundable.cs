@@ -11,7 +11,7 @@ namespace Vheos.Games.ActionPoints
         // Events   
         public readonly AutoEvent<float, bool> OnReceiveDamage = new();
         public readonly AutoEvent<float, bool> OnReceiveHealing = new();
-        public readonly AutoEvent<int, int> OnChangeWoundsCount = new();
+        public readonly AutoEvent<int, int> OnChangeWounds = new();
         public readonly AutoEvent OnDie = new();
 
         // Inputs
@@ -20,8 +20,21 @@ namespace Vheos.Games.ActionPoints
         public readonly Getter<float> SharpArmor = new();
 
         // Publics
-        public int WoundsCount
-        { get; private set; }
+        public int Wounds
+        {
+            get => _wounds;
+            set
+            {
+                if (value == _wounds)
+                    return;
+
+                int previousWounds = _wounds;
+                _wounds = value;
+
+                OnChangeWounds.Invoke(previousWounds, Wounds);
+                CheckIsDead();
+            }
+        }
         public bool IsDead
         { get; private set; }
         public float CalculateBluntDamage(float bluntDamage)
@@ -40,6 +53,7 @@ namespace Vheos.Games.ActionPoints
         => RollForWounds(CalculateHealing(healing).Neg());
 
         // Privates
+        private int _wounds;
         private int GetRollHitsCount(float percentChance)
         {
             int sureHits = percentChance.Div(100f).RoundDown();
@@ -49,25 +63,23 @@ namespace Vheos.Games.ActionPoints
         }
         private void RollForWounds(float chance)
         {
-            int previousWoundsCount = WoundsCount;
+            int previousWounds = Wounds;
             bool isDamage = chance >= 0;
             chance.SetAbs();
 
             int unclampedWoundsDiff = GetRollHitsCount(chance) * isDamage.ToSign();
-            WoundsCount = WoundsCount.Add(unclampedWoundsDiff).Clamp(0, MaxWounds);
-            bool hasWoundsCountChanged = WoundsCount != previousWoundsCount;
+            int newWounds = Wounds.Add(unclampedWoundsDiff).Clamp(0, MaxWounds);
 
-            (isDamage ? OnReceiveDamage : OnReceiveHealing)?.Invoke(chance, hasWoundsCountChanged);
+            (isDamage ? OnReceiveDamage : OnReceiveHealing).Invoke(chance, newWounds != previousWounds);
+            Wounds = newWounds;
+        }
+        private void CheckIsDead()
+        {
+            if (Wounds < MaxWounds)
+                return;
 
-            if (hasWoundsCountChanged)
-            {
-                OnChangeWoundsCount?.Invoke(previousWoundsCount, WoundsCount);
-                if (isDamage && WoundsCount >= MaxWounds)
-                {
-                    IsDead = true;
-                    OnDie?.Invoke();
-                }
-            }
+            IsDead = true;
+            OnDie.Invoke();
         }
     }
 }
