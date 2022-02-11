@@ -104,6 +104,13 @@ namespace Vheos.Games.ActionPoints
                                                - (previousEquipment != null ? previousEquipment.MaxActionPoints : 0);
         }
 
+        private void ActionTargeter_OnChangeTargetable(ActionTargetable from, ActionTargetable to, Action action)
+        { Debug.Log($"{name} has changed target: {(from != null ? from.name : "null")}   ---{{{action.name}}}--->   {(to != null ? to.name : "null")}"); }
+        private void ActionTargetable_OnGainTargeting(ActionTargeter targeter,  Action action, bool isFirst)
+        { Debug.Log($"{name} has gained targeting: {(targeter != null ? targeter.name : "null")}   /   {action.name}   /   {isFirst}"); }
+        private void ActionTargetable_OnLoseTargeting(ActionTargeter targeter, Action action, bool isLast)
+        { Debug.Log($"{name} has lost targeting: {(targeter != null ? targeter.name : "null")}   /   {action.name}   /   {isLast}"); }
+
         // Play
         protected override void PlayAwake()
         {
@@ -115,9 +122,9 @@ namespace Vheos.Games.ActionPoints
             if (Has<Actionable>())
             {
 
-                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * ActionSpeed);
-                Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
-                //Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress = _ActionProgress, () => Get<Actionable>().FocusProgress = _FocusProgress);
+                //Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * ActionSpeed);
+                //Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
+                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress = ActionProgress, () => Get<Actionable>().FocusProgress = FocusProgress);
 
                 Get<Actionable>().MaxActionPoints = MaxActionPoints;
                 Get<Actionable>().TryChangeActions(null, StartingActions);
@@ -137,6 +144,12 @@ namespace Vheos.Games.ActionPoints
 
 
             Get<Equiper>().OnChangeEquipable.SubEnableDisable(this, Equiper_OnChangeEquipable);
+
+
+            Get<ActionTargeter>().OnChangeTargetable.SubEnableDisable(this, ActionTargeter_OnChangeTargetable);
+            Get<ActionTargetable>().OnGainTargeting.SubEnableDisable(this, ActionTargetable_OnGainTargeting);
+            Get<ActionTargetable>().OnLoseTargeting.SubEnableDisable(this, ActionTargetable_OnLoseTargeting);
+
 
 
 

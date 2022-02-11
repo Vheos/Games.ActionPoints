@@ -18,4 +18,9 @@ MonoBehaviour:
     Color: {r: 1, g: 1, b: 1, a: 1}
   <ActionPointsCost>k__BackingField: 1
   <FocusPointsCost>k__BackingField: 0
-  <Effects>k__BackingField: []
+  <Effects>k__BackingField:
+  - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
+    Values:
+    - 5
+    - 0
+    - 0

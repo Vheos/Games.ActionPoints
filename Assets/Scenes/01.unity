@@ -916,6 +916,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4590056948223180880, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
+      propertyPath: ActionData.Datas.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4590056948223180880, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
       propertyPath: _StartingActions.Array.size
       value: 3
       objectReference: {fileID: 0}
