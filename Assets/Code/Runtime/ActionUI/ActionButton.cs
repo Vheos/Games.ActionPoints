@@ -5,12 +5,10 @@ namespace Vheos.Games.ActionPoints
     using TMPro;
     using Games.Core;
     using Tools.Extensions.Math;
-    using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
 
     [RequireComponent(typeof(Raycastable))]
     [RequireComponent(typeof(Selectable))]
-    [RequireComponent(typeof(Targeter))]
     [RequireComponent(typeof(CommonSelectable))]
     [DisallowMultipleComponent]
     public class ActionButton : AActionUIElement<ActionButtonsWheel>
@@ -47,14 +45,14 @@ namespace Vheos.Games.ActionPoints
             if (!_isUsable)
                 return;
 
-            selecter.Get<Player>().TargetingLine.Show(Get<Targeter>(), transform);
+            _group.UI.Actionable.Get<ActionTargeter>().ShowTargetingLine(selecter, Action, transform);
         }
         private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
         {
             if (!_isUsable)
                 return;
 
-            selecter.Get<Player>().TargetingLine.Hide();
+            _group.UI.Actionable.Get<ActionTargeter>().HideTargetingLine(selecter);
         }
         private void UpdateUsability(bool instantly = false)
         {
@@ -64,12 +62,7 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             AnimateUsability(_isUsable, instantly);
-            if (_isUsable)
-                Get<Selectable>().ClearSelectionAndHolder();
             Get<CommonSelectable>().IsEnabled = _isUsable;
-           // if(!currentIsUsable)
-
-            previousIsUsable = _isUsable;
         }
         private void AnimateUsability(bool state, bool instantly = false)
         {
@@ -92,7 +85,7 @@ namespace Vheos.Games.ActionPoints
             BindEnableDisable(wheel);
             Get<Raycastable>().BindEnableDisable(this);
             Get<Selectable>().BindEnableDisable(this);
-            
+
             _originalScale = this.Settings().Radius.Mul(2).ToVector3();
             if (action.ButtonVisuals.Sprite != null)
             {
