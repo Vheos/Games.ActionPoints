@@ -10,18 +10,47 @@ namespace Vheos.Games.ActionPoints
     {
         // Inspector    
         public ActionEffect Effect;
+        public ActionTarget Target;
         public float[] Values;
 
         // Publics
-        public void Invoke(Actionable user, Targetable target)
+        public void Invoke(ActionTargeter targeter, ActionTargetable targetable, ref ActionStats stats)
         {
-            if (!TestForWarnings(target))
+            if (Effect == null)
                 return;
 
-            Effect.Invoke(user, target, Values);
+            ABaseComponent target = Target switch
+            {
+                ActionTarget.Target => targetable,
+                ActionTarget.User => targeter,
+                _ => default,
+            };
+
+            Effect.Invoke(target, Values, ref stats);
+        }
+    }
+
+    public enum ActionTarget
+    {
+        Target,
+        User,
+    }
+}
+
+/*
+        private Type[] _cachedRequiredComponenets;
+        public Type[] CachedRequiredComponents
+        {
+            get
+            {
+                if (_cachedRequiredComponenets == null)
+                    _cachedRequiredComponenets = RequiredComponents;
+                return _cachedRequiredComponenets;
+            }
         }
 
-        // Privates
+       
+
         private bool HasComponents(Targetable target, Type[] componentTypes, out Type missingComponentType)
         {
             foreach (var type in componentTypes)
@@ -54,5 +83,4 @@ namespace Vheos.Games.ActionPoints
             $"Fallback:\treturn without invoking the effect");
             return false;
         }
-    }
-}
+*/

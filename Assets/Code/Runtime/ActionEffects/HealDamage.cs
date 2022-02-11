@@ -8,12 +8,12 @@ namespace Vheos.Games.ActionPoints.ActionScripts
     public class HealDamage : ActionEffect
     {
         // Overrides
-        override protected Type[] RequiredComponents
+        override public Type[] RequiredComponentTypes
         => new[] { typeof(Woundable) };
         override public int RequiredValuesCount
         => 1;
 
-        override public void Invoke(ABaseComponent user, ABaseComponent target, params float[] values)
+        override public void Invoke(ABaseComponent target, float[] values, ref ActionStats actionStats)
         {
             // Params
             float amount = values[0];
