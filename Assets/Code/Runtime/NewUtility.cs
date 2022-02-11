@@ -92,6 +92,10 @@ namespace Vheos.Games.ActionPoints
         }
         static public IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> t)
         => t ?? Enumerable.Empty<T>();
+        static public TReturn IfNonNull<T1, TReturn>(this T1 t, Func<T1, TReturn> a, TReturn b = default)
+        => t != null ? a(t) : b;
+        static public TReturn IfNonNull<T1, TReturn>(this T1 t, TReturn a, TReturn b = default)
+        => t != null ? a : b;
 
         // Try
         static public bool TryNonDefault<T>(this T t, out T r)
@@ -324,6 +328,5 @@ namespace Vheos.Games.ActionPoints
                 return float.NaN.ToVector2();
             return FindCircleCenter(points[0], points[1], points[2]);
         }
-
     }
 }
