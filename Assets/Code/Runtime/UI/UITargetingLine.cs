@@ -5,8 +5,6 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
-    using Vheos.Tools.Extensions.General;
-    using Vheos.Tools.Utilities;
 
     [RequireComponent(typeof(LineRenderer))]
     [RequireComponent(typeof(UITargetingLineMProps))]

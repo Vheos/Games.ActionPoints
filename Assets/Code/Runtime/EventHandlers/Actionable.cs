@@ -83,13 +83,13 @@ namespace Vheos.Games.ActionPoints
                     FocusProgress = _actionProgress;
 
                 if (overflow > 0f)
-                    OnOverflowActionProgress?.Invoke(overflow);
+                    OnOverflowActionProgress.Invoke(overflow);
                 if (previousActionPoints != ActionPoints)
-                    OnChangeActionPoints?.Invoke(previousActionPoints, ActionPoints);
+                    OnChangeActionPoints.Invoke(previousActionPoints, ActionPoints);
                 if (previousExhausted && !IsExhausted)
-                    OnChangeExhausted?.Invoke(false);
+                    OnChangeExhausted.Invoke(false);
                 else if (!previousExhausted && IsExhausted)
-                    OnChangeExhausted?.Invoke(true);
+                    OnChangeExhausted.Invoke(true);
             }
         }
         public float FocusProgress
@@ -102,10 +102,10 @@ namespace Vheos.Games.ActionPoints
 
                 int previousFocusPoints = FocusPoints;
                 _focusProgress = value;
-                _focusProgress.SetClampMax(_actionProgress.ClampMin(0f));
+                _focusProgress.SetClamp(0f, _actionProgress.ClampMin(0f));
 
                 if (previousFocusPoints != FocusPoints)
-                    OnChangeFocusPoints?.Invoke(previousFocusPoints, FocusPoints);
+                    OnChangeFocusPoints.Invoke(previousFocusPoints, FocusPoints);
             }
         }
         public int ActionPoints

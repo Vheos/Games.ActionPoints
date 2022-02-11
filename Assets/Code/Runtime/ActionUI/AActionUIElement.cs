@@ -2,11 +2,8 @@ namespace Vheos.Games.ActionPoints
 {
     using System;
     using UnityEngine;
-    using TMPro;
     using Games.Core;
-    using Tools.Extensions.Math;
     using Tools.Extensions.UnityObjects;
-    using Tools.Extensions.General;
 
     [DisallowMultipleComponent]
     abstract public class AActionUIElement<T> : ABaseComponent
@@ -20,7 +17,6 @@ namespace Vheos.Games.ActionPoints
             this.NewTween()
               .SetDuration(this.Settings().CreateElementDuration)
               .LocalScale(_originalScale)
-              .Alpha(ColorComponentType.Any, 1f)
               .FinishIf(instantly);
         }
         public void AnimateDestroy(bool instantly = false)
@@ -29,7 +25,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween()
               .SetDuration(this.Settings().DestroyElementDuration)
               .LocalScale(Vector3.zero)
-              .Alpha(ColorComponentType.Any, 0f)
+              .AlphaRatio(ColorComponentType.Any, 0f)
               .AddEventsOnFinish(this.DestroyObject)
               .FinishIf(instantly);
         }
