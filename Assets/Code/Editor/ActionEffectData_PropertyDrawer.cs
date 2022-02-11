@@ -8,44 +8,32 @@ namespace Vheos.Games.ActionPoints.Editor
     [CustomPropertyDrawer(typeof(ActionEffectData))]
     public class ActionEffectData_PropertyDrawer : PropertyDrawer
     {
-        private const float LINE_HEIGHT = 18;
         private const int LINES_COUNT = 1;
+        private const int SPACING_X = 4;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return LINE_HEIGHT * LINES_COUNT;
-        }
+        => EditorGUIUtility.singleLineHeight * LINES_COUNT;
 
         public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
         {
             // Cache
-            Rect originalRect = rect;
-            var effectProperty = property.FindPropertyRelative(nameof(ActionEffectData.Effect));
-            var valuesProperty = property.FindPropertyRelative(nameof(ActionEffectData.Values));
-            float spacing = 5f;
+            var propEffects = property.FindPropertyRelative(nameof(ActionEffectData.Effect));
+            var propValues = property.FindPropertyRelative(nameof(ActionEffectData.Values));
+            var propTarget = property.FindPropertyRelative(nameof(ActionEffectData.Target));
+            float originalWidth = rect.width;
+            rect.height = EditorGUIUtility.singleLineHeight;
 
-            EditorGUI.BeginProperty(rect, label, property);
-            {
-                rect.height = LINE_HEIGHT;
-                rect.x = originalRect.x;
-                rect.width = originalRect.width / 2f - spacing;
-                EditorGUI.PropertyField(rect, effectProperty, GUIContent.none);
-                rect.x += originalRect.width / 2f;
+            EditorGUI.PropertyField(rect.ConsumeX(originalWidth * 0.4f, false, SPACING_X), propEffects, GUIContent.none);
+            if (!propEffects.objectReferenceValue.TryAs(out ActionEffect actionEffect))
+                return;
 
-                if (effectProperty.objectReferenceValue.TryAs(out ActionEffect actionEffect))
-                {                    
-                    rect.xMax = originalRect.xMax;
-                    int valuesCount = actionEffect.RequiredValuesCount;
-                    float valueWidth = rect.width / valuesCount;
-                    rect.width  = valueWidth - spacing;
-                    valuesProperty.arraySize = valuesCount;
-                    for (int i = 0; i < valuesCount; i++)
-                    {
-                        EditorGUI.PropertyField(rect, valuesProperty.GetArrayElementAtIndex(i), GUIContent.none);
-                        rect.x += valueWidth;
-                    }
-                }
-            }
+            int valuesCount = actionEffect.RequiredValuesCount;
+            float valueWidth = originalWidth * 0.4f / valuesCount;
+            propValues.arraySize = valuesCount;
+            for (int i = 0; i < valuesCount; i++)
+                EditorGUI.PropertyField(rect.ConsumeX(valueWidth, false, SPACING_X), propValues.GetArrayElementAtIndex(i), GUIContent.none);
+
+            EditorGUI.PropertyField(rect.ConsumeX(originalWidth * 0.2f, false, SPACING_X), propTarget, GUIContent.none);
         }
     }
 }
