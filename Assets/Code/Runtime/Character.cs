@@ -28,8 +28,9 @@ namespace Vheos.Games.ActionPoints
         {
             if (withinTrigger)
             {
-                _actionUI.ButtonsWheel.Get<Expandable>().Toggle();
-                _actionUI.PointsBar.Get<Expandable>().Toggle();
+                _actionUI.Buttons[ActionPhase.Combat].Get<Expandable>().Toggle();
+                _actionUI.Buttons[ActionPhase.Camp].Get<Expandable>().Toggle();             
+                //_actionUI.PointsBar.Get<Expandable>().Toggle();
             }
         }
 
@@ -118,6 +119,8 @@ namespace Vheos.Games.ActionPoints
 
             _actionUI = Instantiate(SettingsManager.Prefabs.ActionUI);
             _actionUI.Initialize(Get<Actionable>(), () => Get<Collider>().LocalBounds().ToRect().Scale(this));
+            _actionUI.Points.Get<Expandable>().TryExpand();
+            _actionUI.Buttons[ActionPhase.Combat].Get<Expandable>().TryExpand();
 
             if (Has<Actionable>())
             {

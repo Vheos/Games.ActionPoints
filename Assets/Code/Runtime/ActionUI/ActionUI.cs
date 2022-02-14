@@ -17,11 +17,13 @@ namespace Vheos.Games.ActionPoints
         public Actionable Actionable
         { get; private set; }
         public readonly Getter<Rect> Rect = new();
-        public ActionPointsBar PointsBar
+        public ActionPointsBar Points
         { get; private set; }
-        public ActionButtonsWheel ButtonsWheel
-        { get; private set; }
+        public IReadOnlyDictionary<ActionPhase, ActionButtonsWheel> Buttons
+        => _buttonsWheelsByPhase;
 
+        // Privates
+        public Dictionary<ActionPhase, ActionButtonsWheel> _buttonsWheelsByPhase;
 
         // Play
         public void Initialize(Actionable actionable, Func<Rect> rectGetter)
@@ -33,11 +35,16 @@ namespace Vheos.Games.ActionPoints
             Get<MoveTowards>().SetTarget(Actionable, true);
             Get<RotateAs>().SetTarget(CameraManager.AnyNonUI, true);
 
-            PointsBar = this.CreateChildComponent(SettingsManager.Prefabs.ActionPointsBar);
-            PointsBar.Initialize(this);
+            Points = this.CreateChildComponent(SettingsManager.Prefabs.ActionPointsBar);
+            Points.Initialize(this);
 
-            ButtonsWheel = this.CreateChildComponent(SettingsManager.Prefabs.ActionButtonsWheel);
-            ButtonsWheel.Initialize(this);
+            _buttonsWheelsByPhase = new Dictionary<ActionPhase, ActionButtonsWheel>();
+            foreach (var phase in Utility.GetEnumValues<ActionPhase>())
+            {
+                var newButtonsWheel = this.CreateChildComponent(SettingsManager.Prefabs.ActionButtonsWheel);
+                newButtonsWheel.Initialize(this, phase);
+                _buttonsWheelsByPhase[phase] = newButtonsWheel;
+            }
         }
     }
 }

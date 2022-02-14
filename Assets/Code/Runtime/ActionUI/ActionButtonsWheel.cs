@@ -7,12 +7,14 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.UnityObjects;
     using Tools.Extensions.General;
+    using Vheos.Tools.Utilities;
 
     [RequireComponent(typeof(Expandable))]
     [DisallowMultipleComponent]
     public class ActionButtonsWheel : AActionUIElementsGroup<ActionButton>
     {
         // Privates
+        private ActionPhase _phase;
         private RectCircle _positionsWheel;
         private bool TryGetButtonForAction(Action action, out ActionButton button)
         => _elements.FirstOrDefault(t => t.Action == action).TryNonNull(out button);
@@ -22,12 +24,16 @@ namespace Vheos.Games.ActionPoints
             r.Shuffle();
             return r;
         }
-
-        // Common
         private void UpdateButtonsCount(IEnumerable<Action> removedActions, IEnumerable<Action> addedActions)
         {
-            DestroyButtons(removedActions);
-            CreateButtons(addedActions);
+            var filteredRemovedActions = removedActions.Where(t => t.Phase == _phase);
+            var filteredAddedActions = addedActions.Where(t => t.Phase == _phase);
+            if (!filteredRemovedActions.Any()
+            && !filteredAddedActions.Any())
+                return;
+
+            DestroyButtons(filteredRemovedActions);
+            CreateButtons(filteredAddedActions);
             UpdateButtonPositions();
             _newElements.Clear();
         }
@@ -79,6 +85,12 @@ namespace Vheos.Games.ActionPoints
 
             Get<Expandable>().OnFinishExpanding.SubDestroy(this, Enable);
             Get<Expandable>().OnStartCollapsing.SubDestroy(this, Disable);
+        }
+        public void Initialize(ActionUI ui, ActionPhase phase)
+        {                        
+            Initialize(ui);
+            _phase = phase;
+            name = $"{ActionPhase.Combat}Buttons";
         }
     }
 }

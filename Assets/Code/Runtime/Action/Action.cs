@@ -17,6 +17,7 @@ namespace Vheos.Games.ActionPoints
         [field: SerializeField, Range(0, 5)] public int ActionPointsCost { get; private set; }
         [field: SerializeField, Range(0, 5)] public int FocusPointsCost { get; private set; }
         [field: SerializeField] public ActionEffectData[] Effects { get; private set; }
+        [field: SerializeField] public ActionPhase Phase { get; private set; }
 
         // Publics (use)
         public void Use(ActionTargeter user, ActionTargetable target)
@@ -27,8 +28,6 @@ namespace Vheos.Games.ActionPoints
             ActionStats stats = new();
             foreach (var effectData in Effects)
                 effectData.Invoke(user, target, stats);
-
-
         }
         public IReadOnlyDictionary<ActionTarget, HashSet<Type>> RequiredComponentTypes
         {

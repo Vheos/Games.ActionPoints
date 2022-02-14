@@ -16,4 +16,10 @@ namespace Vheos.Games.ActionPoints
         Head,
         Accessory,
     }
+
+    public enum ActionPhase
+    {
+        Combat,
+        Camp,
+    }
 }

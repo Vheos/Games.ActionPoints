@@ -7,7 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.Math;
     using Tools.Extensions.Collections;
-
+    using Vheos.Tools.Utilities;
 
     [DisallowMultipleComponent]
     sealed public class Actionable : ABaseComponent
@@ -28,24 +28,37 @@ namespace Vheos.Games.ActionPoints
         => _actions;
         public bool TryChangeActions(IEnumerable<Action> toRemove, IEnumerable<Action> toAdd)
         {
-            HashSet<Action> actuallyRemovedActions = new();
+            HashSet<Action> removedActions = new();
             if (toRemove != null)
                 foreach (var action in toAdd != null ? toRemove.Except(toAdd) : toRemove)
                     if (_actions.TryRemove(action))
-                        actuallyRemovedActions.Add(action);
+                        removedActions.Add(action);
 
-            HashSet<Action> actuallyAddedActions = new();
+            HashSet<Action> addedActions = new();
             if (toAdd != null)
                 foreach (var action in toRemove != null ? toAdd.Except(toRemove) : toAdd)
                     if (_actions.TryAddUnique(action))
-                        actuallyAddedActions.Add(action);
+                        addedActions.Add(action);
 
-            if (actuallyRemovedActions.IsEmpty()
-            && actuallyAddedActions.IsEmpty())
+            if (removedActions.IsEmpty()
+            && addedActions.IsEmpty())
                 return false;
 
-            OnChangeActions.Invoke(actuallyRemovedActions, actuallyAddedActions);
+            OnChangeActions.Invoke(removedActions, addedActions);
             return true;
+
+            /*
+            foreach (var phase in Utility.GetEnumValues<ActionPhase>())
+            {
+                var filteredRemovedActions = removedActions.Where(t => t.Phase == phase);
+                var filteredAddedActions = addedActions.Where(t => t.Phase == phase);
+                if (filteredRemovedActions.IsEmpty()
+                && filteredAddedActions.IsEmpty())
+                    continue;
+
+                OnChangeActions.Invoke(removedActions, addedActions);
+            }
+            */
         }
         public void ClearActions()
         => _actions.Clear();
