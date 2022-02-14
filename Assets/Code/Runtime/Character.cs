@@ -122,9 +122,9 @@ namespace Vheos.Games.ActionPoints
             if (Has<Actionable>())
             {
 
-                //Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * ActionSpeed);
-                //Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
-                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress = ActionProgress, () => Get<Actionable>().FocusProgress = FocusProgress);
+                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * ActionSpeed);
+                Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
+                //Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress = ActionProgress, () => Get<Actionable>().FocusProgress = FocusProgress);
 
                 Get<Actionable>().MaxActionPoints = MaxActionPoints;
                 Get<Actionable>().TryChangeActions(null, StartingActions);
@@ -144,11 +144,13 @@ namespace Vheos.Games.ActionPoints
 
 
             Get<Equiper>().OnChangeEquipable.SubEnableDisable(this, Equiper_OnChangeEquipable);
+            Get<Woundable>().MaxWounds.Set(() => MaxActionPoints);
+            Get<Actionable>().LockedMaxActionPoints.Set(() => Get<Woundable>().Wounds); 
 
 
-            Get<ActionTargeter>().OnChangeTargetable.SubEnableDisable(this, ActionTargeter_OnChangeTargetable);
-            Get<ActionTargetable>().OnGainTargeting.SubEnableDisable(this, ActionTargetable_OnGainTargeting);
-            Get<ActionTargetable>().OnLoseTargeting.SubEnableDisable(this, ActionTargetable_OnLoseTargeting);
+           // Get<ActionTargeter>().OnChangeTargetable.SubEnableDisable(this, ActionTargeter_OnChangeTargetable);
+           // Get<ActionTargetable>().OnGainTargeting.SubEnableDisable(this, ActionTargetable_OnGainTargeting);
+           // Get<ActionTargetable>().OnLoseTargeting.SubEnableDisable(this, ActionTargetable_OnLoseTargeting);
 
 
 
