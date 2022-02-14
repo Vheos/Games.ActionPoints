@@ -45,14 +45,15 @@ namespace Vheos.Games.ActionPoints
             if (!_isUsable)
                 return;
 
-            _group.UI.Actionable.Get<ActionTargeter>().ShowTargetingLine(selecter, Action, transform);
+            _group.UI.Actionable.Get<ActionTargeter>().TryFinishTargeting();
+            _group.UI.Actionable.Get<ActionTargeter>().TryStartTargeting(Action, selecter.Get<Player>().TargetingLine, transform);
         }
         private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
         {
             if (!_isUsable)
                 return;
 
-            _group.UI.Actionable.Get<ActionTargeter>().HideTargetingLine(selecter);
+            _group.UI.Actionable.Get<ActionTargeter>().TryFinishTargeting();
         }
         private void UpdateUsability(bool instantly = false)
         {
@@ -62,6 +63,7 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             AnimateUsability(_isUsable, instantly);
+            Get<Selectable>().ClearSelectionAndHolder();
             Get<CommonSelectable>().IsEnabled = _isUsable;
         }
         private void AnimateUsability(bool state, bool instantly = false)
