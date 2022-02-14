@@ -41,12 +41,12 @@ namespace Vheos.Games.ActionPoints
         => bluntDamage.Add(0 - BluntArmor).ClampMin(0);
         public float CalculateSharpDamage(float sharpDamage)
         => sharpDamage.Mul(1 - SharpArmor / 100f).ClampMin(0);
-        public float CalculateRawDamage(float rawDamage)
-        => rawDamage.ClampMin(0);
-        public float CalculateTotalDamage(float blunt, float sharp, float raw)
-        => CalculateBluntDamage(blunt) + CalculateSharpDamage(sharp) + CalculateRawDamage(raw);
-        public void ReceiveDamage(float blunt, float sharp, float raw)
-        => RollForWounds(CalculateTotalDamage(blunt, sharp, raw));
+        public float CalculatePureDamage(float pureDamage)
+        => pureDamage.ClampMin(0);
+        public float CalculateTotalDamage(float blunt, float sharp, float pure)
+        => CalculateBluntDamage(blunt) + CalculateSharpDamage(sharp) + CalculatePureDamage(pure);
+        public void ReceiveDamage(float blunt, float sharp, float pure)
+        => RollForWounds(CalculateTotalDamage(blunt, sharp, pure));
         public float CalculateHealing(float healing)
         => healing.ClampMin(0);
         public void ReceiveHealing(float healing)

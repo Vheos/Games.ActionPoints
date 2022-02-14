@@ -14,7 +14,7 @@ namespace Vheos.Games.ActionPoints
         public float[] Values;
 
         // Publics
-        public void Invoke(ActionTargeter targeter, ActionTargetable targetable, ref ActionStats stats)
+        public void Invoke(ActionTargeter targeter, ActionTargetable targetable, ActionStats stats)
         {
             if (Effect == null)
                 return;
@@ -26,7 +26,7 @@ namespace Vheos.Games.ActionPoints
                 _ => default,
             };
 
-            Effect.Invoke(target, Values, ref stats);
+            Effect.Invoke(target, Values, stats);
         }
     }
 

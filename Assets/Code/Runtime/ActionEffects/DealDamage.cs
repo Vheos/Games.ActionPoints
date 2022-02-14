@@ -13,21 +13,24 @@ namespace Vheos.Games.ActionPoints.ActionScripts
         override public int RequiredValuesCount
         => 3;
 
-        override public void Invoke(ABaseComponent target, float[] values, ref ActionStats stats)
+        override public void Invoke(ABaseComponent target, float[] values, ActionStats stats)
         {
             // Cache           
             var woundable = target.Get<Woundable>();
             int previousWounds = woundable.Wounds;
             float blunt = values[0];
             float sharp = values[1];
-            float raw = values[2];
+            float pure = values[2];
 
             // Execute
-            woundable.ReceiveDamage(blunt, sharp, raw);
+            woundable.ReceiveDamage(blunt, sharp, pure);
 
             // Stats
-            stats.AddDamageStats(blunt, woundable.CalculateBluntDamage(blunt), sharp, woundable.CalculateBluntDamage(sharp), raw);
-            stats.WoundsDealt += woundable.Wounds - previousWounds;
+            if (stats != null)
+            {
+                stats.AddDamageStats(blunt, woundable.CalculateBluntDamage(blunt), sharp, woundable.CalculateBluntDamage(sharp), pure);
+                stats.WoundsDealt += woundable.Wounds - previousWounds;
+            }
         }
     }
 }

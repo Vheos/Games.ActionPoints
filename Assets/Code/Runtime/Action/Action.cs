@@ -4,6 +4,7 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Games.Core;
     using System.Collections.Generic;
+    using Vheos.Tools.Utilities;
 
     [CreateAssetMenu(fileName = nameof(Action), menuName = CONTEXT_MENU_PATH + nameof(Action))]
     public class Action : ScriptableObject
@@ -25,26 +26,31 @@ namespace Vheos.Games.ActionPoints
 
             ActionStats stats = new();
             foreach (var effectData in Effects)
-                effectData.Invoke(user, target, ref stats);
+                effectData.Invoke(user, target, stats);
+
+
         }
-        public IReadOnlyCollection<Type> RequiredComponentTypes
+        public IReadOnlyDictionary<ActionTarget, HashSet<Type>> RequiredComponentTypes
         {
             get
             {
-                if (_requiredComponentTypes == null)
+                if (_cachedRequiredComponentTypesByTarget == null)
                     InitializeRequiredComponentTypes();
-                return _requiredComponentTypes;
+                return _cachedRequiredComponentTypesByTarget;
             }
         }
 
         // Privates
-        private HashSet<Type> _requiredComponentTypes;
+        private Dictionary<ActionTarget, HashSet<Type>> _cachedRequiredComponentTypesByTarget;
         private void InitializeRequiredComponentTypes()
         {
-            _requiredComponentTypes = new();
+            _cachedRequiredComponentTypesByTarget = new();
+            foreach (var target in Utility.GetEnumValues<ActionTarget>())
+                _cachedRequiredComponentTypesByTarget[target] = new();
+
             foreach (var effectData in Effects)
                 foreach (var componentType in effectData.Effect.RequiredComponentTypes)
-                    _requiredComponentTypes.Add(componentType);
+                    _cachedRequiredComponentTypesByTarget[effectData.Target].Add(componentType);
         }
     }
 }
