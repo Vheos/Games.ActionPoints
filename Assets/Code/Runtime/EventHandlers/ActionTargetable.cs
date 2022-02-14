@@ -4,6 +4,7 @@ namespace Vheos.Games.ActionPoints
     using System.Collections.Generic;
     using UnityEngine;
     using Games.Core;
+    using Vheos.Tools.Extensions.General;
 
     [RequireComponent(typeof(Targetable))]
     public class ActionTargetable : ABaseComponent
@@ -22,11 +23,18 @@ namespace Vheos.Games.ActionPoints
         public void ClearTargeting()
         {
             if (IsTargeted)
-                foreach (var actionByTargeter in new Dictionary<ActionTargeter, Action>(_actionsByTargeters))
+                foreach (var actionByTargeter in _actionsByTargeters.MakeCopy())
                 {
                     _actionsByTargeters.Remove(actionByTargeter.Key);
                     OnLoseTargeting.Invoke(actionByTargeter.Key, actionByTargeter.Value, _actionsByTargeters.Count == 0);
                 }
+        }
+        public bool HasRequiredComponentsToGetTargetedWith(Action action)
+        {
+            foreach (var requiredComponentType in action.RequiredComponentTypes[ActionTarget.Target])
+                if (!Has(requiredComponentType))
+                    return false;
+            return true;
         }
 
         // Internals
@@ -39,7 +47,7 @@ namespace Vheos.Games.ActionPoints
             _actionsByTargeters.Add(targeter, action);
             OnGainTargeting.Invoke(targeter, action, _actionsByTargeters.Count == 1);   // is first
         }
-        internal void GetUntargetedBy(ActionTargeter targeter, Action action)
+        internal void GetUntargetedBy(ActionTargeter targeter)
         {
             var previousAction = _actionsByTargeters[targeter];
             _actionsByTargeters.Remove(targeter);

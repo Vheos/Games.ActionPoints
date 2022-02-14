@@ -23,7 +23,7 @@ namespace Vheos.Games.ActionPoints
                 var previousTargetable = _targetable;
                 if (previousTargetable != null
                 && previousTargetable.CanGetUntargetedBy(this))
-                    previousTargetable.GetUntargetedBy(this, _action);
+                    previousTargetable.GetUntargetedBy(this);
 
                 _targetable = value;
                 if (_targetable != null)
@@ -32,20 +32,45 @@ namespace Vheos.Games.ActionPoints
                 OnChangeTargetable.Invoke(previousTargetable, _targetable, _action);
             }
         }
-        public bool CanTargetWithAction(ActionTargetable actionTargetable, Action action)
-        => true;
-        public void ShowTargetingLine(Selecter selecter, Action action, Transform from)
+        public bool HasRequiredComponentsToTargetWith(Action action)
         {
+            foreach (var requiredComponentType in action.RequiredComponentTypes[ActionTarget.User])
+                if (!Has(requiredComponentType))
+                    return false;
+            return true;
+        }
+        public bool TryStartTargeting(Action action)
+        {
+            if (!HasRequiredComponentsToTargetWith(action))
+                return false;
+
             _action = action;
             Get<Targeter>().OnChangeTargetable.Sub(Targeter_OnChangeTargetable);
-            selecter.Get<Player>().TargetingLine.Show(Get<Targeter>(), from);
-
+            return true;
         }
-        public void HideTargetingLine(Selecter selecter)
+        public bool TryStartTargeting(Action action, UITargetingLine targetingLine, Transform from)
         {
+            if (!TryStartTargeting(action))
+                return false;
+
+            _targetingLine = targetingLine;
+            _targetingLine.Show(Get<Targeter>(), from);
+            return true;
+        }
+        public void TryFinishTargeting()
+        {
+            if (_action == null)
+                return;
+
             if (_targetable != null)
                 _action.Use(this, _targetable);
-            selecter.Get<Player>().TargetingLine.Hide();
+
+            if (_targetingLine != null)
+            {
+                _targetingLine.Hide();
+                _targetingLine = null;
+            }
+
             Get<Targeter>().OnChangeTargetable.Unsub(Targeter_OnChangeTargetable);
             _action = null;
         }
@@ -53,10 +78,11 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private Action _action;
         private ActionTargetable _targetable;
+        private UITargetingLine _targetingLine;
         private bool CanTarget(Targetable targetable)
         => targetable != null
         && targetable.TryGet(out ActionTargetable actionTargetable)
-        && CanTargetWithAction(actionTargetable, _action);
+        && actionTargetable.HasRequiredComponentsToGetTargetedWith(_action);
         private void Targeter_OnChangeTargetable(Targetable from, Targetable to)
         => Targetable = CanTarget(to) ? to.Get<ActionTargetable>() : null;
     }
