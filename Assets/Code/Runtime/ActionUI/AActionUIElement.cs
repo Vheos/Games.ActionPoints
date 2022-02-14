@@ -45,7 +45,6 @@ namespace Vheos.Games.ActionPoints
         {
             _group = group;
             _originalScale = transform.localScale;
-            name = GetType().Name;
         }
     }
 }

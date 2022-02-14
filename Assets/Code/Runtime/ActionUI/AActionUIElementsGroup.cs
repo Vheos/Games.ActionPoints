@@ -24,14 +24,13 @@ namespace Vheos.Games.ActionPoints
         virtual public void Initialize(ActionUI ui)
         {
             UI = ui;
-            name = GetType().Name;
             BindEnableDisable(ui);
 
             Get<Expandable>().OnStartExpanding.SubDestroy(this, Activate);
             Get<Expandable>().OnFinishCollapsing.SubDestroy(this, Deactivate);
             Get<Expandable>().ExpandTween.Set(() => this.NewTween().SetDuration(this.Settings().ExpandGroupDuration).LocalScale(Vector3.one));
             Get<Expandable>().CollapseTween.Set(() => this.NewTween().SetDuration(this.Settings().CollapseGroupDuration).LocalScale(Vector3.zero));
-            Get<Expandable>().TryExpand(true);
+            Get<Expandable>().TryCollapse(true);
         }
     }
 }

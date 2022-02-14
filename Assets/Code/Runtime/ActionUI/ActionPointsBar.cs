@@ -46,8 +46,6 @@ namespace Vheos.Games.ActionPoints
             foreach (var point in _elements)
                 point.UpdateInstantly(_visualActionProgress, _visualFocusProgress, realActionPoints, realFocusPoints);
         }
-
-        // Common
         private void UpdatePointsCount(int from, int to)
         {
             int deltaPoints = to - from;
@@ -97,6 +95,7 @@ namespace Vheos.Games.ActionPoints
         override public void Initialize(ActionUI ui)
         {
             base.Initialize(ui);
+            name = "PointsBar";
 
             OnPlayEnable.Sub(UpdatePointsInstantly);
 
