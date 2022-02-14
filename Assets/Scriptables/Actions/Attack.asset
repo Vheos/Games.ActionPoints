@@ -20,7 +20,8 @@ MonoBehaviour:
   <FocusPointsCost>k__BackingField: 0
   <Effects>k__BackingField:
   - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
+    Target: 0
     Values:
-    - 5
-    - 0
+    - 25
+    - 25
     - 0

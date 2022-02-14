@@ -16,6 +16,10 @@ MonoBehaviour:
     Sprite: {fileID: 4491553773363795640, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
     Text: 
     Color: {r: 1, g: 1, b: 1, a: 1}
-  <ActionPointsCost>k__BackingField: 5
+  <ActionPointsCost>k__BackingField: 0
   <FocusPointsCost>k__BackingField: 0
-  <Effects>k__BackingField: []
+  <Effects>k__BackingField:
+  - Effect: {fileID: 11400000, guid: ba8b517b1e2e04a4384419abd8b3dd4b, type: 2}
+    Target: 0
+    Values:
+    - 15
