@@ -16,5 +16,6 @@ namespace Vheos.Games.ActionPoints
         public ActionPoint ActionPoint;
         public ActionButtonsWheel ActionButtonsWheel;
         public ActionButton ActionButton;
+        public Popup Popup;
     }
 }

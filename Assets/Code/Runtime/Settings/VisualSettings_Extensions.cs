@@ -26,6 +26,8 @@ namespace Vheos.Games.ActionPoints
         => SettingsManager.Instance.VisualSettings.ActionButton;
         static public VisualSettings.ActionButtonSettings Settings(this ActionButton _)
         => SettingsManager.Instance.VisualSettings.ActionButton;
+        static public VisualSettings.PopupSettings Settings(this Popup _)
+        => SettingsManager.Instance.VisualSettings.Popup;
 
     }
 }

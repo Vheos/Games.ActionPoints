@@ -113,5 +113,32 @@ namespace Vheos.Games.ActionPoints
             [Range(0f, 1f)] public float ChangeUsabilityDuration;
         }
         #endregion
+        [field: SerializeField] public PopupSettings Popup { get; private set; }
+        #region struct
+        [Serializable]
+        public struct PopupSettings
+        {
+            public Vector2 AngleRandomRange;
+            public bool AlignTextRotationToDirection;
+            [Range(0f, 1f)] public float Distance;
+            [Range(0f, 1f)] public float FadeInDuration;
+            [Range(0f, 1f)] public float StayUpDuration;
+            [Range(0f, 1f)] public float FadeOutDuration;
+            [Range(0f, 1f)] public float PercentSignSize;
+        }
+        #endregion
+        [field: SerializeField] public SpecificPopupSettings DamagePopup { get; private set; }
+        [field: SerializeField] public SpecificPopupSettings HealingPopup { get; private set; }
+        #region struct
+        [Serializable]
+        public struct SpecificPopupSettings
+        {
+            public AnimationCurve SizeCurve;
+            public Gradient ColorCurve;
+            [Range(1f, 3f)] public float WoundPulseScale;
+            [Range(1f, 5f)] public float WoundPulseRate;
+
+        }
+        #endregion
     }
 }
