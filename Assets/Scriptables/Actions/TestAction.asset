@@ -16,31 +16,17 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     Text: TEST ACTION
     Color: {r: 1, g: 0.5, b: 1, a: 1}
-  <ActionPointsCost>k__BackingField: 2
-  <FocusPointsCost>k__BackingField: 1
+  <ActionPointsCost>k__BackingField: 0
+  <FocusPointsCost>k__BackingField: 0
   <Effects>k__BackingField:
-  - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
-    Target: 0
-    Values:
-    - 0
-    - 0
-    - 0
-  - Effect: {fileID: 11400000, guid: 8459980efcd92bc4293debd53aabe1d2, type: 2}
-    Target: 0
-    Values:
-    - 0
-    - 0
   - Effect: {fileID: 11400000, guid: ba8b517b1e2e04a4384419abd8b3dd4b, type: 2}
     Target: 0
     Values:
-    - 0
-  - Effect: {fileID: 0}
+    - 100
+  - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
     Target: 0
     Values:
+    - 100
     - 0
     - 0
-  - Effect: {fileID: 11400000, guid: 8459980efcd92bc4293debd53aabe1d2, type: 2}
-    Target: 0
-    Values:
-    - 0
-    - 0
+  <Phase>k__BackingField: 0

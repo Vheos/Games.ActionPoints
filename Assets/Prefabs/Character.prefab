@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4590056948223180894}
   - component: {fileID: 4590056948223180880}
+  - component: {fileID: -6205543457380298392}
   - component: {fileID: 1496881883444649891}
   - component: {fileID: 8099017625504549054}
   - component: {fileID: 5726525820959742357}
@@ -64,14 +65,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481c2dc6c33eb4e4eaed4f3a60543007, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <ActionProgress>k__BackingField: 0
+  <FocusProgress>k__BackingField: 0
+--- !u!114 &-6205543457380298392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4590056948223180893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2baae7b3afd5aa949aadf5bd988a155e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   <MaxActionPoints>k__BackingField: 4
   <ActionSpeed>k__BackingField: 0.5
+  <OverflowFocusRate>k__BackingField: 0.5
   <StartingActions>k__BackingField:
   - {fileID: 11400000, guid: 68597f9a938a4e24d85e7a8c0850e50a, type: 2}
   - {fileID: 11400000, guid: 536befe42f21d1144a002b0c84fb5378, type: 2}
   - {fileID: 11400000, guid: 79ad63f6d4fa675488b37f6aa4d2c6c1, type: 2}
-  <ActionProgress>k__BackingField: 0
-  <FocusProgress>k__BackingField: 0
 --- !u!114 &1496881883444649891
 MonoBehaviour:
   m_ObjectHideFlags: 0

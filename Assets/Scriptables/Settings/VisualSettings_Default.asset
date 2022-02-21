@@ -67,7 +67,7 @@ MonoBehaviour:
     UnusableColorScale: 0.5
     ChangeUsabilityDuration: 0.4
   <Popup>k__BackingField:
-    AngleRandomRange: {x: 10, y: 30}
+    AngleRandomRange: {x: 15, y: 45}
     AlignTextRotationToDirection: 0
     Distance: 0.75
     FadeInDuration: 0.4
