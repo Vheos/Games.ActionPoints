@@ -87,7 +87,7 @@ namespace Vheos.Games.ActionPoints
             Get<Expandable>().OnStartCollapsing.SubDestroy(this, Disable);
         }
         public void Initialize(ActionUI ui, ActionPhase phase)
-        {                        
+        {
             Initialize(ui);
             _phase = phase;
             name = $"{ActionPhase.Combat}Buttons";

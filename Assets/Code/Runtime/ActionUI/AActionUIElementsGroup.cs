@@ -24,7 +24,6 @@ namespace Vheos.Games.ActionPoints
         virtual public void Initialize(ActionUI ui)
         {
             UI = ui;
-            BindEnableDisable(ui);
 
             Get<Expandable>().OnStartExpanding.SubDestroy(this, Activate);
             Get<Expandable>().OnFinishCollapsing.SubDestroy(this, Deactivate);

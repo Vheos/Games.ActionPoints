@@ -21,7 +21,7 @@ namespace Vheos.Games.ActionPoints
         }
         public void AnimateDestroy(bool instantly = false)
         {
-            enabled = false;
+            IsEnabled = false;
             this.NewTween()
               .SetDuration(this.Settings().DestroyElementDuration)
               .LocalScale(Vector3.zero)
