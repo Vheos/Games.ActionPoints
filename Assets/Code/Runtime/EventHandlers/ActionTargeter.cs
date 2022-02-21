@@ -46,6 +46,7 @@ namespace Vheos.Games.ActionPoints
 
             _action = action;
             Get<Targeter>().OnChangeTargetable.Sub(Targeter_OnChangeTargetable);
+
             return true;
         }
         public bool TryStartTargeting(Action action, UITargetingLine targetingLine, Transform from)
@@ -55,6 +56,8 @@ namespace Vheos.Games.ActionPoints
 
             _targetingLine = targetingLine;
             _targetingLine.Show(Get<Targeter>(), from);
+            _targetingLine.Player.Get<Selecter>().Disable();
+            _targetingLine.Player.OnInputReleaseConfirm.SubOnce(TryFinishTargeting);
             return true;
         }
         public void TryFinishTargeting()
@@ -67,8 +70,9 @@ namespace Vheos.Games.ActionPoints
 
             if (_targetingLine != null)
             {
+                _targetingLine.Player.Get<Selecter>().Enable();
                 _targetingLine.Hide();
-                _targetingLine = null;
+                _targetingLine = null;               
             }
 
             Get<Targeter>().OnChangeTargetable.Unsub(Targeter_OnChangeTargetable);

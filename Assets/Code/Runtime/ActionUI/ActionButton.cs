@@ -40,20 +40,13 @@ namespace Vheos.Games.ActionPoints
             textMeshPro.verticalAlignment = VerticalAlignmentOptions.Middle;
             return textMeshPro;
         }
-        private void Selectable_OnPress(Selecter selecter)
+        private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
         {
-            if (!_isUsable)
+            if (!isFullClick || !_isUsable)
                 return;
 
             _group.UI.Actionable.Get<ActionTargeter>().TryFinishTargeting();
             _group.UI.Actionable.Get<ActionTargeter>().TryStartTargeting(Action, selecter.Get<Player>().TargetingLine, transform);
-        }
-        private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
-        {
-            if (!_isUsable)
-                return;
-
-            _group.UI.Actionable.Get<ActionTargeter>().TryFinishTargeting();
         }
         private void UpdateUsability(bool instantly = false)
         {
@@ -112,7 +105,6 @@ namespace Vheos.Games.ActionPoints
             _isUsable = true;
             UpdateUsability(true);
 
-            Get<Selectable>().OnPress.SubEnableDisable(this, Selectable_OnPress);
             Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);
         }
     }
