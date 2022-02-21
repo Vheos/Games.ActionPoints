@@ -28,12 +28,16 @@ namespace Vheos.Games.ActionPoints
         private void OnInputPressConfirm()
         {
             AnimatePress();
+            if (!_selecter.isActiveAndEnabled)
+                return;
+
             _selecter.TryPress();
         }
         private void OnInputReleaseConfirm()
         {
             AnimateRelease();
-            if (!_selecter.IsSelectingAny)
+            if (!_selecter.isActiveAndEnabled
+            || !_selecter.IsSelectingAny)
                 return;
 
             var fullClick = _selecter.Selectable == RaycastableManager.FindClosest<Selectable>(_uiCanvas, this);
@@ -41,7 +45,8 @@ namespace Vheos.Games.ActionPoints
         }
         private void OnUpdate()
         {
-            if (_selecter.IsHolding)
+            if (!_selecter.isActiveAndEnabled
+            || _selecter.IsHolding)
                 return;
 
             _selecter.Selectable = RaycastableManager.FindClosest<Selectable>(_uiCanvas, this);
@@ -84,7 +89,7 @@ namespace Vheos.Games.ActionPoints
             Player.OnInputMoveCursor.SubEnableDisable(this, OnInputMoveCursor);
             Player.OnInputPressConfirm.SubEnableDisable(this, OnInputPressConfirm);
             Player.OnInputReleaseConfirm.SubEnableDisable(this, OnInputReleaseConfirm);
-            
+
             Get<Image>().color = Player.Color;
         }
     }
