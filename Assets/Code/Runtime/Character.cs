@@ -8,9 +8,6 @@ namespace Vheos.Games.ActionPoints
     public class Character : ABaseComponent
     {
         // Inspector
-        [field: SerializeField, Range(0, 10)] public int MaxActionPoints { get; private set; }
-        [field: SerializeField, Range(-1f, 1f)] public float ActionSpeed { get; private set; }
-        [field: SerializeField] public Action[] StartingActions { get; private set; }
         [field: SerializeField, Range(-5f, +5f)] public float ActionProgress { get; private set; }
         [field: SerializeField, Range(-5f, +5f)] public float FocusProgress { get; private set; }
 
@@ -29,7 +26,7 @@ namespace Vheos.Games.ActionPoints
             if (withinTrigger)
             {
                 _actionUI.Buttons[ActionPhase.Combat].Get<Expandable>().Toggle();
-                _actionUI.Buttons[ActionPhase.Camp].Get<Expandable>().Toggle();             
+                _actionUI.Buttons[ActionPhase.Camp].Get<Expandable>().Toggle();
                 //_actionUI.PointsBar.Get<Expandable>().Toggle();
             }
         }
@@ -107,7 +104,7 @@ namespace Vheos.Games.ActionPoints
 
         private void ActionTargeter_OnChangeTargetable(ActionTargetable from, ActionTargetable to, Action action)
         { Debug.Log($"{name} has changed target: {(from != null ? from.name : "null")}   ---{{{action.name}}}--->   {(to != null ? to.name : "null")}"); }
-        private void ActionTargetable_OnGainTargeting(ActionTargeter targeter,  Action action, bool isFirst)
+        private void ActionTargetable_OnGainTargeting(ActionTargeter targeter, Action action, bool isFirst)
         { Debug.Log($"{name} has gained targeting: {(targeter != null ? targeter.name : "null")}   /   {action.name}   /   {isFirst}"); }
         private void ActionTargetable_OnLoseTargeting(ActionTargeter targeter, Action action, bool isLast)
         { Debug.Log($"{name} has lost targeting: {(targeter != null ? targeter.name : "null")}   /   {action.name}   /   {isLast}"); }
@@ -121,17 +118,6 @@ namespace Vheos.Games.ActionPoints
             _actionUI.Initialize(Get<Actionable>(), () => Get<Collider>().LocalBounds().ToRect().Scale(this));
             _actionUI.Points.Get<Expandable>().TryExpand();
             _actionUI.Buttons[ActionPhase.Combat].Get<Expandable>().TryExpand();
-
-            if (Has<Actionable>())
-            {
-
-                Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress += Time.deltaTime * ActionSpeed);
-                Get<Actionable>().OnOverflowActionProgress.SubEnableDisable(this, t => Get<Actionable>().FocusProgress += t);
-                //Get<Updatable>().OnUpdate.SubEnableDisable(this, () => Get<Actionable>().ActionProgress = ActionProgress, () => Get<Actionable>().FocusProgress = FocusProgress);
-
-                Get<Actionable>().MaxActionPoints = MaxActionPoints;
-                Get<Actionable>().TryChangeActions(null, StartingActions);
-            }
 
             Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainHighlight);
             Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseHighlight);
@@ -147,18 +133,10 @@ namespace Vheos.Games.ActionPoints
 
 
             Get<Equiper>().OnChangeEquipable.SubEnableDisable(this, Equiper_OnChangeEquipable);
-            Get<Woundable>().MaxWounds.Set(() => MaxActionPoints);
-            Get<Actionable>().LockedMaxActionPoints.Set(() => Get<Woundable>().Wounds); 
 
-
-           // Get<ActionTargeter>().OnChangeTargetable.SubEnableDisable(this, ActionTargeter_OnChangeTargetable);
-           // Get<ActionTargetable>().OnGainTargeting.SubEnableDisable(this, ActionTargetable_OnGainTargeting);
-           // Get<ActionTargetable>().OnLoseTargeting.SubEnableDisable(this, ActionTargetable_OnLoseTargeting);
-
-
-
-
-
+            // Get<ActionTargeter>().OnChangeTargetable.SubEnableDisable(this, ActionTargeter_OnChangeTargetable);
+            // Get<ActionTargetable>().OnGainTargeting.SubEnableDisable(this, ActionTargetable_OnGainTargeting);
+            // Get<ActionTargetable>().OnLoseTargeting.SubEnableDisable(this, ActionTargetable_OnLoseTargeting);
         }
     }
 }
