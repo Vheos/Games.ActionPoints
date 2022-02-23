@@ -21,3 +21,6 @@ inline void ApplyST(inout fixed2 texcoord, fixed4 ST)
 
 inline fixed2 AppliedST(fixed2 texcoord, fixed4 ST)
 { return texcoord.xy * ST.xy + ST.zw; }
+
+inline fixed Random (fixed2 uv)
+{ return frac(sin(dot(uv, fixed2(12.9898, 78.233))) * 43758.5453123); }
