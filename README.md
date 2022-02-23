@@ -9,7 +9,7 @@ On the surface, it's just another of my countless Unity projects. But in reality
 
 # Game design
 ### Gameplay loop
-The main inspiration for the core gameplay loop is [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon]=), in which you first explore a dungeon and fight enemies, then manage your party in a city to prepare for another expedition. While exploring, it's also possible to camp, which allows your party members to use camping-only skills. In my game, I'm planning to skip the city phase, but expand upon the camping phase, so the gameplay loop will look like this: `Explore & Fight -> Camp -> ...`
+The main inspiration for the core gameplay loop is [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon), in which you first explore a dungeon and fight enemies, then manage your party in a city to prepare for another expedition. While exploring, it's also possible to camp, which allows your party members to use camping-only skills. In `ActionPoints`, I'lll skip the city phase, but expand upon the camping phase, so the gameplay loop will become `Explore & Fight -> Camp -> ...`
 ### Action points
 (soon)
 ### Wounds
@@ -17,7 +17,7 @@ The main inspiration for the core gameplay loop is [Darkest Dungeon](https://www
 ### Chance-based damage
 (soon)
 ### Damage mitigation formulas
-The game will also feature a different damage formula for each of its mitigatable armor types: `Blunt` armor will be applied `additively`, so 80 blunt damage against 40 blunt armor will result in `80 - 40 = 30` damage. `Sharp` armor will be applied `multiplicatively`, so 80 sharp damage against 40 sharp armor will result in `80 x 60% = 48` damage. There's also an unmitigatable damage type (called `Pure`) which will be used for special effects - like poison or magic.
+The game will feature a different damage formula for each of its mitigatable armor types: `Blunt` armor will be applied `additively`, so 80 blunt damage against 40 blunt armor will result in `80 - 40 = 30` damage. `Sharp` armor will be applied `multiplicatively`, so 80 sharp damage against 40 sharp armor will result in `80 x 60% = 48` damage. There's also an unmitigatable damage type (called `Pure`) which will be used for special effects - like poison or magic.
 ### Simple math
 Most of the game math will use whole numbers, usualy below 100 (for percentage chances) and even below 10 (for action costs). 
 
