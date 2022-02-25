@@ -22,37 +22,47 @@ On the surface, it's just another of my countless Unity projects. But in reality
 
 # Game design
 ### Gameplay loop
-- the main inspiration for the core gameplay loop is [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon), in which you first explore a dungeon and fight enemies, then manage your party in a city to prepare for another expedition. While exploring, it's also possible to camp, which allows your party members to use camping-only skills. In *ActionPoints*, I'll skip the city phase, but expand upon the camping phase, so the gameplay loop will become *Explore & Fight -> Camp*.
+- the main inspiration for the core gameplay loop is [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon), in which you first explore a dungeon and fight enemies, then manage your party in a city to prepare for another expedition. While exploring, it's also possible to camp, which allows your party members to use camping-only skills. 
+- in *ActionPoints*, the city and camping phases will be combined into one, so the gameplay loop will become *Explore -> Camp*, with *Combat* occuring mostly during exploration, but also possibly when resting at an unguarded camp.
 ### Action system
-- characters will interact with the world by using *Actions*. Actions will be bundled into contextual sets, each usable only in certain game phase - like exploration, combat and camping. For example, a scouting-oriented character might have a *Disarm trap* action usable only while exploring, *Expose weakness* while in combat and *Patrol* while camping.
-- characters will gain actions from equipment, progression and events. For example, an axe may allow you to use the *Chop* in combat and *Chop firewood* in camp while you're wielding it, or a magic ritual may permanently grant you *Light torch* while exploring, *Fireball* in combat and *Light bonfire* in camp.
-- actions will cost resources - most commonly the easily-available action points, but may also require the rare focus points or even some consumable items. Actions may be used even if the character doesn't have enough action points, but doing so will put the character in an *exhausted* state, unable to perform anything else until all exhaust points are recharged.
-### Action phases
-- (sson)
+- characters will interact with the world by using their *Actions*. Each action will be usable only during certain game phase - for example, a character might be able to use *Disarm trap* while exploring and *Patrol* while camping, but won't have any special combat actions.
+- characters will gain actions from equipment, progression and events. For example, wielding an axe may allow you to use *Chop* combat action and *Chop firewood* camping action, or a magic ritual may permanently grant you *Fireball* combat action and *Light bonfire* camping action.
+- actions will cost resources - most commonly the easily-available action points, but may also require the rare focus points or even some consumable items.
 ### Action resources
-- characters will have a number of *Action points* that can be used to perform actions. Action points recharge differently in each game phase.
-- action points may get *over-charged* under certain conditions, becoming *Focus points* - rare, extra resource used to perform powerful actions.
-- when a character uses up more action points then they have, they will receive *Exhaust points* - essentialy negative action points that prevent the character from using any more actions until recharged.
-- when a character gets successfully damaged (since damage will chance-based), they will receive a *Wound point*. Wound points cannot be recharged, effectively reducing the character's maximum available action points. Moreover, if all of character's action points become wound points, that character will die.
+- characters will have a number of *Maximum points* that represent both their health and stamina at the same time.
+- points can be *charged*, usually by resting. A fully charged point becomes an *Action point* - the most common resource used to perform actions.
+- under certain conditions, action points may get *focused* (over-charged). A fully focused action point becomes a *Focus point* - rare, extra resource used to perform unique actions. Focus points also count as normal action points, and can be used as such in a pinch, but that would waste their potential.
+- when a character gets wounded, they will receive a *Wound point*. Wound points cannot be charged or focused, effectively reducing the character's maximum available points. Moreover, if all of character's points become wound points, that character will die.
 ### Single resource bar
-- many games feature separate bars for each of character-related resources - like health, mana and stamina. In *ActionPoints*, all resources will be combined into a single bar consisting of multiple *points*, each of which usually represents only one resource (or lack thereof) at any given time. This way, the UI won't be cluttered with multiple bars, and all vital information will be visible at first glance.
-- example resoure bar, from left to right;
-<br/>*(image of action points bar with all types of resource points)*
-  - fully charged focus point
-  - fully charged action point with partially charged (unusable) focus
-  - fully charged action point
-  - partially charged (unusable) action point
-  - wound (unchargeable action point)
+- many games feature separate bars for each of character-related resources - like health, stamina or mana. In *ActionPoints*, all resources will be combined into a single bar consisting of multiple *points*, each of which usually represents only one resource (or lack thereof) at any given time. This way, the UI won't be cluttered with multiple bars, and all vital information will be visible at first glance.
+- *(image of action points bar with all types of resource points)*
+<br/>from left to right:
+  - focus point (also counts as an action point)
+  - action point, partially focused
+  - action point
+  - partially charged point
+  - wound (cannot be charged)
+
 ### Combat system
-- (soon)
+- WIP
+- Actions may be used even if the character doesn't have enough action points, but doing so will put the character in an *exhausted* state, unable to perform anything else until all exhaust points are recharged.
+- when a character uses up more action points then they have, they will receive *Exhaust points* - essentialy negative action points that prevent the character from using any more actions until recharged.
+- *(image of action points bar with all types of resource points)*
+<br/>from left to right:
+  - exhaust point
+  - partialy exhausted point
+  - empty point
+  - wound (cannot be charged or exhausted)
+  - wound (cannot be charged or exhausted)
 ### Damage types
 - the game will feature 2 mitigatable damage/armor types (blunt and sharp) and 1 unmitigatable damage type (pure).
 - blunt armor mitigates blunt damage additively, following the formula `Damage - Armor`. Dealing 80 blunt damage against character with 60 blunt armor will result in `80 - 60 = 20` damage. This encourages single high-damage attacks instead of multiple weaker attacks.
 - sharp armor mitigates sharp damage multiplicatively and is displayed as percentage. It follows the formula `Damage x (1 - Armor)`. Dealing 80 sharp damage against 60% sharp armor will result in `80 x (1 - 60%) = 80 x 40% = 32` damage. This type of damage doesn't encourage either big or quick attacks.
 - pure damage is unmitigatable, so it doesn't have a corresponding armor type. It will be used for special effects, like poison or magic.
 ### Chance rolls
-- damage and healing are actually percentage chances of inflicting or removing a single wound, so dealing 99 damage might not actually have any effect.
-- for every 100 damage or healing, there will be guaranteed success. The remaining amount (below 100) will be rolled as usual, so 150 damage is guaranteed to inflict 1 wound, and 50% of the time will inflict 2 wounds.
+- damage and healing are actually percentage chances of inflicting or removing a single wound, so dealing 99 damage might not actually have any effect (if you're unlucky).
+- for every 100 damage or healing, there will be guaranteed success. The remaining amount (below 100) will be rolled as usual, so 150 damage is guaranteed to inflict 1 wound, with 50% chance of inflicting 2 wounds instead.
+
 ### Simple math
 - most of the game math will use whole numbers, usualy below 100 (for percentage chances) and even below 10 (for action costs).
 - there will be very little inflation throughout the game - end-game characters shouldn't be more than twice as powerful as a starting characters.
