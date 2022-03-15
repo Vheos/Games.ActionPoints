@@ -15,7 +15,7 @@ namespace Vheos.Games.ActionPoints
         public readonly Getter<float> PressScale = new();
 
         // Privates
-        private ColorComponentType _colorComponentType;
+        private ColorComponent _colorComponentType;
         private void Selectable_OnGainHighlight(Selecter selecter, bool isFirst)
         {
             if (isFirst)

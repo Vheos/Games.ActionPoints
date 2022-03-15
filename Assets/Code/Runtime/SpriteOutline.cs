@@ -22,14 +22,14 @@ namespace Vheos.Games.ActionPoints
             _outlineRenderer.NewTween(ConflictResolution.Interrupt)
                 .SetDuration(this.Settings().ExpandDuration)
                 .AddPropertyModifier(v => _mprops.Thickness += v, this.Settings().Thickness - _mprops.Thickness)
-                .Color(ColorComponentType.SpriteRenderer, Color)
+                .Color(ColorComponent.SpriteRenderer, Color)
                 .FinishIf(instantly);
         }
         public void Hide(bool instantly = false)
         => _outlineRenderer.NewTween(ConflictResolution.Interrupt)
             .SetDuration(this.Settings().CollapseDuration)
             .AddPropertyModifier(v => _mprops.Thickness += v, 0f - _mprops.Thickness)
-            .Alpha(ColorComponentType.SpriteRenderer, 0f)
+            .Alpha(ColorComponent.SpriteRenderer, 0f)
             .AddEventsOnFinish(() => _outlineRenderer.gameObject.SetActive(false))
             .FinishIf(instantly);
 

@@ -25,7 +25,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween()
               .SetDuration(this.Settings().DestroyElementDuration)
               .LocalScale(Vector3.zero)
-              .AlphaRatio(ColorComponentType.Any, 0f)
+              .AlphaRatio(ColorComponent.Any, 0f)
               .AddEventsOnFinish(this.DestroyObject)
               .FinishIf(instantly);
         }

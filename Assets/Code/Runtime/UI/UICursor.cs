@@ -1,6 +1,8 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
     using Games.Core;
@@ -57,7 +59,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween()
                 .SetDuration(this.Settings().PressDuration)
                 .LocalScaleRatio(this.Settings().PressScale)
-                .RGBRatio(ColorComponentType.Image, this.Settings().PressColorScale)
+                .RGBRatio(ColorComponent.Image, this.Settings().PressColorScale)
                 .FinishIf(instantly);
         }
         private void AnimateRelease(bool instantly = false)
@@ -66,9 +68,10 @@ namespace Vheos.Games.ActionPoints
             this.NewTween()
                 .SetDuration(this.Settings().ReleaseDuration)
                 .LocalScaleRatio(this.Settings().PressScale.Inv())
-                .RGBRatio(ColorComponentType.Image, this.Settings().PressColorScale.Inv())
+                .RGBRatio(ColorComponent.Image, this.Settings().PressColorScale.Inv())
                 .FinishIf(instantly);
         }
+
         // Play
         public void Initialize(UICanvas uiCanvas)
         {

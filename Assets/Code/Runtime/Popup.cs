@@ -37,7 +37,7 @@ namespace Vheos.Games.ActionPoints
         => this.NewTween()
             .SetDuration(this.Settings().FadeInDuration)
             .Position(transform.position + direction * this.Settings().Distance)
-            .Alpha(ColorComponentType.TextMeshPro, 1f)
+            .Alpha(ColorComponent.TextMeshPro, 1f)
             .AddEventsOnFinish(StayUp);
         private void StayUp()
         => this.NewTween()
@@ -46,7 +46,7 @@ namespace Vheos.Games.ActionPoints
         private void FadeOut()
         => this.NewTween()
             .SetDuration(this.Settings().FadeOutDuration)
-            .Alpha(ColorComponentType.TextMeshPro, 0f)
+            .Alpha(ColorComponent.TextMeshPro, 0f)
             .AddEventsOnFinish(this.StopTweens, this.DestroyObject);
         private void Pulse(float rate, float scale)
         => this.NewTween(ConflictResolution.Blend)

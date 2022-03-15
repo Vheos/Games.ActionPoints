@@ -90,7 +90,7 @@ namespace Vheos.Games.ActionPoints
         {
             Initialize(ui);
             _phase = phase;
-            name = $"{ActionPhase.Combat}Buttons";
+            name = $"{phase}Buttons";
         }
     }
 }

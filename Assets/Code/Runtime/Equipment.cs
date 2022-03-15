@@ -10,8 +10,8 @@ namespace Vheos.Games.ActionPoints
     public class Equipment : ABaseComponent
     {
         // Inspector
-        [field: SerializeField] public EquipSlot Slot {get; private set;}
-        [field: SerializeField] public Action[] Actions {get; private set;}
+        [field: SerializeField] public EquipSlot Slot { get; private set; }
+        [field: SerializeField] public Action[] Actions { get; private set; }
         [field: SerializeField, Range(-2, +2)] public int MaxActionPoints { get; private set; }
 
         // Privates
