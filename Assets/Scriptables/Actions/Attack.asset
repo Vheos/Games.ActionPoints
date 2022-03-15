@@ -16,13 +16,15 @@ MonoBehaviour:
     Sprite: {fileID: -7814885851622180520, guid: 7fcfe973e6c6ad34badfb2e6f08566c1, type: 3}
     Text: 
     Color: {r: 1, g: 1, b: 1, a: 1}
+  <Phase>k__BackingField: 1
+  <Execution>k__BackingField: 1
   <ActionPointsCost>k__BackingField: 1
   <FocusPointsCost>k__BackingField: 0
   <Effects>k__BackingField:
   - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
-    Target: 0
+    Subject: 0
+    Object: 1
     Values:
     - 25
     - 25
     - 0
-  <Phase>k__BackingField: 0

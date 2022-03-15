@@ -903,6 +903,18 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6205543457380298392, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
+      propertyPath: <StartingActions>k__BackingField.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -6205543457380298392, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
+      propertyPath: <StartingActions>k__BackingField.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: ed308a994ab7e614897896bc8ad46962, type: 2}
+    - target: {fileID: -6205543457380298392, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
+      propertyPath: <StartingActions>k__BackingField.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: de1701883d9e1844ca9d270ba095ee00, type: 2}
     - target: {fileID: 4590056948223180880, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1061,11 +1073,11 @@ PrefabInstance:
       objectReference: {fileID: -3551287784963028691, guid: ab52c4229e4d1754fbd7b6961b5d0a63, type: 3}
     - target: {fileID: 4590056948223180895, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
       propertyPath: m_Color.b
-      value: 0.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4590056948223180895, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
       propertyPath: m_Color.g
-      value: 0.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4590056948223180895, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
       propertyPath: m_Enabled
@@ -1075,6 +1087,8 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: a4163b717e050cb4db6e10ce02a76834, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7727458632884581444, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
+    - {fileID: 2264417396315860736, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 01f1eb4026043c645917652ec10729b1, type: 3}
