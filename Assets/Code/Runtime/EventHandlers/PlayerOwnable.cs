@@ -28,4 +28,31 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private Player _owner;
     }
+
+    static public class PlayerOwnable_Extensions
+    {
+        static public bool HasPlayerOwner(this ABaseComponent t)
+        => t.TryGet(out PlayerOwnable playerOwnable)
+        && playerOwnable.Owner != null;
+        static public Player PlayerOwner(this ABaseComponent t)
+        => t.TryGet(out PlayerOwnable playerOwnable)
+        ? playerOwnable.Owner
+        : null;
+        static public bool TrySetPlayerOwnerIfNull(this ABaseComponent t, Player a)
+        {
+            if (t.TryGet(out PlayerOwnable playerOwnable)
+            && playerOwnable.Owner == null)
+            {
+                playerOwnable.Owner = a;
+                return true;
+            }
+            return false;
+        }
+        static public void TryRemovePlayerOwner(this ABaseComponent t)
+        {
+            if (t.TryGet(out PlayerOwnable playerOwnable)
+            && playerOwnable.Owner != null)
+                playerOwnable.Owner = null;
+        }
+    }
 }
