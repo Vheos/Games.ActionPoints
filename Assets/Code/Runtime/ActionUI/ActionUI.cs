@@ -19,11 +19,24 @@ namespace Vheos.Games.ActionPoints
         public readonly Getter<Rect> Rect = new();
         public ActionPointsBar Points
         { get; private set; }
-        public IReadOnlyDictionary<ActionPhase, ActionButtonsWheel> Buttons
+        public IReadOnlyDictionary<ActionPhase, ActionButtonsWheel> ButtonWheels
         => _buttonsWheelsByPhase;
+        public void ExpandButtonWheel(ActionPhase phase, bool instantly = false)
+        {
+            foreach (var buttonWheelByPhase in _buttonsWheelsByPhase)
+                if (buttonWheelByPhase.Key == phase)
+                    buttonWheelByPhase.Value.Get<Expandable>().TryExpand(instantly);
+                else
+                    buttonWheelByPhase.Value.Get<Expandable>().TryCollapse(instantly);
+        }
+        public void CollapseButtonWheels(bool instantly = false)
+        {
+            foreach (var buttonWheelByPhase in _buttonsWheelsByPhase)
+                buttonWheelByPhase.Value.Get<Expandable>().TryCollapse(instantly);
+        }
 
         // Privates
-        public Dictionary<ActionPhase, ActionButtonsWheel> _buttonsWheelsByPhase;
+        private Dictionary<ActionPhase, ActionButtonsWheel> _buttonsWheelsByPhase;
 
         // Play
         public void Initialize(Actionable actionable, Func<Rect> rectGetter)
