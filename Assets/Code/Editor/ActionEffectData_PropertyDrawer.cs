@@ -19,21 +19,23 @@ namespace Vheos.Games.ActionPoints.Editor
             // Cache
             var propEffects = property.FindPropertyRelative(nameof(ActionEffectData.Effect));
             var propValues = property.FindPropertyRelative(nameof(ActionEffectData.Values));
-            var propTarget = property.FindPropertyRelative(nameof(ActionEffectData.Target));
+            var propSubject = property.FindPropertyRelative(nameof(ActionEffectData.Subject));
+            var propObject = property.FindPropertyRelative(nameof(ActionEffectData.Object));
             float originalWidth = rect.width;
             rect.height = EditorGUIUtility.singleLineHeight;
 
-            EditorGUI.PropertyField(rect.ConsumeX(originalWidth * 0.4f, false, SPACING_X), propEffects, GUIContent.none);
+            EditorGUI.PropertyField(rect.ConsumeX(originalWidth * 1 / 3f, false, SPACING_X), propEffects, GUIContent.none);
             if (!propEffects.objectReferenceValue.TryAs(out ActionEffect actionEffect))
                 return;
 
+            EditorGUI.PropertyField(rect.ConsumeX(originalWidth * 1 / 6f, false, SPACING_X), propSubject, GUIContent.none);
+            EditorGUI.PropertyField(rect.ConsumeX(originalWidth * 1 / 6f, false, SPACING_X), propObject, GUIContent.none);
+
             int valuesCount = actionEffect.RequiredValuesCount;
-            float valueWidth = originalWidth * 0.4f / valuesCount;
+            float valueWidth = originalWidth * 1 / 3f / valuesCount;
             propValues.arraySize = valuesCount;
             for (int i = 0; i < valuesCount; i++)
                 EditorGUI.PropertyField(rect.ConsumeX(valueWidth, false, SPACING_X), propValues.GetArrayElementAtIndex(i), GUIContent.none);
-
-            EditorGUI.PropertyField(rect.ConsumeX(originalWidth * 0.2f, false, SPACING_X), propTarget, GUIContent.none);
         }
     }
 }

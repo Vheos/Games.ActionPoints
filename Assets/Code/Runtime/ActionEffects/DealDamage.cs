@@ -1,6 +1,7 @@
 namespace Vheos.Games.ActionPoints.ActionScripts
 {
     using System;
+    using System.Collections.Generic;
     using UnityEngine;
     using Games.Core;
 
@@ -8,28 +9,28 @@ namespace Vheos.Games.ActionPoints.ActionScripts
     public class DealDamage : ActionEffect
     {
         // Overrides
-        override public Type[] RequiredComponentTypes
+        override public Type[] ObjectRequiredComponents
         => new[] { typeof(Woundable) };
         override public int RequiredValuesCount
         => 3;
 
-        override public void Invoke(ABaseComponent target, float[] values, ActionStats stats)
+        override public void Invoke(ABaseComponent user, ABaseComponent target, float[] values, ActionStats stats)
         {
             // Cache           
-            var woundable = target.Get<Woundable>();
-            int previousWounds = woundable.Wounds;
+            var targetWoundable = target.Get<Woundable>();
+            int targetPreviousWounds = targetWoundable.Wounds;
             float blunt = values[0];
             float sharp = values[1];
             float pure = values[2];
 
             // Execute
-            woundable.ReceiveDamage(blunt, sharp, pure);
+            targetWoundable.ReceiveDamage(blunt, sharp, pure);
 
             // Stats
             if (stats != null)
             {
-                stats.AddDamageStats(blunt, woundable.CalculateBluntDamage(blunt), sharp, woundable.CalculateBluntDamage(sharp), pure);
-                stats.WoundsDealt += woundable.Wounds - previousWounds;
+                stats.AddDamageStats(blunt, targetWoundable.CalculateBluntDamage(blunt), sharp, targetWoundable.CalculateBluntDamage(sharp), pure);
+                stats.WoundsDealt += targetWoundable.Wounds - targetPreviousWounds;
             }
         }
     }

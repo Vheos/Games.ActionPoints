@@ -10,30 +10,26 @@ namespace Vheos.Games.ActionPoints
     {
         // Inspector    
         public ActionEffect Effect;
-        public ActionTarget Target;
+        public ActionAgent Subject;
+        public ActionAgent Object;
         public float[] Values;
 
         // Publics
-        public void Invoke(ActionTargeter targeter, ActionTargetable targetable, ActionStats stats)
+        public void Invoke(Actionable user, Targetable target, ActionStats stats)
         {
             if (Effect == null)
                 return;
 
-            ABaseComponent target = Target switch
+            ABaseComponent EnumToAgent(ActionAgent agentEnum)
+            => agentEnum switch
             {
-                ActionTarget.Target => targetable,
-                ActionTarget.User => targeter,
+                ActionAgent.User => user,
+                ActionAgent.Target => target,
                 _ => default,
             };
 
-            Effect.Invoke(target, Values, stats);
+            Effect.Invoke(EnumToAgent(Subject), EnumToAgent(Object), Values, stats);
         }
-    }
-
-    public enum ActionTarget
-    {
-        Target,
-        User,
     }
 }
 
