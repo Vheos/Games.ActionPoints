@@ -1,10 +1,11 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using UnityEngine;
     using Games.Core;
-    using System.Collections.Generic;
-    using Vheos.Tools.Utilities;
+    using Tools.Utilities;
 
     [CreateAssetMenu(fileName = nameof(Action), menuName = CONTEXT_MENU_PATH + nameof(Action))]
     public class Action : ScriptableObject
@@ -13,43 +14,66 @@ namespace Vheos.Games.ActionPoints
         protected const string CONTEXT_MENU_PATH = "";
 
         // Inspector
-        [field: SerializeField] public ActionButtonVisuals ButtonVisuals { get; private set; }
+        [field: SerializeField,] public ActionButtonVisuals ButtonVisuals { get; private set; }
+        [field: SerializeField] public ActionPhase Phase { get; private set; }
+        [field: SerializeField] public ActionExecution Execution { get; private set; }
         [field: SerializeField, Range(0, 5)] public int ActionPointsCost { get; private set; }
         [field: SerializeField, Range(0, 5)] public int FocusPointsCost { get; private set; }
         [field: SerializeField] public ActionEffectData[] Effects { get; private set; }
-        [field: SerializeField] public ActionPhase Phase { get; private set; }
 
         // Publics (use)
-        public void Use(ActionTargeter user, ActionTargetable target)
+        public void Use(Actionable user, Targetable target)
         {
-            user.Get<Actionable>().ActionProgress -= ActionPointsCost;
-            user.Get<Actionable>().FocusProgress -= FocusPointsCost;
+            user.ActionProgress -= ActionPointsCost;
+            user.FocusProgress -= FocusPointsCost;
 
             ActionStats stats = new();
             foreach (var effectData in Effects)
                 effectData.Invoke(user, target, stats);
         }
-        public IReadOnlyDictionary<ActionTarget, HashSet<Type>> RequiredComponentTypes
+        public IReadOnlyDictionary<ActionAgent, HashSet<Type>> RequiredComponents
         {
             get
             {
-                if (_cachedRequiredComponentTypesByTarget == null)
-                    InitializeRequiredComponentTypes();
-                return _cachedRequiredComponentTypesByTarget;
+                if (_cachedRequiredComponentsByAgent == null)
+                    InitializeRequiredComponents();
+                return _cachedRequiredComponentsByAgent;
             }
+        }
+        public bool CheckComponentRequirements(Actionable user)
+        {
+            foreach (var requiredComponentType in RequiredComponents[ActionAgent.User])
+                if (!user.Has(requiredComponentType))
+                    return false;
+            return true;
+        }
+        public bool CheckComponentRequirements(Targetable target)
+        {
+            foreach (var requiredComponentType in RequiredComponents[ActionAgent.Target])
+                if (!target.Has(requiredComponentType))
+                    return false;
+            return true;
+        }
+        public bool CheckExtraRequirements(Actionable user, Targetable target)
+        {
+            return true;
         }
 
         // Privates
-        private Dictionary<ActionTarget, HashSet<Type>> _cachedRequiredComponentTypesByTarget;
-        private void InitializeRequiredComponentTypes()
+        private Dictionary<ActionAgent, HashSet<Type>> _cachedRequiredComponentsByAgent;
+        private void InitializeRequiredComponents()
         {
-            _cachedRequiredComponentTypesByTarget = new();
-            foreach (var target in Utility.GetEnumValues<ActionTarget>())
-                _cachedRequiredComponentTypesByTarget[target] = new();
+            _cachedRequiredComponentsByAgent = new();
+            foreach (var target in Utility.GetEnumValues<ActionAgent>())
+                _cachedRequiredComponentsByAgent[target] = new();
 
             foreach (var effectData in Effects)
-                foreach (var componentType in effectData.Effect.RequiredComponentTypes)
-                    _cachedRequiredComponentTypesByTarget[effectData.Target].Add(componentType);
+            {
+                foreach (var requiredComponent in effectData.Effect.SubjectRequiredComponents)
+                    _cachedRequiredComponentsByAgent[effectData.Subject].Add(requiredComponent);
+                foreach (var requiredComponent in effectData.Effect.ObjectRequiredComponents)
+                    _cachedRequiredComponentsByAgent[effectData.Object].Add(requiredComponent);
+            }
         }
     }
 }
