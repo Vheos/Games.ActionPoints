@@ -1,52 +1,57 @@
 namespace Vheos.Games.ActionPoints
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using UnityEngine;
     using Games.Core;
+    using Tools.Extensions.General;
+    using Tools.Extensions.Collections;
 
+    [RequireComponent(typeof(Actionable))]
     [RequireComponent(typeof(Targeter))]
     public class ActionTargeter : ABaseComponent
     {
         // Events
-        public readonly AutoEvent<ActionTargetable, ActionTargetable, Action> OnChangeTargetable = new();
+        public readonly AutoEvent<Targetable, Targetable, Action> OnChangeTargetable = new();
 
         // Publics
-        public ActionTargetable Targetable
+        public void TryStartHighlightingValidTargets(Action action)
         {
-            get => _targetable;
-            set
-            {
-                if (value == _targetable
-                || value != null && !value.CanGetTargetedBy(this))
-                    return;
-
-                var previousTargetable = _targetable;
-                if (previousTargetable != null
-                && previousTargetable.CanGetUntargetedBy(this))
-                    previousTargetable.GetUntargetedBy(this);
-
-                _targetable = value;
-                if (_targetable != null)
-                    _targetable.GetTargetedBy(this, _action);
-
-                OnChangeTargetable.Invoke(previousTargetable, _targetable, _action);
-            }
+            foreach (var target in TargetableManager.GetValidTargets(Get<Actionable>(), action))
+                if (target.TryGet(out Highlightable highlightable))
+                {
+                    highlightable.GainHighlight();
+                    _highlightedTargets.Add(target);
+                }
         }
-        public bool HasRequiredComponentsToTargetWith(Action action)
+        public void TryStopHighlightingValidTargets()
         {
-            foreach (var requiredComponentType in action.RequiredComponentTypes[ActionTarget.User])
-                if (!Has(requiredComponentType))
-                    return false;
-            return true;
+            foreach (var target in _highlightedTargets)
+                target.Get<Highlightable>().LoseHighlight();
+            _highlightedTargets.Clear();
+        }
+        public void UseAction(Action action, Transform targetingLineAnchor)
+        {
+            switch (action.Execution)
+            {
+                case ActionExecution.Instant:
+                case ActionExecution.Targeted when _highlightedTargets.Count == 1:
+                    action.Use(Get<Actionable>(), _highlightedTargets.First());
+                    break;
+                case ActionExecution.Targeted:
+                    TryStartTargeting(action, Get<PlayerOwnable>().Owner.TargetingLine, targetingLineAnchor);
+                    break;
+            }
         }
         public bool TryStartTargeting(Action action)
         {
-            if (!HasRequiredComponentsToTargetWith(action))
+            TryFinishTargeting();
+            if (!action.CheckComponentRequirements(Get<Actionable>()))
                 return false;
 
             _action = action;
-            Get<Targeter>().OnChangeTargetable.Sub(Targeter_OnChangeTargetable);
-
+            Get<Targeter>().AddTargetingTest(CanTarget);
             return true;
         }
         public bool TryStartTargeting(Action action, UITargetingLine targetingLine, Transform from)
@@ -57,7 +62,7 @@ namespace Vheos.Games.ActionPoints
             _targetingLine = targetingLine;
             _targetingLine.Show(Get<Targeter>(), from);
             _targetingLine.Player.Get<Selecter>().Disable();
-            _targetingLine.Player.OnInputReleaseConfirm.SubOnce(TryFinishTargeting);
+            _targetingLine.Player.OnInputReleaseConfirm.Sub(TryFinishTargeting);
             return true;
         }
         public void TryFinishTargeting()
@@ -65,29 +70,26 @@ namespace Vheos.Games.ActionPoints
             if (_action == null)
                 return;
 
-            if (_targetable != null)
-                _action.Use(this, _targetable);
+            if (Get<Targeter>().Targetable.TryNonNull(out var targetable))
+                _action.Use(Get<Actionable>(), targetable);
 
             if (_targetingLine != null)
             {
+                _targetingLine.Player.OnInputReleaseConfirm.Unsub(TryFinishTargeting);
                 _targetingLine.Player.Get<Selecter>().Enable();
                 _targetingLine.Hide();
-                _targetingLine = null;               
+                _targetingLine = null;
             }
 
-            Get<Targeter>().OnChangeTargetable.Unsub(Targeter_OnChangeTargetable);
             _action = null;
+            Get<Targeter>().RemoveTargetingTest(CanTarget);
         }
 
         // Privates
         private Action _action;
-        private ActionTargetable _targetable;
         private UITargetingLine _targetingLine;
+        private readonly HashSet<Targetable> _highlightedTargets = new();
         private bool CanTarget(Targetable targetable)
-        => targetable != null
-        && targetable.TryGet(out ActionTargetable actionTargetable)
-        && actionTargetable.HasRequiredComponentsToGetTargetedWith(_action);
-        private void Targeter_OnChangeTargetable(Targetable from, Targetable to)
-        => Targetable = CanTarget(to) ? to.Get<ActionTargetable>() : null;
+        => _action.CheckComponentRequirements(targetable);
     }
 }
