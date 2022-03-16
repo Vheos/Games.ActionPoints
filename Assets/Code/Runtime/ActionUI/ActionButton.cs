@@ -46,7 +46,7 @@ namespace Vheos.Games.ActionPoints
         }
         private void Selectable_OnGainSelection(Selecter selecter, bool isFirst)
         {
-            if (!_isUsable || !isFirst )
+            if (!_isUsable || !isFirst)
                 return;
 
             ActionTargeter.TryStartHighlightingValidTargets(Action);
@@ -135,11 +135,12 @@ namespace Vheos.Games.ActionPoints
             _group.UI.Actionable.OnChangeExhausted.SubEnableDisable(this, isExhausted => UpdateUsability());
             _isUsable = true;
             UpdateUsability(true);
-            
+
             Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainSelection);
             Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseSelection);
             Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);
 
+            Get<Selectable>().AddSelectionTest(selecter => _group.UI.Actionable.HasPlayerOwner(selecter.Get<Player>()));
             if (_group.UI.Actionable.TryGet(out PlayerOwnable playerOwnable))
                 playerOwnable.OnChangeOwner.SubDestroy(this, PlayerOwnable_OnChangePlayer);
         }
