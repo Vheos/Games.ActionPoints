@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
     using Tools.Extensions.General;
     using Vheos.Tools.Extensions.Collections;
+    using System.Linq;
 
     [RequireComponent(typeof(Raycastable))]
     [RequireComponent(typeof(Selectable))]
@@ -63,7 +64,7 @@ namespace Vheos.Games.ActionPoints
             if (!_isUsable || !isFullClick)
                 return;
 
-            _group.UI.Actionable.Get<ActionTargeter>().UseAction(Action, transform);
+            _group.UI.Actionable.Get<ActionTargeter>().ConfirmActionButton(this);
         }
         private void PlayerOwnable_OnChangePlayer(Player from, Player to)
         {
@@ -81,8 +82,7 @@ namespace Vheos.Games.ActionPoints
         private void UpdateUsability(bool instantly = false)
         {
             bool previousIsUsable = _isUsable;
-            _isUsable = _group.UI.Actionable.CanAfford(Action)
-                     && TargetableManager.GetValidTargets(_group.UI.Actionable, Action).IsNotEmpty();
+            _isUsable = Action.IsUsableBy(_group.UI.Actionable);
             if (_isUsable == previousIsUsable)
                 return;
 
