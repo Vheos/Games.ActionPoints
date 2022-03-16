@@ -136,10 +136,6 @@ namespace Vheos.Games.ActionPoints
         => MaxActionPoints - LockedMaxActionPoints;
         public bool IsExhausted
          => _actionProgress < 0;
-        public bool CanAfford(Action action)
-        => !IsExhausted
-        && UsableActionPoints >= action.ActionPointsCost
-        && FocusPoints >= action.FocusPointsCost;
 
         // Privates
         private readonly HashSet<Action> _actions = new();
