@@ -4,13 +4,10 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Games.Core;
     using Tools.Extensions.Math;
+    using Vheos.Tools.Extensions.UnityObjects;
 
     public class Character : ABaseComponent
     {
-        // Inspector
-        [field: SerializeField, Range(-5f, +5f)] public float ActionProgress { get; private set; }
-        [field: SerializeField, Range(-5f, +5f)] public float FocusProgress { get; private set; }
-
         // Privates
         private ActionUI _actionUI;
         private void Selectable_OnGainHighlight(Selecter selecter, bool isFirst)
@@ -19,21 +16,16 @@ namespace Vheos.Games.ActionPoints
         private void Selectable_OnLoseHighlight(Selecter selecter, bool isLast)
         {
         }
-        private void TrySetOwner(Selecter selecter)
-        {
-
-        }
         private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
         {
-            if (isFullClick)
-            {
-                if (this.TrySetPlayerOwnerIfNull(selecter.Get<Player>()))
-                    return;
-
-                ActionPhase phase = this.IsInCombat() ? ActionPhase.Combat : ActionPhase.Camp;
-                _actionUI.ButtonWheels[phase].Get<Expandable>().Toggle();
-                //_actionUI.PointsBar.Get<Expandable>().Toggle();
-            }
+            if (isFullClick && TryGet(out PlayerOwnable playerOwnable))
+                if (playerOwnable.Owner == null)
+                    playerOwnable.Owner = selecter.Get<Player>();
+                else
+                {
+                    ActionPhase phase = this.IsInCombat() ? ActionPhase.Combat : ActionPhase.Camp;
+                    _actionUI.Buttons[phase].Get<Expandable>().Toggle();
+                }
         }
         private void Highlightable_OnGainHighlight(bool isFirst)
         {
@@ -67,13 +59,29 @@ namespace Vheos.Games.ActionPoints
         private void Combatable_OnChangeCombat(Combat from, Combat to)
         {
             if (to == null)
-                _actionUI.CollapseButtonWheels();
+                _actionUI.CollapseButtons();
             else
-                _actionUI.ExpandButtonWheel(ActionPhase.Combat);
+            {
+                _actionUI.ExpandButtons(ActionPhase.Combat);
+                foreach (var ally in Get<Teamable>().Allies)
+                    if (ally.TryGet(out Combatable allyCombatable))
+                        allyCombatable.Combat = to;
+            }
         }
         private void PlayerOwnable_OnChangePlayer(Player from, Player to)
         {
             Get<SpriteRenderer>().color = to.Color;
+        }
+        private void Woundable_OnDie()
+        {
+            _actionUI.CollapseAll();
+            Get<SpriteOutline>().Hide();
+
+            var _mprops = Get<SpriteShadowMProps>();
+            this.NewTween()
+              .SetDuration(1f)
+              .AddPropertyModifier(v => _mprops.OpacityDitheringRatio += v, 0f - _mprops.OpacityDitheringRatio)
+              .AddEventsOnFinish(this.StopTweens, this.DestroyObject);
         }
 
         // Play
@@ -102,14 +110,12 @@ namespace Vheos.Games.ActionPoints
             Get<Combatable>().OnChangeCombat.SubEnableDisable(this, Combatable_OnChangeCombat);
 
             if (TryGet(out PlayerOwnable playerOwnable))
-            {
-                Get<Selectable>().OnPress.SubEnableDisable(this, TrySetOwner);
                 playerOwnable.OnChangeOwner.SubEnableDisable(this, PlayerOwnable_OnChangePlayer);
-            }
 
-            // Get<ActionTargeter>().OnChangeTargetable.SubEnableDisable(this, ActionTargeter_OnChangeTargetable);
-            // Get<ActionTargetable>().OnGainTargeting.SubEnableDisable(this, ActionTargetable_OnGainTargeting);
-            // Get<ActionTargetable>().OnLoseTargeting.SubEnableDisable(this, ActionTargetable_OnLoseTargeting);
+
+            Get<Woundable>().OnDie.SubDestroy(this, Woundable_OnDie);
+
+            Get<SpriteShadowMProps>().Initialize();
         }
     }
 }
