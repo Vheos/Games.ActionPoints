@@ -69,9 +69,8 @@ namespace Vheos.Games.ActionPoints
             }
         }
         private void PlayerOwnable_OnChangePlayer(Player from, Player to)
-        {
-            Get<SpriteRenderer>().color = to.Color;
-        }
+        => Get<SpriteRenderer>().color = to.Color;
+
         private void Woundable_OnDie()
         {
             _actionUI.CollapseAll();

@@ -14,10 +14,10 @@ namespace Vheos.Games.ActionPoints.ActionScripts
         override public int RequiredValuesCount
         => 3;
 
-        override public void Invoke(ABaseComponent user, ABaseComponent target, float[] values, ActionStats stats)
+        override public void Invoke(ABaseComponent @subject, ABaseComponent @object, float[] values, ActionStats stats)
         {
             // Cache           
-            var targetWoundable = target.Get<Woundable>();
+            var targetWoundable = @object.Get<Woundable>();
             int targetPreviousWounds = targetWoundable.Wounds;
             float blunt = values[0];
             float sharp = values[1];

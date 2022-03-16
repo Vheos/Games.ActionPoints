@@ -10,7 +10,7 @@ namespace Vheos.Games.ActionPoints
     public class TargetableManager : AStaticManager<TargetableManager, Targetable>
     {
         static public IEnumerable<Targetable> GetValidTargets(Actionable user, Action action)
-        {            
+        {
             foreach (var targetable in ActiveComponents)
                 if (action.CheckTargetComponents(targetable)
                 && action.CheckConditions(user, targetable))

@@ -16,10 +16,10 @@ namespace Vheos.Games.ActionPoints.ActionScripts
         override public int RequiredValuesCount
         => 0;
 
-        override public void Invoke(ABaseComponent user, ABaseComponent target, float[] values, ActionStats stats)
+        override public void Invoke(ABaseComponent @subject, ABaseComponent @object, float[] values, ActionStats stats)
         {
             // Execute
-            user.Get<Combatable>().TryStartCombatWith(target.Get<Combatable>());
+            @subject.Get<Combatable>().TryStartCombatWith(@object.Get<Combatable>());
         }
     }
 }
