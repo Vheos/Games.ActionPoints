@@ -71,6 +71,21 @@ namespace Vheos.Games.ActionPoints
                 .RGBRatio(ColorComponent.Image, this.Settings().PressColorScale.Inv())
                 .FinishIf(instantly);
         }
+        public void MoveTo(ViewSpace viewSpace, Vector3 position, float duration)
+        {
+            Vector2 canvasPosition = viewSpace switch
+            {
+                ViewSpace.World => _uiCanvas.WorldToCanvasPosition(position),
+                ViewSpace.Canvas => position,
+                ViewSpace.Screen => _uiCanvas.ScreenToCanvasPosition(position),
+                _ => default,
+            };
+
+            this.NewTween(ConflictResolution.Interrupt)
+              .SetDuration(duration)
+              .Position(canvasPosition)
+              .FinishIf(duration <= 0f);
+        }
 
         // Play
         public void Initialize(UICanvas uiCanvas)
