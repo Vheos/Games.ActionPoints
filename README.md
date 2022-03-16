@@ -5,8 +5,8 @@ On the surface, it's just another of my countless Unity projects. But in reality
 ### Inspirations
 - [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon) - core gameplay loop
 - [For The King]() - focus points
-- [Neuroshima (tabletop RPG)] - chance-based wound system
-- [Res Arcana (boadr game)] - minimalistic action cards design
+- [Neuroshima (tabletop RPG)](https://en.wikipedia.org/wiki/Neuroshima) - chance-based wound system
+- [Res Arcana (board game)](https://boardgamegeek.com/boardgame/262712/res-arcana) - minimalistic action cards design
 ### Gameplay loop
 - the main inspiration for the core gameplay loop is [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon), in which you first explore a dungeon and fight enemies, then manage your party in a city to prepare for another expedition. While exploring, it's also possible to camp, which allows your party members to use camping-only abilities. 
 - in *ActionPoints*, the city and camping phases will be combined into one, so the gameplay loop will become *Explore -> Camp*, with *Combat* occuring mostly during exploration, but also possibly when resting at an unguarded camp.
