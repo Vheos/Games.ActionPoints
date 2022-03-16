@@ -121,9 +121,15 @@ namespace Vheos.Games.ActionPoints
             }
         }
         public int ActionPoints
-        => _actionProgress.RoundTowardsZero();
+        {
+            get => _actionProgress.RoundTowardsZero();
+            set => ActionProgress = value;
+        }
         public int FocusPoints
-        => _focusProgress.RoundTowardsZero();
+        {
+            get => _focusProgress.RoundTowardsZero();
+            set => FocusProgress = value;
+        }
         public int UsableActionPoints
         => _actionProgress.Add(UsableMaxActionPoints).RoundTowardsZero();
         public int UsableMaxActionPoints
