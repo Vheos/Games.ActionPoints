@@ -1,28 +1,14 @@
-# Table of contents
-- [About](https://github.com/Vheos/Games.ActionPoints#About)
-- [Game design](https://github.com/Vheos/Games.ActionPoints#Hame-design)
-  - [Gameplay loop](https://github.com/Vheos/Games.ActionPoints#Gameplay-loop)
-  - [Action system](https://github.com/Vheos/Games.ActionPoints#Action-system)
-  - [Action phases](https://github.com/Vheos/Games.ActionPoints#Action-phases)
-  - [Action resources](https://github.com/Vheos/Games.ActionPoints#Action-resources)
-  - [Single resource bar](https://github.com/Vheos/Games.ActionPoints#Single-resource-bar)
-  - [Combat system](https://github.com/Vheos/Games.ActionPoints#Combat-system)
-  - [Damage types](https://github.com/Vheos/Games.ActionPoints#Damage-types)
-  - [Chance rolls](https://github.com/Vheos/Games.ActionPoints#Chance-rolls)
-  - [Simple math](https://github.com/Vheos/Games.ActionPoints#Simple-math)
-- [Code design](https://github.com/Vheos/Games.ActionPoints#Code-design)
-  - [Composition over inheritance](https://github.com/Vheos/Games.ActionPoints#Composition-over-inheritance)
-  - [Event-driven communication](https://github.com/Vheos/Games.ActionPoints#Event-driven-communication)
-  - [Subject-observer pattern](https://github.com/Vheos/Games.ActionPoints#Subject-observer-pattern)
-  - [No asset store](https://github.com/Vheos/Games.ActionPoints#No-asset-store)
-- [Progress](https://github.com/Vheos/Games.ActionPoints#Progress)
-
 # About
 On the surface, it's just another of my countless Unity projects. But in reality it's **THE CHOSEN ONE** - chosen to get publicly released instead of privately shelved ;) So yeah, that's basically it - `ActionPoints` is my first attempt at actual finished product. Wish me luck!
 
 # Game design
+### Inspirations
+- [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon) - core gameplay loop
+- [For The King]() - focus points
+- [Neuroshima (tabletop RPG)] - chance-based wound system
+- [Res Arcana (boadr game)] - minimalistic action cards design
 ### Gameplay loop
-- the main inspiration for the core gameplay loop is [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon), in which you first explore a dungeon and fight enemies, then manage your party in a city to prepare for another expedition. While exploring, it's also possible to camp, which allows your party members to use camping-only skills. 
+- the main inspiration for the core gameplay loop is [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon), in which you first explore a dungeon and fight enemies, then manage your party in a city to prepare for another expedition. While exploring, it's also possible to camp, which allows your party members to use camping-only abilities. 
 - in *ActionPoints*, the city and camping phases will be combined into one, so the gameplay loop will become *Explore -> Camp*, with *Combat* occuring mostly during exploration, but also possibly when resting at an unguarded camp.
 ### Action system
 - characters will interact with the world by using their *Actions*. Each action will be usable only during certain game phase - for example, a character might be able to use *Disarm trap* while exploring and *Patrol* while camping, but won't have any special combat actions.
@@ -45,7 +31,7 @@ On the surface, it's just another of my countless Unity projects. But in reality
 
 ### Combat system
 - WIP
-- Actions may be used even if the character doesn't have enough action points, but doing so will put the character in an *exhausted* state, unable to perform anything else until all exhaust points are recharged.
+- actions may be used even if the character doesn't have enough action points, but doing so will put the character in an *exhausted* state, unable to perform anything else until all exhaust points are recharged.
 - when a character uses up more action points then they have, they will receive *Exhaust points* - essentialy negative action points that prevent the character from using any more actions until recharged.
 - *(image of action points bar with all types of resource points)*
 <br/>from left to right:
@@ -66,14 +52,23 @@ On the surface, it's just another of my countless Unity projects. But in reality
 ### Simple math
 - most of the game math will use whole numbers, usualy below 100 (for percentage chances) and even below 10 (for action costs).
 - there will be very little inflation throughout the game - end-game characters shouldn't be more than twice as powerful as a starting characters.
+### Luck
+- there will be an attribute called *Luck* that will secretly cause rerolls. I haven't decided yet whether this attribute will be per-character, or party wide.
+- if luck is positive, every failed positive roll (such as healing) and every successful negative roll (such as taking damage) against/by the character/party will be rolled again, with chance equal to the luck's value. This essentially increases chances of positive rolls being successful, and negative rolls being failed.
+- analogcially, if luck is negative, every successful positive roll and failed negative roll will be rerolled with chance equal to the luck's absolute value.
+- there will be visual feedback when a roll has been successful or failed because of the luck reroll.
 
 # Code design
 ### Composition over inheritance
-- This time around, I'm actively trying **NOT** to get tangled up in inheritance spaghetti. Yep, I'm finally yielding to the Unity-suggested pseudo-ECS pattern by creating a lot of small, specialized components instead of huge, god-like ones.
+- this time around, I'm actively trying **NOT** to get tangled up in inheritance spaghetti. Yep, I'm finally yielding to the Unity-suggested pseudo-ECS pattern by creating a lot of small, specialized components instead of huge, god-like ones.
 ### Event-driven communication
-- Instead of one component calling methods of another to change its state, it will merely invoke some event - whether any other component decides to react to it, that's none of its concern. This way the event handler (at the very least) won't be coupled with its listeners.
+- instead of one component calling methods of another to change its state, it will merely invoke some event - whether any other component decides to react to it, that's none of its concern. This way the event handler (at the very least) won't be coupled with its listeners.
 ### Subject-observer pattern
-- Managed components (observers) merely observe their manager (subject) - which, in best case scenario, doesn't even have to know about their existence. For example, the `SkillBar` component instantiates and initalizes `SkillButton`s, which subscribe to the `SkillBar`'s events. After the initialization, the `SkillBar` doesn't really have to remember what components are observing it (although it might want to).
+- managed components (observers) merely observe their manager (subject) - which, in best case scenario, doesn't even have to know about their existence. For example, the `ActionBar` component instantiates and initalizes `ActionButton`s, which subscribe to the `ActionBar`'s events. After the initialization, the `ActionBar` doesn't really have to remember what components are observing it (although it might want to).
+### Disabled domain reloading
+- WIP
+### New input system package
+- WIP
 ### No asset store
 - Mostly to learn the far limits of Unity, but also to develop my own tools along the way, which I'll move to my [game-dev core package](https://github.com/Vheos/Games.Core) over time.
 
