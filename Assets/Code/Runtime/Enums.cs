@@ -25,15 +25,17 @@ namespace Vheos.Games.ActionPoints
         Combat,
         Camp,
     }
-    public enum ActionExecution
-    {
-        Instant,
-        Targeted,
-    }
 
     public enum ActionAgent
     {
         User,
         Target,
+    }
+
+    public enum ViewSpace
+    {
+        World,
+        Canvas,
+        Screen,
     }
 }
