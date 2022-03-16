@@ -6,6 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.Math;
 
     [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(SpriteShadowMProps))]
     public class CommonShadowSprite : ABaseComponent
     {
         // Play

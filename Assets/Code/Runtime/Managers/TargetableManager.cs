@@ -12,8 +12,8 @@ namespace Vheos.Games.ActionPoints
         static public IEnumerable<Targetable> GetValidTargets(Actionable user, Action action)
         {            
             foreach (var targetable in ActiveComponents)
-                if (action.CheckComponentRequirements(targetable)
-                && action.CheckExtraRequirements(user, targetable))
+                if (action.CheckTargetComponents(targetable)
+                && action.CheckConditions(user, targetable))
                     yield return targetable;
         }
     }

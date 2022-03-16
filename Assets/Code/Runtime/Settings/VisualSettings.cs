@@ -4,12 +4,9 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Games.Core;
 
-    [CreateAssetMenu(fileName = nameof(VisualSettings), menuName = CONTEXT_MENU_PATH + nameof(VisualSettings))]
+    [CreateAssetMenu(fileName = nameof(VisualSettings), menuName = SettingsManager.ASSET_MENU_PATH + nameof(VisualSettings))]
     public class VisualSettings : ScriptableObject
     {
-        // Constants
-        protected const string CONTEXT_MENU_PATH = "Settings/";
-
         // Publics
         [field: SerializeField] public GeneralSettings General { get; private set; }
         #region struct

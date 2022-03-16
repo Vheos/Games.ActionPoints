@@ -7,11 +7,11 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Utilities;
 
-    [CreateAssetMenu(fileName = nameof(Action), menuName = CONTEXT_MENU_PATH + nameof(Action))]
+    [CreateAssetMenu(fileName = nameof(Action), menuName = ASSET_MENU_PATH + nameof(Action))]
     public class Action : ScriptableObject
     {
         // Constants
-        protected const string CONTEXT_MENU_PATH = "";
+        public const string ASSET_MENU_PATH = "";
 
         // Inspector
         [field: SerializeField,] public ActionButtonVisuals ButtonVisuals { get; private set; }
@@ -40,22 +40,32 @@ namespace Vheos.Games.ActionPoints
                 return _cachedRequiredComponentsByAgent;
             }
         }
-        public bool CheckComponentRequirements(Actionable user)
+        public bool CheckUserComponents(Actionable user)
         {
             foreach (var requiredComponentType in RequiredComponents[ActionAgent.User])
                 if (!user.Has(requiredComponentType))
                     return false;
             return true;
         }
-        public bool CheckComponentRequirements(Targetable target)
+        public bool CheckTargetComponents(Targetable target)
         {
             foreach (var requiredComponentType in RequiredComponents[ActionAgent.Target])
                 if (!target.Has(requiredComponentType))
                     return false;
             return true;
         }
-        public bool CheckExtraRequirements(Actionable user, Targetable target)
+        public bool CheckConditions(Actionable user, Targetable target)
         {
+            // Eat
+            // - IsSelf
+            // - HasAnyWound
+
+            // Attack, StartCombat
+            // - IsEnemy
+
+            // LeaveCombat
+            // - IsSelf
+
             return true;
         }
 

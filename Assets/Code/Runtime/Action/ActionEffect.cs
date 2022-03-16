@@ -8,7 +8,7 @@ namespace Vheos.Games.ActionPoints
     abstract public class ActionEffect : ScriptableObject
     {
         // Constants
-        protected const string CONTEXT_MENU_PATH = "ActionEffects/";
+        public const string ASSET_MENU_PATH = "ActionEffects/";
 
         // Publics
         abstract public void Invoke(ABaseComponent @subject, ABaseComponent @object, float[] values, ActionStats actionStats);

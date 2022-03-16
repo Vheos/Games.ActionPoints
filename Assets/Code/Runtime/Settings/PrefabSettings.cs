@@ -4,12 +4,9 @@ namespace Vheos.Games.ActionPoints
     using UnityEngine;
     using Games.Core;
 
-    [CreateAssetMenu(fileName = nameof(PrefabSettings), menuName = CONTEXT_MENU_PATH + nameof(PrefabSettings))]
+    [CreateAssetMenu(fileName = nameof(PrefabSettings), menuName = SettingsManager.ASSET_MENU_PATH + nameof(PrefabSettings))]
     public class PrefabSettings : ScriptableObject
     {
-        // Constants
-        protected const string CONTEXT_MENU_PATH = "Settings/";
-
         // Inspector
         public ActionUI ActionUI;
         public ActionPointsBar ActionPointsBar;

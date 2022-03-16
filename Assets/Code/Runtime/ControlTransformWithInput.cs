@@ -25,7 +25,7 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             // Rotation
-            Vector3 anglesOffset = _rotate.ReadValue<Vector2>().YX() * RotationSpeed * 10;
+            Vector3 anglesOffset =  RotationSpeed * 10 * _rotate.ReadValue<Vector2>().YX();
             Quaternion targetRotation = transform.rotation;
             targetRotation.eulerAngles += anglesOffset * Time.deltaTime;
             transform.rotation = targetRotation;

@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
     using UnityEngine;
     using Games.Core;
 
-    [CreateAssetMenu(fileName = nameof(StartCombat), menuName = CONTEXT_MENU_PATH + nameof(StartCombat))]
+    [CreateAssetMenu(fileName = nameof(StartCombat), menuName = ASSET_MENU_PATH + nameof(StartCombat))]
     public class StartCombat : ActionEffect
     {
         // Overrides

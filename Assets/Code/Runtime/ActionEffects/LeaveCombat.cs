@@ -5,7 +5,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
     using UnityEngine;
     using Games.Core;
 
-    [CreateAssetMenu(fileName = nameof(LeaveCombat), menuName = CONTEXT_MENU_PATH + nameof(LeaveCombat))]
+    [CreateAssetMenu(fileName = nameof(LeaveCombat), menuName = ASSET_MENU_PATH + nameof(LeaveCombat))]
     public class LeaveCombat : ActionEffect
     {
         // Overrides
@@ -17,7 +17,7 @@ namespace Vheos.Games.ActionPoints.ActionScripts
         override public void Invoke(ABaseComponent user, ABaseComponent target, float[] values, ActionStats stats)
         {
             // Execute
-            user.Get<Combatable>().TryLeaveCombat();
+            user.Get<Combatable>().Combat = null;
         }
     }
 }

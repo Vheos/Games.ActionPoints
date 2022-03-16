@@ -47,7 +47,7 @@ namespace Vheos.Games.ActionPoints
         public bool TryStartTargeting(Action action)
         {
             TryFinishTargeting();
-            if (!action.CheckComponentRequirements(Get<Actionable>()))
+            if (!action.CheckUserComponents(Get<Actionable>()))
                 return false;
 
             _action = action;
@@ -90,6 +90,6 @@ namespace Vheos.Games.ActionPoints
         private UITargetingLine _targetingLine;
         private readonly HashSet<Targetable> _highlightedTargets = new();
         private bool CanTarget(Targetable targetable)
-        => _action.CheckComponentRequirements(targetable);
+        => _action.CheckTargetComponents(targetable);
     }
 }
