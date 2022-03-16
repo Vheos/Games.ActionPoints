@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6e5868c3e98464eae2df68568acb59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <GameplaySettings>k__BackingField: {fileID: 11400000, guid: 2386e7eaf0ae78f44b15f370272f426f, type: 2}
   <VisualSettings>k__BackingField: {fileID: 11400000, guid: d143340ade8f1b944aae39fe7bb0196a, type: 2}
   <PrefabSettings>k__BackingField: {fileID: 11400000, guid: 51406f5aa4703ec409b8a52ac424f845, type: 2}
 --- !u!114 &3909449117901916575
