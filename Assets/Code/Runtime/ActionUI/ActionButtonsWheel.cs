@@ -51,8 +51,9 @@ namespace Vheos.Games.ActionPoints
             foreach (var action in addedActions)
             {
                 var newButton = Instantiate(SettingsManager.Prefabs.ActionButton);
-                newButton.BecomeChildOf(this);
+                // Initialize() has to be called before reparenting because TextMeshPro needs to be active in hierarchy
                 newButton.Initialize(this, action);
+                newButton.BecomeChildOf(this);
                 newButton.AnimateCreate(!isActiveAndEnabled);
                 _newElements.Add(newButton);
             }
