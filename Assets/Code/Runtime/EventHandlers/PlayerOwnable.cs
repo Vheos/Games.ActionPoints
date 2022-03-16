@@ -31,13 +31,28 @@ namespace Vheos.Games.ActionPoints
 
     static public class PlayerOwnable_Extensions
     {
-        static public bool HasPlayerOwner(this ABaseComponent t)
-        => t.TryGet(out PlayerOwnable playerOwnable)
-        && playerOwnable.Owner != null;
         static public Player PlayerOwner(this ABaseComponent t)
         => t.TryGet(out PlayerOwnable playerOwnable)
-        ? playerOwnable.Owner
-        : null;
+            ? playerOwnable.Owner
+            : null;
+        static public bool TryGetPlayerOwner(this ABaseComponent t, out Player owner)
+        {
+            if (t.TryGet(out PlayerOwnable playerOwnable)
+            && playerOwnable.Owner != null)
+            {
+                owner = playerOwnable.Owner;
+                return true;
+            }
+            owner = null;
+            return false;
+        }
+        static public bool HasAnyPlayerOwner(this ABaseComponent t)
+        => t.TryGet(out PlayerOwnable playerOwnable)
+            && playerOwnable.Owner != null;
+        static public bool HasPlayerOwner(this ABaseComponent t, Player a)
+        => t.PlayerOwner() == a;
+        static public bool HasSamePlayerOwnerAs(this ABaseComponent t, ABaseComponent a)
+        => t.PlayerOwner() == a.PlayerOwner();
         static public bool TrySetPlayerOwnerIfNull(this ABaseComponent t, Player a)
         {
             if (t.TryGet(out PlayerOwnable playerOwnable)
@@ -48,11 +63,15 @@ namespace Vheos.Games.ActionPoints
             }
             return false;
         }
-        static public void TryRemovePlayerOwner(this ABaseComponent t)
+        static public bool TryRemovePlayerOwner(this ABaseComponent t)
         {
             if (t.TryGet(out PlayerOwnable playerOwnable)
             && playerOwnable.Owner != null)
+            {
                 playerOwnable.Owner = null;
+                return true;
+            }
+            return false;
         }
     }
 }
