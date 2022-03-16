@@ -16,12 +16,17 @@ namespace Vheos.Games.ActionPoints
         // Inspector
         [field: SerializeField,] public ActionButtonVisuals ButtonVisuals { get; private set; }
         [field: SerializeField] public ActionPhase Phase { get; private set; }
-        [field: SerializeField] public ActionExecution Execution { get; private set; }
         [field: SerializeField, Range(0, 5)] public int ActionPointsCost { get; private set; }
         [field: SerializeField, Range(0, 5)] public int FocusPointsCost { get; private set; }
+        [field: SerializeField] public ActionConditionData[] Conditions { get; private set; }
         [field: SerializeField] public ActionEffectData[] Effects { get; private set; }
 
         // Publics (use)
+        public bool IsUsableBy(Actionable user)
+        => CheckPhase(user)
+        && CheckResources(user)
+        && CheckUserComponents(user)
+        && TargetableManager.GetValidTargets(user, this).Any();
         public void Use(Actionable user, Targetable target)
         {
             user.ActionProgress -= ActionPointsCost;
@@ -40,32 +45,36 @@ namespace Vheos.Games.ActionPoints
                 return _cachedRequiredComponentsByAgent;
             }
         }
+        public bool CheckPhase(Actionable user)
+        => Phase switch
+        {
+            ActionPhase.Combat => user.IsInCombat(),
+            ActionPhase.Camp => !user.IsInCombat(),
+            _ => false,
+        };
+        public bool CheckResources(Actionable user)
+        => !user.IsExhausted
+        && user.UsableActionPoints >= ActionPointsCost
+        && user.FocusPoints >= FocusPointsCost;
         public bool CheckUserComponents(Actionable user)
         {
-            foreach (var requiredComponentType in RequiredComponents[ActionAgent.User])
-                if (!user.Has(requiredComponentType))
+            foreach (var requiredComponent in RequiredComponents[ActionAgent.User])
+                if (!user.Has(requiredComponent))
                     return false;
             return true;
         }
         public bool CheckTargetComponents(Targetable target)
         {
-            foreach (var requiredComponentType in RequiredComponents[ActionAgent.Target])
-                if (!target.Has(requiredComponentType))
+            foreach (var requiredComponent in RequiredComponents[ActionAgent.Target])
+                if (!target.Has(requiredComponent))
                     return false;
             return true;
         }
         public bool CheckConditions(Actionable user, Targetable target)
         {
-            // Eat
-            // - IsSelf
-            // - HasAnyWound
-
-            // Attack, StartCombat
-            // - IsEnemy
-
-            // LeaveCombat
-            // - IsSelf
-
+            foreach (var condition in Conditions)
+                if (!condition.Check(user, target))
+                    return false;
             return true;
         }
 
