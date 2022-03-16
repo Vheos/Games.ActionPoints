@@ -16,7 +16,6 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public CCamera WorldCamera
         { get; private set; }
-        private CCamera _canvasCamera;
         public CCamera CanvasCamera
         {
             get => _canvasCamera;
@@ -50,12 +49,22 @@ namespace Vheos.Games.ActionPoints
             : WorldCamera.Unity.WorldToScreenPoint(t.transform.position);
         public Vector2 ScreenPosition(Component t)
         => ScreenPosition(t.gameObject);
+        public Vector2 WorldToScreenPosition(Vector3 t)
+        => WorldCamera.Unity.WorldToScreenPoint(t);
+        public Vector2 WorldToCanvasPosition(Vector3 t)
+        => WorldCamera.Unity.WorldToScreenPoint(t) / ScaleFactor;
+        public Vector2 CanvasToWorldPosition(Vector2 t, float z)
+        => WorldCamera.Unity.ScreenToWorldPoint(t.Mul(ScaleFactor).Append(z));
         public Vector2 CanvasToScreenPosition(Vector2 t)
         => t * ScaleFactor;
+        public Vector2 ScreenToWorldPosition(Vector2 t, float z)
+        => WorldCamera.Unity.ScreenToWorldPoint(t.Append(z));
         public Vector2 ScreenToCanvasPosition(Vector2 t)
         => t / ScaleFactor;
 
+
         // Privates
+        private CCamera _canvasCamera;
         private void UpdateCanvasCamera(Vector2 from, Vector2 to)
         {
             CanvasCamera.transform.position = to.Div(2f).Append(-PlaneDistance);
