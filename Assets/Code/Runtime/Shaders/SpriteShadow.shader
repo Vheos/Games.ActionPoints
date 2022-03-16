@@ -9,8 +9,8 @@ Shader "Custom/SpriteShadow"
         IncidenceMin("Incidence minimum", Range(0, 1)) = 0.5
         IncidenceSharpness("Incidence sharpness", Range(1, 10)) = 2
         ViewDirectionOffset("View direction offset", Range(-10, 10)) = 0
-        OpacityDitheringSize("Opacity dithering size", Range(1, 100)) = 50
-        OpacityDitheringRatio("Opacity dithering ratio", Range(0, 1)) = 0.5
+        [PerRendererData] OpacityDitheringSize("Opacity dithering size", Range(1, 100)) = 50
+        [PerRendererData] OpacityDitheringRatio("Opacity dithering ratio", Range(0, 1)) = 0.5
     }
 
     SubShader
@@ -65,7 +65,9 @@ Shader "Custom/SpriteShadow"
         }
         void SurfaceFunction (Input input, inout SurfaceOutput output)
         {
-            if((input.uv_MainTex.x + input.uv_MainTex.y) * OpacityDitheringSize % 1 > OpacityDitheringRatio)
+
+            if(OpacityDitheringRatio != 1
+            && (OpacityDitheringRatio == 0 || (input.uv_MainTex.x + input.uv_MainTex.y) * OpacityDitheringSize % 1 > OpacityDitheringRatio))
                 return;
 
             fixed4 color = tex2D (_MainTex, input.uv_MainTex) * input.color;
