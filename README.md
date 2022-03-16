@@ -3,9 +3,10 @@ On the surface, it's just another of my countless Unity projects. But in reality
 
 # Game design
 ### Inspirations
-- [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon) - core gameplay loop
-- [For The King]() - focus points
-- [Neuroshima (tabletop RPG)](https://en.wikipedia.org/wiki/Neuroshima) - chance-based wound system
+- [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon) - core gameplay loop and phases
+- [For the King](https://store.steampowered.com/app/527230/For_The_King/) - focus points and chance rolls
+- [Neuroshima (tabletop RPG)](https://en.wikipedia.org/wiki/Neuroshima) - wounds instead of HP
+- [Griftlands](https://store.steampowered.com/app/601840/Griftlands/) - combat system
 - [Res Arcana (board game)](https://boardgamegeek.com/boardgame/262712/res-arcana) - minimalistic action cards design
 ### Gameplay loop
 - the main inspiration for the core gameplay loop is [Darkest Dungeon](https://www.gog.com/game/darkest_dungeon), in which you first explore a dungeon and fight enemies, then manage your party in a city to prepare for another expedition. While exploring, it's also possible to camp, which allows your party members to use camping-only abilities. 
