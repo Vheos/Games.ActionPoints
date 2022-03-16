@@ -7,6 +7,7 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.General;
     using Tools.Extensions.Collections;
+    using Vheos.Tools.Extensions.UnityObjects;
 
     [RequireComponent(typeof(Actionable))]
     [RequireComponent(typeof(Targeter))]
@@ -31,18 +32,12 @@ namespace Vheos.Games.ActionPoints
                 target.Get<Highlightable>().LoseHighlight();
             _highlightedTargets.Clear();
         }
-        public void UseAction(Action action, Transform targetingLineAnchor)
+        public void ConfirmActionButton(ActionButton button)
         {
-            switch (action.Execution)
-            {
-                case ActionExecution.Instant:
-                case ActionExecution.Targeted when _highlightedTargets.Count == 1:
-                    action.Use(Get<Actionable>(), _highlightedTargets.First());
-                    break;
-                case ActionExecution.Targeted:
-                    TryStartTargeting(action, Get<PlayerOwnable>().Owner.TargetingLine, targetingLineAnchor);
-                    break;
-            }
+            if (_highlightedTargets.Count == 1)
+                button.Action.Use(Get<Actionable>(), _highlightedTargets.First());
+            else
+                TryStartTargeting(button.Action, Get<PlayerOwnable>().Owner.TargetingLine, button.transform);
         }
         public bool TryStartTargeting(Action action)
         {
@@ -89,7 +84,11 @@ namespace Vheos.Games.ActionPoints
         private Action _action;
         private UITargetingLine _targetingLine;
         private readonly HashSet<Targetable> _highlightedTargets = new();
-        private bool CanTarget(Targetable targetable)
-        => _action.CheckTargetComponents(targetable);
+        private bool CanTarget(Targetable target)
+        => target.IsContainedIn(_highlightedTargets);
     }
 }
+
+// Move mouse to valid targets midpoint
+//Vector2 screenMidpoint = _highlightedTargets.Midpoint(t => UICanvasManager.Any.WorldToScreenPosition(t.transform.position));
+//Get<PlayerOwnable>().Owner.Cursor.MoveTo(ViewSpace.Screen, screenMidpoint, 0.4f);
