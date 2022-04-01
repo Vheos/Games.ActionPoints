@@ -17,9 +17,12 @@ MonoBehaviour:
     Text: 
     Color: {r: 1, g: 1, b: 1, a: 1}
   <Phase>k__BackingField: 1
-  <Execution>k__BackingField: 1
   <ActionPointsCost>k__BackingField: 1
   <FocusPointsCost>k__BackingField: 0
+  <Conditions>k__BackingField:
+  - Condition: {fileID: 11400000, guid: 8ef9184e42b67944a94c6745fb529f11, type: 2}
+    Invert: 0
+    Values: []
   <Effects>k__BackingField:
   - Effect: {fileID: 11400000, guid: 84ffe07a6333c594a9a05437bf9700d4, type: 2}
     Subject: 0
