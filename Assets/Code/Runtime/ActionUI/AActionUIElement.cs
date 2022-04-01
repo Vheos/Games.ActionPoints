@@ -6,7 +6,7 @@ namespace Vheos.Games.ActionPoints
     using Tools.Extensions.UnityObjects;
 
     [DisallowMultipleComponent]
-    abstract public class AActionUIElement<T> : ABaseComponent
+    abstract public class AActionUIElement<TElementGroup> : ABaseComponent
     {
         // Publics
         public void SetIndex(int index)
@@ -36,12 +36,12 @@ namespace Vheos.Games.ActionPoints
             .FinishIf(instantly);
 
         // Privates
-        protected T _group;
+        protected TElementGroup _group;
         protected int _index;
         protected Vector3 _originalScale;
 
         // Play
-        virtual public void Initialize(T group)
+        virtual public void Initialize(TElementGroup group)
         {
             _group = group;
             _originalScale = transform.localScale;

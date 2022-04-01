@@ -10,15 +10,15 @@ namespace Vheos.Games.ActionPoints
 
     [RequireComponent(typeof(Expandable))]
     [DisallowMultipleComponent]
-    abstract public class AActionUIElementsGroup<T> : ABaseComponent
+    abstract public class AActionUIElementsGroup<TElement> : ABaseComponent
     {
         // Publics
         public ActionUI UI
         { get; private set; }
 
         // Privates
-        protected readonly List<T> _elements = new();
-        protected readonly HashSet<T> _newElements = new();
+        protected readonly List<TElement> _elements = new();
+        protected readonly HashSet<TElement> _newElements = new();
 
         // Play
         virtual public void Initialize(ActionUI ui)
