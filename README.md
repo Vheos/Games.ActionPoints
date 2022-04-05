@@ -1,5 +1,5 @@
 # About
-On the surface, it's just another of my countless Unity projects. But in reality it's **THE CHOSEN ONE** - chosen to get publicly released instead of privately shelved ;) So yeah, that's basically it - `ActionPoints` is my first attempt at actual finished product. Wish me luck!
+On the surface, it's just another of my countless Unity projects... But in reality, it's **THE CHOSEN ONE** - chosen to get publicly released instead of privately shelved ;) Wish me luck! ([project board](https://github.com/users/Vheos/projects/2/views/2))
 
 # Game design
 
@@ -64,7 +64,7 @@ On the surface, it's just another of my countless Unity projects. But in reality
 ### Chance rolls
 - damage and healing are actually percentage chances of inflicting or removing a single wound, so dealing 99 damage might not actually have any effect (if you're unlucky).
 - for every 100 damage or healing, there will be guaranteed success. The remaining amount (below 100) will be rolled as usual, so 150 damage is guaranteed to inflict 1 wound, with 50% chance of inflicting 2 wounds instead.
-- 
+
 ### Luck
 - there will be an attribute called *Luck* that will secretly cause rerolls. I haven't decided yet whether this attribute will be per-character or party wide.
 - if luck is positive, every failed positive roll (such as healing) and every successful negative roll (such as taking damage) against/by the character will be rolled again, with chance equal to the luck's value. This essentially increases chances of positive rolls being successful, and negative rolls being failed.
