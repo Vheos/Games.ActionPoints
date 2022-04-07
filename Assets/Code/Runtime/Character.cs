@@ -13,7 +13,7 @@ namespace Vheos.Games.ActionPoints
         private void Selectable_OnGainHighlight(Selecter selecter, bool isFirst)
         {
         }
-        private void Selectable_OnLoseHighlight(Selecter selecter, bool isLast)
+        private void Selectable_OnLoseHighlight(Selecter selecter, bool wasLast)
         {
         }
         private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
@@ -77,10 +77,10 @@ namespace Vheos.Games.ActionPoints
             Get<SpriteOutline>().Hide();
 
             var _mprops = Get<SpriteShadowMProps>();
-            this.NewTween()
+            this.NewTween(ConflictResolution.Blend)
               .SetDuration(1f)
               .AddPropertyModifier(v => _mprops.OpacityDitheringRatio += v, 0f - _mprops.OpacityDitheringRatio)
-              .AddEventsOnFinish(this.StopTweens, this.DestroyObject);
+              .AddEventsOnFinish(this.DestroyObject);
         }
 
         // Play
@@ -93,10 +93,10 @@ namespace Vheos.Games.ActionPoints
             _actionUI.Points.Get<Expandable>().TryExpand();
             //_actionUI.ButtonWheels[ActionPhase.Camp].Get<Expandable>().TryExpand();
 
-            Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainHighlight);
-            Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseHighlight);
+            Get<Selectable>().OnGetSelected.SubEnableDisable(this, Selectable_OnGainHighlight);
+            Get<Selectable>().OnGetDeselected.SubEnableDisable(this, Selectable_OnLoseHighlight);
 
-            Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);
+            Get<Selectable>().OnGetReleased.SubEnableDisable(this, Selectable_OnRelease);
 
             Get<Highlightable>().OnGainHighlight.SubEnableDisable(this, Highlightable_OnGainHighlight);
             Get<Highlightable>().OnLoseHighlight.SubEnableDisable(this, Highlightable_OnLoseHighlight);
@@ -115,6 +115,8 @@ namespace Vheos.Games.ActionPoints
             Get<Woundable>().OnDie.SubDestroy(this, Woundable_OnDie);
 
             Get<SpriteShadowMProps>().Initialize();
+
+            OnPlayDestroy.SubOnce(() => this.StopTweens());
         }
     }
 }
