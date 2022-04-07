@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1496881883444649891}
   - component: {fileID: 4590056948223180895}
   - component: {fileID: 4122061427132940447}
+  - component: {fileID: -30768859705186284}
   - component: {fileID: 5169335137139737422}
   - component: {fileID: 2123789854801938354}
   - component: {fileID: 4519784278957037571}
@@ -21,7 +22,6 @@ GameObject:
   - component: {fileID: 6931479347380061605}
   - component: {fileID: 8546878873627012483}
   - component: {fileID: 8099017625504549054}
-  - component: {fileID: -1723395741695821558}
   - component: {fileID: 7156099509497477728}
   - component: {fileID: 1240119998787256843}
   - component: {fileID: 5165964163940343052}
@@ -164,6 +164,26 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1, y: 0.8, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-30768859705186284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4590056948223180893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff75a47892ac88947b052baa061aca0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SelectDuration>k__BackingField: 0.4
+  <DeselectDuration>k__BackingField: 0.8
+  <SelectScale>k__BackingField: 1.1
+  <SelectColorScale>k__BackingField: 1
+  <PressDuration>k__BackingField: 0.1
+  <ReleaseDuration>k__BackingField: 0.2
+  <PressScale>k__BackingField: 0.95
+  <PressColorScale>k__BackingField: 0.8
 --- !u!114 &5169335137139737422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,18 +268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a9b3f5b260988b4bb43fb26c93c0ea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-1723395741695821558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4590056948223180893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9a2e0131caed5c4396df7e798bbfc0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7156099509497477728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,6 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4f1a38f339ab114c860588f8bb14c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <PressedDeselectBehavior>k__BackingField: 0
 --- !u!114 &1999471314265462940
 MonoBehaviour:
   m_ObjectHideFlags: 0

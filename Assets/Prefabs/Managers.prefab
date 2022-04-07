@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 3909449117901916546}
   - component: {fileID: 3909449117901916561}
   - component: {fileID: 3909449117901916567}
-  - component: {fileID: 3909449117901916566}
+  - component: {fileID: 6006123735228351934}
   - component: {fileID: 2916524866719511471}
   - component: {fileID: 3909449117901916568}
   - component: {fileID: 3909449117901916569}
@@ -137,7 +137,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 8766593516385359140, guid: 5798705b9a380ee4483b9533f634028e, type: 3}
   <PersistentComponents>k__BackingField: 1
-  <EnsureAnyComponent>k__BackingField: 1
 --- !u!114 &3909449117901916572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +151,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 7810912012921641213, guid: 37434cab7eae1f04d87058624aa0517a, type: 3}
   <PersistentComponents>k__BackingField: 1
-  <EnsureAnyComponent>k__BackingField: 0
   <Actions>k__BackingField: {fileID: -944628639613478452, guid: 90ef15be7a3e4d949a768b16e5790e6f, type: 3}
   <JoinAction>k__BackingField: {fileID: 1026726547556581313, guid: 90ef15be7a3e4d949a768b16e5790e6f, type: 3}
   <PlayerColors>k__BackingField:
@@ -174,7 +172,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: -66601126168397642, guid: a2c31c22ae442a5428ffc95f53bf6c95, type: 3}
   <PersistentComponents>k__BackingField: 1
-  <EnsureAnyComponent>k__BackingField: 1
   <UICameraPrefab>k__BackingField: {fileID: 6803609304893408197, guid: 23219dab8b802364288c4b7ea0adcd50, type: 3}
 --- !u!114 &3909449117901916561
 MonoBehaviour:
@@ -190,7 +187,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 737779621490586369, guid: 77f360719ef9b094d918fb7f47647539, type: 3}
   <PersistentComponents>k__BackingField: 1
-  <EnsureAnyComponent>k__BackingField: 0
   <DisableNativeCursor>k__BackingField: 1
 --- !u!114 &3909449117901916567
 MonoBehaviour:
@@ -206,8 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 5421020388957066970, guid: 68db931d161ca554995403ca6143bd16, type: 3}
   <PersistentComponents>k__BackingField: 1
-  <EnsureAnyComponent>k__BackingField: 0
---- !u!114 &3909449117901916566
+--- !u!114 &6006123735228351934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -216,12 +211,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3909449117901916544}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9acdd52643f7332418df78dffc1f7024, type: 3}
+  m_Script: {fileID: 11500000, guid: 628dcdbded4395d4b94502b0af0f3cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 0}
   <PersistentComponents>k__BackingField: 0
-  <EnsureAnyComponent>k__BackingField: 0
 --- !u!114 &2916524866719511471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,7 +230,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 0}
   <PersistentComponents>k__BackingField: 0
-  <EnsureAnyComponent>k__BackingField: 0
 --- !u!114 &3909449117901916568
 MonoBehaviour:
   m_ObjectHideFlags: 0

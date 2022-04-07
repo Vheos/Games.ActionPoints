@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8146316743540505493}
   - component: {fileID: 8146316743540505492}
-  - component: {fileID: 8048329886889986284}
+  - component: {fileID: -3886414975881214494}
   - component: {fileID: -1050533516135375101}
   - component: {fileID: 6769786772760314090}
   - component: {fileID: 3853355215770658980}
+  - component: {fileID: 7990054835989208215}
   m_Layer: 0
   m_Name: ActionButton
   m_TagString: Untagged
@@ -53,8 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad10c7eaee5fbff4fb91618c3e92552b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Radius>k__BackingField: 0.33333334
---- !u!114 &8048329886889986284
+--- !u!114 &-3886414975881214494
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,9 +63,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8146316743540505481}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9a2e0131caed5c4396df7e798bbfc0e, type: 3}
+  m_Script: {fileID: 11500000, guid: ff75a47892ac88947b052baa061aca0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <SelectDuration>k__BackingField: 0.4
+  <DeselectDuration>k__BackingField: 0.8
+  <SelectScale>k__BackingField: 1.25
+  <SelectColorScale>k__BackingField: 1
+  <PressDuration>k__BackingField: 0.1
+  <ReleaseDuration>k__BackingField: 0.2
+  <PressScale>k__BackingField: 0.95
+  <PressColorScale>k__BackingField: 0.8
 --- !u!65 &-1050533516135375101
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -101,5 +109,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4f1a38f339ab114c860588f8bb14c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <PressedDeselectBehavior>k__BackingField: 0
+--- !u!114 &7990054835989208215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8146316743540505481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739773d97b69431458d7c409677151bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

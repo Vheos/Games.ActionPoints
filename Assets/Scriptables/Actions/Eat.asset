@@ -17,7 +17,7 @@ MonoBehaviour:
     Text: 
     Color: {r: 1, g: 1, b: 1, a: 1}
   <Phase>k__BackingField: 2
-  <ActionPointsCost>k__BackingField: 0
+  <ActionPointsCost>k__BackingField: 1
   <FocusPointsCost>k__BackingField: 0
   <Conditions>k__BackingField:
   - Condition: {fileID: 11400000, guid: 1d1d62ffa05a6aa4c9bdde399b7684e6, type: 2}
