@@ -23,7 +23,7 @@ namespace Vheos.Games.ActionPoints
                 .SetDuration(this.Settings().ExpandDuration)
                 .AddPropertyModifier(v => _mprops.Thickness += v, this.Settings().Thickness - _mprops.Thickness)
                 .Color(ColorComponent.SpriteRenderer, Color)
-                .FinishIf(instantly);
+                .If(instantly).Finish();
         }
         public void Hide(bool instantly = false)
         { 
@@ -33,7 +33,7 @@ namespace Vheos.Games.ActionPoints
               .AddPropertyModifier(v => _mprops.Thickness += v, 0f - _mprops.Thickness)
               .Alpha(ColorComponent.SpriteRenderer, 0f)
               .AddEventsOnFinish(() => _outlineRenderer.gameObject.SetActive(false))
-              .FinishIf(instantly);
+              .If(instantly).Finish();
         }
 
         // Private
@@ -49,7 +49,9 @@ namespace Vheos.Games.ActionPoints
             
             _outlineRenderer.sprite = Get<SpriteRenderer>().sprite;
             Get<SpriteChangable>().OnChangeSprite.SubEnableDisable(this, (from, to) => _outlineRenderer.sprite = to);
-            Hide(true);          
+            Hide(true);
+
+            OnPlayDestroy.SubOnce(() => this.StopTweens());
         }
     }
 }

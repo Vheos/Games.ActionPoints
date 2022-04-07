@@ -25,6 +25,8 @@ namespace Vheos.Games.ActionPoints
         // Privates
         private UICanvas _uiCanvas;
         private Selecter _selecter;
+        private Selectable SelectableUnderCursor
+        => RaycastableManager.ScreenRaycastClosest<Selectable>(_uiCanvas.CanvasToScreenPosition(transform.position), CameraManager.AnyNonUI.Unity);
         private void OnInputMoveCursor(Vector2 offset)
         => transform.position = transform.position.Add(offset * Sensitivity / _uiCanvas.ScaleFactor).Clamp(Vector2.zero, _uiCanvas.Size);
         private void OnInputPressConfirm()
@@ -33,7 +35,7 @@ namespace Vheos.Games.ActionPoints
             if (!_selecter.isActiveAndEnabled)
                 return;
 
-            _selecter.TryPress();
+            _selecter.Press();
         }
         private void OnInputReleaseConfirm()
         {
@@ -42,16 +44,11 @@ namespace Vheos.Games.ActionPoints
             || !_selecter.IsSelectingAny)
                 return;
 
-            var fullClick = _selecter.Selectable == RaycastableManager.FindClosest<Selectable>(_uiCanvas, this);
-            _selecter.TryRelease(fullClick);
+            _selecter.Release(_selecter.Selectable == SelectableUnderCursor);
         }
         private void OnUpdate()
         {
-            if (!_selecter.isActiveAndEnabled
-            || _selecter.IsHolding)
-                return;
-
-            _selecter.Selectable = RaycastableManager.FindClosest<Selectable>(_uiCanvas, this);
+            _selecter.Selectable = SelectableUnderCursor;
         }
         private void AnimatePress(bool instantly = false)
         {
@@ -60,7 +57,7 @@ namespace Vheos.Games.ActionPoints
                 .SetDuration(this.Settings().PressDuration)
                 .LocalScaleRatio(this.Settings().PressScale)
                 .RGBRatio(ColorComponent.Image, this.Settings().PressColorScale)
-                .FinishIf(instantly);
+                .If(instantly).Finish();
         }
         private void AnimateRelease(bool instantly = false)
         {
@@ -69,7 +66,7 @@ namespace Vheos.Games.ActionPoints
                 .SetDuration(this.Settings().ReleaseDuration)
                 .LocalScaleRatio(this.Settings().PressScale.Inv())
                 .RGBRatio(ColorComponent.Image, this.Settings().PressColorScale.Inv())
-                .FinishIf(instantly);
+                .If(instantly).Finish();
         }
         public void MoveTo(ViewSpace viewSpace, Vector3 position, float duration)
         {
@@ -84,7 +81,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween(ConflictResolution.Interrupt)
               .SetDuration(duration)
               .Position(canvasPosition)
-              .FinishIf(duration <= 0f);
+              .If(duration <= 0f).Finish();
         }
 
         // Play

@@ -11,7 +11,7 @@ namespace Vheos.Games.ActionPoints
 
     [RequireComponent(typeof(Raycastable))]
     [RequireComponent(typeof(Selectable))]
-    [RequireComponent(typeof(CommonSelectable))]
+    [RequireComponent(typeof(AnimatedSelectable))]
     [RequireComponent(typeof(Updatable))]
     [DisallowMultipleComponent]
     public class ActionButton : AActionUIElement<ActionButtonsWheel>
@@ -52,17 +52,19 @@ namespace Vheos.Games.ActionPoints
 
             ActionTargeter.TryStartHighlightingValidTargets(Action);
         }
-        private void Selectable_OnLoseSelection(Selecter selecter, bool isLast)
+        private void Selectable_OnLoseSelection(Selecter selecter, bool wasLast)
         {
-            if (!_isUsable || !isLast)
+            if (!_isUsable || !wasLast)
                 return;
 
             ActionTargeter.TryStopHighlightingValidTargets();
         }
-        private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
+        private void Selectable_OnRelease(Selecter selecter, bool isClick)
         {
-            if (!_isUsable || !isFullClick)
+            if (!_isUsable || !isClick)
                 return;
+
+
 
             _group.UI.Actionable.Get<ActionTargeter>().ConfirmActionButton(this);
         }
@@ -87,8 +89,8 @@ namespace Vheos.Games.ActionPoints
                 return;
 
             AnimateUsability(_isUsable, instantly);
-            Get<Selectable>().ClearSelectionAndHolder();
-            Get<CommonSelectable>().IsEnabled = _isUsable;
+            Get<Selectable>().ClearUsers();
+            Get<AnimatedSelectable>().IsEnabled = _isUsable;
         }
         private void AnimateUsability(bool state, bool instantly = false)
         {
@@ -99,7 +101,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween()
               .SetDuration(this.Settings().ChangeUsabilityDuration)
               .ColorRatio(_colorComponentType, targetColorScale)
-              .FinishIf(instantly);
+              .If(instantly).Finish();
         }
 
         // Play
@@ -115,19 +117,17 @@ namespace Vheos.Games.ActionPoints
             _originalScale = this.Settings().Radius.Mul(2).ToVector3();
             if (action.ButtonVisuals.Sprite != null)
             {
-                Get<Raycastable>().RaycastTarget = CreateSpriteRenderer();
+                Get<Raycastable>().RaycastComponent = CreateSpriteRenderer();
                 _colorComponentType = ColorComponent.SpriteRenderer;
             }
             else
             {
-                Get<Raycastable>().RaycastTarget = CreateTextMeshPro();
+                Get<Raycastable>().RaycastComponent = CreateTextMeshPro();
                 _colorComponentType = ColorComponent.TextMeshPro;
                 _originalScale = _originalScale.Mul(1f, 1.5f, 1f);
             }
 
-            Get<CommonSelectable>().HighlightScale.Set(() => this.Settings().HighlightScale);
-            Get<CommonSelectable>().PressScale.Set(() => this.Settings().PressScale);
-            Get<CommonSelectable>().UpdateColorComponentType();
+            Get<AnimatedSelectable>().UpdateColorComponent();
 
             OnPlayEnable.SubDestroy(this, () => UpdateUsability());
             _group.UI.Actionable.OnChangeActionPoints.SubEnableDisable(this, (from, to) => UpdateUsability());
@@ -136,11 +136,11 @@ namespace Vheos.Games.ActionPoints
             _isUsable = true;
             UpdateUsability(true);
 
-            Get<Selectable>().OnGainSelection.SubEnableDisable(this, Selectable_OnGainSelection);
-            Get<Selectable>().OnLoseSelection.SubEnableDisable(this, Selectable_OnLoseSelection);
-            Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);
+            Get<Selectable>().OnGetSelected.SubEnableDisable(this, Selectable_OnGainSelection);
+            Get<Selectable>().OnGetDeselected.SubEnableDisable(this, Selectable_OnLoseSelection);
+            Get<Selectable>().OnGetReleased.SubEnableDisable(this, Selectable_OnRelease);
 
-            Get<Selectable>().AddSelectionTest(selecter => _group.UI.Actionable.HasPlayerOwner(selecter.Get<Player>()));
+            Get<Selectable>().AddTest(selecter => _group.UI.Actionable.HasPlayerOwner(selecter.Get<Player>()));
             if (_group.UI.Actionable.TryGet(out PlayerOwnable playerOwnable))
                 playerOwnable.OnChangeOwner.SubDestroy(this, PlayerOwnable_OnChangePlayer);
         }

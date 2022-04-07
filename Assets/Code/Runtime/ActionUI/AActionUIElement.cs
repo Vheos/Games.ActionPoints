@@ -17,7 +17,7 @@ namespace Vheos.Games.ActionPoints
             this.NewTween()
               .SetDuration(this.Settings().CreateElementDuration)
               .LocalScale(_originalScale)
-              .FinishIf(instantly);
+              .If(instantly).Finish();
         }
         public void AnimateDestroy(bool instantly = false)
         {
@@ -27,13 +27,13 @@ namespace Vheos.Games.ActionPoints
               .LocalScale(Vector3.zero)
               .AlphaRatio(ColorComponent.Any, 0f)
               .AddEventsOnFinish(this.DestroyObject)
-              .FinishIf(instantly);
+              .If(instantly).Finish();
         }
         public void AnimateMove(Vector3 targetLocalPosition, bool instantly = false)
         => this.NewTween(ConflictResolution.Interrupt)
             .SetDuration(this.Settings().MoveElementDuration)
             .LocalPosition(targetLocalPosition)
-            .FinishIf(instantly);
+            .If(instantly).Finish();
 
         // Privates
         protected TElementGroup _group;

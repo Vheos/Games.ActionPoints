@@ -29,7 +29,7 @@ namespace Vheos.Games.ActionPoints
                 .SetDuration(this.Settings().ExpandDuration)
                 .AddPropertyModifier(v => Get<LineRenderer>().startWidth += v, this.Settings().StartWidth * _uiCanvas.Size.y - Get<LineRenderer>().startWidth)
                 .AddPropertyModifier(v => Get<LineRenderer>().endWidth += v, this.Settings().EndWidth * _uiCanvas.Size.y - Get<LineRenderer>().endWidth)
-                .FinishIf(instantly);
+                .If(instantly).Finish();
 
             _targeter = targeter;
             _from = from;
@@ -45,7 +45,7 @@ namespace Vheos.Games.ActionPoints
                 .AddPropertyModifier(v => Get<LineRenderer>().startWidth += v, 0f - Get<LineRenderer>().startWidth)
                 .AddPropertyModifier(v => Get<LineRenderer>().endWidth += v, 0f - Get<LineRenderer>().endWidth)
                 .AddEventsOnFinish(() => IsActive = false)
-                .FinishIf(instantly);
+                .If(instantly).Finish();
 
             if (_targeter != null)
                 _targeter.Targetable = null;
@@ -77,7 +77,7 @@ namespace Vheos.Games.ActionPoints
             if (_to != null)
                 LineTo = _uiCanvas.CanvasPosition(_to);
             if (_targeter != null)
-                _targeter.Targetable = RaycastableManager.FindClosest<Targetable>(_uiCanvas, LineTo);
+                _targeter.Targetable = RaycastableManager.ScreenRaycastClosest<Targetable>(LineTo, CameraManager.AnyActive.Unity);
 
             Get<UITargetingLineMProps>().TilingX = LineFrom.DistanceTo(LineTo) * this.Settings().Tiling / _uiCanvas.Size.y;
         }
