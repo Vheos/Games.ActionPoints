@@ -7,7 +7,6 @@ namespace Vheos.Games.ActionPoints
     using Games.Core;
     using Tools.Extensions.General;
     using Tools.Extensions.Collections;
-    using Vheos.Tools.Extensions.UnityObjects;
 
     [RequireComponent(typeof(Actionable))]
     [RequireComponent(typeof(Targeter))]
@@ -46,7 +45,7 @@ namespace Vheos.Games.ActionPoints
                 return false;
 
             _action = action;
-            Get<Targeter>().AddTargetingTest(CanTarget);
+            //Get<Targeter>().AddTest(CanTarget);
             return true;
         }
         public bool TryStartTargeting(Action action, UITargetingLine targetingLine, Transform from)
@@ -56,7 +55,6 @@ namespace Vheos.Games.ActionPoints
 
             _targetingLine = targetingLine;
             _targetingLine.Show(Get<Targeter>(), from);
-            _targetingLine.Player.Get<Selecter>().Disable();
             _targetingLine.Player.OnInputReleaseConfirm.Sub(TryFinishTargeting);
             return true;
         }
@@ -71,13 +69,12 @@ namespace Vheos.Games.ActionPoints
             if (_targetingLine != null)
             {
                 _targetingLine.Player.OnInputReleaseConfirm.Unsub(TryFinishTargeting);
-                _targetingLine.Player.Get<Selecter>().Enable();
                 _targetingLine.Hide();
                 _targetingLine = null;
             }
 
             _action = null;
-            Get<Targeter>().RemoveTargetingTest(CanTarget);
+            //Get<Targeter>().RemoveTest(CanTarget);
         }
 
         // Privates
