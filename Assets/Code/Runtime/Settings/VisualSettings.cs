@@ -44,21 +44,6 @@ namespace Vheos.Games.ActionPoints
             [Range(0f, 1f)] public float CollapseDuration;
         }
         #endregion
-        [field: SerializeField] public CommonSelectableSettings CommonSelectable { get; private set; }
-        #region struct
-        [Serializable]
-        public struct CommonSelectableSettings
-        {
-            [Range(0.5f, 2f)] public float HighlightScale;
-            [Range(0.5f, 2f)] public float HighlightColorScale;
-            [Range(0.5f, 2f)] public float PressScale;
-            [Range(0.5f, 2f)] public float PressColorScale;
-            [Range(0f, 1f)] public float GainHighlightDuration;
-            [Range(0f, 1f)] public float LoseHighlightDuration;
-            [Range(0f, 1f)] public float PressDuration;
-            [Range(0f, 1f)] public float ReleaseDuration;
-        }
-        #endregion
         [field: SerializeField] public SpriteOutlineSettings SpriteOutline { get; private set; }
         #region struct
         [Serializable]

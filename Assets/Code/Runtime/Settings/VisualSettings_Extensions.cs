@@ -10,8 +10,6 @@ namespace Vheos.Games.ActionPoints
         => SettingsManager.Instance.VisualSettings.UICursor;
         static public VisualSettings.UITargetingLineSettings Settings(this UITargetingLine _)
         => SettingsManager.Instance.VisualSettings.UITargetingLine;
-        static public VisualSettings.CommonSelectableSettings Settings(this CommonSelectable _)
-        => SettingsManager.Instance.VisualSettings.CommonSelectable;
         static public VisualSettings.SpriteOutlineSettings Settings(this SpriteOutline _)
         => SettingsManager.Instance.VisualSettings.SpriteOutline;
         static public VisualSettings.ActionUIElementSettings Settings<T>(this AActionUIElementsGroup<T> _)
