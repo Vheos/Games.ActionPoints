@@ -45,8 +45,8 @@ namespace Vheos.Games.ActionPoints
 
             Get<Equipable>().EquipSlot.Set(() => (int)Slot);
 
-            Get<Selectable>().OnPress.SubEnableDisable(this, Selectable_OnPress);
-            Get<Selectable>().OnRelease.SubEnableDisable(this, Selectable_OnRelease);
+            Get<Selectable>().OnGetPressed.SubEnableDisable(this, Selectable_OnPress);
+            Get<Selectable>().OnGetReleased.SubEnableDisable(this, Selectable_OnRelease);
 
             Get<Targetable>().OnGainTargeting.SubEnableDisable(this, Targetable_OnGainTargeting);
             Get<Targetable>().OnLoseTargeting.SubEnableDisable(this, Targetable_OnLoseTargeting);
