@@ -32,19 +32,12 @@ namespace Vheos.Games.ActionPoints
         private void OnInputPressConfirm()
         {
             AnimatePress();
-            if (!_selecter.isActiveAndEnabled)
-                return;
-
             _selecter.Press();
         }
         private void OnInputReleaseConfirm()
         {
             AnimateRelease();
-            if (!_selecter.isActiveAndEnabled
-            || !_selecter.IsSelectingAny)
-                return;
-
-            _selecter.Release(_selecter.Selectable == SelectableUnderCursor);
+            _selecter.Release(_selecter.IsSelectingAny && _selecter.Selectable == SelectableUnderCursor);
         }
         private void OnUpdate()
         {
