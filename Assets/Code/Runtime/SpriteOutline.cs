@@ -50,8 +50,13 @@ namespace Vheos.Games.ActionPoints
             _outlineRenderer.sprite = Get<SpriteRenderer>().sprite;
             Get<SpriteChangable>().OnChangeSprite.SubEnableDisable(this, (from, to) => _outlineRenderer.sprite = to);
             Hide(true);
-
-            OnPlayDestroy.SubOnce(() => this.StopTweens());
         }
+        protected override void PlayDisable()
+        {
+            base.PlayDisable();
+            Hide();
+        }
+        protected override void PlayDestroy()
+        => this.StopGameObjectTweens();
     }
 }

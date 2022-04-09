@@ -47,12 +47,16 @@ namespace Vheos.Games.ActionPoints
         => this.NewTween()
             .SetDuration(this.Settings().FadeOutDuration)
             .Alpha(ColorComponent.TextMeshPro, 0f)
-            .AddEventsOnFinish(this.StopTweens, this.DestroyObject);
+            .AddEventsOnFinish(this.DestroyObject);
         private void Pulse(float rate, float scale)
         => this.NewTween(ConflictResolution.Blend)
             .SetDuration(rate.Inv())
             .SetCurveShape(CurveShape.Bounce)
             .LocalScaleRatio(scale)
             .SetLoops(3);
+
+        // Play
+        protected override void PlayDestroy()
+        => this.StopGameObjectTweens();
     }
 }
