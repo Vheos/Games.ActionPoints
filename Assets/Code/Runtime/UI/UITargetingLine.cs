@@ -16,13 +16,9 @@ namespace Vheos.Games.ActionPoints
         // Publics
         public Player Player
         { get; private set; }
-        public void Show(Component component, bool instantly = false)
-        => Show(component.GetComponent<Targeter>(), component.transform, Player.Cursor.transform, instantly);
-        public void Show(Targeter targeter, bool instantly = false)
-        => Show(targeter, targeter.transform, Player.Cursor.transform, instantly);
-        public void Show(Targeter targeter, Transform from, bool instantly = false)
-        => Show(targeter, from, Player.Cursor.transform, instantly);
-        public void Show(Targeter targeter, Transform from, Transform to, bool instantly = false)
+        public void Show(Transform from, bool instantly = false)
+        => Show( from, Player.Cursor.transform, instantly);
+        public void Show( Transform from, Transform to, bool instantly = false)
         {
             IsActive = true;
             this.NewTween(ConflictResolution.Interrupt)
@@ -31,12 +27,8 @@ namespace Vheos.Games.ActionPoints
                 .AddPropertyModifier(v => Get<LineRenderer>().endWidth += v, this.Settings().EndWidth * _uiCanvas.Size.y - Get<LineRenderer>().endWidth)
                 .If(instantly).Finish();
 
-            _targeter = targeter;
             _from = from;
             _to = to;
-
-            if (_targeter != null)
-                _targeter.Targetable = null;
         }
         public void Hide(bool instantly = false)
         {
@@ -47,17 +39,12 @@ namespace Vheos.Games.ActionPoints
                 .AddEventsOnFinish(() => IsActive = false)
                 .If(instantly).Finish();
 
-            if (_targeter != null)
-                _targeter.Targetable = null;
-
-            _targeter = null;
             _from = null;
             _to = null;
         }
 
         // Privates
         private UICanvas _uiCanvas;
-        private Targeter _targeter;
         private Transform _from;
         private Transform _to;
         private Vector3 LineFrom
@@ -76,8 +63,6 @@ namespace Vheos.Games.ActionPoints
                 LineFrom = _uiCanvas.CanvasPosition(_from);
             if (_to != null)
                 LineTo = _uiCanvas.CanvasPosition(_to);
-            if (_targeter != null)
-                _targeter.Targetable = RaycastableManager.ScreenRaycastClosest<Targetable>(LineTo, CameraManager.AnyActive.Unity);
 
             Get<UITargetingLineMProps>().TilingX = LineFrom.DistanceTo(LineTo) * this.Settings().Tiling / _uiCanvas.Size.y;
         }
