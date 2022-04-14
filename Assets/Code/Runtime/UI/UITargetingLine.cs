@@ -17,8 +17,8 @@ namespace Vheos.Games.ActionPoints
         public Player Player
         { get; private set; }
         public void Show(Transform from, bool instantly = false)
-        => Show( from, Player.Cursor.transform, instantly);
-        public void Show( Transform from, Transform to, bool instantly = false)
+        => Show(from, Player.Cursor.transform, instantly);
+        public void Show(Transform from, Transform to, bool instantly = false)
         {
             IsActive = true;
             this.NewTween(ConflictResolution.Interrupt)
