@@ -16,49 +16,42 @@ namespace Vheos.Games.ActionPoints
         public readonly AutoEvent<Targetable, Targetable, Action> OnChangeTargetable = new();
 
         // Publics
-        public void TryStartHighlightingValidTargets(Action action)
+        public bool IsTargeting
+        => _action != null;
+        public void StartHighlightingValidTargets(Selecter selecter, Action action)
         {
             foreach (var target in TargetableManager.GetValidTargets(Get<Actionable>(), action))
                 if (target.TryGet(out Highlightable highlightable))
                 {
-                    highlightable.GainHighlight();
-                    _highlightedTargets.Add(target);
+                    selecter.Get<Highlighter>().TryAddHighlightable(target.Get<Highlightable>());
+                    _highlightedTargets.Add(highlightable);
                 }
         }
-        public void TryStopHighlightingValidTargets()
+        public void StopHighlightingValidTargets(Selecter selecter)
         {
-            foreach (var target in _highlightedTargets)
-                target.Get<Highlightable>().LoseHighlight();
+            foreach (var highlightedTarget in _highlightedTargets)
+                if (highlightedTarget != null)
+                    selecter.Get<Highlighter>().TryRemoveHighlightable( highlightedTarget);
             _highlightedTargets.Clear();
         }
-        public void ConfirmActionButton(ActionButton button)
-        {
-            if (_highlightedTargets.Count == 1)
-                button.Action.Use(Get<Actionable>(), _highlightedTargets.First());
-            else
-                TryStartTargeting(button.Action, Get<PlayerOwnable>().Owner.TargetingLine, button.transform);
-        }
-        public bool TryStartTargeting(Action action)
-        {
-            TryFinishTargeting();
-            if (!action.CheckUserComponents(Get<Actionable>()))
-                return false;
 
-            _action = action;
-            //Get<Targeter>().AddTest(CanTarget);
-            return true;
-        }
-        public bool TryStartTargeting(Action action, UITargetingLine targetingLine, Transform from)
+        public void TryStartTargeting(Selecter selecter, ActionButton button)
         {
-            if (!TryStartTargeting(action))
-                return false;
+            TryFinishTargeting(selecter);
+            if (!button.Action.CheckUserComponents(Get<Actionable>()))
+                return;
 
-            _targetingLine = targetingLine;
-            _targetingLine.Show(Get<Targeter>(), from);
-            _targetingLine.Player.OnInputReleaseConfirm.Sub(TryFinishTargeting);
-            return true;
+            _action = button.Action;
+            Get<Targeter>().Targetable = null;
+
+            selecter.AddTest(TargetingTest);
+            selecter.AddPressTest(DisablePressEvents);
+            selecter.OnChangeSelectable.Sub(SetTargetable);
+            selecter.OnRelease.Sub(TryFinishTargeting);
+            selecter.Get<Player>().TargetingLine.Show(button.transform);
         }
-        public void TryFinishTargeting()
+
+        public void TryFinishTargeting(Selecter selecter)
         {
             if (_action == null)
                 return;
@@ -66,25 +59,33 @@ namespace Vheos.Games.ActionPoints
             if (Get<Targeter>().Targetable.TryNonNull(out var targetable))
                 _action.Use(Get<Actionable>(), targetable);
 
-            if (_targetingLine != null)
-            {
-                _targetingLine.Player.OnInputReleaseConfirm.Unsub(TryFinishTargeting);
-                _targetingLine.Hide();
-                _targetingLine = null;
-            }
+            selecter.Get<Player>().TargetingLine.Hide();
+            selecter.OnRelease.Unsub(TryFinishTargeting);
+            selecter.OnChangeSelectable.Unsub(SetTargetable);
+            selecter.RemovePressTest(DisablePressEvents);
+            selecter.RemoveTest(TargetingTest);
 
+            Get<Targeter>().Targetable = null;
             _action = null;
-            //Get<Targeter>().RemoveTest(CanTarget);
+            StopHighlightingValidTargets(selecter);
         }
 
         // Privates
         private Action _action;
-        private UITargetingLine _targetingLine;
-        private readonly HashSet<Targetable> _highlightedTargets = new();
-        private bool CanTarget(Targetable target)
-        => target.IsContainedIn(_highlightedTargets);
+        private readonly HashSet<Highlightable> _highlightedTargets = new();
+        private bool TargetingTest(Selectable selectable)
+        => _highlightedTargets.Any(t => t.SameGOAs(selectable));
+        private void SetTargetable(Selecter selecter)
+        => Get<Targeter>().Targetable = selecter.IsSelectingAny ? selecter.Selectable.Get<Targetable>() : null;
+        private bool DisablePressEvents(Selectable selectable)
+        => false;
     }
 }
+
+// Auto-use if only one target
+//if (_highlightedTargets.Count == 1)
+//    button.Action.Use(Get<Actionable>(), _highlightedTargets.First());
+
 
 // Move mouse to valid targets midpoint
 //Vector2 screenMidpoint = _highlightedTargets.Midpoint(t => UICanvasManager.Any.WorldToScreenPosition(t.transform.position));
