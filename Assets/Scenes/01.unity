@@ -439,6 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 787525291aca520459da58e716b4df1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <EquipSlot>k__BackingField: 0
 --- !u!65 &295689532
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -647,6 +648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 787525291aca520459da58e716b4df1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <EquipSlot>k__BackingField: 0
 --- !u!65 &536219743
 BoxCollider:
   m_ObjectHideFlags: 0
