@@ -42,7 +42,7 @@ Shader "Custom/UISpriteOutline"
             };             
             VertexData VertexFunction(VertexData data)
             {
-                data.vertex = UnityObjectToClipPos(data.vertex);              
+                data.vertex = UnityObjectToClipPos(data.vertex);         
                 return data;
             }
             fixed4 FragmentFunction(VertexData data) : SV_Target
@@ -53,7 +53,13 @@ Shader "Custom/UISpriteOutline"
                 fixed alphaRight = tex2D(_MainTex, data.texcoord - offset.xy * _MainTex_TexelSize).a;
                 fixed alphaDown = tex2D(_MainTex, data.texcoord + offset.yx * _MainTex_TexelSize).a;
                 fixed alphaUp = tex2D(_MainTex, data.texcoord - offset.yx * _MainTex_TexelSize).a;
-                fixed alpha = min(1 - alphaMain, max(alphaLeft, max(alphaRight, max(alphaDown, alphaUp)))); 
+                fixed alpha = min(1 - alphaMain, Max(alphaLeft, alphaRight, alphaDown, alphaUp)); 
+
+                // rotation
+                fixed s = sin ( _Time.x);
+                fixed c = cos ( _Time.x);           
+                fixed2x2 rotation = float2x2(c, -s, s, c);
+
                 return PremultipliedAlpha(data.color) * alpha;
             }
             ENDCG
