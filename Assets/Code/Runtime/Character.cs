@@ -10,13 +10,13 @@ namespace Vheos.Games.ActionPoints
     {
         // Privates
         private ActionUI _actionUI;
-        private void Selectable_OnGainHighlight(Selecter selecter, bool isFirst)
+        private void Selectable_OnGainHighlight(Selectable selectable, Selecter selecter)
         {
         }
-        private void Selectable_OnLoseHighlight(Selecter selecter, bool wasLast)
+        private void Selectable_OnLoseHighlight(Selectable selectable, Selecter selecter)
         {
         }
-        private void Selectable_OnRelease(Selecter selecter, bool isFullClick)
+        private void Selectable_OnRelease(Selectable selectable, Selecter selecter, bool isFullClick)
         {
             if (isFullClick && TryGet(out PlayerOwnable playerOwnable))
                 if (playerOwnable.Owner == null)
@@ -27,17 +27,21 @@ namespace Vheos.Games.ActionPoints
                     _actionUI.Buttons[phase].Get<Expandable>().Toggle();
                 }
         }
-        private void Highlightable_OnGainHighlight(bool isFirst)
+        private void Highlightable_OnGainHighlight(Highlightable highlightable, Highlighter highlighter)
         {
-            if (isFirst)
-                Get<SpriteOutline>().Show();
+            if (highlightable.IsHighlightedByMany)
+                return;
+
+            Get<SpriteOutline>().Show();
         }
-        private void Highlightable_OnLoseHighlight(bool isLast)
+        private void Highlightable_OnLoseHighlight(Highlightable highlightable, Highlighter highlighter)
         {
-            if (isLast)
-                Get<SpriteOutline>().Hide();
+            if (highlightable.IsHighlighted)
+                return;
+
+            Get<SpriteOutline>().Hide();
         }
-        private void Equiper_OnChangeEquipable(Equipable from, Equipable to)
+        private void Equiper_OnChangeEquipable(Equiper equiper, Equipable from, Equipable to)
         {
             var previousEquipment = from != null ? from.Get<Equipment>() : null;
             var currentEquipment = to != null ? to.Get<Equipment>() : null;
@@ -56,32 +60,40 @@ namespace Vheos.Games.ActionPoints
             Get<Actionable>().MaxActionPoints += (currentEquipment != null ? currentEquipment.MaxActionPoints : 0)
                                                - (previousEquipment != null ? previousEquipment.MaxActionPoints : 0);
         }
-        private void Combatable_OnChangeCombat(Combat from, Combat to)
+        private void Combatable_OnChangeCombat(Combatable combatable)
         {
-            if (to == null)
+            if (combatable.Combat == null)
                 _actionUI.CollapseButtons();
             else
             {
                 _actionUI.ExpandButtons(ActionPhase.Combat);
                 foreach (var ally in Get<Teamable>().Allies)
                     if (ally.TryGet(out Combatable allyCombatable))
-                        allyCombatable.Combat = to;
+                        allyCombatable.Combat = combatable.Combat;
             }
+            Get<Animator>().SetBool(nameof(combatable.IsInCombat), combatable.IsInCombat);
         }
         private void PlayerOwnable_OnChangePlayer(Player from, Player to)
         => Get<SpriteRenderer>().color = to.Color;
-
         private void Woundable_OnDie()
         {
-            _actionUI.CollapseAll();
-            Get<SpriteOutline>().Hide();
+            _actionUI.Disable();
+            Get<Targetable>().Disable();
+            Get<Highlightable>().Disable();
+            Get<SpriteOutline>().Disable();
+            Get<Combatable>().Disable();
 
             var _mprops = Get<SpriteShadowMProps>();
-            this.NewTween(ConflictResolution.Blend)
+            this.NewTween()
               .SetDuration(1f)
               .AddPropertyModifier(v => _mprops.OpacityDitheringRatio += v, 0f - _mprops.OpacityDitheringRatio)
               .AddEventsOnFinish(this.DestroyObject);
         }
+        private void SetAnimatorSpeed(Vector3 from, Vector3 to)
+        => Get<Animator>().SetFloat("Speed", from.DistanceTo(to) / Time.deltaTime);
+        private void ResetAnimatorSpeed(Vector3 at)
+        => Get<Animator>().SetFloat("Speed", 0f);
+
 
         // Play
         protected override void PlayAwake()
@@ -115,46 +127,10 @@ namespace Vheos.Games.ActionPoints
             Get<Woundable>().OnDie.SubDestroy(this, Woundable_OnDie);
 
             Get<SpriteShadowMProps>().Initialize();
-
-            OnPlayDestroy.SubOnce(() => this.StopTweens());
+            Get<Movable>().OnMove.SubEnableDisable(this, SetAnimatorSpeed);
+            Get<Movable>().OnStop.SubEnableDisable(this, ResetAnimatorSpeed);
         }
+        protected override void PlayDestroy()
+        => this.StopGameObjectTweens();
     }
 }
-
-
-/*
-private void Selectable_OnPress(Selecter selecter)
-{
-    //Debug.Log($"{selecter.name} -> {name}:\tOnPress");
-    this.NewTween()
-        .SetDuration(0.2f)
-        .LocalScaleRatio(0.9f)
-        .SpriteRGBRatio(0.75f);
-
-    selecter.Get<Player>().TargetingLine.Show(Get<Targeter>(), this.transform, selecter.Get<Player>().Cursor.transform);
-}
-private void Selectable_OnRelease(Selecter selecter, bool withinTrigger)
-{
-    //Debug.Log($"{selecter.name} -> {name}:\tOnRelease, {withinTrigger}");
-    this.NewTween()
-        .SetDuration(0.2f)
-        .LocalScaleRatio(0.9f.Inv())
-        .SpriteRGBRatio(0.75f.Inv());
-
-    if (Get<Targeter>().IsTargetingAny
-    && !Get<Targeter>().IsTargeting(Get<Targetable>()))
-    {
-        this.NewTween()
-            .SetDuration(1f)
-            .Position(this.transform.position.Lerp(Get<Targeter>().Targetable.transform.position, 0.5f));
-    }
-
-    if (withinTrigger
-    && selecter.TryGet(out Player player)
-    && TryGet(out PlayerOwnable playerOwnable)
-    && playerOwnable.Owner == null)
-        playerOwnable.Owner = player;
-
-    selecter.Get<Player>().TargetingLine.Hide();
-}
-*/
