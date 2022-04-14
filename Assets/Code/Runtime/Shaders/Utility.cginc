@@ -24,3 +24,9 @@ inline fixed2 AppliedST(fixed2 texcoord, fixed4 ST)
 
 inline fixed Random (fixed2 uv)
 { return frac(sin(dot(uv, fixed2(12.9898, 78.233))) * 43758.5453123); }
+
+inline fixed Max(fixed a, fixed b, fixed c)
+{ return max(a, max(b, c)); }
+
+inline fixed Max(fixed a, fixed b, fixed c, fixed d)
+{ return max(a, max(b, max(c, d))); }
