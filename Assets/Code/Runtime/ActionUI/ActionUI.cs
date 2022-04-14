@@ -64,5 +64,10 @@ namespace Vheos.Games.ActionPoints
                 _buttonsWheelsByPhase[phase] = newButtonsWheel;
             }
         }
+        protected override void PlayDisable()
+        {
+            base.PlayDisable();
+            CollapseAll();
+        }
     }
 }
