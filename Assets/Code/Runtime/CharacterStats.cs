@@ -22,9 +22,9 @@ namespace Vheos.Games.ActionPoints
         => Get<Actionable>().ActionProgress += Time.deltaTime * ActionSpeed;
         private void ApplyOverflowFocusRate(float overflow)
         => Get<Actionable>().FocusProgress += overflow * OverflowFocusRate;
-        private void HandleResourcesOnChangeCombat(Combat from, Combat to)
+        private void HandleResourcesOnChangeCombat(Combatable combatable)
         {
-            if (to != null)
+            if (combatable.Combat != null)
             {
                 _recentExplorationActionProgress = Get<Actionable>().ActionProgress;
                 _recentExplorationFocusProgress = Get<Actionable>().FocusProgress;

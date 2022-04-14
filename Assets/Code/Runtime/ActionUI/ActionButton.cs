@@ -45,28 +45,26 @@ namespace Vheos.Games.ActionPoints
             textMeshPro.verticalAlignment = VerticalAlignmentOptions.Middle;
             return textMeshPro;
         }
-        private void Selectable_OnGainSelection(Selecter selecter, bool isFirst)
+        private void Selectable_OnGainSelection(Selectable selectable, Selecter selecter)
         {
-            if (!_isUsable || !isFirst)
+            if (!_isUsable || selectable.IsSelectedByMany)
                 return;
 
-            ActionTargeter.TryStartHighlightingValidTargets(Action);
+            ActionTargeter.StartHighlightingValidTargets(selecter, Action);
         }
-        private void Selectable_OnLoseSelection(Selecter selecter, bool wasLast)
+        private void Selectable_OnLoseSelection(Selectable selectable, Selecter selecter)
         {
-            if (!_isUsable || !wasLast)
+            if (!_isUsable || selectable.IsSelected || ActionTargeter.IsTargeting)
                 return;
 
-            ActionTargeter.TryStopHighlightingValidTargets();
+            ActionTargeter.StopHighlightingValidTargets(selecter);
         }
-        private void Selectable_OnRelease(Selecter selecter, bool isClick)
+        private void Selectable_OnRelease(Selectable selectable, Selecter selecter, bool isClick)
         {
-            if (!_isUsable || !isClick)
+            if (!_isUsable)
                 return;
 
-
-
-            _group.UI.Actionable.Get<ActionTargeter>().ConfirmActionButton(this);
+            ActionTargeter.TryStartTargeting(selecter, this);            
         }
         private void PlayerOwnable_OnChangePlayer(Player from, Player to)
         {

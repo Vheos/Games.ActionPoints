@@ -15,11 +15,11 @@ namespace Vheos.Games.ActionPoints
         [field: SerializeField, Range(-2, +2)] public int MaxActionPoints { get; private set; }
 
         // Privates
-        private void Selectable_OnPress(Selecter selecter)
+        private void Selectable_OnPress(Selectable selectable, Selecter selecter)
         {
-            selecter.Get<Player>().TargetingLine.Show(Get<Targeter>(), this.transform);
+            selecter.Get<Player>().TargetingLine.Show(transform);
         }
-        private void Selectable_OnRelease(Selecter selecter, bool withinTrigger)
+        private void Selectable_OnRelease(Selectable selectable, Selecter selecter, bool isClick)
         {
             if (Get<Targeter>().TryGetTargetable(out Equiper equiper))
                 if (!equiper.TryEquip(Get<Equipable>()))
@@ -27,15 +27,21 @@ namespace Vheos.Games.ActionPoints
 
             selecter.Get<Player>().TargetingLine.Hide();
         }
-        private void Targetable_OnGainTargeting(Targeter targeter, bool isFirst)
+        private void Targetable_OnGainTargeting(Targetable targetable, Targeter targeter)
         {
-            if (isFirst && !targeter.SameGOAs(this))
-                Get<SpriteOutline>().Show();
+            if (targetable.IsTargetedByMany
+            || targeter.SameGOAs(this))
+                return;
+
+            Get<SpriteOutline>().Show();
         }
-        private void Targetable_OnLoseTargeting(Targeter targeter, bool isLast)
+        private void Targetable_OnLoseTargeting(Targetable targetable, Targeter targeter)
         {
-            if (isLast && !targeter.SameGOAs(this))
-                Get<SpriteOutline>().Hide();
+            if (targetable.IsTargeted
+            || targeter.SameGOAs(this))
+                return;
+
+            Get<SpriteOutline>().Hide();
         }
 
         // Play
@@ -43,7 +49,7 @@ namespace Vheos.Games.ActionPoints
         {
             base.PlayAwake();
 
-            Get<Equipable>().EquipSlot.Set(() => (int)Slot);
+            Get<Equipable>().EquipSlot = (int)Slot;
 
             Get<Selectable>().OnGetPressed.SubEnableDisable(this, Selectable_OnPress);
             Get<Selectable>().OnGetReleased.SubEnableDisable(this, Selectable_OnRelease);
