@@ -5,42 +5,24 @@ namespace Vheos.Games.Core
     using UnityEngine;
 
     [DisallowMultipleComponent]
-    sealed public class Highlightable : ABaseComponent
+    sealed public class Highlightable : AUsableByMany<Highlightable, Highlighter>
     {
         // Events
-        public readonly AutoEvent<bool> OnGainHighlight = new();
-        public readonly AutoEvent<bool> OnLoseHighlight = new();
+        public AutoEvent<Highlightable, Highlighter> OnGainHighlight
+        => OnStartBeingUsed;
+        public AutoEvent<Highlightable, Highlighter> OnLoseHighlight
+        => OnStopBeingUsed;
 
         // Publics
         public bool IsHighlighted
-        => _highlightersCount > 0;
-        public void GainHighlight()
-        {
-            _highlightersCount++;
-            OnGainHighlight.Invoke(_highlightersCount == 1);   // is first
-        }
-        public void LoseHighlight()
-        {
-            _highlightersCount--;
-            OnLoseHighlight.Invoke(_highlightersCount == 0);   // is last
-        }
-        public void ClearAllHighlights()
-        {
-            for (int i = 0; i < _highlightersCount; i++)
-            {
-                _highlightersCount--;
-                OnLoseHighlight.Invoke(_highlightersCount == 0);
-            }
-        }
-
-        // Privates
-        private int _highlightersCount;
-
-        // Play
-        protected override void PlayDisable()
-        {
-            base.PlayDisable();
-            ClearAllHighlights();
-        }
+        => IsBeingUsed;
+        public bool IsHighlightedByMany
+        => IsBeingUsedByMany;
+        public bool IsHighlightedBy(Highlighter highlighter)
+        => IsBeingUsedBy(highlighter);
+        public void GainHighlightFrom(Highlighter highlighter)
+        => StartBeingUsedBy(highlighter);
+        public void LoseHighlightFrom(Highlighter highlighter)
+        => StopBeingUsedBy(highlighter);
     }
 }
